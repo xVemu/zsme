@@ -2,28 +2,26 @@ package pl.vemu.zsme;
 
 public class NewsItem {
 
-    private String title, description;
+    private final String title;
+    private final String description;
+    private final String imgUrl;
 
-    NewsItem(String title, String description) {
+    NewsItem(String title, String description, String imgUrl) {
         this.title = title;
         this.description = description;
+        this.imgUrl = imgUrl;
     }
 
-    public String getTitle() {
+    String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
+    String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    String getImgUrl() {
+        return imgUrl;
     }
-
 
 }

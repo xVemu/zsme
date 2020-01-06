@@ -4,15 +4,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    private NewsAdapter adapter;
-    private ArrayList<NewsItem> newsItems;
+    private final ArrayList<NewsItem> newsItems = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,8 +19,9 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView recView = findViewById(R.id.recView);
         recView.setLayoutManager(new LinearLayoutManager(this));
 
-        adapter = new NewsAdapter(newsItems);
-        new DownloadNews().execute(adapter);
+        NewsAdapter adapter = new NewsAdapter(newsItems);
         recView.setAdapter(adapter);
+        recView.addOnScrollListener(new RecScrollListener());
+        new DownloadNews(1).execute(adapter);
     }
 }
