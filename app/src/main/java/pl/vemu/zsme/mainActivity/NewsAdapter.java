@@ -1,9 +1,12 @@
-package pl.vemu.zsme;
+package pl.vemu.zsme.mainActivity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,12 +16,25 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import pl.vemu.zsme.R;
+import pl.vemu.zsme.detailedNews.DetailActivity;
+
+@RequiredArgsConstructor
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder> {
 
-    final ArrayList<NewsItem> newsItems;
+    private final Context context;
+    @Getter
+    private final ArrayList<NewsItem> newsItems = new ArrayList<>();
 
-    NewsAdapter(ArrayList<NewsItem> newsItems) {
-        this.newsItems = newsItems;
+
+    public void addNewsItem(NewsItem item) {
+        newsItems.add(item);
+    }
+
+    public void removeAllItems() {
+        newsItems.clear();
     }
 
     @NonNull
@@ -41,7 +57,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder> {
         return newsItems.size();
     }
 
-    class NewsHolder extends RecyclerView.ViewHolder {
+    class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         final TextView title;
         final TextView description;
@@ -52,6 +68,15 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder> {
             description = itemView.findViewById(R.id.description);
             title = itemView.findViewById(R.id.title);
             img = itemView.findViewById(R.id.thumbnail);
+            itemView.findViewById(R.id.cardView).setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            int position = getAdapterPosition();
+            Intent intent = new Intent(context, DetailActivity.class);
+            intent.putExtra("url", newsItems.get(position).getUrl());
+            context.startActivity(intent);
         }
     }
 }

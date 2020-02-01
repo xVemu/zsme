@@ -1,4 +1,4 @@
-package pl.vemu.zsme;
+package pl.vemu.zsme.mainActivity;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -13,7 +13,7 @@ public class RecScrollListener extends RecyclerView.OnScrollListener {
         super.onScrolled(recyclerView, dx, dy);
         NewsAdapter adapter = (NewsAdapter) recyclerView.getAdapter();
         LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
-        if ( manager != null && adapter != null && manager.findLastVisibleItemPosition() == adapter.newsItems.size() - 1) {
+        if ( manager != null && adapter != null && manager.findLastVisibleItemPosition() == adapter.getNewsItems().size() - 1) {
             new DownloadNews(page).execute(adapter);
             page++;
         }
