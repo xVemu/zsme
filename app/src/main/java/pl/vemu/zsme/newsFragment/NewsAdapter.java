@@ -1,39 +1,36 @@
-package pl.vemu.zsme.mainActivity;
+package pl.vemu.zsme.newsFragment;
 
-import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import pl.vemu.zsme.R;
-import pl.vemu.zsme.detailedNews.DetailActivity;
 
 @RequiredArgsConstructor
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder> {
 
-    private final Context context;
     @Getter
-    private final ArrayList<NewsItem> newsItems = new ArrayList<>();
+    private final List<NewsItem> newsItems = new ArrayList<>();
 
 
-    public void addNewsItem(NewsItem item) {
+    void addNewsItem(NewsItem item) {
         newsItems.add(item);
     }
 
-    public void removeAllItems() {
+    void removeAllItems() {
         newsItems.clear();
     }
 
@@ -49,6 +46,10 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder> {
         NewsItem item = newsItems.get(position);
         holder.title.setText(item.getTitle());
         holder.description.setText(item.getDescription());
+        holder.author.setText(item.getAuthor());
+        holder.date.setText(item.getDate());
+        NewsFragmentDirections.ActionNewsToDetailFragment actionNewsToDetailFragment = NewsFragmentDirections.actionNewsToDetailFragment(item);
+        holder.itemView.setOnClickListener(Navigation.createNavigateOnClickListener(actionNewsToDetailFragment));
         Picasso.get().load(item.getImgUrl()).resize(1080, 1080).centerCrop().into(holder.img);
     }
 
@@ -57,26 +58,18 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder> {
         return newsItems.size();
     }
 
-    class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class NewsHolder extends RecyclerView.ViewHolder {
 
-        final TextView title;
-        final TextView description;
+        final TextView title, description, author, date;
         final ImageView img;
 
         NewsHolder(@NonNull View itemView) {
             super(itemView);
             description = itemView.findViewById(R.id.description);
             title = itemView.findViewById(R.id.title);
+            author = itemView.findViewById(R.id.author);
+            date = itemView.findViewById(R.id.date);
             img = itemView.findViewById(R.id.thumbnail);
-            itemView.findViewById(R.id.cardView).setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View v) {
-            int position = getAdapterPosition();
-            Intent intent = new Intent(context, DetailActivity.class);
-            intent.putExtra("url", newsItems.get(position).getUrl());
-            context.startActivity(intent);
         }
     }
 }

@@ -1,11 +1,8 @@
-package pl.vemu.zsme.searchNews;
+package pl.vemu.zsme.newsFragment;
 
-import android.util.Log;
-import android.widget.SearchView;
+import androidx.appcompat.widget.SearchView;
 
 import lombok.RequiredArgsConstructor;
-import pl.vemu.zsme.mainActivity.DownloadNews;
-import pl.vemu.zsme.mainActivity.NewsAdapter;
 
 @RequiredArgsConstructor
 public class QueryTextListener implements SearchView.OnQueryTextListener {
@@ -15,7 +12,6 @@ public class QueryTextListener implements SearchView.OnQueryTextListener {
     @Override
     public boolean onQueryTextSubmit(String query) {
         new DownloadNews(1, query).execute(adapter);
-        Log.d("xD", query);
         return true;
     }
 

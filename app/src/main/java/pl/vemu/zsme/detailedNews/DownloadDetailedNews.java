@@ -28,6 +28,6 @@ public class DownloadDetailedNews extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
-        context.setParams(s);
+        context.setDetailText(s);
     }
 }

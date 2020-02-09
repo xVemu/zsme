@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/newsFragment">
+
+    <fragment
+        android:id="@+id/newsFragment"
+        android:name="pl.vemu.zsme.newsFragment.NewsFragment"
+        android:label="Aktualności"
+        tools:layout="@layout/fragment_news">
+        <action
+            android:id="@+id/action_news_to_detailFragment"
+            app:destination="@id/detailFragment"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit"
+            app:popEnterAnim="@anim/fragment_fade_enter"
+            app:popExitAnim="@anim/fragment_fade_exit" />
+        <action
+            android:id="@+id/action_newsFragment_to_timetableFragment"
+            app:destination="@id/timetableFragment"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit"
+            app:popEnterAnim="@anim/fragment_fade_enter"
+            app:popExitAnim="@anim/fragment_fade_exit" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailFragment"
+        android:name="pl.vemu.zsme.detailedNews.DetailFragment"
+        tools:layout="@layout/fragment_detail_news" >
+        <argument
+            android:name="newsItem"
+            app:argType="pl.vemu.zsme.newsFragment.NewsItem" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="pl.vemu.zsme.timetableFragment.LoginFragment"
+        android:label="Plan lekcji"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_timetableFragment"
+            app:destination="@id/timetableFragment"
+            app:enterAnim="@anim/fragment_open_enter"
+            app:exitAnim="@anim/fragment_open_exit"
+            app:popUpTo="@+id/mobile_navigation" />
+    </fragment>
+    <fragment
+        android:id="@+id/timetableFragment"
+        android:name="pl.vemu.zsme.timetableFragment.TimetableFragment"
+        android:label="Plan lekcji"
+        tools:layout="@layout/fragment_timetable" >
+        <action
+            android:id="@+id/action_timetableFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@+id/mobile_navigation" />
+    </fragment>
+</navigation>

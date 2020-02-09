@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:id="@+id/news_nav_btn"
-        android:title="Aktualności"
+    <item android:id="@+id/newsFragment"
+        android:title="@string/news"
         android:icon="@drawable/ic_news"/>
-    <item android:id="@+id/lessons_nav_btn"
-        android:title="Plan lekcji"
+    <item android:id="@+id/timetableFragment"
+        android:title="@string/timetable"
         android:icon="@drawable/ic_event_note"/>
-    <item android:title="Item"
+    <item android:title="@string/item"
         android:icon="@drawable/ic_done"/>
-    <item android:title="Item"
+    <item android:title="@string/item"
         android:icon="@drawable/ic_done"/>
-    <item android:title="Item"
+    <item android:title="@string/item"
         android:icon="@drawable/ic_done"/>
 </menu>

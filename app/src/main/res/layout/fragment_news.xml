@@ -3,14 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
-    tools:context=".detailedNews.DetailActivity">
+    tools:context=".newsFragment.NewsFragment"
+    android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/detailText"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout_editor_absoluteX="182dp"
-        tools:layout_editor_absoluteY="250dp" />
+        android:layout_height="match_parent" />
 
 </LinearLayout>

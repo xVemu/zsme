@@ -5,4 +5,13 @@
     <string name="thumbnail">Thumbnail</string>
 
     <string name="search">Wyszukaj</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="news">Aktualności</string>
+    <string name="timetable">Plan lekcji</string>
+    <string name="item">Item</string>
+    <string name="login">Login</string>
+    <string name="password">Hasło</string>
+    <string name="log_in">Zaloguj</string>
+    <string name="wrong_password_or_login">Złe hasło lub login</string>
 </resources>

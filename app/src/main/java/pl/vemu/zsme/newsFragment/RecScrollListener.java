@@ -1,4 +1,4 @@
-package pl.vemu.zsme.mainActivity;
+package pl.vemu.zsme.newsFragment;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
