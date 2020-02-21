@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 import pl.vemu.zsme.R;
 
 @RequiredArgsConstructor
-class TimetablePage extends Fragment {
+public class TimetablePage extends Fragment {
 
     private final LinkedMap<String, String> map;
 

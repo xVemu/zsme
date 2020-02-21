@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 import pl.vemu.zsme.R;
 
 @RequiredArgsConstructor
-class TableFragmentPage extends Fragment {
+public class TableFragmentPage extends Fragment {
 
     private TableAdapter tableAdapter;
     private final List<Lesson> lessons;
