@@ -15,12 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.jsoup.Connection;
-import org.jsoup.HttpStatusException;
-import org.jsoup.Jsoup;
-
-import java.io.IOException;
-
 import pl.vemu.zsme.R;
 import pl.vemu.zsme.STATIC;
 
@@ -49,8 +43,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, IAs
         String login = username + ":" + password;
 
         String base64login = Base64.encodeToString(login.getBytes(), Base64.NO_WRAP);
-        String url = "https://zsme.tarnow.pl/plan/lista.html";
-        new DownloadTimetable(this).execute(url, base64login);
+        new LoginTimetable(this).execute(base64login);
     }
 
     @Override

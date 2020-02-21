@@ -8,5 +8,5 @@ import lombok.Value;
 @Value
 @Builder
 public class NewsItem implements Serializable {
-    String title, description, author, date, imgUrl, url;
+    private String title, description, author, date, imgUrl, url;
 }

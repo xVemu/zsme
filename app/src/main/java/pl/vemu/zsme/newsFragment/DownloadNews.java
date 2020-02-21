@@ -1,24 +1,34 @@
 package pl.vemu.zsme.newsFragment;
 
 import android.os.AsyncTask;
+import android.view.View;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import pl.vemu.zsme.detailedNews.IAsyncTaskContext;
 
-@AllArgsConstructor
-public class DownloadNews extends AsyncTask<NewsAdapter, Void, NewsAdapter> implements IMakeNewsItem {
+@RequiredArgsConstructor
+class DownloadNews extends AsyncTask<NewsAdapter, Integer, NewsAdapter> implements IMakeNewsItem {
 
     private final int page;
     private final String search;
+    @Setter
+    private static IAsyncTaskContext context;
 
     public DownloadNews(int page) {
         this(page, null);
+    }
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        context.setProgressVisibility(View.VISIBLE);
     }
 
     @Override
@@ -49,8 +59,15 @@ public class DownloadNews extends AsyncTask<NewsAdapter, Void, NewsAdapter> impl
     }
 
     @Override
+    protected void onProgressUpdate(Integer... values) {
+        super.onProgressUpdate(values);
+        context.setProgress(values[0]);
+    }
+
+    @Override
     protected void onPostExecute(NewsAdapter newsAdapter) {
-        newsAdapter.notifyDataSetChanged();
         super.onPostExecute(newsAdapter);
+        newsAdapter.notifyDataSetChanged();
+        context.setProgressVisibility(View.GONE);
     }
 }

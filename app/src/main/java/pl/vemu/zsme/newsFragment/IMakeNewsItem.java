@@ -2,7 +2,7 @@ package pl.vemu.zsme.newsFragment;
 
 import org.jsoup.nodes.Element;
 
-public interface IMakeNewsItem {
+interface IMakeNewsItem {
 
     default NewsItem makeNewsItem(Element element) {
         NewsItem.NewsItemBuilder newsItemBuilder = NewsItem.builder();

@@ -5,7 +5,7 @@ import androidx.appcompat.widget.SearchView;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class QueryTextListener implements SearchView.OnQueryTextListener {
+class QueryTextListener implements SearchView.OnQueryTextListener {
 
     private final NewsAdapter adapter;
 

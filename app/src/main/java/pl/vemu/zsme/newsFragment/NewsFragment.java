@@ -6,6 +6,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,10 +16,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import pl.vemu.zsme.R;
+import pl.vemu.zsme.detailedNews.IAsyncTaskContext;
 
-public class NewsFragment extends Fragment {
+public class NewsFragment extends Fragment implements IAsyncTaskContext {
 
     private NewsAdapter adapter;
+    // TODO Progress bar
+    private ProgressBar progressBar;
 
     @Nullable
     @Override
@@ -29,9 +33,12 @@ public class NewsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        RecyclerView recView = view.findViewById(R.id.recView);
+        RecyclerView recView = view.findViewById(R.id.recViewNews);
         LinearLayoutManager manager = new LinearLayoutManager(getActivity());
         recView.setLayoutManager(manager);
+
+        progressBar = view.findViewById(R.id.progressBarNews);
+        DownloadNews.setContext(this);
 
         setHasOptionsMenu(true);
         adapter = new NewsAdapter();
@@ -50,5 +57,15 @@ public class NewsFragment extends Fragment {
             new DownloadNews(1, "").execute(adapter);
             return true;
         });
+    }
+
+    @Override
+    public void setProgress(int progress) {
+        progressBar.setProgress(progress);
+    }
+
+    @Override
+    public void setProgressVisibility(int progressVisibility) {
+        progressBar.setVisibility(progressVisibility);
     }
 }

@@ -17,13 +17,6 @@
             app:exitAnim="@anim/fragment_fade_exit"
             app:popEnterAnim="@anim/fragment_fade_enter"
             app:popExitAnim="@anim/fragment_fade_exit" />
-        <action
-            android:id="@+id/action_newsFragment_to_timetableFragment"
-            app:destination="@id/timetableFragment"
-            app:enterAnim="@anim/fragment_fade_enter"
-            app:exitAnim="@anim/fragment_fade_exit"
-            app:popEnterAnim="@anim/fragment_fade_enter"
-            app:popExitAnim="@anim/fragment_fade_exit" />
     </fragment>
     <fragment
         android:id="@+id/detailFragment"
@@ -54,5 +47,23 @@
             android:id="@+id/action_timetableFragment_to_loginFragment"
             app:destination="@id/loginFragment"
             app:popUpTo="@+id/mobile_navigation" />
+        <action
+            android:id="@+id/action_timetableFragment_to_tableFragment"
+            app:destination="@id/tableFragment"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="pl.vemu.zsme.settingsFragment.SettingsFragment"
+        android:label="Ustawienia"
+        tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/tableFragment"
+        android:name="pl.vemu.zsme.timetableFragment.TableFragment"
+        tools:layout="@layout/fragment_table">
+        <argument
+            android:name="url"
+            app:argType="string" />
     </fragment>
 </navigation>

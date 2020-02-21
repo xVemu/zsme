@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class RecScrollListener extends RecyclerView.OnScrollListener {
+class RecScrollListener extends RecyclerView.OnScrollListener {
 
     private int page = 2;
 

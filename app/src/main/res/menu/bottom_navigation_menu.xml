@@ -7,10 +7,7 @@
     <item android:id="@+id/timetableFragment"
         android:title="@string/timetable"
         android:icon="@drawable/ic_event_note"/>
-    <item android:title="@string/item"
-        android:icon="@drawable/ic_done"/>
-    <item android:title="@string/item"
-        android:icon="@drawable/ic_done"/>
-    <item android:title="@string/item"
-        android:icon="@drawable/ic_done"/>
+    <item android:id="@+id/settingsFragment"
+        android:title="@string/settings"
+        android:icon="@drawable/ic_settings"/>
 </menu>
