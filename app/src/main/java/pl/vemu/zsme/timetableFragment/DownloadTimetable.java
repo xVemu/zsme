@@ -10,12 +10,11 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-class DownloadTimetable extends AsyncTask<Void, Void, List<LinkedMap<String, String>>> implements IDownloadTimetable{
+public class DownloadTimetable extends AsyncTask<Void, Void, List<LinkedMap<String, String>>> implements IDownloadTimetable{
 
     private final ISetMaps context;
 

@@ -4,6 +4,6 @@ import org.apache.commons.collections4.map.LinkedMap;
 
 import java.util.List;
 
-interface ISetMaps {
+public interface ISetMaps {
     void makePageAdapter(List<LinkedMap<String, String>> maps);
 }

@@ -6,7 +6,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import java.util.List;
 
-class TablePageAdapter extends FragmentStateAdapter {
+public class TablePageAdapter extends FragmentStateAdapter {
 
     private final List<List<Lesson>> lessons;
 

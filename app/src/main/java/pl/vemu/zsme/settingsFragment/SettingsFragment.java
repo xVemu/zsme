@@ -9,7 +9,7 @@ import androidx.preference.PreferenceFragmentCompat;
 
 import pl.vemu.zsme.R;
 
-class SettingsFragment extends PreferenceFragmentCompat {
+public class SettingsFragment extends PreferenceFragmentCompat {
 
 
     @Override

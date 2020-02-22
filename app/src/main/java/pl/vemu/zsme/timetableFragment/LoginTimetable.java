@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 import pl.vemu.zsme.STATIC;
 
 @RequiredArgsConstructor
-class LoginTimetable extends AsyncTask<String, Void, Boolean> implements IDownloadTimetable{
+public class LoginTimetable extends AsyncTask<String, Void, Boolean> implements IDownloadTimetable{
 
     private final IAsyncTaskContext context;
 

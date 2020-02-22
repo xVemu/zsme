@@ -5,6 +5,6 @@ import lombok.Value;
 
 @Value
 @Builder
-class Lesson {
+public class Lesson {
     private String name, room, teacher, hour, index;
 }

@@ -2,18 +2,18 @@ package pl.vemu.zsme.timetableFragment;
 
 
 import android.os.Bundle;
+import android.util.Base64;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-
-import android.util.Base64;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
 import pl.vemu.zsme.R;
 import pl.vemu.zsme.STATIC;
@@ -48,6 +48,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, IAs
 
     @Override
     public void login() {
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
         STATIC.LOGGED_IN = true;
         navController.navigate(LoginFragmentDirections.actionLoginFragmentToTimetableFragment());

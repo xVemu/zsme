@@ -14,7 +14,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-class DownloadTable extends AsyncTask<String, Void, List<List<Lesson>>> implements IDownloadTimetable{
+public class DownloadTable extends AsyncTask<String, Void, List<List<Lesson>>> implements IDownloadTimetable{
 
     private final IDownloadTable context;
 

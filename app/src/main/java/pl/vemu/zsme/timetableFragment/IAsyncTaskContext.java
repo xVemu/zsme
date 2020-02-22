@@ -1,7 +1,7 @@
 package pl.vemu.zsme.timetableFragment;
 
 
-interface IAsyncTaskContext {
+public interface IAsyncTaskContext {
     void login();
     void wrong();
 }

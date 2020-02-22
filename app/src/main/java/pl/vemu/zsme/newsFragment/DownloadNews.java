@@ -14,7 +14,7 @@ import lombok.Setter;
 import pl.vemu.zsme.detailedNews.IAsyncTaskContext;
 
 @RequiredArgsConstructor
-class DownloadNews extends AsyncTask<NewsAdapter, Integer, NewsAdapter> implements IMakeNewsItem {
+public class DownloadNews extends AsyncTask<NewsAdapter, Integer, NewsAdapter> implements IMakeNewsItem {
 
     private final int page;
     private final String search;

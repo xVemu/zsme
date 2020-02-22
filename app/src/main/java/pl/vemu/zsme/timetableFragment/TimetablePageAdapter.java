@@ -8,7 +8,7 @@ import org.apache.commons.collections4.map.LinkedMap;
 
 import java.util.List;
 
-class TimetablePageAdapter extends FragmentStateAdapter {
+public class TimetablePageAdapter extends FragmentStateAdapter {
 
     private final List<LinkedMap<String, String>> maps;
 

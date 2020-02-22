@@ -2,6 +2,6 @@ package pl.vemu.zsme.timetableFragment;
 
 import java.util.List;
 
-interface IDownloadTable {
+public interface IDownloadTable {
     void makeAdapter(List<List<Lesson>> lessons);
 }

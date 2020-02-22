@@ -11,7 +11,7 @@ import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-class DownloadDetailedNews extends AsyncTask<String, Integer, String> {
+public class DownloadDetailedNews extends AsyncTask<String, Integer, String> {
 
     private final IAsyncTaskContext context;
 
