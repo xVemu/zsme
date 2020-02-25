@@ -15,4 +15,5 @@
     <string name="log_in">Zaloguj</string>
     <string name="wrong_password_or_login">Złe hasło lub login</string>
     <string name="settings">Ustawienia</string>
+    <string name="no_results">Brak wyników</string>
 </resources>

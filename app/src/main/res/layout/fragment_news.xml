@@ -6,19 +6,27 @@
     android:orientation="vertical"
     tools:context=".newsFragment.NewsFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recViewNews"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:itemCount="8"
-        tools:listitem="@layout/item_news" />
-
-    <ProgressBar
-        android:id="@+id/progressBarNews"
-        style="?android:attr/progressBarStyle"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refreshNews"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recViewNews"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:itemCount="8"
+            tools:listitem="@layout/item_news" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <TextView
+        android:id="@+id/not_found"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:layout_marginTop="32dp"
+        android:textAlignment="center"
+        android:text="@string/no_results"
+        android:textSize="18sp"
         android:visibility="gone" />
 
 </LinearLayout>

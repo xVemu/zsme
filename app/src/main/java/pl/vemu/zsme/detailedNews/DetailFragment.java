@@ -21,6 +21,8 @@ public class DetailFragment extends Fragment implements IAsyncTaskContext {
     private ProgressBar progressBar;
     private NewsItem newsItem;
 
+    public DetailFragment() { }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

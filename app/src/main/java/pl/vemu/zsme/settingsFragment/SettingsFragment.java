@@ -11,6 +11,7 @@ import pl.vemu.zsme.R;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
 
+    public SettingsFragment() { }
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {

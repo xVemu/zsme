@@ -42,13 +42,13 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder> {
     @Override
     public void onBindViewHolder(@NonNull NewsHolder holder, int position) {
         NewsItem item = newsItems.get(position);
+        Picasso.get().load(item.getImgUrl()).resize(1080, 1080).centerCrop().into(holder.img);
         holder.title.setText(item.getTitle());
         holder.description.setText(item.getDescription());
         holder.author.setText(item.getAuthor());
         holder.date.setText(item.getDate());
         NewsFragmentDirections.ActionNewsToDetailFragment actionNewsToDetailFragment = NewsFragmentDirections.actionNewsToDetailFragment(item);
         holder.itemView.setOnClickListener(Navigation.createNavigateOnClickListener(actionNewsToDetailFragment));
-        Picasso.get().load(item.getImgUrl()).resize(1080, 1080).centerCrop().into(holder.img);
     }
 
     @Override

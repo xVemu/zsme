@@ -26,6 +26,8 @@ public class TimetableFragment extends Fragment implements ISetMaps{
     private ViewPager2 viewPager;
     private TabLayout tabLayout;
 
+    public TimetableFragment() { }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_timetable, container, false);

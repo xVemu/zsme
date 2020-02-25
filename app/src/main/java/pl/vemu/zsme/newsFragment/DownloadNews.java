@@ -1,7 +1,6 @@
 package pl.vemu.zsme.newsFragment;
 
 import android.os.AsyncTask;
-import android.view.View;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -11,10 +10,9 @@ import java.io.IOException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import pl.vemu.zsme.detailedNews.IAsyncTaskContext;
 
 @RequiredArgsConstructor
-public class DownloadNews extends AsyncTask<NewsAdapter, Integer, NewsAdapter> implements IMakeNewsItem {
+public class DownloadNews extends AsyncTask<NewsAdapter, Void, NewsAdapter> implements IMakeNewsItem {
 
     private final int page;
     private final String search;
@@ -28,12 +26,11 @@ public class DownloadNews extends AsyncTask<NewsAdapter, Integer, NewsAdapter> i
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        context.setProgressVisibility(View.VISIBLE);
+        context.startRefreshing();
     }
 
     @Override
     protected NewsAdapter doInBackground(NewsAdapter... newsAdapters) {
-        // TODO Add throw expection
         try {
             String url;
             if (search == null) url =  String.format("http://zsme.tarnow.pl/wp/page/%s/", page);
@@ -46,6 +43,7 @@ public class DownloadNews extends AsyncTask<NewsAdapter, Integer, NewsAdapter> i
                 newsAdapters[0].removeAllItems();
             }
             Document document = Jsoup.connect(url).get();
+            if (document.selectFirst(".column-one") == null) return null;
             Elements columnOneNews = document.selectFirst(".column-one").children();
             Elements columnTwoNews = document.selectFirst(".column-two").children();
             for (int i = 0; i < columnOneNews.size(); i++) {
@@ -58,16 +56,15 @@ public class DownloadNews extends AsyncTask<NewsAdapter, Integer, NewsAdapter> i
         return newsAdapters[0];
     }
 
-    @Override
-    protected void onProgressUpdate(Integer... values) {
-        super.onProgressUpdate(values);
-        context.setProgress(values[0]);
-    }
-
+    // TODO present when ready
     @Override
     protected void onPostExecute(NewsAdapter newsAdapter) {
-        super.onPostExecute(newsAdapter);
-        newsAdapter.notifyDataSetChanged();
-        context.setProgressVisibility(View.GONE);
+        if (newsAdapter == null) {
+            context.setIsFound(false);
+        } else {
+            super.onPostExecute(newsAdapter);
+            context.setIsFound(true);
+            newsAdapter.notifyDataSetChanged();
+        }
     }
 }

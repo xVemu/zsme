@@ -13,16 +13,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import lombok.RequiredArgsConstructor;
 import pl.vemu.zsme.R;
 
-@RequiredArgsConstructor
 public class TableFragmentPage extends Fragment {
 
     private TableAdapter tableAdapter;
-    private final List<Lesson> lessons;
+    private List<Lesson> lessons = new ArrayList<>();
+
+    public TableFragmentPage() { }
+    public TableFragmentPage(List<Lesson> lessons) {
+        this.lessons = lessons;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

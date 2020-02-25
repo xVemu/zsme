@@ -15,13 +15,14 @@ import android.view.ViewGroup;
 
 import org.apache.commons.collections4.map.LinkedMap;
 
-import lombok.RequiredArgsConstructor;
 import pl.vemu.zsme.R;
 
-@RequiredArgsConstructor
 public class TimetablePage extends Fragment {
 
-    private final LinkedMap<String, String> map;
+    private LinkedMap<String, String> map = new LinkedMap<>();
+
+    public TimetablePage() { }
+    public TimetablePage(LinkedMap<String, String> map) { this.map = map; }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
