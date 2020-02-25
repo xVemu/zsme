@@ -50,7 +50,10 @@ public class NewsFragment extends Fragment implements IAsyncTaskContext {
         recView.addOnScrollListener(new RecScrollListener());
         new DownloadNews(1).execute(adapter);
 
-        refreshLayout.setOnRefreshListener(() -> new DownloadNews(1).execute(adapter));
+        refreshLayout.setOnRefreshListener(() -> {
+            adapter.removeAllItems();
+            new DownloadNews(1).execute(adapter);
+        });
     }
 
     @Override
@@ -61,7 +64,8 @@ public class NewsFragment extends Fragment implements IAsyncTaskContext {
         searchView.setOnQueryTextListener(new QueryTextListener(adapter));
         searchView.setOnCloseListener(() -> {
             searchView.onActionViewCollapsed();
-            new DownloadNews(1, "").execute(adapter);
+            adapter.removeAllItems();
+            new DownloadNews(1).execute(adapter);
             return true;
         });
     }

@@ -34,10 +34,6 @@ public class DownloadNews extends AsyncTask<NewsAdapter, Void, NewsAdapter> impl
         try {
             String url;
             if (search == null) url =  String.format("http://zsme.tarnow.pl/wp/page/%s/", page);
-            else if (search.equals("")) {
-                url =  String.format("http://zsme.tarnow.pl/wp/page/%s/", page);
-                newsAdapters[0].removeAllItems();
-            }
             else {
                 url = String.format("http://zsme.tarnow.pl/wp/page/%s/?s=", page) + search;
                 newsAdapters[0].removeAllItems();
@@ -56,7 +52,6 @@ public class DownloadNews extends AsyncTask<NewsAdapter, Void, NewsAdapter> impl
         return newsAdapters[0];
     }
 
-    // TODO present when ready
     @Override
     protected void onPostExecute(NewsAdapter newsAdapter) {
         if (newsAdapter == null) {
