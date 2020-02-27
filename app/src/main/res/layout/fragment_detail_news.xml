@@ -10,13 +10,13 @@
         android:id="@+id/detailTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:textAlignment="center"
-        android:scrollbars = "vertical"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="16dp"
-        android:text="@string/title" />
+        android:scrollbars="vertical"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        tools:text="@string/title" />
 
     <ProgressBar
         android:id="@+id/progressBarDetail"
@@ -27,23 +27,24 @@
 
     <TextView
         android:id="@+id/detailText"
-        android:layout_margin="4dp"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_margin="4dp"
+        android:layout_weight="1"
+        tools:text="@string/lorem" />
 
     <TextView
         android:id="@+id/detailDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
-        android:text="@string/title" />
+        tools:text="@string/title" />
 
     <TextView
         android:id="@+id/detailAuthor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
-        android:text="@string/title" />
+        tools:text="@string/title" />
 
 </LinearLayout>

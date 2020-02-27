@@ -17,7 +17,7 @@ import pl.vemu.zsme.newsFragment.NewsItem;
 
 public class DetailFragment extends Fragment implements IAsyncTaskContext {
 
-    private TextView detailText;
+    private TextView detailText, author, date;
     private ProgressBar progressBar;
     private NewsItem newsItem;
 
@@ -29,11 +29,9 @@ public class DetailFragment extends Fragment implements IAsyncTaskContext {
         View view = inflater.inflate(R.layout.fragment_detail_news, container, false);
         newsItem = DetailFragmentArgs.fromBundle(getArguments()).getNewsItem();
         TextView title = view.findViewById(R.id.detailTitle);
-        TextView author = view.findViewById(R.id.detailAuthor);
-        TextView date = view.findViewById(R.id.detailDate);
+        author = view.findViewById(R.id.detailAuthor);
+        date = view.findViewById(R.id.detailDate);
         title.setText(newsItem.getTitle());
-        author.setText(newsItem.getAuthor());
-        date.setText(newsItem.getDate());
         return view;
     }
 
@@ -60,5 +58,15 @@ public class DetailFragment extends Fragment implements IAsyncTaskContext {
     @Override
     public void setProgressVisibility(int progressVisibility) {
         progressBar.setVisibility(progressVisibility);
+    }
+
+    @Override
+    public void setAuthor(String text) {
+        author.setText(text);
+    }
+
+    @Override
+    public void setDate(String text) {
+        date.setText(text);
     }
 }

@@ -45,8 +45,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder> {
         Picasso.get().load(item.getImgUrl()).resize(1080, 1080).centerCrop().into(holder.img);
         holder.title.setText(item.getTitle());
         holder.description.setText(item.getDescription());
-        holder.author.setText(item.getAuthor());
-        holder.date.setText(item.getDate());
         NewsFragmentDirections.ActionNewsToDetailFragment actionNewsToDetailFragment = NewsFragmentDirections.actionNewsToDetailFragment(item);
         holder.itemView.setOnClickListener(Navigation.createNavigateOnClickListener(actionNewsToDetailFragment));
     }
@@ -56,17 +54,15 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder> {
         return newsItems.size();
     }
 
-    class NewsHolder extends RecyclerView.ViewHolder {
+    static class NewsHolder extends RecyclerView.ViewHolder {
 
-        final TextView title, description, author, date;
+        final TextView title, description;
         final ImageView img;
 
         NewsHolder(@NonNull View itemView) {
             super(itemView);
             description = itemView.findViewById(R.id.description);
             title = itemView.findViewById(R.id.title);
-            author = itemView.findViewById(R.id.author);
-            date = itemView.findViewById(R.id.date);
             img = itemView.findViewById(R.id.thumbnail);
         }
     }
