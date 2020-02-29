@@ -10,8 +10,7 @@ import androidx.preference.PreferenceManager;
 
 import android.os.Bundle;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
+import pl.vemu.zsme.databinding.ActivityMainBinding;
 import pl.vemu.zsme.timetableFragment.TimetableFragmentDirections;
 
 public class MainActivity extends AppCompatActivity {
@@ -22,17 +21,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         int theme = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this).getString("theme", "-1"));
         AppCompatDelegate.setDefaultNightMode(theme);
-        setContentView(R.layout.activity_main);
+        setContentView(binding.getRoot());
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        BottomNavigationView navigationView = findViewById(R.id.bottom_nav);
-        AppBarConfiguration configuration = new AppBarConfiguration.Builder(navigationView.getMenu()).build();
+        AppBarConfiguration configuration = new AppBarConfiguration.Builder(binding.bottomNav.getMenu()).build();
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
             if (!STATIC.LOGGED_IN && destination.getId() == R.id.timetableFragment) navController.navigate(TimetableFragmentDirections.actionTimetableFragmentToLoginFragment());
         });
         NavigationUI.setupActionBarWithNavController(this, navController, configuration);
-        NavigationUI.setupWithNavController(navigationView, navController);
+        NavigationUI.setupWithNavController(binding.bottomNav, navController);
     }
 
     @Override

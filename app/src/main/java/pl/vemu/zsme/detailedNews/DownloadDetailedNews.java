@@ -17,7 +17,6 @@ public class DownloadDetailedNews extends AsyncTask<String, Integer, DetailItem>
 
     @Override
     protected void onPreExecute() {
-        super.onPreExecute();
         context.setProgressVisibility(View.VISIBLE);
     }
 
@@ -37,13 +36,11 @@ public class DownloadDetailedNews extends AsyncTask<String, Integer, DetailItem>
 
     @Override
     protected void onProgressUpdate(Integer... values) {
-        super.onProgressUpdate(values);
         context.setProgress(values[0]);
     }
 
     @Override
     protected void onPostExecute(DetailItem detailItem) {
-        super.onPostExecute(detailItem);
         context.setProgressVisibility(View.GONE);
         context.setDetailText(detailItem.getDetailText());
         context.setDate(detailItem.getDate());

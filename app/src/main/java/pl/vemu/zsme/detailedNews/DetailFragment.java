@@ -9,64 +9,60 @@ import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
-import pl.vemu.zsme.R;
+import pl.vemu.zsme.databinding.FragmentDetailNewsBinding;
 import pl.vemu.zsme.newsFragment.NewsItem;
 
 public class DetailFragment extends Fragment implements IAsyncTaskContext {
 
-    private TextView detailText, author, date;
-    private ProgressBar progressBar;
-    private NewsItem newsItem;
+    private FragmentDetailNewsBinding binding;
 
     public DetailFragment() { }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_detail_news, container, false);
-        newsItem = DetailFragmentArgs.fromBundle(getArguments()).getNewsItem();
-        TextView title = view.findViewById(R.id.detailTitle);
-        author = view.findViewById(R.id.detailAuthor);
-        date = view.findViewById(R.id.detailDate);
-        title.setText(newsItem.getTitle());
-        return view;
+        binding = FragmentDetailNewsBinding.inflate(inflater, container, false);
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 
     // TODO parse html
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        detailText = view.findViewById(R.id.detailText);
-        progressBar = view.findViewById(R.id.progressBarDetail);
-        detailText.setMovementMethod(new ScrollingMovementMethod());
+        NewsItem newsItem = DetailFragmentArgs.fromBundle(getArguments()).getNewsItem();
+        binding.title.setText(newsItem.getTitle());
+        binding.text.setMovementMethod(new ScrollingMovementMethod());
         new DownloadDetailedNews(this).execute(newsItem.getUrl());
     }
 
     @Override
     public void setDetailText(String text) {
-        detailText.setText(text);
+        binding.text.setText(text);
     }
 
     @Override
     public void setProgress(int progress) {
-        progressBar.setProgress(progress);
+        binding.progressBar.setProgress(progress);
     }
 
     @Override
     public void setProgressVisibility(int progressVisibility) {
-        progressBar.setVisibility(progressVisibility);
+        binding.progressBar.setVisibility(progressVisibility);
     }
 
     @Override
     public void setAuthor(String text) {
-        author.setText(text);
+        binding.author.setText(text);
     }
 
     @Override
     public void setDate(String text) {
-        date.setText(text);
+        binding.date.setText(text);
     }
 }

@@ -31,7 +31,6 @@ public class LoginTimetable extends AsyncTask<String, Void, Boolean> implements 
 
     @Override
     protected void onPostExecute(Boolean isCorrect) {
-        super.onPostExecute(isCorrect);
         if (isCorrect) context.login();
         else context.wrong();
     }

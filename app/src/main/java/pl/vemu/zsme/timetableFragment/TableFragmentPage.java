@@ -7,7 +7,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,33 +15,40 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-import pl.vemu.zsme.R;
+import pl.vemu.zsme.databinding.FragmentTablePageBinding;
 
 public class TableFragmentPage extends Fragment {
 
-    private TableAdapter tableAdapter;
     private List<Lesson> lessons = new ArrayList<>();
+    private String day;
+    private FragmentTablePageBinding binding;
 
     public TableFragmentPage() { }
-    public TableFragmentPage(List<Lesson> lessons) {
+    public TableFragmentPage(List<Lesson> lessons, String day) {
         this.lessons = lessons;
+        this.day = day;
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_table_page, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        binding = FragmentTablePageBinding.inflate(inflater, container, false);
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        RecyclerView recView = view.findViewById(R.id.recViewTable);
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
-        recView.setLayoutManager(manager);
+        binding.recyclerView.setLayoutManager(manager);
 
-        tableAdapter = new TableAdapter(lessons);
-        recView.setAdapter(tableAdapter);
+        binding.day.setText(day);
+
+        TableAdapter tableAdapter = new TableAdapter(lessons);
+        binding.recyclerView.setAdapter(tableAdapter);
     }
 }

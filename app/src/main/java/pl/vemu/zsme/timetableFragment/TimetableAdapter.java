@@ -13,6 +13,7 @@ import org.apache.commons.collections4.map.LinkedMap;
 
 import lombok.RequiredArgsConstructor;
 import pl.vemu.zsme.R;
+import pl.vemu.zsme.databinding.ItemTimetableBinding;
 
 @RequiredArgsConstructor
 public class TimetableAdapter extends RecyclerView.Adapter<TimetableAdapter.TimetableHolder> {
@@ -38,13 +39,14 @@ public class TimetableAdapter extends RecyclerView.Adapter<TimetableAdapter.Time
         return map.size();
     }
 
-    class TimetableHolder extends RecyclerView.ViewHolder {
+    static class TimetableHolder extends RecyclerView.ViewHolder {
 
         final TextView textView;
 
         TimetableHolder(@NonNull View itemView) {
             super(itemView);
-            textView = itemView.findViewById(R.id.cell);
+            ItemTimetableBinding binding = ItemTimetableBinding.bind(itemView);
+            textView = binding.cell;
         }
 
 

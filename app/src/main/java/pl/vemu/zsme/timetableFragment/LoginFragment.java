@@ -15,35 +15,35 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
-
 import pl.vemu.zsme.R;
 import pl.vemu.zsme.STATIC;
+import pl.vemu.zsme.databinding.FragmentLoginBinding;
 
 public class LoginFragment extends Fragment implements View.OnClickListener, IAsyncTaskContext{
 
-    private TextInputLayout loginLayout;
-    private TextInputEditText login, password;
+    private FragmentLoginBinding binding;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_login, container, false);
+        binding = FragmentLoginBinding.inflate(inflater, container, false);
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        loginLayout = view.findViewById(R.id.loginLayout);
-        login = view.findViewById(R.id.login);
-        password = view.findViewById(R.id.password);
-        view.findViewById(R.id.signIn).setOnClickListener(this);
+        binding.signIn.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
-        String username = login.getText().toString();
-        String password = this.password.getText().toString();
+        String username = binding.login.getText().toString();
+        String password = binding.password.getText().toString();
         String login = username + ":" + password;
 
         String base64login = Base64.encodeToString(login.getBytes(), Base64.NO_WRAP);
@@ -61,6 +61,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener, IAs
 
     @Override
     public void wrong() {
-        loginLayout.setError(getString(R.string.wrong_password_or_login));
+        binding.loginLayout.setError(getString(R.string.wrong_password_or_login));
     }
 }

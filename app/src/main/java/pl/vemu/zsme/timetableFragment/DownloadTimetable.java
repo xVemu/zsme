@@ -42,7 +42,6 @@ public class DownloadTimetable extends AsyncTask<Void, Void, List<LinkedMap<Stri
 
     @Override
     protected void onPostExecute(List<LinkedMap<String, String>> maps) {
-        super.onPostExecute(maps);
         context.makePageAdapter(maps);
     }
 }

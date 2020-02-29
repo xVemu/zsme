@@ -17,6 +17,7 @@ import java.util.List;
 
 import lombok.Getter;
 import pl.vemu.zsme.R;
+import pl.vemu.zsme.databinding.ItemNewsBinding;
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder> {
 
@@ -61,9 +62,10 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder> {
 
         NewsHolder(@NonNull View itemView) {
             super(itemView);
-            description = itemView.findViewById(R.id.description);
-            title = itemView.findViewById(R.id.title);
-            img = itemView.findViewById(R.id.thumbnail);
+            ItemNewsBinding binding = ItemNewsBinding.bind(itemView);
+            description = binding.description;
+            title = binding.title;
+            img = binding.thumbnail;
         }
     }
 }

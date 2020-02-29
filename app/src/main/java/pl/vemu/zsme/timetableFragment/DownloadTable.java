@@ -71,7 +71,6 @@ public class DownloadTable extends AsyncTask<String, Void, List<List<Lesson>>> i
 
     @Override
     protected void onPostExecute(List<List<Lesson>> lessons) {
-        super.onPostExecute(lessons);
         context.makeAdapter(lessons);
     }
 }

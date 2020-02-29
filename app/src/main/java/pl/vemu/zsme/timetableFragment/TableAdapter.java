@@ -12,6 +12,7 @@ import java.util.List;
 
 import lombok.RequiredArgsConstructor;
 import pl.vemu.zsme.R;
+import pl.vemu.zsme.databinding.ItemTableBinding;
 
 @RequiredArgsConstructor
 public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHolder> {
@@ -28,13 +29,13 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
     @Override
     public void onBindViewHolder(@NonNull TableViewHolder holder, int position) {
         Lesson lesson = day.get(position);
-        holder.timetableItemNumber.setText(lesson.getIndex());
-        holder.timetableItemRoom.setText(lesson.getRoom());
-        holder.timetableItemSubject.setText(lesson.getName());
-        holder.timetableItemTeacher.setText(lesson.getTeacher());
+        holder.number.setText(lesson.getIndex());
+        holder.room.setText(lesson.getRoom());
+        holder.subject.setText(lesson.getName());
+        holder.teacher.setText(lesson.getTeacher());
         String[] hours = lesson.getHour().replaceAll("\\s+","").split("-");
-        holder.timetableItemTimeStart.setText(hours[0]);
-        holder.timetableItemTimeFinish.setText(hours[1]);
+        holder.timeStart.setText(hours[0]);
+        holder.timeFinish.setText(hours[1]);
     }
 
     @Override
@@ -42,19 +43,20 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
         return day.size();
     }
 
-    class TableViewHolder extends RecyclerView.ViewHolder {
+    static class TableViewHolder extends RecyclerView.ViewHolder {
 
-        final TextView timetableItemNumber, timetableItemSubject, timetableItemTimeStart,
-                timetableItemTimeFinish, timetableItemRoom, timetableItemTeacher;
+        final TextView number, subject, timeStart,
+                timeFinish, room, teacher;
 
         TableViewHolder(@NonNull View itemView) {
             super(itemView);
-            this.timetableItemNumber = itemView.findViewById(R.id.timetableItemNumber);
-            this.timetableItemSubject = itemView.findViewById(R.id.timetableItemSubject);
-            this.timetableItemTimeStart = itemView.findViewById(R.id.timetableItemTimeStart);
-            this.timetableItemTimeFinish = itemView.findViewById(R.id.timetableItemTimeFinish);
-            this.timetableItemRoom = itemView.findViewById(R.id.timetableItemRoom);
-            this.timetableItemTeacher = itemView.findViewById(R.id.timetableItemTeacher);
+            ItemTableBinding binding = ItemTableBinding.bind(itemView);
+            number = binding.number;
+            subject = binding.subject;
+            timeStart = binding.timeStart;
+            timeFinish = binding.timeFinish;
+            room = binding.room;
+            teacher = binding.teacher;
         }
     }
 }

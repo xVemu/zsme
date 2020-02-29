@@ -18,7 +18,8 @@ public class TablePageAdapter extends FragmentStateAdapter {
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        return new TableFragmentPage(lessons.get(position));
+        String[] days = {"Poniedziałek", "Wtorek", "Środa", "Czwartek", "Piątek"};
+        return new TableFragmentPage(lessons.get(position), days[position]);
     }
 
     @Override

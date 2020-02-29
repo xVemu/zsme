@@ -25,7 +25,6 @@ public class DownloadNews extends AsyncTask<NewsAdapter, Void, NewsAdapter> impl
 
     @Override
     protected void onPreExecute() {
-        super.onPreExecute();
         context.startRefreshing();
     }
 
@@ -57,7 +56,6 @@ public class DownloadNews extends AsyncTask<NewsAdapter, Void, NewsAdapter> impl
         if (newsAdapter == null) {
             context.setIsFound(false);
         } else {
-            super.onPostExecute(newsAdapter);
             context.setIsFound(true);
             newsAdapter.notifyDataSetChanged();
         }
