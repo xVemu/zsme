@@ -25,26 +25,10 @@
         android:layout_height="wrap_content"
         android:visibility="gone" />
 
-    <TextView
-        android:id="@+id/text"
-        android:layout_width="wrap_content"
+    <WebView
+        android:id="@+id/web_view"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_margin="4dp"
-        android:layout_weight="1"
-        tools:text="@string/lorem" />
-
-    <TextView
-        android:id="@+id/date"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="4dp"
-        tools:text="@string/title" />
-
-    <TextView
-        android:id="@+id/author"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="4dp"
-        tools:text="@string/title" />
+        android:layout_weight="1" />
 
 </LinearLayout>

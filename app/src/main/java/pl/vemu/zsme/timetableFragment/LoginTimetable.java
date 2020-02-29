@@ -2,6 +2,7 @@ package pl.vemu.zsme.timetableFragment;
 
 
 import android.os.AsyncTask;
+
 import org.jsoup.HttpStatusException;
 
 import java.io.IOException;

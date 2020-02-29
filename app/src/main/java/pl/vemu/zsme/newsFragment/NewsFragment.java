@@ -21,7 +21,8 @@ public class NewsFragment extends Fragment implements IAsyncTaskContext {
     private NewsAdapter adapter;
     private FragmentNewsBinding binding;
 
-    public NewsFragment() { }
+    public NewsFragment() {
+    }
 
     @Nullable
     @Override
@@ -70,13 +71,15 @@ public class NewsFragment extends Fragment implements IAsyncTaskContext {
 
     @Override
     public void setIsFound(boolean isFound) {
-        binding.refresh.setRefreshing(false);
-        if (isFound) {
-            binding.notFound.setVisibility(View.GONE);
-            binding.refresh.setVisibility(View.VISIBLE);
-        } else {
-            binding.notFound.setVisibility(View.VISIBLE);
-            binding.refresh.setVisibility(View.GONE);
+        if (binding != null) {
+            binding.refresh.setRefreshing(false);
+            if (isFound) {
+                binding.notFound.setVisibility(View.GONE);
+                binding.refresh.setVisibility(View.VISIBLE);
+            } else {
+                binding.notFound.setVisibility(View.VISIBLE);
+                binding.refresh.setVisibility(View.GONE);
+            }
         }
     }
 

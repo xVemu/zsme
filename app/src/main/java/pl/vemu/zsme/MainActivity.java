@@ -1,5 +1,7 @@
 package pl.vemu.zsme;
 
+import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.navigation.NavController;
@@ -7,8 +9,6 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.preference.PreferenceManager;
-
-import android.os.Bundle;
 
 import pl.vemu.zsme.databinding.ActivityMainBinding;
 import pl.vemu.zsme.timetableFragment.TimetableFragmentDirections;
