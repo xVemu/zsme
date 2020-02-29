@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,13 +21,11 @@ import pl.vemu.zsme.databinding.FragmentTablePageBinding;
 public class TableFragmentPage extends Fragment {
 
     private List<Lesson> lessons = new ArrayList<>();
-    private String day;
     private FragmentTablePageBinding binding;
 
     public TableFragmentPage() { }
-    public TableFragmentPage(List<Lesson> lessons, String day) {
+    public TableFragmentPage(List<Lesson> lessons) {
         this.lessons = lessons;
-        this.day = day;
     }
 
     @Override
@@ -44,11 +43,10 @@ public class TableFragmentPage extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
-        binding.recyclerView.setLayoutManager(manager);
-
-        binding.day.setText(day);
+        RecyclerView recyclerView = (RecyclerView) binding.getRoot();
+        recyclerView.setLayoutManager(manager);
 
         TableAdapter tableAdapter = new TableAdapter(lessons);
-        binding.recyclerView.setAdapter(tableAdapter);
+        recyclerView.setAdapter(tableAdapter);
     }
 }

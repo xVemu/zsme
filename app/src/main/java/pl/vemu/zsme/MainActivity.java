@@ -17,7 +17,6 @@ public class MainActivity extends AppCompatActivity {
 
     private NavController navController;
 
-    // TODO save state beetwen fragments
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

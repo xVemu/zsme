@@ -9,6 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.tabs.TabLayoutMediator;
+
 import java.util.List;
 
 import pl.vemu.zsme.databinding.FragmentTableBinding;
@@ -41,5 +43,7 @@ public class TableFragment extends Fragment implements IDownloadTable{
     @Override
     public void makeAdapter(List<List<Lesson>> lessons) {
         binding.viewPager.setAdapter(new TablePageAdapter(this, lessons));
+        String[] names = {"Poniedziałek", "Wtorek", "Środa", "Czwartek", "Piątek"};
+        new TabLayoutMediator(binding.tabLayout, binding.viewPager, (tab, position) -> tab.setText(names[position])).attach();
     }
 }
