@@ -1,5 +1,6 @@
 package pl.vemu.zsme.timetableFragment;
 
+import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,6 +45,11 @@ public class TableFragment extends Fragment implements IDownloadTable{
     public void makeAdapter(List<List<Lesson>> lessons) {
         binding.viewPager.setAdapter(new TablePageAdapter(this, lessons));
         String[] names = {"Poniedziałek", "Wtorek", "Środa", "Czwartek", "Piątek"};
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            int day = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+            day = (day == 1) || (day == 7) ? 0 : day - 2;
+            binding.viewPager.setCurrentItem(day);
+        }
         new TabLayoutMediator(binding.tabLayout, binding.viewPager, (tab, position) -> tab.setText(names[position])).attach();
     }
 }

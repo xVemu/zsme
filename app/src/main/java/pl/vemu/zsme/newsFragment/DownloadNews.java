@@ -32,9 +32,9 @@ public class DownloadNews extends AsyncTask<NewsAdapter, Void, NewsAdapter> impl
     protected NewsAdapter doInBackground(NewsAdapter... newsAdapters) {
         try {
             String url;
-            if (search == null) url =  String.format("http://zsme.tarnow.pl/wp/page/%s/", page);
+            if (search == null) url =  String.format("https://zsme.tarnow.pl/wp/page/%s/", page);
             else {
-                url = String.format("http://zsme.tarnow.pl/wp/page/%s/?s=", page) + search;
+                url = String.format("https://zsme.tarnow.pl/wp/page/%s/?s=", page) + search;
                 newsAdapters[0].removeAllItems();
             }
             Document document = Jsoup.connect(url).get();
