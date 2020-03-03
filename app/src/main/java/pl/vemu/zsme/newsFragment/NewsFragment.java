@@ -1,11 +1,16 @@
 package pl.vemu.zsme.newsFragment;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkRequest;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -48,12 +53,27 @@ public class NewsFragment extends Fragment implements IAsyncTaskContext {
         adapter = new NewsAdapter();
         binding.recyclerView.setAdapter(adapter);
         binding.recyclerView.addOnScrollListener(new RecScrollListener());
-        new DownloadNews(1).execute(adapter);
+        downloadFirstNews();
 
         binding.refresh.setOnRefreshListener(() -> {
             adapter.removeAllItems();
-            new DownloadNews(1).execute(adapter);
+            downloadFirstNews();
         });
+        ConnectivityManager connectivityManager = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkRequest networkRequest = new NetworkRequest.Builder().build();
+        if (connectivityManager.getActiveNetwork() == null) Toast.makeText(getContext(), "Brak połaczenia z internetem", Toast.LENGTH_LONG).show();
+        connectivityManager.registerNetworkCallback(networkRequest, networkCallback);
+    }
+
+    private ConnectivityManager.NetworkCallback networkCallback = new ConnectivityManager.NetworkCallback() {
+        @Override
+        public void onAvailable(@NonNull Network network) {
+            getActivity().runOnUiThread(() -> downloadFirstNews());
+        }
+    };
+
+    private void downloadFirstNews() {
+        new DownloadNews(1).execute(adapter);
     }
 
     @Override
@@ -64,7 +84,7 @@ public class NewsFragment extends Fragment implements IAsyncTaskContext {
         searchView.setOnCloseListener(() -> {
             searchView.onActionViewCollapsed();
             adapter.removeAllItems();
-            new DownloadNews(1).execute(adapter);
+            downloadFirstNews();
             return true;
         });
     }

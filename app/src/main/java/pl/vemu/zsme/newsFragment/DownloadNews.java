@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @RequiredArgsConstructor
-public class DownloadNews extends AsyncTask<NewsAdapter, Void, NewsAdapter> implements IMakeNewsItem {
+public class DownloadNews extends AsyncTask<NewsAdapter, Void, NewsAdapter> {
 
     private final int page;
     private final String search;
@@ -42,8 +42,8 @@ public class DownloadNews extends AsyncTask<NewsAdapter, Void, NewsAdapter> impl
             Elements columnOneNews = document.selectFirst(".column-one").children();
             Elements columnTwoNews = document.selectFirst(".column-two").children();
             for (int i = 0; i < columnOneNews.size(); i++) {
-                newsAdapters[0].addNewsItem(makeNewsItem(columnOneNews.get(i)));
-                newsAdapters[0].addNewsItem(makeNewsItem(columnTwoNews.get(i)));
+                newsAdapters[0].addNewsItem(NewsItem.makeNewsItem(columnOneNews.get(i)));
+                newsAdapters[0].addNewsItem(NewsItem.makeNewsItem(columnTwoNews.get(i)));
             }
         } catch (IOException e) {
             e.printStackTrace();
