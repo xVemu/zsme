@@ -18,7 +18,7 @@ public class NewsItem implements Serializable {
                 .description(element.selectFirst(".article-entry").text())
                 .author(element.selectFirst(".article-author").text())
                 .date(element.selectFirst(".article-date").text())
-                .imgUrl(element.selectFirst("img").attr("src"))
+                .imgUrl(element.selectFirst("img") == null ? null : element.selectFirst("img").attr("src"))
                 .url(element.selectFirst("a").attr("href"));
         return newsItemBuilder.build();
     }
