@@ -24,7 +24,7 @@ public class DownloadDetailedNews extends AsyncTask<String, Integer, String> {
     protected String doInBackground(String... strings) {
         try {
             Document document = Jsoup.connect(strings[0]).get();
-            return document.selectFirst(".single-post").toString();
+            return document.selectFirst(".single-post").text();
         } catch (IOException e) {
             e.printStackTrace();
         }

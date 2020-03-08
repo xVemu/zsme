@@ -1,6 +1,7 @@
 package pl.vemu.zsme.detailedNews;
 
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,13 +37,15 @@ public class DetailFragment extends Fragment implements IAsyncTaskContext {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         NewsItem newsItem = DetailFragmentArgs.fromBundle(getArguments()).getNewsItem();
         binding.title.setText(newsItem.getTitle());
-        binding.webView.setWebViewClient(new DetailWebClient());
+        binding.date.setText(newsItem.getDate());
+        binding.author.setText(newsItem.getAuthor());
+        binding.text.setMovementMethod(new ScrollingMovementMethod());
         new DownloadDetailedNews(this).execute(newsItem.getUrl());
     }
 
     @Override
     public void setDetailText(String text) {
-        binding.webView.loadData(text, "text/html", "UTF-8");
+        binding.text.setText(text);
     }
 
     @Override

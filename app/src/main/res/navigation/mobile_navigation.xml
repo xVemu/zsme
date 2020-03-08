@@ -53,6 +53,7 @@
             app:enterAnim="@anim/fragment_fade_enter"
             app:exitAnim="@anim/fragment_fade_exit" />
     </fragment>
+<!--    TODO change to more instead of single settings-->
     <fragment
         android:id="@+id/settingsFragment"
         android:name="pl.vemu.zsme.settingsFragment.SettingsFragment"

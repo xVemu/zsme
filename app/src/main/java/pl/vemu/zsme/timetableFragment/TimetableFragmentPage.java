@@ -44,7 +44,7 @@ public class TimetableFragmentPage extends Fragment {
         RecyclerView recyclerView = (RecyclerView) binding.getRoot();
         recyclerView.setLayoutManager(linearManager);
 
-        TimetableAdapter adapter = new TimetableAdapter(map);
+        RecyclerView.Adapter adapter = new TimetableAdapter(map);
         recyclerView.setAdapter(adapter);
     }
 }
