@@ -1,9 +1,8 @@
 package pl.vemu.zsme.timetableFragment;
 
-import org.apache.commons.collections4.map.LinkedMap;
-
 import java.util.List;
+import java.util.Map;
 
 public interface ISetMaps {
-    void makePageAdapter(List<LinkedMap<String, String>> maps);
+    void makePageAdapter(List<Map<String, String>> maps);
 }

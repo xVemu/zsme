@@ -10,22 +10,23 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class DownloadTimetable extends AsyncTask<Void, Void, List<LinkedMap<String, String>>> implements IDownloadTimetable {
+public class DownloadTimetable extends AsyncTask<Void, Void, List<Map<String, String>>> implements IDownloadTimetable {
 
     private final ISetMaps context;
 
     @Override
-    protected List<LinkedMap<String, String>> doInBackground(Void... voids) {
+    protected List<Map<String, String>> doInBackground(Void... voids) {
         try {
             Document document = getNews("lista.html");
             List<Elements> elements = Arrays.asList(document.selectFirst("#oddzialy").children(),
                     document.selectFirst("#nauczyciele").children(),
                     document.selectFirst("#sale").children());
-            List<LinkedMap<String, String>> maps = Arrays.asList(new LinkedMap<>(),
+            List<Map<String, String>> maps = Arrays.asList(new LinkedMap<>(),
                     new LinkedMap<>(),
                     new LinkedMap<>());
             for (int i = 0; i < elements.size(); i++) {
@@ -41,7 +42,7 @@ public class DownloadTimetable extends AsyncTask<Void, Void, List<LinkedMap<Stri
     }
 
     @Override
-    protected void onPostExecute(List<LinkedMap<String, String>> maps) {
+    protected void onPostExecute(List<Map<String, String>> maps) {
         context.makePageAdapter(maps);
     }
 }

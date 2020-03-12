@@ -1,6 +1,8 @@
 package pl.vemu.zsme.detailedNews;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,12 +10,15 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.text.HtmlCompat;
 import androidx.fragment.app.Fragment;
+
+import java.util.concurrent.ExecutionException;
 
 import pl.vemu.zsme.databinding.FragmentDetailNewsBinding;
 import pl.vemu.zsme.newsFragment.NewsItem;
 
-public class DetailFragment extends Fragment implements IAsyncTaskContext {
+public class DetailFragment extends Fragment implements IAsyncTaskContext, Html.ImageGetter {
 
     private FragmentDetailNewsBinding binding;
 
@@ -32,20 +37,17 @@ public class DetailFragment extends Fragment implements IAsyncTaskContext {
         binding = null;
     }
 
-    // TODO parse photos
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         NewsItem newsItem = DetailFragmentArgs.fromBundle(getArguments()).getNewsItem();
         binding.title.setText(newsItem.getTitle());
-        binding.date.setText(newsItem.getDate());
-        binding.author.setText(newsItem.getAuthor());
         binding.text.setMovementMethod(new ScrollingMovementMethod());
         new DownloadDetailedNews(this).execute(newsItem.getUrl());
     }
 
     @Override
     public void setDetailText(String text) {
-        binding.text.setText(text);
+        binding.text.setText(HtmlCompat.fromHtml(text, HtmlCompat.FROM_HTML_MODE_COMPACT, this, null));
     }
 
     @Override
@@ -58,4 +60,13 @@ public class DetailFragment extends Fragment implements IAsyncTaskContext {
         binding.progressBar.setVisibility(progressVisibility);
     }
 
+    @Override
+    public Drawable getDrawable(String source) {
+        try {
+            return new LoadImages(this).execute(source).get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

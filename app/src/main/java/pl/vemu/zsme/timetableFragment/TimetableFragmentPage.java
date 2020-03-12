@@ -14,15 +14,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.apache.commons.collections4.map.LinkedMap;
 
+import java.util.Map;
+
 import pl.vemu.zsme.databinding.FragmentTimetablePageBinding;
 
 public class TimetableFragmentPage extends Fragment {
 
-    private LinkedMap<String, String> map = new LinkedMap<>();
+    private Map<String, String> map = new LinkedMap<>();
     private FragmentTimetablePageBinding binding;
 
     public TimetableFragmentPage() { }
-    public TimetableFragmentPage(LinkedMap<String, String> map) {
+    public TimetableFragmentPage(Map<String, String> map) {
         this.map = map;
     }
 

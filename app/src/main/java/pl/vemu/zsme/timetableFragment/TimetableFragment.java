@@ -12,9 +12,8 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.tabs.TabLayoutMediator;
 
-import org.apache.commons.collections4.map.LinkedMap;
-
 import java.util.List;
+import java.util.Map;
 
 import pl.vemu.zsme.databinding.FragmentTimetableBinding;
 
@@ -42,7 +41,7 @@ public class TimetableFragment extends Fragment implements ISetMaps{
     }
 
     @Override
-    public void makePageAdapter(List<LinkedMap<String, String>> maps) {
+    public void makePageAdapter(List<Map<String, String>> maps) {
         binding.viewPager.setAdapter(new TimetablePageAdapter(this, maps));
         String[] names = {"Oddziały", "Nauczyciele", "Sale"};
         new TabLayoutMediator(binding.tabLayout, binding.viewPager, (tab, position) -> tab.setText(names[position])).attach();

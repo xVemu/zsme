@@ -26,8 +26,7 @@ public class NewsFragment extends Fragment implements IAsyncTaskContext {
     private NewsAdapter adapter;
     private FragmentNewsBinding binding;
 
-    public NewsFragment() {
-    }
+    public NewsFragment() { }
 
     @Nullable
     @Override
@@ -53,7 +52,6 @@ public class NewsFragment extends Fragment implements IAsyncTaskContext {
         adapter = new NewsAdapter();
         binding.recyclerView.setAdapter(adapter);
         binding.recyclerView.addOnScrollListener(new RecScrollListener());
-        downloadFirstNews();
 
         binding.refresh.setOnRefreshListener(() -> {
             adapter.removeAllItems();

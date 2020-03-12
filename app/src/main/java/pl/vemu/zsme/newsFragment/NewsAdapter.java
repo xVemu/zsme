@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +23,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder> {
 
     @Getter
     private final List<NewsItem> newsItems = new ArrayList<>();
-
 
     void addNewsItem(NewsItem item) {
         newsItems.add(item);
@@ -43,7 +42,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder> {
     @Override
     public void onBindViewHolder(@NonNull NewsHolder holder, int position) {
         NewsItem item = newsItems.get(position);
-        Picasso.get().load(item.getImgUrl()).resize(1080, 1080).centerCrop().into(holder.img);
+        Glide.with(holder.img.getContext()).load(item.getImgUrl()).centerCrop().into(holder.img);
         holder.title.setText(item.getTitle());
         holder.description.setText(item.getDescription());
         holder.author.setText(item.getAuthor());
