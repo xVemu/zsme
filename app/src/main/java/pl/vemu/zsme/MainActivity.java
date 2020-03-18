@@ -1,6 +1,7 @@
 package pl.vemu.zsme;
 
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -11,7 +12,7 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.preference.PreferenceManager;
 
 import pl.vemu.zsme.databinding.ActivityMainBinding;
-import pl.vemu.zsme.timetableFragment.TimetableFragmentDirections;
+import pl.vemu.zsme.timetableFragment.timetable.TimetableFragmentDirections;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         });
         NavigationUI.setupActionBarWithNavController(this, navController, configuration);
         NavigationUI.setupWithNavController(binding.bottomNav, navController);
+        Thread.setDefaultUncaughtExceptionHandler((t, e) -> Toast.makeText(this, "Wystąpił błąd!", Toast.LENGTH_LONG).show());
     }
 
     @Override
