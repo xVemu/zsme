@@ -19,7 +19,7 @@ import pl.vemu.zsme.R;
 import pl.vemu.zsme.STATIC;
 import pl.vemu.zsme.databinding.FragmentLoginBinding;
 
-public class LoginFragment extends Fragment implements View.OnClickListener, IAsyncTaskContext{
+public class LoginFragment extends Fragment implements View.OnClickListener, AsyncTaskContext {
 
     private FragmentLoginBinding binding;
 

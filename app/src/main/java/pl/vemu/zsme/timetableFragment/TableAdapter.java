@@ -33,7 +33,7 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
         holder.room.setText(lesson.getRoom());
         holder.subject.setText(lesson.getName());
         holder.teacher.setText(lesson.getTeacher());
-        String[] hours = lesson.getHour().replaceAll("\\s+","").split("-");
+        String[] hours = lesson.getHour().replaceAll("\\s+", "").split("-");
         holder.timeStart.setText(hours[0]);
         holder.timeFinish.setText(hours[1]);
     }

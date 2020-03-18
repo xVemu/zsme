@@ -15,9 +15,9 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class DownloadTimetable extends AsyncTask<Void, Void, List<Map<String, String>>> implements IDownloadTimetable {
+public class DownloadTimetable extends AsyncTask<Void, Void, List<Map<String, String>>> implements TimetableDownload {
 
-    private final ISetMaps context;
+    private final SetMaps context;
 
     @Override
     protected List<Map<String, String>> doInBackground(Void... voids) {

@@ -16,11 +16,12 @@ import java.util.List;
 
 import pl.vemu.zsme.databinding.FragmentTableBinding;
 
-public class TableFragment extends Fragment implements IDownloadTable{
+public class TableFragment extends Fragment implements TableDownload {
 
     private FragmentTableBinding binding;
 
-    public TableFragment() { }
+    public TableFragment() {
+    }
 
     @Nullable
     @Override

@@ -22,7 +22,8 @@ public class DetailFragment extends Fragment implements IAsyncTaskContext, Html.
 
     private FragmentDetailNewsBinding binding;
 
-    public DetailFragment() { }
+    public DetailFragment() {
+    }
 
     @Nullable
     @Override

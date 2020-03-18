@@ -21,12 +21,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import pl.vemu.zsme.R;
 import pl.vemu.zsme.databinding.FragmentNewsBinding;
 
-public class NewsFragment extends Fragment implements IAsyncTaskContext {
+public class NewsFragment extends Fragment implements AsyncTaskContext {
 
     private NewsAdapter adapter;
     private FragmentNewsBinding binding;
 
-    public NewsFragment() { }
+    public NewsFragment() {
+    }
 
     @Nullable
     @Override
@@ -59,7 +60,8 @@ public class NewsFragment extends Fragment implements IAsyncTaskContext {
         });
         ConnectivityManager connectivityManager = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkRequest networkRequest = new NetworkRequest.Builder().build();
-        if (connectivityManager.getActiveNetwork() == null) Toast.makeText(getContext(), "Brak połaczenia z internetem", Toast.LENGTH_LONG).show();
+        if (connectivityManager.getActiveNetwork() == null)
+            Toast.makeText(getContext(), "Brak połaczenia z internetem", Toast.LENGTH_LONG).show();
         connectivityManager.registerNetworkCallback(networkRequest, networkCallback);
     }
 

@@ -14,9 +14,9 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class DownloadTable extends AsyncTask<String, Void, List<List<Lesson>>> implements IDownloadTimetable {
+public class DownloadTable extends AsyncTask<String, Void, List<List<Lesson>>> implements TimetableDownload {
 
-    private final IDownloadTable context;
+    private final TableDownload context;
 
     @Override
     protected List<List<Lesson>> doInBackground(String... strings) {
@@ -42,7 +42,7 @@ public class DownloadTable extends AsyncTask<String, Void, List<List<Lesson>>> i
                         lessonBuilder.name("etyka").room("41").teacher("GD");
                     } else if (lesson.select(".p").size() == 2 && "#wf3".equals(lesson.select(".p").get(1).text())) {
                         lessonBuilder.name("wf 3/3").room(lesson.selectFirst(".s").text());
-                    }else if (lesson.getElementsByAttributeValue("style", "font-size:85%").size() == 2) {
+                    } else if (lesson.getElementsByAttributeValue("style", "font-size:85%").size() == 2) {
                         Elements spans = lesson.getElementsByAttributeValue("style", "font-size:85%");
                         lessonBuilder = buildLesson(spans.first());
                         lessonBuilder2 = buildLesson(spans.last());

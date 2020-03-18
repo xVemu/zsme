@@ -17,11 +17,12 @@ import java.util.Map;
 
 import pl.vemu.zsme.databinding.FragmentTimetableBinding;
 
-public class TimetableFragment extends Fragment implements ISetMaps{
+public class TimetableFragment extends Fragment implements SetMaps {
 
     private FragmentTimetableBinding binding;
 
-    public TimetableFragment() { }
+    public TimetableFragment() {
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

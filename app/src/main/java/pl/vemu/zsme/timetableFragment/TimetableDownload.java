@@ -8,7 +8,7 @@ import java.io.IOException;
 
 import pl.vemu.zsme.STATIC;
 
-public interface IDownloadTimetable {
+public interface TimetableDownload {
 
     default Document getNews(String aurl) throws IOException {
         String url = "https://zsme.tarnow.pl/plan/" + aurl;

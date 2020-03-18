@@ -11,9 +11,9 @@ import lombok.RequiredArgsConstructor;
 import pl.vemu.zsme.STATIC;
 
 @RequiredArgsConstructor
-public class LoginTimetable extends AsyncTask<String, Void, Boolean> implements IDownloadTimetable{
+public class LoginTimetable extends AsyncTask<String, Void, Boolean> implements TimetableDownload {
 
-    private final IAsyncTaskContext context;
+    private final AsyncTaskContext context;
 
     @Override
     protected Boolean doInBackground(String... strings) {
@@ -23,8 +23,7 @@ public class LoginTimetable extends AsyncTask<String, Void, Boolean> implements 
             return true;
         } catch (HttpStatusException e) {
             if (e.getStatusCode() == 401) return false;
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return false;

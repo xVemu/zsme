@@ -1,4 +1,4 @@
-package pl.vemu.zsme.settingsFragment;
+package pl.vemu.zsme.moreFragment;
 
 
 import android.os.Bundle;
@@ -11,7 +11,8 @@ import pl.vemu.zsme.R;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
 
-    public SettingsFragment() { }
+    public SettingsFragment() {
+    }
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {

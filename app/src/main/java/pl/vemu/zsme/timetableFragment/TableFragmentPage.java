@@ -22,7 +22,9 @@ public class TableFragmentPage extends Fragment {
     private List<Lesson> lessons = new ArrayList<>();
     private FragmentTablePageBinding binding;
 
-    public TableFragmentPage() { }
+    public TableFragmentPage() {
+    }
+
     public TableFragmentPage(List<Lesson> lessons) {
         this.lessons = lessons;
     }

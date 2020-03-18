@@ -23,7 +23,9 @@ public class TimetableFragmentPage extends Fragment {
     private Map<String, String> map = new LinkedMap<>();
     private FragmentTimetablePageBinding binding;
 
-    public TimetableFragmentPage() { }
+    public TimetableFragmentPage() {
+    }
+
     public TimetableFragmentPage(Map<String, String> map) {
         this.map = map;
     }

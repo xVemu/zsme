@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:id="@+id/newsFragment"
+    <item
+        android:id="@+id/newsFragment"
         android:title="@string/news"
-        android:icon="@drawable/ic_news"/>
-    <item android:id="@+id/timetableFragment"
+        android:icon="@drawable/ic_news" />
+    <item
+        android:id="@+id/timetableFragment"
         android:title="@string/timetable"
-        android:icon="@drawable/ic_event_note"/>
-    <item android:id="@+id/settingsFragment"
-        android:title="@string/settings"
-        android:icon="@drawable/ic_settings"/>
+        android:icon="@drawable/ic_event_note" />
+    <item
+        android:id="@+id/moreFragment"
+        android:title="@string/more"
+        android:icon="@drawable/ic_more" />
 </menu>

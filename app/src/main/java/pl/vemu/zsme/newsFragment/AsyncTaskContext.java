@@ -1,6 +1,7 @@
 package pl.vemu.zsme.newsFragment;
 
-public interface IAsyncTaskContext {
+public interface AsyncTaskContext {
     void setIsFound(boolean isFound);
+
     void startRefreshing();
 }

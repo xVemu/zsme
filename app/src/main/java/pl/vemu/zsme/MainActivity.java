@@ -27,7 +27,8 @@ public class MainActivity extends AppCompatActivity {
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         AppBarConfiguration configuration = new AppBarConfiguration.Builder(binding.bottomNav.getMenu()).build();
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-            if (!STATIC.LOGGED_IN && destination.getId() == R.id.timetableFragment) navController.navigate(TimetableFragmentDirections.actionTimetableFragmentToLoginFragment());
+            if (!STATIC.LOGGED_IN && destination.getId() == R.id.timetableFragment)
+                navController.navigate(TimetableFragmentDirections.actionTimetableFragmentToLoginFragment());
         });
         NavigationUI.setupActionBarWithNavController(this, navController, configuration);
         NavigationUI.setupWithNavController(binding.bottomNav, navController);

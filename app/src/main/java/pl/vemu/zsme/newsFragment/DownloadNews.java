@@ -17,7 +17,7 @@ public class DownloadNews extends AsyncTask<NewsAdapter, Void, NewsAdapter> {
     private final int page;
     private final String search;
     @Setter
-    private static IAsyncTaskContext context;
+    private static AsyncTaskContext context;
 
     public DownloadNews(int page) {
         this(page, null);
