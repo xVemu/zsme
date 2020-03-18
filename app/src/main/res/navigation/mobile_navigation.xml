@@ -40,7 +40,7 @@
     </fragment>
     <fragment
         android:id="@+id/timetableFragment"
-        android:name="pl.vemu.zsme.timetableFragment.TimetableFragment"
+        android:name="pl.vemu.zsme.timetableFragment.timetable.TimetableFragment"
         android:label="Plan lekcji"
         tools:layout="@layout/fragment_timetable">
         <action
@@ -68,7 +68,7 @@
     </fragment>
     <fragment
         android:id="@+id/tableFragment"
-        android:name="pl.vemu.zsme.timetableFragment.TableFragment"
+        android:name="pl.vemu.zsme.timetableFragment.table.TableFragment"
         tools:layout="@layout/fragment_table">
         <argument
             android:name="url"

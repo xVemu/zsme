@@ -1,4 +1,4 @@
-package pl.vemu.zsme.timetableFragment;
+package pl.vemu.zsme.timetableFragment.timetable;
 
 import android.os.AsyncTask;
 
@@ -13,9 +13,10 @@ import java.util.List;
 import java.util.Map;
 
 import lombok.RequiredArgsConstructor;
+import pl.vemu.zsme.timetableFragment.Download;
 
 @RequiredArgsConstructor
-public class DownloadTimetable extends AsyncTask<Void, Void, List<Map<String, String>>> implements TimetableDownload {
+public class DownloadTimetable extends AsyncTask<Void, Void, List<Map<String, String>>> implements Download {
 
     private final SetMaps context;
 

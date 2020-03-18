@@ -1,4 +1,4 @@
-package pl.vemu.zsme.timetableFragment;
+package pl.vemu.zsme.timetableFragment.timetable;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +15,7 @@ import java.util.Map;
 
 import pl.vemu.zsme.R;
 import pl.vemu.zsme.databinding.ItemTimetableBinding;
+import pl.vemu.zsme.timetableFragment.TimetableFragmentDirections;
 
 public class TimetableAdapter extends RecyclerView.Adapter<TimetableAdapter.TimetableHolder> {
 

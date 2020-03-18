@@ -1,4 +1,4 @@
-package pl.vemu.zsme.timetableFragment;
+package pl.vemu.zsme.timetableFragment.table;
 
 import lombok.Builder;
 import lombok.Value;

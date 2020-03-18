@@ -18,6 +18,8 @@ import androidx.navigation.Navigation;
 import pl.vemu.zsme.R;
 import pl.vemu.zsme.STATIC;
 import pl.vemu.zsme.databinding.FragmentLoginBinding;
+import pl.vemu.zsme.timetableFragment.timetable.AsyncTaskContext;
+import pl.vemu.zsme.timetableFragment.timetable.LoginTimetable;
 
 public class LoginFragment extends Fragment implements View.OnClickListener, AsyncTaskContext {
 

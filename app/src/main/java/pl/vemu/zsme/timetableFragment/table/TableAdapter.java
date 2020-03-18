@@ -1,4 +1,4 @@
-package pl.vemu.zsme.timetableFragment;
+package pl.vemu.zsme.timetableFragment.table;
 
 import android.view.LayoutInflater;
 import android.view.View;

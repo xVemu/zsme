@@ -1,4 +1,4 @@
-package pl.vemu.zsme.timetableFragment;
+package pl.vemu.zsme.timetableFragment.timetable;
 
 import java.util.List;
 import java.util.Map;

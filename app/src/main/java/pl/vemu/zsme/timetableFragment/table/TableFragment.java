@@ -1,4 +1,4 @@
-package pl.vemu.zsme.timetableFragment;
+package pl.vemu.zsme.timetableFragment.table;
 
 import android.icu.util.Calendar;
 import android.os.Bundle;
@@ -15,6 +15,7 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import java.util.List;
 
 import pl.vemu.zsme.databinding.FragmentTableBinding;
+import pl.vemu.zsme.timetableFragment.TableFragmentArgs;
 
 public class TableFragment extends Fragment implements TableDownload {
 

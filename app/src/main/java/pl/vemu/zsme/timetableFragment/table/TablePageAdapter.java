@@ -1,4 +1,4 @@
-package pl.vemu.zsme.timetableFragment;
+package pl.vemu.zsme.timetableFragment.table;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
