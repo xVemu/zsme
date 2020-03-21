@@ -14,10 +14,10 @@ import lombok.Setter;
 @RequiredArgsConstructor
 public class DownloadNews extends AsyncTask<NewsAdapter, Void, NewsAdapter> {
 
-    private final int page;
-    private final String search;
     @Setter
     private static AsyncTaskContext context;
+    private final int page;
+    private final String search;
 
     public DownloadNews(int page) {
         this(page, null);
@@ -35,7 +35,6 @@ public class DownloadNews extends AsyncTask<NewsAdapter, Void, NewsAdapter> {
             if (search == null) url = String.format("https://zsme.tarnow.pl/wp/page/%s/", page);
             else {
                 url = String.format("https://zsme.tarnow.pl/wp/page/%s/?s=", page) + search;
-                newsAdapters[0].removeAllItems();
             }
             Document document = Jsoup.connect(url).get();
             if (document.selectFirst(".column-one") == null) return null;
@@ -43,7 +42,8 @@ public class DownloadNews extends AsyncTask<NewsAdapter, Void, NewsAdapter> {
             Elements columnTwoNews = document.selectFirst(".column-two").children();
             for (int i = 0; i < columnOneNews.size(); i++) {
                 newsAdapters[0].addNewsItem(NewsItem.makeNewsItem(columnOneNews.get(i)));
-                newsAdapters[0].addNewsItem(NewsItem.makeNewsItem(columnTwoNews.get(i)));
+                if (columnTwoNews.get(i).selectFirst(".article-title") != null)
+                    newsAdapters[0].addNewsItem(NewsItem.makeNewsItem(columnTwoNews.get(i)));
             }
         } catch (IOException e) {
             e.printStackTrace();

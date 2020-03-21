@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -17,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import pl.vemu.zsme.R;
 import pl.vemu.zsme.databinding.FragmentNewsBinding;
@@ -25,6 +27,8 @@ public class NewsFragment extends Fragment implements AsyncTaskContext {
 
     private NewsAdapter adapter;
     private FragmentNewsBinding binding;
+    private RecyclerView.OnScrollListener scrollListener;
+    private SearchView searchView;
 
     public NewsFragment() {
     }
@@ -52,11 +56,15 @@ public class NewsFragment extends Fragment implements AsyncTaskContext {
         setHasOptionsMenu(true);
         adapter = new NewsAdapter();
         binding.recyclerView.setAdapter(adapter);
-        binding.recyclerView.addOnScrollListener(new RecScrollListener());
+        scrollListener = new RecScrollListener();
+        binding.recyclerView.addOnScrollListener(scrollListener);
+        binding.recyclerView.setLayoutAnimation(AnimationUtils.loadLayoutAnimation(getContext(), R.anim.layout_animation_fall_down));
 
         binding.refresh.setOnRefreshListener(() -> {
             adapter.removeAllItems();
-            downloadFirstNews();
+            if (searchView.getQuery() != null)
+                new DownloadNews(1, searchView.getQuery().toString()).execute(adapter);
+            else downloadFirstNews();
         });
         ConnectivityManager connectivityManager = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkRequest networkRequest = new NetworkRequest.Builder().build();
@@ -79,10 +87,12 @@ public class NewsFragment extends Fragment implements AsyncTaskContext {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.menu_search, menu);
-        SearchView searchView = (SearchView) menu.findItem(R.id.app_bar_search).getActionView();
-        searchView.setOnQueryTextListener(new QueryTextListener(adapter));
+        searchView = (SearchView) menu.findItem(R.id.app_bar_search).getActionView();
+        searchView.setOnQueryTextListener(new QueryTextListener(binding.recyclerView));
         searchView.setOnCloseListener(() -> {
             searchView.onActionViewCollapsed();
+            binding.recyclerView.clearOnScrollListeners();
+            binding.recyclerView.addOnScrollListener(scrollListener);
             adapter.removeAllItems();
             downloadFirstNews();
             return true;
@@ -96,6 +106,7 @@ public class NewsFragment extends Fragment implements AsyncTaskContext {
             if (isFound) {
                 binding.notFound.setVisibility(View.GONE);
                 binding.refresh.setVisibility(View.VISIBLE);
+                binding.recyclerView.scheduleLayoutAnimation();
             } else {
                 binding.notFound.setVisibility(View.VISIBLE);
                 binding.refresh.setVisibility(View.GONE);

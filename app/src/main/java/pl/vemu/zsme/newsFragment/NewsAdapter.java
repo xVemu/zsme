@@ -42,6 +42,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder> {
     @Override
     public void onBindViewHolder(@NonNull NewsHolder holder, int position) {
         NewsItem item = newsItems.get(position);
+        if (item == null) return;
         Glide.with(holder.img.getContext()).load(item.getImgUrl()).centerCrop().into(holder.img);
         holder.title.setText(item.getTitle());
         holder.description.setText(item.getDescription());
