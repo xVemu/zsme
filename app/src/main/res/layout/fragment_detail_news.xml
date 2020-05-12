@@ -31,5 +31,8 @@
         android:layout_height="0dp"
         android:layout_margin="4dp"
         android:layout_weight="1"
+        android:textIsSelectable="true"
+        android:scrollbars="vertical"
         tools:text="@string/lorem" />
+    <!--        android:autoLink="all"-->
 </LinearLayout>

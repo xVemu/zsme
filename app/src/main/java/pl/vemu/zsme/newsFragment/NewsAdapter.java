@@ -3,6 +3,7 @@ package pl.vemu.zsme.newsFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -50,6 +51,13 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder> {
         holder.date.setText(item.getDate());
         NewsFragmentDirections.ActionNewsToDetailFragment actionNewsToDetailFragment = NewsFragmentDirections.actionNewsToDetailFragment(item);
         holder.itemView.setOnClickListener(Navigation.createNavigateOnClickListener(actionNewsToDetailFragment));
+//        setFadeAnimation(holder.itemView);
+    }
+
+    private void setFadeAnimation(View view) {
+        AlphaAnimation anim = new AlphaAnimation(0.0f, 1.0f);
+        anim.setDuration(1000);
+        view.startAnimation(anim);
     }
 
     @Override

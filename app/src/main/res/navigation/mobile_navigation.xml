@@ -65,6 +65,13 @@
             app:exitAnim="@anim/fragment_fade_exit"
             app:popEnterAnim="@anim/fragment_fade_enter"
             app:popExitAnim="@anim/fragment_fade_exit" />
+        <action
+            android:id="@+id/action_moreFragment_to_contactFragment"
+            app:destination="@id/contactFragment"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit"
+            app:popEnterAnim="@anim/fragment_fade_enter"
+            app:popExitAnim="@anim/fragment_fade_exit" />
     </fragment>
     <fragment
         android:id="@+id/tableFragment"
@@ -79,4 +86,9 @@
         android:name="pl.vemu.zsme.moreFragment.SettingsFragment"
         android:label="@string/settings"
         tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/contactFragment"
+        android:name="pl.vemu.zsme.moreFragment.ContactFragment"
+        android:label="@string/contact"
+        tools:layout="@layout/fragment_contact" />
 </navigation>

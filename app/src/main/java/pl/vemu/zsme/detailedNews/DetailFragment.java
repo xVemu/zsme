@@ -3,7 +3,7 @@ package pl.vemu.zsme.detailedNews;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Html;
-import android.text.method.ScrollingMovementMethod;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +42,8 @@ public class DetailFragment extends Fragment implements IAsyncTaskContext, Html.
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         NewsItem newsItem = DetailFragmentArgs.fromBundle(getArguments()).getNewsItem();
         binding.title.setText(newsItem.getTitle());
-        binding.text.setMovementMethod(new ScrollingMovementMethod());
+//        binding.text.setMovementMethod(new ScrollingMovementMethod());
+        binding.text.setMovementMethod(LinkMovementMethod.getInstance());
         new DownloadDetailedNews(this).execute(newsItem.getUrl());
     }
 

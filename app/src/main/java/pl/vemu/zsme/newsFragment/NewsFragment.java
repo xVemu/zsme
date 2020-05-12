@@ -10,7 +10,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -58,11 +57,10 @@ public class NewsFragment extends Fragment implements AsyncTaskContext {
         binding.recyclerView.setAdapter(adapter);
         scrollListener = new RecScrollListener();
         binding.recyclerView.addOnScrollListener(scrollListener);
-        binding.recyclerView.setLayoutAnimation(AnimationUtils.loadLayoutAnimation(getContext(), R.anim.layout_animation_fall_down));
 
         binding.refresh.setOnRefreshListener(() -> {
             adapter.removeAllItems();
-            if (searchView.getQuery() != null)
+            if (!"".contentEquals(searchView.getQuery()))
                 new DownloadNews(1, searchView.getQuery().toString()).execute(adapter);
             else downloadFirstNews();
         });
@@ -106,7 +104,6 @@ public class NewsFragment extends Fragment implements AsyncTaskContext {
             if (isFound) {
                 binding.notFound.setVisibility(View.GONE);
                 binding.refresh.setVisibility(View.VISIBLE);
-                binding.recyclerView.scheduleLayoutAnimation();
             } else {
                 binding.notFound.setVisibility(View.VISIBLE);
                 binding.refresh.setVisibility(View.GONE);
