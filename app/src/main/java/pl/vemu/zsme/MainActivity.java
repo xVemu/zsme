@@ -4,6 +4,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -52,8 +53,13 @@ public class MainActivity extends AppCompatActivity {
         PeriodicWorkRequest worker = new PeriodicWorkRequest.Builder(NewsWorker.class, 30L, TimeUnit.MINUTES, 15L, TimeUnit.MINUTES)
                 .setConstraints(constraints).build();
         WorkManager.getInstance(this).enqueueUniquePeriodicWork("SyncNewsWorker", ExistingPeriodicWorkPolicy.KEEP, worker);
+        Log.d(STATIC.TAG, getIntent().getAction());
         if (getIntent() != null && getIntent().getSerializableExtra("NewsItem") != null)
             navController.navigate(NewsFragmentDirections.actionNewsToDetailFragment((NewsItem) getIntent().getSerializableExtra("NewsItem")));
+        else if ("pl.vemu.zsme.shortcut.TIMETABLE".equals(getIntent().getAction()))
+            navController.navigate(R.id.timetableFragment);
+        else if ("pl.vemu.zsme.shortcut.MORE".equals(getIntent().getAction()))
+            navController.navigate(R.id.moreFragment);
     }
 
     @Override
