@@ -113,6 +113,6 @@ public class NewsFragment extends Fragment implements AsyncTaskContext {
 
     @Override
     public void startRefreshing() {
-        binding.refresh.setRefreshing(true);
+        if (binding != null) binding.refresh.setRefreshing(true);
     }
 }

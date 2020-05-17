@@ -5,6 +5,7 @@ import android.view.View;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 import java.io.IOException;
 
@@ -24,7 +25,10 @@ public class DownloadDetailedNews extends AsyncTask<String, Integer, String> {
     protected String doInBackground(String... strings) {
         try {
             Document document = Jsoup.connect(strings[0]).get();
-            return document.selectFirst(".single-post").toString();
+
+            Element s = document.selectFirst(".single-post");
+            if (s == null) return "Wystąpił błąd";
+            return s.toString();
         } catch (IOException e) {
             e.printStackTrace();
         }

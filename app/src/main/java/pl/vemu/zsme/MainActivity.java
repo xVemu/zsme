@@ -2,6 +2,8 @@ package pl.vemu.zsme;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -30,14 +32,53 @@ import pl.vemu.zsme.timetableFragment.timetable.TimetableFragmentDirections;
 public class MainActivity extends AppCompatActivity {
 
     private NavController navController;
+    private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
-        int theme = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this).getString("theme", "-1"));
-        AppCompatDelegate.setDefaultNightMode(theme);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        setupTheme();
+        setupNavigationBar();
+        setupErrorHandler();
+        createNotificationChannel();
+        setupNotification();
+        setupIntent();
+    }
+
+    private void setupErrorHandler() {
+        //TODO remove on release
+        final Thread.UncaughtExceptionHandler oldHandler = Thread.getDefaultUncaughtExceptionHandler();
+        Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
+            Toast.makeText(this, "Wystąpił błąd!", Toast.LENGTH_LONG).show();
+            if (oldHandler != null)
+                oldHandler.uncaughtException(t, e);
+            else
+                System.exit(2);
+        });
+    }
+
+    private void setupIntent() {
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        NewsItem newsItem = (NewsItem) intent.getSerializableExtra("NewsItem");
+        if (newsItem != null)
+            navController.navigate(NewsFragmentDirections.actionNewsToDetailFragment(newsItem));
+        else if ("pl.vemu.zsme.shortcut.TIMETABLE".equals(action))
+            navController.navigate(R.id.timetableFragment);
+        else if ("pl.vemu.zsme.shortcut.MORE".equals(action))
+            navController.navigate(R.id.moreFragment);
+    }
+
+    private void setupNotification() {
+        Constraints constraints = new Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build();
+        PeriodicWorkRequest worker = new PeriodicWorkRequest.Builder(NewsWorker.class, 30L, TimeUnit.MINUTES, 15L, TimeUnit.MINUTES)
+                .setConstraints(constraints).build();
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork("SyncNewsWorker", ExistingPeriodicWorkPolicy.KEEP, worker);
+    }
+
+    private void setupNavigationBar() {
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         AppBarConfiguration configuration = new AppBarConfiguration.Builder(binding.bottomNav.getMenu()).build();
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
@@ -46,18 +87,36 @@ public class MainActivity extends AppCompatActivity {
         });
         NavigationUI.setupActionBarWithNavController(this, navController, configuration);
         NavigationUI.setupWithNavController(binding.bottomNav, navController);
-        Thread.setDefaultUncaughtExceptionHandler((t, e) -> Toast.makeText(this, "Wystąpił błąd!", Toast.LENGTH_LONG).show());
-        createNotificationChannel();
-        Constraints constraints = new Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build();
-        PeriodicWorkRequest worker = new PeriodicWorkRequest.Builder(NewsWorker.class, 30L, TimeUnit.MINUTES, 15L, TimeUnit.MINUTES)
-                .setConstraints(constraints).build();
-        WorkManager.getInstance(this).enqueueUniquePeriodicWork("SyncNewsWorker", ExistingPeriodicWorkPolicy.KEEP, worker);
-        if (getIntent() != null && getIntent().getSerializableExtra("NewsItem") != null)
-            navController.navigate(NewsFragmentDirections.actionNewsToDetailFragment((NewsItem) getIntent().getSerializableExtra("NewsItem")));
-        else if ("pl.vemu.zsme.shortcut.TIMETABLE".equals(getIntent().getAction()))
-            navController.navigate(R.id.timetableFragment);
-        else if ("pl.vemu.zsme.shortcut.MORE".equals(getIntent().getAction()))
-            navController.navigate(R.id.moreFragment);
+    }
+
+    private void setupTheme() {
+        int theme = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this).getString("theme", "-1"));
+        AppCompatDelegate.setDefaultNightMode(theme);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Uri data = getIntent().getData();
+        if (data != null) {
+            String url = data.toString();
+            switch (url) {
+                case "https://zsme.tarnow.pl/":
+                    break;
+                case "https://zsme.tarnow.pl/wp/kontakt/":
+                    navController.navigate(R.id.contactFragment);
+                    break;
+                case "https://zsme.tarnow.pl/plan/":
+                    navController.navigate(R.id.timetableFragment);
+                    break;
+                default:
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("newsItem", NewsItem.builder().url(url).build());
+                    navController.navigate(R.id.detailFragment, bundle);
+//                    navController.navigate(NewsFragmentDirections.actionNewsToDetailFragment(NewsItem.builder().url(url).build()));
+                    break;
+            }
+        }
     }
 
     @Override
