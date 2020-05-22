@@ -42,4 +42,6 @@
     <string name="school_email">E-mail</string>
     <string name="school_email_text">sekretzsme@umt.tarnow.pl</string>
     <string name="share">Udostępnij</string>
+    <string name="theme">Motyw</string>
+    <string name="notification">Powiadomienia</string>
 </resources>

@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <ListPreference
-        android:defaultValue="1"
+        android:defaultValue="-1"
         android:entries="@array/theme"
         android:entryValues="@array/themeMode"
         android:icon="@drawable/ic_theme"
         android:summary="%s"
         android:key="theme"
-        android:title="Motyw" />
+        android:title="@string/theme" />
+    <Preference
+        android:title="@string/notification"
+        android:key="notification"
+        android:icon="@drawable/ic_notification" />
 </PreferenceScreen>
