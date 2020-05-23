@@ -49,7 +49,6 @@ public class DetailFragment extends Fragment implements IAsyncTaskContext, Html.
         newsItem = DetailFragmentArgs.fromBundle(getArguments()).getNewsItem();
         binding.title.setText(newsItem.getTitle());
         setHasOptionsMenu(true);
-//        binding.text.setMovementMethod(new ScrollingMovementMethod());
         binding.text.setMovementMethod(LinkMovementMethod.getInstance());
         new DownloadDetailedNews(this).execute(newsItem.getUrl());
     }

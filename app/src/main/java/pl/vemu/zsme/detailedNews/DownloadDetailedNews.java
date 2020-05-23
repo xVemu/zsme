@@ -6,6 +6,7 @@ import android.view.View;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.IOException;
 
@@ -27,6 +28,10 @@ public class DownloadDetailedNews extends AsyncTask<String, Integer, String> {
             Document document = Jsoup.connect(strings[0]).get();
 
             Element s = document.selectFirst(".single-post");
+            Elements a_img = s.select("a img");
+            for (Element element : a_img) {
+                element.parent().unwrap();
+            }
             if (s == null) return "Wystąpił błąd";
             return s.toString();
         } catch (IOException e) {
