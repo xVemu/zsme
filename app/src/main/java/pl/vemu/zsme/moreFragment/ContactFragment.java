@@ -35,6 +35,12 @@ public class ContactFragment extends Fragment implements View.OnClickListener {
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         List<View> buttons = Arrays.asList(binding.navigateButton, binding.schoolEmailButton, binding.schoolHeadmasterButton,
                 binding.schoolTelephoneButton, binding.schoolTelephoneFaxButton, binding.schoolVice1Button, binding.schoolVice2Button);

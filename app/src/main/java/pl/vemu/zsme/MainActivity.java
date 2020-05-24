@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -41,23 +40,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         setupTheme();
         setupNavigationBar();
-        setupErrorHandler();
         createNotificationChannel();
         setupNotification();
         setupIntent();
     }
 
-    private void setupErrorHandler() {
-        //TODO remove on release
-        final Thread.UncaughtExceptionHandler oldHandler = Thread.getDefaultUncaughtExceptionHandler();
-        Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
-            Toast.makeText(this, "Wystąpił błąd!", Toast.LENGTH_LONG).show();
-            if (oldHandler != null)
-                oldHandler.uncaughtException(t, e);
-            else
-                System.exit(2);
-        });
-    }
 
     private void setupIntent() {
         Intent intent = getIntent();

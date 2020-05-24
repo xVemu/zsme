@@ -18,7 +18,7 @@ public class TablePageAdapter extends FragmentStateAdapter {
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        return new TableFragmentPage(lessons.get(position));
+        return new TablePageFragment(lessons.get(position));
     }
 
     @Override

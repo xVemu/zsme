@@ -12,27 +12,27 @@ import pl.vemu.zsme.STATIC;
 import pl.vemu.zsme.timetableFragment.Download;
 
 @RequiredArgsConstructor
-public class LoginTimetable extends AsyncTask<String, Void, Boolean> implements Download {
+public class LoginTimetable extends AsyncTask<String, Void, Integer> implements Download {
 
     private final AsyncTaskContext context;
 
     @Override
-    protected Boolean doInBackground(String... strings) {
+    protected Integer doInBackground(String... strings) {
         try {
             STATIC.LOGIN = strings[0];
             getNews("lista.html");
-            return true;
+            return 200;
         } catch (HttpStatusException e) {
-            if (e.getStatusCode() == 401) return false;
+            return e.getStatusCode();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return false;
+        return 404;
     }
 
     @Override
-    protected void onPostExecute(Boolean isCorrect) {
-        if (isCorrect) context.login();
-        else context.wrong();
+    protected void onPostExecute(Integer code) {
+        if (code == 200) context.login();
+        else context.wrong(code);
     }
 }

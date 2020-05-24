@@ -8,8 +8,10 @@
     <fragment
         android:id="@+id/newsFragment"
         android:name="pl.vemu.zsme.newsFragment.NewsFragment"
-        android:label="Aktualności"
+        android:label="@string/news"
         tools:layout="@layout/fragment_news">
+        <!--        TODO animations are private-->
+        <!--        TODO deep links-->
         <action
             android:id="@+id/action_news_to_detailFragment"
             app:destination="@id/detailFragment"
@@ -17,14 +19,21 @@
             app:exitAnim="@anim/fragment_fade_exit"
             app:popEnterAnim="@anim/fragment_fade_enter"
             app:popExitAnim="@anim/fragment_fade_exit" />
+        <deepLink
+            android:id="@+id/deepLink"
+            app:uri="https://zsme.tarnow.pl" />
     </fragment>
     <fragment
         android:id="@+id/detailFragment"
         android:name="pl.vemu.zsme.detailedNews.DetailFragment"
+        android:label="@string/news"
         tools:layout="@layout/fragment_detail_news">
         <argument
             android:name="newsItem"
             app:argType="pl.vemu.zsme.newsFragment.NewsItem" />
+        <action
+            android:id="@+id/action_detailFragment_to_galleryFragment"
+            app:destination="@id/galleryFragment" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
@@ -52,6 +61,9 @@
             app:destination="@id/tableFragment"
             app:enterAnim="@anim/fragment_fade_enter"
             app:exitAnim="@anim/fragment_fade_exit" />
+        <deepLink
+            android:id="@+id/deepLink3"
+            app:uri="http://zsme.tarnow.pl/plan/" />
     </fragment>
     <fragment
         android:id="@+id/moreFragment"
@@ -90,5 +102,18 @@
         android:id="@+id/contactFragment"
         android:name="pl.vemu.zsme.moreFragment.ContactFragment"
         android:label="@string/contact"
-        tools:layout="@layout/fragment_contact" />
+        tools:layout="@layout/fragment_contact">
+        <deepLink
+            android:id="@+id/deepLink2"
+            app:uri="https://zsme.tarnow.pl/wp/kontakt/" />
+    </fragment>
+    <fragment
+        android:id="@+id/galleryFragment"
+        android:name="pl.vemu.zsme.detailedNews.galleryFragment.GalleryFragment"
+        android:label="@string/gallery"
+        tools:layout="@layout/fragment_gallery">
+        <argument
+            android:name="images"
+            app:argType="string[]" />
+    </fragment>
 </navigation>

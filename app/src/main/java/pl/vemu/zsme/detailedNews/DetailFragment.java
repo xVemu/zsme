@@ -1,9 +1,7 @@
 package pl.vemu.zsme.detailedNews;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,17 +14,24 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.text.HtmlCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
-import java.util.concurrent.ExecutionException;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.util.ArrayList;
 
 import pl.vemu.zsme.R;
 import pl.vemu.zsme.databinding.FragmentDetailNewsBinding;
 import pl.vemu.zsme.newsFragment.NewsItem;
 
-public class DetailFragment extends Fragment implements IAsyncTaskContext, Html.ImageGetter {
+public class DetailFragment extends Fragment implements IAsyncTaskContext, View.OnClickListener {
 
     private FragmentDetailNewsBinding binding;
     private NewsItem newsItem;
+    private ArrayList<String> images = new ArrayList<>();
 
     public DetailFragment() {
     }
@@ -51,6 +56,7 @@ public class DetailFragment extends Fragment implements IAsyncTaskContext, Html.
         setHasOptionsMenu(true);
         binding.text.setMovementMethod(LinkMovementMethod.getInstance());
         new DownloadDetailedNews(this).execute(newsItem.getUrl());
+        binding.gallery.setOnClickListener(this);
     }
 
     @Override
@@ -73,7 +79,16 @@ public class DetailFragment extends Fragment implements IAsyncTaskContext, Html.
 
     @Override
     public void setDetailText(String text) {
-        binding.text.setText(HtmlCompat.fromHtml(text, HtmlCompat.FROM_HTML_MODE_COMPACT, this, null));
+        Document parse = Jsoup.parse(text);
+        Elements photos = parse.select("img");
+        if (photos.size() != 0) {
+            binding.gallery.setVisibility(View.VISIBLE);
+            for (Element photo : photos) {
+                images.add(photo.attr("src").replace("thumbs/thumbs_", ""));
+                photo.remove();
+            }
+        }
+        binding.text.setText(HtmlCompat.fromHtml(parse.toString(), HtmlCompat.FROM_HTML_MODE_COMPACT, null, null));
     }
 
     @Override
@@ -87,12 +102,9 @@ public class DetailFragment extends Fragment implements IAsyncTaskContext, Html.
     }
 
     @Override
-    public Drawable getDrawable(String source) {
-        try {
-            return new LoadImages(this).execute(source).get();
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public void onClick(View v) {
+        String[] imagesArray = new String[this.images.size()];
+        this.images.toArray(imagesArray);
+        Navigation.findNavController(v).navigate(DetailFragmentDirections.actionDetailFragmentToGalleryFragment(imagesArray));
     }
 }

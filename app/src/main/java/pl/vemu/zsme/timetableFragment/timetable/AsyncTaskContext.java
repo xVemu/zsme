@@ -4,5 +4,5 @@ package pl.vemu.zsme.timetableFragment.timetable;
 public interface AsyncTaskContext {
     void login();
 
-    void wrong();
+    void wrong(int code);
 }

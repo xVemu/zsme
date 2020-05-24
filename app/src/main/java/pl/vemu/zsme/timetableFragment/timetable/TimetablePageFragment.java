@@ -1,4 +1,4 @@
-package pl.vemu.zsme.timetableFragment.table;
+package pl.vemu.zsme.timetableFragment.timetable;
 
 
 import android.os.Bundle;
@@ -12,26 +12,27 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.apache.commons.collections4.map.LinkedMap;
 
-import pl.vemu.zsme.databinding.FragmentTablePageBinding;
+import java.util.Map;
 
-public class TableFragmentPage extends Fragment {
+import pl.vemu.zsme.databinding.FragmentTimetablePageBinding;
 
-    private List<Lesson> lessons = new ArrayList<>();
-    private FragmentTablePageBinding binding;
+public class TimetablePageFragment extends Fragment {
 
-    public TableFragmentPage() {
+    private Map<String, String> map = new LinkedMap<>();
+    private FragmentTimetablePageBinding binding;
+
+    public TimetablePageFragment() {
     }
 
-    public TableFragmentPage(List<Lesson> lessons) {
-        this.lessons = lessons;
+    public TimetablePageFragment(Map<String, String> map) {
+        this.map = map;
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentTablePageBinding.inflate(inflater, container, false);
+        binding = FragmentTimetablePageBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
@@ -43,11 +44,11 @@ public class TableFragmentPage extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        LinearLayoutManager manager = new LinearLayoutManager(getContext());
+        LinearLayoutManager linearManager = new LinearLayoutManager(getContext());
         RecyclerView recyclerView = (RecyclerView) binding.getRoot();
-        recyclerView.setLayoutManager(manager);
+        recyclerView.setLayoutManager(linearManager);
 
-        RecyclerView.Adapter tableAdapter = new TableAdapter(lessons);
-        recyclerView.setAdapter(tableAdapter);
+        RecyclerView.Adapter adapter = new TimetableAdapter(map);
+        recyclerView.setAdapter(adapter);
     }
 }

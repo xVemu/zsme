@@ -62,7 +62,10 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Asy
     }
 
     @Override
-    public void wrong() {
-        binding.loginLayout.setError(getString(R.string.wrong_password_or_login));
+    public void wrong(int code) {
+        String error;
+        if (code == 401) error = getString(R.string.wrong_password_or_login);
+        else error = getString(R.string.error) + " " + code;
+        binding.loginLayout.setError(error);
     }
 }

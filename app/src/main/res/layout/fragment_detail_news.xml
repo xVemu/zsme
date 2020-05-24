@@ -34,5 +34,11 @@
         android:textIsSelectable="true"
         android:scrollbars="vertical"
         tools:text="@string/lorem" />
-    <!--        android:autoLink="all"-->
+
+    <Button
+        android:id="@+id/gallery"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/gallery"
+        android:visibility="gone" />
 </LinearLayout>

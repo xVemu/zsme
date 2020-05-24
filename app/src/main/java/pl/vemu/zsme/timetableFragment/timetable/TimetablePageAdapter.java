@@ -19,7 +19,7 @@ public class TimetablePageAdapter extends FragmentStateAdapter {
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        return new TimetableFragmentPage(maps.get(position));
+        return new TimetablePageFragment(maps.get(position));
     }
 
     @Override

@@ -18,11 +18,12 @@ import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import pl.vemu.zsme.R;
 import pl.vemu.zsme.databinding.FragmentNewsBinding;
 
-public class NewsFragment extends Fragment implements AsyncTaskContext {
+public class NewsFragment extends Fragment implements AsyncTaskContext, SwipeRefreshLayout.OnRefreshListener {
 
     private NewsAdapter adapter;
     private FragmentNewsBinding binding;
@@ -47,28 +48,32 @@ public class NewsFragment extends Fragment implements AsyncTaskContext {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        LinearLayoutManager manager = new LinearLayoutManager(getActivity());
-        binding.recyclerView.setLayoutManager(manager);
+        setupRecyclerView();
 
         DownloadNews.setContext(this);
 
         setHasOptionsMenu(true);
-        adapter = new NewsAdapter();
-        binding.recyclerView.setAdapter(adapter);
-        scrollListener = new RecScrollListener();
-        binding.recyclerView.addOnScrollListener(scrollListener);
 
-        binding.refresh.setOnRefreshListener(() -> {
-            adapter.removeAllItems();
-            if (!"".contentEquals(searchView.getQuery()))
-                new DownloadNews(1, searchView.getQuery().toString()).execute(adapter);
-            else downloadFirstNews();
-        });
+        binding.refresh.setOnRefreshListener(this);
+
+        setupNetwork();
+    }
+
+    private void setupNetwork() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkRequest networkRequest = new NetworkRequest.Builder().build();
         if (connectivityManager.getActiveNetwork() == null)
             Toast.makeText(getContext(), "Brak połaczenia z internetem", Toast.LENGTH_LONG).show();
         connectivityManager.registerNetworkCallback(networkRequest, networkCallback);
+    }
+
+    private void setupRecyclerView() {
+        LinearLayoutManager manager = new LinearLayoutManager(getActivity());
+        binding.recyclerView.setLayoutManager(manager);
+        adapter = new NewsAdapter();
+        binding.recyclerView.setAdapter(adapter);
+        scrollListener = new RecScrollListener();
+        binding.recyclerView.addOnScrollListener(scrollListener);
     }
 
     private ConnectivityManager.NetworkCallback networkCallback = new ConnectivityManager.NetworkCallback() {
@@ -114,5 +119,13 @@ public class NewsFragment extends Fragment implements AsyncTaskContext {
     @Override
     public void startRefreshing() {
         if (binding != null) binding.refresh.setRefreshing(true);
+    }
+
+    @Override
+    public void onRefresh() {
+        adapter.removeAllItems();
+        if (!"".contentEquals(searchView.getQuery()))
+            new DownloadNews(1, searchView.getQuery().toString()).execute(adapter);
+        else downloadFirstNews();
     }
 }

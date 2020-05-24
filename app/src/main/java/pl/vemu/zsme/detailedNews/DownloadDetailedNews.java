@@ -28,11 +28,11 @@ public class DownloadDetailedNews extends AsyncTask<String, Integer, String> {
             Document document = Jsoup.connect(strings[0]).get();
 
             Element s = document.selectFirst(".single-post");
+            if (s == null) return "Wystąpił błąd";
             Elements a_img = s.select("a img");
             for (Element element : a_img) {
                 element.parent().unwrap();
             }
-            if (s == null) return "Wystąpił błąd";
             return s.toString();
         } catch (IOException e) {
             e.printStackTrace();
