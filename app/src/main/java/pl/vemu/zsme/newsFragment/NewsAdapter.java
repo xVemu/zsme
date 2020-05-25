@@ -49,9 +49,8 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder> {
         holder.description.setText(item.getDescription());
         holder.author.setText(item.getAuthor());
         holder.date.setText(item.getDate());
-        NewsFragmentDirections.ActionNewsToDetailFragment actionNewsToDetailFragment = NewsFragmentDirections.actionNewsToDetailFragment(item);
-        holder.itemView.setOnClickListener(Navigation.createNavigateOnClickListener(actionNewsToDetailFragment));
-//        setFadeAnimation(holder.itemView);
+        NewsFragmentDirections.ActionNewsToDetailFragment action = NewsFragmentDirections.actionNewsToDetailFragment(item.getUrl());
+        holder.itemView.setOnClickListener(Navigation.createNavigateOnClickListener(action));
     }
 
     private void setFadeAnimation(View view) {

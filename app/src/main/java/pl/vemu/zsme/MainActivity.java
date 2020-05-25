@@ -3,7 +3,6 @@ package pl.vemu.zsme;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -24,7 +23,6 @@ import java.util.concurrent.TimeUnit;
 
 import pl.vemu.zsme.databinding.ActivityMainBinding;
 import pl.vemu.zsme.newsFragment.NewsFragmentDirections;
-import pl.vemu.zsme.newsFragment.NewsItem;
 import pl.vemu.zsme.newsFragment.NewsWorker;
 import pl.vemu.zsme.timetableFragment.timetable.TimetableFragmentDirections;
 
@@ -49,9 +47,9 @@ public class MainActivity extends AppCompatActivity {
     private void setupIntent() {
         Intent intent = getIntent();
         String action = intent.getAction();
-        NewsItem newsItem = (NewsItem) intent.getSerializableExtra("NewsItem");
-        if (newsItem != null)
-            navController.navigate(NewsFragmentDirections.actionNewsToDetailFragment(newsItem));
+        String url = (String) intent.getSerializableExtra("url");
+        if (url != null)
+            navController.navigate(NewsFragmentDirections.actionNewsToDetailFragment(url));
         else if ("pl.vemu.zsme.shortcut.TIMETABLE".equals(action))
             navController.navigate(R.id.timetableFragment);
         else if ("pl.vemu.zsme.shortcut.MORE".equals(action))
@@ -79,31 +77,6 @@ public class MainActivity extends AppCompatActivity {
     private void setupTheme() {
         int theme = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this).getString("theme", "-1"));
         AppCompatDelegate.setDefaultNightMode(theme);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Uri data = getIntent().getData();
-        if (data != null) {
-            String url = data.toString();
-            switch (url) {
-                case "https://zsme.tarnow.pl/":
-                    break;
-                case "https://zsme.tarnow.pl/wp/kontakt/":
-                    navController.navigate(R.id.contactFragment);
-                    break;
-                case "https://zsme.tarnow.pl/plan/":
-                    navController.navigate(R.id.timetableFragment);
-                    break;
-                default:
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("newsItem", NewsItem.builder().url(url).build());
-                    navController.navigate(R.id.detailFragment, bundle);
-//                    navController.navigate(NewsFragmentDirections.actionNewsToDetailFragment(NewsItem.builder().url(url).build()));
-                    break;
-            }
-        }
     }
 
     @Override

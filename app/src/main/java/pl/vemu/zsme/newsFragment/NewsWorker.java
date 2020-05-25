@@ -43,7 +43,7 @@ public class NewsWorker extends Worker {
                 SharedPreferences.Editor editor = memory.edit();
                 editor.putString("article-title", downloaded.getTitle()).apply();
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                intent.putExtra("NewsItem", downloaded);
+                intent.putExtra("url", downloaded.getUrl());
                 PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), "ZSME")
                         .setSmallIcon(R.drawable.zsme)

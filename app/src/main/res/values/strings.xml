@@ -47,4 +47,5 @@
     <string name="photo_gallery">Photo in gallery</string>
     <string name="gallery">Galeria</string>
     <string name="error">Wystąpił błąd</string>
+    <string name="zsme_default_link">https://zsme.tarnow.pl/wp/</string>
 </resources>

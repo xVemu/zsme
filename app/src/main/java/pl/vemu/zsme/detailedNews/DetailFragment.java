@@ -25,12 +25,11 @@ import java.util.ArrayList;
 
 import pl.vemu.zsme.R;
 import pl.vemu.zsme.databinding.FragmentDetailNewsBinding;
-import pl.vemu.zsme.newsFragment.NewsItem;
 
 public class DetailFragment extends Fragment implements IAsyncTaskContext, View.OnClickListener {
 
     private FragmentDetailNewsBinding binding;
-    private NewsItem newsItem;
+    private String url;
     private ArrayList<String> images = new ArrayList<>();
 
     public DetailFragment() {
@@ -51,11 +50,11 @@ public class DetailFragment extends Fragment implements IAsyncTaskContext, View.
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        newsItem = DetailFragmentArgs.fromBundle(getArguments()).getNewsItem();
-        binding.title.setText(newsItem.getTitle());
+        url = DetailFragmentArgs.fromBundle(getArguments()).getUrl();
         setHasOptionsMenu(true);
         binding.text.setMovementMethod(LinkMovementMethod.getInstance());
-        new DownloadDetailedNews(this).execute(newsItem.getUrl());
+        if (!url.startsWith("http")) url = getString(R.string.zsme_default_link) + url;
+        new DownloadDetailedNews(this).execute(url);
         binding.gallery.setOnClickListener(this);
     }
 
@@ -69,7 +68,7 @@ public class DetailFragment extends Fragment implements IAsyncTaskContext, View.
         if (item.getItemId() == R.id.app_bar_share) {
             Intent intent = new Intent();
             intent.setAction(Intent.ACTION_SEND);
-            intent.putExtra(Intent.EXTRA_TEXT, newsItem.getUrl());
+            intent.putExtra(Intent.EXTRA_TEXT, url);
             intent.setType("text/plain");
             Intent shareIntent = Intent.createChooser(intent, null);
             startActivity(shareIntent);
