@@ -48,7 +48,6 @@ public class NewsWorker extends Worker {
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), "ZSME")
                         .setSmallIcon(R.drawable.zsme)
                         .setContentTitle(downloaded.getTitle())
-                        .setContentText("chuj")
                         .setStyle(new NotificationCompat.BigTextStyle().bigText(downloaded.getDescription()))
                         .setContentIntent(pendingIntent)
                         .setAutoCancel(true)
