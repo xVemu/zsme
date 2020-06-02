@@ -32,7 +32,7 @@ public class MoreFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         binding.settings.setOnClickListener(Navigation.createNavigateOnClickListener(MoreFragmentDirections.actionMoreFragmentToSettingsFragment()));
-        binding.page.setOnClickListener(v -> getActivity().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://zsme.tarnow.pl"))));
+        binding.page.setOnClickListener(v -> getActivity().startActivity(Intent.createChooser(new Intent(Intent.ACTION_VIEW, Uri.parse("https://zsme.tarnow.pl")), "Przeglądaj za pomocą:")));
         binding.eDziennik.setOnClickListener(v -> getActivity().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://uonetplus.umt.tarnow.pl/tarnow"))));
         binding.contact.setOnClickListener(Navigation.createNavigateOnClickListener(MoreFragmentDirections.actionMoreFragmentToContactFragment()));
     }

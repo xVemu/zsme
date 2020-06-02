@@ -53,7 +53,8 @@ public class DetailFragment extends Fragment implements IAsyncTaskContext, View.
         url = DetailFragmentArgs.fromBundle(getArguments()).getUrl();
         setHasOptionsMenu(true);
         binding.text.setMovementMethod(LinkMovementMethod.getInstance());
-        if (!url.startsWith("http")) url = getString(R.string.zsme_default_link) + url;
+        if (!url.startsWith("http") && !url.startsWith("https"))
+            url = getString(R.string.zsme_default_link) + url;
         new DownloadDetailedNews(this).execute(url);
         binding.gallery.setOnClickListener(this);
     }
