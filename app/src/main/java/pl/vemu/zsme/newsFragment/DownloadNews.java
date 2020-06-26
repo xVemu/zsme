@@ -17,7 +17,7 @@ public class DownloadNews extends AsyncTask<NewsAdapter, Void, NewsAdapter> {
     @Setter
     private static AsyncTaskContext context;
     private final int page;
-    private final String search;
+    private final String id;
 
     public DownloadNews(int page) {
         this(page, null);
@@ -31,11 +31,10 @@ public class DownloadNews extends AsyncTask<NewsAdapter, Void, NewsAdapter> {
     @Override
     protected NewsAdapter doInBackground(NewsAdapter... newsAdapters) {
         try {
-            String url;
-            if (search == null) url = String.format("https://zsme.tarnow.pl/wp/page/%s/", page);
-            else {
-                url = String.format("https://zsme.tarnow.pl/wp/page/%s/?s=", page) + search;
-            }
+            String url = "https://zsme.tarnow.pl/wp/";
+            if (id == null) url += "/page/" + page;
+            else if (id.startsWith("author")) url += id + "/page/" + page;
+            else url += "/page/" + page + "/?s=" + id;
             Document document = Jsoup.connect(url).get();
             if (document.selectFirst(".column-one") == null) return null;
             Elements columnOneNews = document.selectFirst(".column-one").children();

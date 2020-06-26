@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.text.HtmlCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import org.jsoup.Jsoup;
@@ -53,6 +54,13 @@ public class DetailFragment extends Fragment implements IAsyncTaskContext, View.
         url = DetailFragmentArgs.fromBundle(getArguments()).getUrl();
         setHasOptionsMenu(true);
         binding.text.setMovementMethod(LinkMovementMethod.getInstance());
+        if (url.startsWith("author")) {
+            NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
+            DetailFragmentDirections.ActionDetailFragmentToNewsFragment action =
+                    DetailFragmentDirections.actionDetailFragmentToNewsFragment();
+            action.setAuthor(url);
+            navController.navigate(action);
+        }
         if (!url.startsWith("http") && !url.startsWith("https"))
             url = getString(R.string.zsme_default_link) + url;
         new DownloadDetailedNews(this).execute(url);
@@ -79,16 +87,18 @@ public class DetailFragment extends Fragment implements IAsyncTaskContext, View.
 
     @Override
     public void setDetailText(String text) {
-        Document parse = Jsoup.parse(text);
-        Elements photos = parse.select("img");
-        if (photos.size() != 0) {
-            binding.gallery.setVisibility(View.VISIBLE);
-            for (Element photo : photos) {
-                images.add(photo.attr("src").replace("thumbs/thumbs_", ""));
-                photo.remove();
+        if (binding != null) {
+            Document parse = Jsoup.parse(text);
+            Elements photos = parse.select("img");
+            if (photos.size() != 0) {
+                binding.gallery.setVisibility(View.VISIBLE);
+                for (Element photo : photos) {
+                    images.add(photo.attr("src").replace("thumbs/thumbs_", ""));
+                    photo.remove();
+                }
             }
+            binding.text.setText(HtmlCompat.fromHtml(parse.toString(), HtmlCompat.FROM_HTML_MODE_COMPACT, null, null));
         }
-        binding.text.setText(HtmlCompat.fromHtml(parse.toString(), HtmlCompat.FROM_HTML_MODE_COMPACT, null, null));
     }
 
     @Override
@@ -98,7 +108,7 @@ public class DetailFragment extends Fragment implements IAsyncTaskContext, View.
 
     @Override
     public void setProgressVisibility(int progressVisibility) {
-        binding.progressBar.setVisibility(progressVisibility);
+        if (binding != null) binding.progressBar.setVisibility(progressVisibility);
     }
 
     @Override

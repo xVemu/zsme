@@ -2,14 +2,12 @@ package pl.vemu.zsme.newsFragment;
 
 import org.jsoup.nodes.Element;
 
-import java.io.Serializable;
-
 import lombok.Builder;
 import lombok.Value;
 
 @Value
 @Builder
-public class NewsItem implements Serializable {
+public class NewsItem {
 
     private String title, description, imgUrl, url, author, date;
 

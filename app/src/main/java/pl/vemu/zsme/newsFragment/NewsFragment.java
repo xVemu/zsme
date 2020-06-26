@@ -29,6 +29,7 @@ public class NewsFragment extends Fragment implements AsyncTaskContext, SwipeRef
     private FragmentNewsBinding binding;
     private RecyclerView.OnScrollListener scrollListener;
     private SearchView searchView;
+    private String author;
 
     public NewsFragment() {
     }
@@ -48,6 +49,8 @@ public class NewsFragment extends Fragment implements AsyncTaskContext, SwipeRef
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        author = NewsFragmentArgs.fromBundle(getArguments()).getAuthor();
+
         setupRecyclerView();
 
         DownloadNews.setContext(this);
@@ -101,6 +104,10 @@ public class NewsFragment extends Fragment implements AsyncTaskContext, SwipeRef
             downloadFirstNews();
             return true;
         });
+        if (author != null) {
+            searchView.onActionViewExpanded();
+            searchView.setQuery(author, true);
+        }
     }
 
     @Override
