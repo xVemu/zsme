@@ -55,6 +55,7 @@ public class NewsFragment extends Fragment implements AsyncTaskContext, SwipeRef
         setHasOptionsMenu(true);
 
         binding.refresh.setOnRefreshListener(this);
+        binding.refresh.setColorSchemeResources(R.color.colorPrimary);
 
         setupNetwork();
     }
