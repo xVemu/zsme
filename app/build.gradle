@@ -2,20 +2,31 @@ apply plugin: 'com.android.application'
 apply plugin: "androidx.navigation.safeargs"
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.2"
+    compileSdkVersion 30
+    buildToolsVersion '30.0.0'
     defaultConfig {
         applicationId "pl.vemu.zsme"
         minSdkVersion 23
-        targetSdkVersion 29
+        targetSdkVersion 30
         versionCode 26
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
-        release {
-            minifyEnabled false
+        buildTypes.all {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            debuggable  true
+            minifyEnabled false
+            shrinkResources false
+        }
+
+        release {
+            debuggable  false
+            minifyEnabled true
+            shrinkResources true
         }
     }
     compileOptions {
@@ -43,13 +54,13 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'androidx.preference:preference:1.1.1'
-    implementation 'androidx.navigation:navigation-fragment:2.2.2'
-    implementation 'androidx.navigation:navigation-ui:2.2.2'
+    implementation 'androidx.navigation:navigation-fragment:2.3.0'
+    implementation 'androidx.navigation:navigation-ui:2.3.0'
     implementation "androidx.viewpager2:viewpager2:1.0.0"
-    implementation 'com.google.android.material:material:1.2.0-beta01'
+    implementation 'com.google.android.material:material:1.3.0-alpha01'
     implementation 'org.jsoup:jsoup:1.13.1'
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     implementation 'org.apache.commons:commons-collections4:4.4'
-    implementation "androidx.work:work-runtime:2.3.4"
-    implementation 'androidx.work:work-testing:2.4.0-beta01'
+    implementation 'androidx.work:work-runtime:2.4.0-rc01'
+    implementation 'androidx.work:work-testing:2.4.0-rc01'
 }
