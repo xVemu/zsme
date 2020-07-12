@@ -4,13 +4,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.github.chrisbanes.photoview.PhotoView;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -44,6 +44,6 @@ public class GalleryPageFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        Glide.with(getContext()).load(image).into((ImageView) binding.getRoot());
+        Glide.with(getContext()).load(image).into((PhotoView) binding.getRoot());
     }
 }
