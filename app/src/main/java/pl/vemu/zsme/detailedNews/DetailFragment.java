@@ -60,6 +60,7 @@ public class DetailFragment extends Fragment implements IAsyncTaskContext, View.
                     DetailFragmentDirections.actionDetailFragmentToNewsFragment();
             action.setAuthor(url);
             navController.navigate(action);
+            return;
         }
         if (!url.startsWith("http") && !url.startsWith("https"))
             url = getString(R.string.zsme_default_link) + url;

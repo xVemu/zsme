@@ -83,12 +83,14 @@ public class NewsFragment extends Fragment implements AsyncTaskContext, SwipeRef
     private ConnectivityManager.NetworkCallback networkCallback = new ConnectivityManager.NetworkCallback() {
         @Override
         public void onAvailable(@NonNull Network network) {
-            getActivity().runOnUiThread(() -> downloadFirstNews());
+            getActivity().runOnUiThread(() -> {
+                if (author == null) downloadFirstNews();
+            });
         }
     };
 
     private void downloadFirstNews() {
-        new DownloadNews(1).execute(adapter);
+        new DownloadNews(new Queries.Page(1)).execute(adapter);
     }
 
     @Override
@@ -133,7 +135,7 @@ public class NewsFragment extends Fragment implements AsyncTaskContext, SwipeRef
     public void onRefresh() {
         adapter.removeAllItems();
         if (!"".contentEquals(searchView.getQuery()))
-            new DownloadNews(1, searchView.getQuery().toString()).execute(adapter);
+            new DownloadNews(new Queries.Search(1, searchView.getQuery().toString())).execute(adapter);
         else downloadFirstNews();
     }
 }

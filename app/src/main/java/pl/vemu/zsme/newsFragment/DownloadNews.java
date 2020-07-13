@@ -16,12 +16,8 @@ public class DownloadNews extends AsyncTask<NewsAdapter, Void, NewsAdapter> {
 
     @Setter
     private static AsyncTaskContext context;
-    private final int page;
-    private final String id;
+    private final Queries query;
 
-    public DownloadNews(int page) {
-        this(page, null);
-    }
 
     @Override
     protected void onPreExecute() {
@@ -31,10 +27,8 @@ public class DownloadNews extends AsyncTask<NewsAdapter, Void, NewsAdapter> {
     @Override
     protected NewsAdapter doInBackground(NewsAdapter... newsAdapters) {
         try {
-            String url = "https://zsme.tarnow.pl/wp/";
-            if (id == null) url += "/page/" + page;
-            else if (id.startsWith("author")) url += id + "/page/" + page;
-            else url += "/page/" + page + "/?s=" + id;
+            String url = "https://zsme.tarnow.pl/wp/" + query.parseUrl();
+            query.addOnePage();
             Document document = Jsoup.connect(url).get();
             if (document.selectFirst(".column-one") == null) return null;
             Elements columnOneNews = document.selectFirst(".column-one").children();

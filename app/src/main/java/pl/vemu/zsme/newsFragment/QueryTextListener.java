@@ -13,10 +13,13 @@ public class QueryTextListener implements SearchView.OnQueryTextListener {
     @Override
     public boolean onQueryTextSubmit(String query) {
         recyclerView.clearOnScrollListeners();
-        recyclerView.addOnScrollListener(new RecScrollListener(query));
         NewsAdapter adapter = (NewsAdapter) recyclerView.getAdapter();
         adapter.removeAllItems();
-        new DownloadNews(1, query).execute(adapter);
+        Queries queryObj;
+        if (query.startsWith("author/")) queryObj = new Queries.Author(1, query);
+        else queryObj = new Queries.Search(1, query);
+        new DownloadNews(queryObj).execute(adapter);
+        recyclerView.addOnScrollListener(new RecScrollListener(queryObj));
         return true;
     }
 
