@@ -17,7 +17,6 @@ import pl.vemu.zsme.databinding.FragmentGalleryBinding;
 public class GalleryFragment extends Fragment {
 
     private FragmentGalleryBinding binding;
-    private String[] images;
 
     public GalleryFragment() {
     }
@@ -36,7 +35,7 @@ public class GalleryFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        images = GalleryFragmentArgs.fromBundle(getArguments()).getImages();
+        String[] images = GalleryFragmentArgs.fromBundle(getArguments()).getImages();
         ViewPager2 viewPager = (ViewPager2) binding.getRoot();
         viewPager.setAdapter(new GalleryPageAdapter(this, images));
     }
