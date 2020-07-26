@@ -17,10 +17,11 @@
         android:id="@+id/text"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_margin="4dp"
+        android:layout_margin="16dp"
         android:layout_weight="1"
         android:textIsSelectable="true"
         android:scrollbars="vertical"
+        android:textSize="20sp"
         tools:text="@string/lorem" />
 
     <Button
