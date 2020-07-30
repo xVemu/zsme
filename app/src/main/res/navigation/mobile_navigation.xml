@@ -30,7 +30,7 @@
         android:id="@+id/detailFragment"
         android:name="pl.vemu.zsme.detailedNews.DetailFragment"
         android:label="@string/news"
-        tools:layout="@layout/fragment_detail_news">
+        tools:layout="@layout/fragment_detail">
         <action
             android:id="@+id/action_detailFragment_to_galleryFragment"
             app:destination="@id/galleryFragment"

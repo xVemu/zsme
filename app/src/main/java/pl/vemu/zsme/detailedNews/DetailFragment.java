@@ -12,26 +12,21 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.text.HtmlCompat;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import java.util.ArrayList;
-
 import pl.vemu.zsme.R;
-import pl.vemu.zsme.databinding.FragmentDetailNewsBinding;
+import pl.vemu.zsme.databinding.FragmentDetailBinding;
 
-public class DetailFragment extends Fragment implements IAsyncTaskContext, View.OnClickListener {
+public class DetailFragment extends Fragment implements View.OnClickListener {
 
-    private FragmentDetailNewsBinding binding;
     private String url;
-    private ArrayList<String> images = new ArrayList<>();
+
+    private FragmentDetailBinding binding;
+    private DetailFragmentViewModel viewModel;
 
     public DetailFragment() {
     }
@@ -39,19 +34,16 @@ public class DetailFragment extends Fragment implements IAsyncTaskContext, View.
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = FragmentDetailNewsBinding.inflate(inflater, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_detail, container, false);
+        url = DetailFragmentArgs.fromBundle(getArguments()).getUrl();
+        viewModel = new ViewModelProvider(this, new DetailFragmentViewModelFactory(requireActivity().getApplication(), url)).get(DetailFragmentViewModel.class);
+        binding.setLifecycleOwner(this);
+        binding.setViewmodel(viewModel);
         return binding.getRoot();
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
-    }
-
-    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        url = DetailFragmentArgs.fromBundle(getArguments()).getUrl();
         setHasOptionsMenu(true);
         binding.text.setMovementMethod(LinkMovementMethod.getInstance());
         if (url.startsWith("author")) {
@@ -60,11 +52,7 @@ public class DetailFragment extends Fragment implements IAsyncTaskContext, View.
                     DetailFragmentDirections.actionDetailFragmentToNewsFragment();
             action.setAuthor(url);
             navController.navigate(action);
-            return;
         }
-        if (!url.startsWith("http") && !url.startsWith("https"))
-            url = getString(R.string.zsme_default_link) + url;
-        new DownloadDetailedNews(this).execute(url);
         binding.gallery.setOnClickListener(this);
     }
 
@@ -87,35 +75,9 @@ public class DetailFragment extends Fragment implements IAsyncTaskContext, View.
     }
 
     @Override
-    public void setDetailText(String text) {
-        if (binding != null) {
-            Document parse = Jsoup.parse(text);
-            Elements photos = parse.select("img");
-            if (photos.size() != 0) {
-                binding.gallery.setVisibility(View.VISIBLE);
-                for (Element photo : photos) {
-                    images.add(photo.attr("src").replace("thumbs/thumbs_", ""));
-                    photo.remove();
-                }
-            }
-            binding.text.setText(HtmlCompat.fromHtml(parse.toString(), HtmlCompat.FROM_HTML_MODE_COMPACT, null, null));
-        }
-    }
-
-    @Override
-    public void setProgress(int progress) {
-        binding.progressBar.setProgress(progress);
-    }
-
-    @Override
-    public void setProgressVisibility(int progressVisibility) {
-        if (binding != null) binding.progressBar.setVisibility(progressVisibility);
-    }
-
-    @Override
     public void onClick(View v) {
-        String[] imagesArray = new String[this.images.size()];
-        this.images.toArray(imagesArray);
+        String[] imagesArray = new String[viewModel.getImages().getValue().size()];
+        viewModel.getImages().getValue().toArray(imagesArray);
         Navigation.findNavController(v).navigate(DetailFragmentDirections.actionDetailFragmentToGalleryFragment(imagesArray));
     }
 }
