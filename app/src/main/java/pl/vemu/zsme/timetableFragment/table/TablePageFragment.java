@@ -47,7 +47,7 @@ public class TablePageFragment extends Fragment {
         RecyclerView recyclerView = (RecyclerView) binding.getRoot();
         recyclerView.setLayoutManager(manager);
 
-        RecyclerView.Adapter tableAdapter = new TableAdapter(lessons);
+        RecyclerView.Adapter<TableAdapter.TableViewHolder> tableAdapter = new TableAdapter(lessons);
         recyclerView.setAdapter(tableAdapter);
     }
 }

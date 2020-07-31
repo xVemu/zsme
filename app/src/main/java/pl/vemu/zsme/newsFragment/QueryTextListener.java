@@ -16,8 +16,8 @@ public class QueryTextListener implements SearchView.OnQueryTextListener {
         NewsAdapter adapter = (NewsAdapter) recyclerView.getAdapter();
         adapter.removeAllItems();
         Queries queryObj;
-        if (query.startsWith("author/")) queryObj = new Queries.Author(1, query);
-        else queryObj = new Queries.Search(1, query);
+        if (query.startsWith("author/")) queryObj = new Queries.Author(query);
+        else queryObj = new Queries.Search(query);
         new DownloadNews(queryObj).execute(adapter);
         recyclerView.addOnScrollListener(new RecScrollListener(queryObj));
         return true;

@@ -6,7 +6,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 public class GalleryPageAdapter extends FragmentStateAdapter {
 
-    private String[] images;
+    private final String[] images;
 
     public GalleryPageAdapter(@NonNull Fragment fragment, String[] images) {
         super(fragment);

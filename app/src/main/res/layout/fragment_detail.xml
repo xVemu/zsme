@@ -24,6 +24,7 @@
             android:layout_height="wrap_content"
             android:visibility="@{viewmodel.isUpdating ? View.VISIBLE : View.GONE}" />
 
+        <!--        TODO sdk 23 crah when select-->
         <TextView
             android:id="@+id/text"
             android:layout_width="wrap_content"

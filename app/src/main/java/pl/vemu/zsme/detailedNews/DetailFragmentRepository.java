@@ -16,9 +16,9 @@ import java.util.ArrayList;
 public enum DetailFragmentRepository {
     INSTANCE;
 
-    private MutableLiveData<Spanned> text = new MutableLiveData<>();
-    private MutableLiveData<Boolean> isUpdating = new MutableLiveData<>();
-    private MutableLiveData<ArrayList<String>> images = new MutableLiveData<>();
+    private final MutableLiveData<Spanned> text = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isUpdating = new MutableLiveData<>();
+    private final MutableLiveData<ArrayList<String>> images = new MutableLiveData<>();
     private String errorMessage;
 
     public MutableLiveData<Spanned> downloadText(String url, String errorMessage) {
@@ -60,6 +60,7 @@ public enum DetailFragmentRepository {
         }).start();
     }
 
+    //TODO sdk 23 * parse
     private Spanned parseString(String toSpan) {
         return HtmlCompat.fromHtml(toSpan, HtmlCompat.FROM_HTML_MODE_COMPACT, null, null);
     }

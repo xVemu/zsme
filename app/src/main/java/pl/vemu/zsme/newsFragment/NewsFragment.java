@@ -135,7 +135,7 @@ public class NewsFragment extends Fragment implements AsyncTaskContext, SwipeRef
     public void onRefresh() {
         adapter.removeAllItems();
         if (!"".contentEquals(searchView.getQuery()))
-            new DownloadNews(new Queries.Search(1, searchView.getQuery().toString())).execute(adapter);
+            new DownloadNews(new Queries.Search(searchView.getQuery().toString())).execute(adapter);
         else downloadFirstNews();
     }
 }

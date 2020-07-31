@@ -61,6 +61,7 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
         inflater.inflate(R.menu.menu_share, menu);
     }
 
+    // TODO SDK 23 more options
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.app_bar_share) {

@@ -20,9 +20,8 @@ public class TimetableAdapter extends RecyclerView.Adapter<TimetableAdapter.Time
 
     private final LinkedMap<String, String> map;
 
-    @SuppressWarnings("unchecked")
     public TimetableAdapter(Map<String, String> map) {
-        this.map = (LinkedMap) map;
+        this.map = (LinkedMap<String, String>) map;
     }
 
     @NonNull

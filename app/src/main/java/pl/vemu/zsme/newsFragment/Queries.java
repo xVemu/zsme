@@ -18,8 +18,8 @@ public abstract class Queries {
 
         private final String author;
 
-        Author(int page, String author) {
-            super(page);
+        Author(String author) {
+            super(1);
             this.author = author;
         }
 
@@ -46,8 +46,8 @@ public abstract class Queries {
 
         private final String query;
 
-        Search(int page, String query) {
-            super(page);
+        Search(String query) {
+            super(1);
             this.query = query;
         }
 

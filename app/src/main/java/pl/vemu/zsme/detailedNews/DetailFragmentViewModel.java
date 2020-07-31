@@ -12,9 +12,9 @@ import java.util.ArrayList;
 import pl.vemu.zsme.R;
 
 public class DetailFragmentViewModel extends AndroidViewModel {
-    private MutableLiveData<Spanned> text;
-    private MutableLiveData<Boolean> isUpdating;
-    private MutableLiveData<ArrayList<String>> images;
+    private final MutableLiveData<Spanned> text;
+    private final MutableLiveData<Boolean> isUpdating;
+    private final MutableLiveData<ArrayList<String>> images;
 
     public DetailFragmentViewModel(Application application, String url) {
         super(application);

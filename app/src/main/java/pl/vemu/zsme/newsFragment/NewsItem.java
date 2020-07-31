@@ -9,7 +9,7 @@ import lombok.Value;
 @Builder
 public class NewsItem {
 
-    private String title, description, imgUrl, url, author, date;
+    String title, description, imgUrl, url, author, date;
 
     static NewsItem makeNewsItem(Element element) {
         NewsItem.NewsItemBuilder newsItemBuilder = NewsItem.builder();

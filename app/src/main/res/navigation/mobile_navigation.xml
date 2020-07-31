@@ -60,7 +60,7 @@
         <action
             android:id="@+id/action_loginFragment_to_timetableFragment"
             app:destination="@id/timetableFragment"
-            app:enterAnim="@anim/fragment_open_enter"
+            app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim"
@@ -82,7 +82,7 @@
         <action
             android:id="@+id/action_timetableFragment_to_tableFragment"
             app:destination="@id/tableFragment"
-            app:enterAnim="@anim/fragment_fade_enter"
+            app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
