@@ -9,8 +9,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import org.apache.commons.collections4.map.LinkedMap;
 
@@ -44,11 +42,6 @@ public class TimetablePageFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        LinearLayoutManager linearManager = new LinearLayoutManager(getContext());
-        RecyclerView recyclerView = (RecyclerView) binding.getRoot();
-        recyclerView.setLayoutManager(linearManager);
-
-        RecyclerView.Adapter<TimetableAdapter.TimetableHolder> adapter = new TimetableAdapter(map);
-        recyclerView.setAdapter(adapter);
+        binding.getRoot().setAdapter(new TimetableAdapter(map));
     }
 }

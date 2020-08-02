@@ -65,8 +65,8 @@ public class DownloadTable extends AsyncTask<String, Void, List<List<Lesson>>> i
 
     private Lesson.LessonBuilder buildLesson(Element lesson) {
         return Lesson.builder()
-                .name(lesson.selectFirst(".p").text())
-                .teacher(lesson.selectFirst(".n") == null ? lesson.selectFirst(".o").text() : lesson.selectFirst(".n").text())
+                .name(lesson.select(".p").text())
+                .teacher(lesson.selectFirst(".n") == null ? (lesson.selectFirst(".o") == null ? "" : lesson.selectFirst(".o").text()) : lesson.selectFirst(".n").text())
                 .room(lesson.selectFirst(".s") == null ? lesson.selectFirst(".o").text() : lesson.selectFirst(".s").text());
     }
 

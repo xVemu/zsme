@@ -16,7 +16,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -72,9 +71,8 @@ public class NewsFragment extends Fragment implements AsyncTaskContext, SwipeRef
     }
 
     private void setupRecyclerView() {
-        LinearLayoutManager manager = new LinearLayoutManager(getActivity());
-        binding.recyclerView.setLayoutManager(manager);
         adapter = new NewsAdapter();
+        binding.recyclerView.setHasFixedSize(true);
         binding.recyclerView.setAdapter(adapter);
         scrollListener = new RecScrollListener();
         binding.recyclerView.addOnScrollListener(scrollListener);

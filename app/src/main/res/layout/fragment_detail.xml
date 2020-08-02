@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -10,8 +11,7 @@
             type="pl.vemu.zsme.detailedNews.DetailFragmentViewModel" />
     </data>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -24,7 +24,6 @@
             android:layout_height="wrap_content"
             android:visibility="@{viewmodel.isUpdating ? View.VISIBLE : View.GONE}" />
 
-        <!--        TODO sdk 23 crah when select-->
         <TextView
             android:id="@+id/text"
             android:layout_width="wrap_content"
@@ -32,9 +31,9 @@
             android:layout_margin="16dp"
             android:layout_weight="1"
             android:textIsSelectable="true"
-            android:scrollbars="vertical"
+            android:text="@{viewmodel.text}"
             android:textSize="20sp"
-            tools:text="@{viewmodel.text}" />
+            tools:text="@string/lorem" />
 
         <Button
             android:id="@+id/gallery"

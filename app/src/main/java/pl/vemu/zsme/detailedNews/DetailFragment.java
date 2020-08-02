@@ -2,7 +2,6 @@ package pl.vemu.zsme.detailedNews;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import me.saket.bettermovementmethod.BetterLinkMovementMethod;
 import pl.vemu.zsme.R;
 import pl.vemu.zsme.databinding.FragmentDetailBinding;
 
@@ -45,7 +45,7 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        binding.text.setMovementMethod(LinkMovementMethod.getInstance());
+        binding.text.setMovementMethod(BetterLinkMovementMethod.getInstance());
         if (url.startsWith("author")) {
             NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
             DetailFragmentDirections.ActionDetailFragmentToNewsFragment action =
@@ -61,7 +61,6 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
         inflater.inflate(R.menu.menu_share, menu);
     }
 
-    // TODO SDK 23 more options
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.app_bar_share) {

@@ -62,7 +62,7 @@ public enum DetailFragmentRepository {
 
     //TODO sdk 23 * parse
     private Spanned parseString(String toSpan) {
-        return HtmlCompat.fromHtml(toSpan, HtmlCompat.FROM_HTML_MODE_COMPACT, null, null);
+        return HtmlCompat.fromHtml(toSpan, HtmlCompat.FROM_HTML_MODE_COMPACT);
     }
 
     public MutableLiveData<Boolean> getIsUpdating() {

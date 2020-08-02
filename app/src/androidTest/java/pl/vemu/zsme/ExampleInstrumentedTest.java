@@ -39,7 +39,7 @@ public class ExampleInstrumentedTest {
 //        Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
         ListenableWorker worker = TestListenableWorkerBuilder.from(mContext, NewsWorker.class).build();
         ListenableWorker.Result result = worker.startWork().get();
-        assertEquals(result, ListenableWorker.Result.success());
+        assertEquals(ListenableWorker.Result.success(), result);
 
 //        assertEquals("pl.vemu.zsme", appContext.getPackageName());
     }
