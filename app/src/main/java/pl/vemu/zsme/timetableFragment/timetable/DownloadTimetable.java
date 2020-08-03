@@ -8,7 +8,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -25,14 +24,9 @@ public class DownloadTimetable extends AsyncTask<Void, Void, List<Map<String, St
     protected List<Map<String, String>> doInBackground(Void... voids) {
         try {
             Document document = getNews("lista.html");
-            List<Elements> elements = new ArrayList<>();
-            for (Element ul : document.select("ul")) {
-                elements.add(ul.children());
-            }
-            //TODO revert
-            /*List<Elements> elements = Arrays.asList(document.selectFirst("#oddzialy").children(),
+            List<Elements> elements = Arrays.asList(document.selectFirst("#oddzialy").children(),
                     document.selectFirst("#nauczyciele").children(),
-                    document.selectFirst("#sale").children());*/
+                    document.selectFirst("#sale").children());
             List<Map<String, String>> maps = Arrays.asList(new LinkedMap<>(),
                     new LinkedMap<>(),
                     new LinkedMap<>());
