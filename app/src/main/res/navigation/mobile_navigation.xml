@@ -92,7 +92,7 @@
     </fragment>
     <fragment
         android:id="@+id/moreFragment"
-        android:name="pl.vemu.zsme.moreFragment.MoreFragment"
+        android:name="pl.vemu.zsme.moreFragment.more.MoreFragment"
         android:label="@string/more"
         tools:layout="@layout/fragment_more">
         <action
@@ -125,7 +125,7 @@
         tools:layout="@layout/fragment_settings" />
     <fragment
         android:id="@+id/contactFragment"
-        android:name="pl.vemu.zsme.moreFragment.ContactFragment"
+        android:name="pl.vemu.zsme.moreFragment.contact.ContactFragment"
         android:label="@string/contact"
         tools:layout="@layout/fragment_contact">
         <deepLink

@@ -7,11 +7,10 @@
 
         <variable
             name="viewmodel"
-            type="pl.vemu.zsme.moreFragment.MoreItem" />
+            type="pl.vemu.zsme.moreFragment.more.MoreItem" />
     </data>
 
     <LinearLayout
-        android:id="@+id/settings"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:background="?selectableItemBackground"

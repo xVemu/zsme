@@ -8,4 +8,4 @@
     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
     tools:itemCount="8"
     tools:listitem="@layout/item_more"
-    tools:context=".moreFragment.MoreFragment" />
+    tools:context=".moreFragment.more.MoreFragment" />

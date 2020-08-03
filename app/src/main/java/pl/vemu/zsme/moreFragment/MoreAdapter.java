@@ -5,36 +5,42 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
+import androidx.databinding.ViewDataBinding;
+import androidx.databinding.library.baseAdapters.BR;
 import androidx.recyclerview.widget.RecyclerView;
 
-import pl.vemu.zsme.R;
-import pl.vemu.zsme.databinding.ItemMoreBinding;
+import lombok.RequiredArgsConstructor;
 
-public class MoreAdapter extends RecyclerView.Adapter<MoreAdapter.MoreHolder> {
+@RequiredArgsConstructor
+public class MoreAdapter<E extends Enum<E>, T extends ViewDataBinding> extends RecyclerView.Adapter<MoreAdapter.MoreHolder<T>> {
+
+    private final int layout;
+    private final Class<E> enumType;
+
 
     @NonNull
     @Override
-    public MoreHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MoreHolder<T> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        ItemMoreBinding binding = DataBindingUtil.inflate(inflater, R.layout.item_more, parent, false);
-        return new MoreHolder(binding);
+        T binding = DataBindingUtil.inflate(inflater, layout, parent, false);
+        return new MoreHolder<>(binding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MoreHolder holder, int position) {
-        holder.binding.setViewmodel(MoreItem.values()[position]);
+        holder.binding.setVariable(BR.viewmodel, enumType.getEnumConstants()[position]);
     }
 
     @Override
     public int getItemCount() {
-        return MoreItem.values().length;
+        return enumType.getEnumConstants().length;
     }
 
-    static class MoreHolder extends RecyclerView.ViewHolder {
+    static class MoreHolder<T extends ViewDataBinding> extends RecyclerView.ViewHolder {
 
-        private ItemMoreBinding binding;
+        private T binding;
 
-        public MoreHolder(@NonNull ItemMoreBinding binding) {
+        public MoreHolder(@NonNull T binding) {
             super(binding.getRoot());
             this.binding = binding;
         }

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewmodel"
+            type="pl.vemu.zsme.moreFragment.contact.ContactItem" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingStart="12dp"
+            android:paddingLeft="12dp"
+            android:paddingTop="7dp"
+            android:paddingEnd="12dp"
+            android:paddingRight="12dp"
+            android:paddingBottom="7dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{viewmodel.headerText}"
+                android:textColor="?android:textColorSecondary"
+                android:textSize="12sp"
+                tools:text="@string/school_name" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{viewmodel.text}"
+                android:textIsSelectable="true"
+                android:textSize="17sp"
+                tools:text="@string/school_name_text" />
+        </LinearLayout>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/destination_button"
+            android:onClick="@{viewmodel}"
+            android:padding="4dp"
+            android:tint="?colorPrimary"
+            android:visibility="@{viewmodel.icon != 0 ? View.VISIBLE : View.GONE}"
+            app:imageResource="@{viewmodel.icon}"
+            tools:src="@drawable/ic_mail"
+            tools:visibility="visible" />
+    </LinearLayout>
+</layout>

@@ -19,25 +19,37 @@
     <string name="channel_name">Aktualności</string>
     <string name="e_dziennik">E-dziennik</string>
     <string name="contact">Kontakt</string>
+
+
     <string name="school_name">Nazwa szkoły</string>
     <string name="school_name_text">Zespół Szkół Mechaniczno-Elektrycznych w Tarnowie</string>
+
     <string name="school_address" tools:ignore="Typos">Adres szkoły</string>
     <string name="school_address_text">ul. Szujskiego 13, 33–100 Tarnów</string>
-    <string name="school_address_button">School destination buttom</string>
-    <string name="school_telephone">Telefon</string>
-    <string name="school_telephone_text">(014) 621 61 84</string>
-    <string name="school_telephone_button">School Telephone Button</string>
-    <string name="school_telephone_fax">Telefon/Fax</string>
-    <string name="school_telephone_button_fax">School Telephone/Fax Button</string>
-    <string name="school_telephone_fax_text">(014) 621 61 83</string>
-    <string name="school_headmaster">Dyrektor</string>
-    <string name="school_headmaster_text">mgr Jan Onak</string>
-    <string name="school_headmaster_button">School Headmaster  Button</string>
-    <string name="school_vice_headmaster">Zastępca dyrektora</string>
-    <string name="school_vice2_text">dr inż. Grzegorz Szerszeń</string>
-    <string name="school_vice1_text">mgr Marta Piszczek</string>
+    <string name="school_address_action">"https://www.google.com/maps/place/Zesp%C3%B3%C5%82+Szk%C3%B3%C5%82+Mechaniczno+-+Elektrycznych/@50.0154782,20.9749706,18.58z/data=!4m5!3m4!1s0x0:0xc3a2ae398241c00!8m2!3d50.0154716!4d20.975434"</string>
+
     <string name="school_email">E-mail</string>
     <string name="school_email_text">sekretzsme@umt.tarnow.pl</string>
+
+    <string name="school_phone">Telefon</string>
+    <string name="school_phone_text">(014) 621 61 84</string>
+
+    <string name="school_phone_fax">Telefon/Fax</string>
+    <string name="school_phone_fax_text">(014) 621 61 83</string>
+
+    <string name="school_headmaster">Dyrektor</string>
+    <string name="school_headmaster_text">mgr Jan Onak</string>
+    <string name="school_headmaster_action">dyrzsme@umt.tarnow.pl</string>
+
+    <string name="school_vice_headmaster">Zastępca dyrektora</string>
+
+    <string name="school_vice1_text">mgr Marta Piszczek</string>
+    <string name="school_vice1_action">m.piszczek@zsme.tarnow.pl</string>
+
+    <string name="school_vice2_text">dr inż. Grzegorz Szerszeń</string>
+    <string name="school_vice2_action">g.szerszen@zsme.tarnow.pl</string>
+
+
     <string name="share">Udostępnij</string>
     <string name="theme">Motyw</string>
     <string name="notification">Powiadomienia</string>
@@ -45,4 +57,5 @@
     <string name="gallery">Galeria</string>
     <string name="error">Wystąpił błąd</string>
     <string name="zsme_default_link">https://zsme.tarnow.pl/wp/</string>
+    <string name="destination_button">Destionation button</string>
 </resources>

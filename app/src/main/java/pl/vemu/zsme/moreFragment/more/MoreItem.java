@@ -1,4 +1,4 @@
-package pl.vemu.zsme.moreFragment;
+package pl.vemu.zsme.moreFragment.more;
 
 import android.content.Context;
 import android.content.Intent;
