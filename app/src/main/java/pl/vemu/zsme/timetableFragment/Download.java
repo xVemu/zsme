@@ -11,7 +11,7 @@ import pl.vemu.zsme.STATIC;
 public interface Download {
 
     default Document getNews(String aurl) throws IOException {
-        String url = "https://zsme.tarnow.pl/plan/" + aurl;
+        String url = "https://www.iii-lo.tarnow.pl/plan/" + aurl;
         Connection.Response response = Jsoup.connect(url)
                 .timeout(30000)
                 .method(Connection.Method.GET)

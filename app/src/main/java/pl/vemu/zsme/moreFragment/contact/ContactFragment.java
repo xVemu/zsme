@@ -11,10 +11,9 @@ import androidx.fragment.app.Fragment;
 
 import org.jetbrains.annotations.NotNull;
 
+import pl.vemu.zsme.BaseAdapter;
 import pl.vemu.zsme.R;
 import pl.vemu.zsme.databinding.FragmentContactBinding;
-import pl.vemu.zsme.databinding.ItemContactBinding;
-import pl.vemu.zsme.moreFragment.MoreAdapter;
 
 public class ContactFragment extends Fragment {
 
@@ -38,7 +37,7 @@ public class ContactFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        binding.getRoot().setAdapter(new MoreAdapter<ContactItem, ItemContactBinding>(R.layout.item_contact, ContactItem.class));
+        binding.getRoot().setAdapter(new BaseAdapter(R.layout.item_contact, ContactItem.values()));
         binding.getRoot().setHasFixedSize(true);
     }
 }

@@ -9,10 +9,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import pl.vemu.zsme.BaseAdapter;
 import pl.vemu.zsme.R;
 import pl.vemu.zsme.databinding.FragmentMoreBinding;
-import pl.vemu.zsme.databinding.ItemMoreBinding;
-import pl.vemu.zsme.moreFragment.MoreAdapter;
 
 
 public class MoreFragment extends Fragment {
@@ -31,7 +30,7 @@ public class MoreFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        binding.getRoot().setAdapter(new MoreAdapter<MoreItem, ItemMoreBinding>(R.layout.item_more, MoreItem.class));
+        binding.getRoot().setAdapter(new BaseAdapter(R.layout.item_more, MoreItem.values()));
         binding.getRoot().setHasFixedSize(true);
     }
 
