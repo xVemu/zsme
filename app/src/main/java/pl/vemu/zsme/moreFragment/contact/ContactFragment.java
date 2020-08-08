@@ -8,16 +8,19 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.jetbrains.annotations.NotNull;
 
 import pl.vemu.zsme.BaseAdapter;
 import pl.vemu.zsme.R;
-import pl.vemu.zsme.databinding.FragmentContactBinding;
+
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 public class ContactFragment extends Fragment {
 
-    private FragmentContactBinding binding;
+    private RecyclerView recyclerView;
 
     public ContactFragment() {
     }
@@ -25,19 +28,15 @@ public class ContactFragment extends Fragment {
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentContactBinding.inflate(inflater, container, false);
-        return binding.getRoot();
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
+        recyclerView = new RecyclerView(inflater.getContext());
+        recyclerView.setLayoutManager(new LinearLayoutManager(inflater.getContext()));
+        recyclerView.setLayoutParams(new RecyclerView.LayoutParams(MATCH_PARENT, MATCH_PARENT));
+        return recyclerView;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        binding.getRoot().setAdapter(new BaseAdapter(R.layout.item_contact, ContactItem.values()));
-        binding.getRoot().setHasFixedSize(true);
+        recyclerView.setAdapter(new BaseAdapter(R.layout.item_contact, ContactItem.values()));
+        recyclerView.setHasFixedSize(true);
     }
 }

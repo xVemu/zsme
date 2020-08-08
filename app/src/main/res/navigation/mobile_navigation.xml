@@ -54,7 +54,7 @@
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
-        android:name="pl.vemu.zsme.timetableFragment.LoginFragment"
+        android:name="pl.vemu.zsme.timetableFragment.login.LoginFragment"
         android:label="Plan lekcji"
         tools:layout="@layout/fragment_login">
         <action
@@ -126,8 +126,7 @@
     <fragment
         android:id="@+id/contactFragment"
         android:name="pl.vemu.zsme.moreFragment.contact.ContactFragment"
-        android:label="@string/contact"
-        tools:layout="@layout/fragment_contact">
+        android:label="@string/contact">
         <deepLink
             android:id="@+id/deepLink2"
             app:uri="zsme.tarnow.pl/wp/kontakt/" />
@@ -135,8 +134,7 @@
     <fragment
         android:id="@+id/galleryFragment"
         android:name="pl.vemu.zsme.detailedNews.galleryFragment.GalleryFragment"
-        android:label="@string/gallery"
-        tools:layout="@layout/fragment_gallery">
+        android:label="@string/gallery">
         <argument
             android:name="images"
             app:argType="string[]" />

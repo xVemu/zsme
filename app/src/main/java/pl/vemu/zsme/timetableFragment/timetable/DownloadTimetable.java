@@ -1,8 +1,7 @@
 package pl.vemu.zsme.timetableFragment.timetable;
 
-import android.os.AsyncTask;
+import androidx.lifecycle.MutableLiveData;
 
-import org.apache.commons.collections4.map.LinkedMap;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -11,44 +10,41 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
-import lombok.RequiredArgsConstructor;
-import pl.vemu.zsme.timetableFragment.Download;
+import pl.vemu.zsme.timetableFragment.Login;
 
-@RequiredArgsConstructor
-public class DownloadTimetable extends AsyncTask<Void, Void, List<Map<String, String>>> implements Download {
+public enum DownloadTimetable {
+    INSTANCE;
 
-    private final SetMaps context;
+    private final MutableLiveData<List<List<Timetable>>> list = new MutableLiveData<>(new ArrayList<>());
 
-    @Override
-    protected List<Map<String, String>> doInBackground(Void... voids) {
-        try {
-            Document document = getNews("lista.html");
-            List<Elements> elements = new ArrayList<>();
-            for (Element ul : document.select("ul")) {
-                elements.add(ul.children());
-            }
+    public void downloadTimetable() {
+        new Thread(() -> {
+            try {
+                Document document = Login.INSTANCE.login("lista.html");
+                List<Elements> elements = new ArrayList<>();
+                for (Element ul : document.select("ul")) {
+                    elements.add(ul.children());
+                }
             /*List<Elements> elements = Arrays.asList(document.selectFirst("#oddzialy").children(),
                     document.selectFirst("#nauczyciele").children(),
                     document.selectFirst("#sale").children());*/
-            List<Map<String, String>> maps = Arrays.asList(new LinkedMap<>(),
-                    new LinkedMap<>(),
-                    new LinkedMap<>());
-            for (int i = 0; i < elements.size(); i++) {
-                for (Element element : elements.get(i)) {
-                    maps.get(i).put(element.text(), element.child(0).attr("href"));
+                List<List<Timetable>> maps = Arrays.asList(new ArrayList<>(),
+                        new ArrayList<>(),
+                        new ArrayList<>());
+                for (int i = 0; i < elements.size(); i++) {
+                    for (Element element : elements.get(i)) {
+                        maps.get(i).add(new Timetable(element.text(), element.child(0).attr("href")));
+                    }
                 }
+                list.postValue(maps);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            return maps;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+        }).start();
     }
 
-    @Override
-    protected void onPostExecute(List<Map<String, String>> maps) {
-        context.makePageAdapter(maps);
+    public MutableLiveData<List<List<Timetable>>> getList() {
+        return list;
     }
 }

@@ -9,17 +9,20 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.util.List;
-import java.util.Map;
 
+import pl.vemu.zsme.R;
 import pl.vemu.zsme.databinding.FragmentTimetableBinding;
+import pl.vemu.zsme.timetableFragment.TableTimetableAdapter;
 
-public class TimetableFragment extends Fragment implements SetMaps {
+public class TimetableFragment extends Fragment {
 
     private FragmentTimetableBinding binding;
+    private TimetableVM viewmodel;
 
     public TimetableFragment() {
     }
@@ -27,6 +30,7 @@ public class TimetableFragment extends Fragment implements SetMaps {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentTimetableBinding.inflate(inflater, container, false);
+        viewmodel = new ViewModelProvider(this).get(TimetableVM.class);
         return binding.getRoot();
     }
 
@@ -38,13 +42,13 @@ public class TimetableFragment extends Fragment implements SetMaps {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        new DownloadTimetable(this).execute();
-    }
-
-    @Override
-    public void makePageAdapter(List<Map<String, String>> maps) {
-        binding.viewPager.setAdapter(new TimetablePageAdapter(this, maps));
+        TableTimetableAdapter adapter = new TableTimetableAdapter(R.layout.item_timetable, (List) viewmodel.getList().getValue());
+        binding.viewPager.setAdapter(adapter);
         String[] names = {"Oddziały", "Nauczyciele", "Sale"};
         new TabLayoutMediator(binding.tabLayout, binding.viewPager, (tab, position) -> tab.setText(names[position])).attach();
+        viewmodel.getList().observe(getViewLifecycleOwner(), lists -> {
+            adapter.setList((List) lists);
+            adapter.notifyDataSetChanged();
+        });
     }
 }

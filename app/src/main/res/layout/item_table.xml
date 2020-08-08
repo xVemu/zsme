@@ -1,86 +1,99 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingStart="8dp"
-    android:paddingTop="6dp"
-    android:paddingEnd="12dp"
-    android:paddingBottom="6dp">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
-        android:id="@+id/number"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:gravity="center"
-        android:includeFontPadding="false"
-        android:maxLength="2"
-        android:textSize="32sp"
-        android:textColor="?android:textColorPrimary"
-        tools:text="5" />
+    <data>
 
-    <TextView
-        android:id="@+id/subject"
-        android:layout_width="wrap_content"
+        <variable
+            name="viewmodel"
+            type="pl.vemu.zsme.timetableFragment.table.Lesson" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="40dp"
-        android:layout_toEndOf="@+id/time_start"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:textSize="15sp"
-        android:textColor="?android:textColorPrimary"
-        tools:text="@tools:sample/lorem" />
+        android:paddingStart="8dp"
+        android:paddingTop="6dp"
+        android:paddingEnd="12dp"
+        android:paddingBottom="6dp">
 
-    <TextView
-        android:id="@+id/time_start"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/number"
-        android:layout_marginStart="8dp"
-        android:layout_alignTop="@id/number"
-        android:maxLines="1"
-        android:textColor="?android:textColorSecondary"
-        android:textSize="13sp"
-        tools:text="11:11" />
+        <TextView
+            android:id="@+id/number"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:maxLength="2"
+            android:textSize="32sp"
+            android:textColor="?android:textColorPrimary"
+            android:text="@{viewmodel.index}"
+            tools:text="5" />
 
-    <TextView
-        android:id="@+id/time_finish"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/number"
-        android:layout_marginStart="8dp"
-        android:layout_alignBottom="@+id/number"
-        android:maxLines="1"
-        android:textColor="?android:textColorSecondary"
-        android:textSize="13sp"
-        tools:text="12:00" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="40dp"
+            android:layout_toEndOf="@+id/time_start"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="15sp"
+            android:textColor="?android:textColorPrimary"
+            android:text="@{viewmodel.name}"
+            tools:text="@tools:sample/lorem" />
 
-    <TextView
-        android:id="@+id/room"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/number"
-        android:layout_marginStart="10dp"
-        android:layout_toEndOf="@+id/time_start"
-        android:maxLines="1"
-        android:textColor="?android:textColorSecondary"
-        android:textSize="13sp"
-        tools:text="22"
-        tools:visibility="gone" />
+        <TextView
+            android:id="@+id/time_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/number"
+            android:layout_marginStart="8dp"
+            android:layout_alignTop="@id/number"
+            android:maxLines="1"
+            android:textColor="?android:textColorSecondary"
+            android:textSize="13sp"
+            android:text="@{viewmodel.timeStart}"
+            tools:text="11:11" />
 
-    <TextView
-        android:id="@+id/teacher"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/number"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="16dp"
-        android:layout_toEndOf="@id/room"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:textColor="?android:textColorSecondary"
-        android:textSize="13sp"
-        tools:text="Agata Kowalska - Błaszczyk" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/number"
+            android:layout_marginStart="8dp"
+            android:layout_alignBottom="@+id/number"
+            android:maxLines="1"
+            android:textColor="?android:textColorSecondary"
+            android:textSize="13sp"
+            android:text="@{viewmodel.timeFinish}"
+            tools:text="12:00" />
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/room"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/number"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@+id/time_start"
+            android:maxLines="1"
+            android:textColor="?android:textColorSecondary"
+            android:textSize="13sp"
+            android:text="@{viewmodel.room}"
+            tools:text="22"
+            tools:visibility="gone" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/number"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="16dp"
+            android:layout_toEndOf="@id/room"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="?android:textColorSecondary"
+            android:textSize="13sp"
+            android:text="@{viewmodel.teacher}"
+            tools:text="Agata Kowalska - Błaszczyk" />
+
+    </RelativeLayout>
+</layout>

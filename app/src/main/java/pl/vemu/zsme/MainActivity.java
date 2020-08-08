@@ -22,6 +22,7 @@ import java.util.concurrent.TimeUnit;
 import pl.vemu.zsme.databinding.ActivityMainBinding;
 import pl.vemu.zsme.newsFragment.NewsFragmentDirections;
 import pl.vemu.zsme.newsFragment.NewsWorker;
+import pl.vemu.zsme.timetableFragment.Login;
 import pl.vemu.zsme.timetableFragment.timetable.TimetableFragmentDirections;
 
 public class MainActivity extends AppCompatActivity {
@@ -64,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         AppBarConfiguration configuration = new AppBarConfiguration.Builder(binding.bottomNav.getMenu()).build();
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-            if (!STATIC.LOGGED_IN && destination.getId() == R.id.timetableFragment)
+            if (!Login.INSTANCE.isLogged() && destination.getId() == R.id.timetableFragment)
                 navController.navigate(TimetableFragmentDirections.actionTimetableFragmentToLoginFragment());
         });
         NavigationUI.setupActionBarWithNavController(this, navController, configuration);

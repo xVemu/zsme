@@ -6,5 +6,5 @@ import lombok.Value;
 @Value
 @Builder
 public class Lesson {
-    String name, room, teacher, hour, index;
+    String name, room, teacher, timeStart, timeFinish, index;
 }

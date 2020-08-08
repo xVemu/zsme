@@ -21,12 +21,11 @@ import me.saket.bettermovementmethod.BetterLinkMovementMethod;
 import pl.vemu.zsme.R;
 import pl.vemu.zsme.databinding.FragmentDetailBinding;
 
-public class DetailFragment extends Fragment implements View.OnClickListener {
+public class DetailFragment extends Fragment {
 
     private String url;
 
     private FragmentDetailBinding binding;
-    private DetailFragmentViewModel viewModel;
 
     public DetailFragment() {
     }
@@ -36,7 +35,8 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_detail, container, false);
         url = DetailFragmentArgs.fromBundle(getArguments()).getUrl();
-        viewModel = new ViewModelProvider(this, new DetailFragmentViewModelFactory(requireActivity().getApplication(), url)).get(DetailFragmentViewModel.class);
+        DetailFragmentVM viewModel = new ViewModelProvider(this).get(DetailFragmentVM.class);
+        viewModel.init(url);
         binding.setLifecycleOwner(this);
         binding.setViewmodel(viewModel);
         return binding.getRoot();
@@ -53,7 +53,6 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
             action.setAuthor(url);
             navController.navigate(action);
         }
-        binding.gallery.setOnClickListener(this);
     }
 
     @Override
@@ -72,12 +71,5 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
             startActivity(shareIntent);
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onClick(View v) {
-        String[] imagesArray = new String[viewModel.getImages().getValue().size()];
-        viewModel.getImages().getValue().toArray(imagesArray);
-        Navigation.findNavController(v).navigate(DetailFragmentDirections.actionDetailFragmentToGalleryFragment(imagesArray));
     }
 }

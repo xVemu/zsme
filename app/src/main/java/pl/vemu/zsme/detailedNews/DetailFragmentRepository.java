@@ -21,11 +21,10 @@ public enum DetailFragmentRepository {
     private final MutableLiveData<ArrayList<String>> images = new MutableLiveData<>();
     private String errorMessage;
 
-    public MutableLiveData<Spanned> downloadText(String url, String errorMessage) {
+    public void downloadText(String url, String errorMessage) {
         this.errorMessage = errorMessage;
         isUpdating.setValue(true);
         downloadTextThread(url);
-        return text;
     }
 
     private void downloadTextThread(String url) {
@@ -63,6 +62,10 @@ public enum DetailFragmentRepository {
     //TODO sdk 23 * parse
     private Spanned parseString(String toSpan) {
         return HtmlCompat.fromHtml(toSpan, HtmlCompat.FROM_HTML_MODE_COMPACT);
+    }
+
+    public MutableLiveData<Spanned> getText() {
+        return text;
     }
 
     public MutableLiveData<Boolean> getIsUpdating() {

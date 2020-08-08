@@ -66,8 +66,8 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder> {
 
     static class NewsHolder extends RecyclerView.ViewHolder {
 
-        final TextView title, description, author, date;
-        final ImageView img;
+        private final TextView title, description, author, date;
+        private final ImageView img;
 
         NewsHolder(@NonNull View itemView) {
             super(itemView);

@@ -8,7 +8,7 @@
 
         <variable
             name="viewmodel"
-            type="pl.vemu.zsme.detailedNews.DetailFragmentViewModel" />
+            type="pl.vemu.zsme.detailedNews.DetailFragmentVM" />
     </data>
 
     <LinearLayout
@@ -40,6 +40,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/gallery"
-            android:visibility="@{viewmodel.images.size() > 0 ? View.VISIBLE : View.GONE}" />
+            android:visibility="@{viewmodel.images.size() > 0 ? View.VISIBLE : View.GONE}"
+            android:onClick="@{viewmodel}" />
     </LinearLayout>
 </layout>

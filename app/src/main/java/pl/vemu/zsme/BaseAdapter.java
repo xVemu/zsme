@@ -15,7 +15,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class BaseAdapter extends RecyclerView.Adapter<BaseAdapter.MoreHolder> {
+public class BaseAdapter extends RecyclerView.Adapter<BaseAdapter.BaseHolder> {
 
     private final int layout;
     private List<Object> list;
@@ -32,14 +32,14 @@ public class BaseAdapter extends RecyclerView.Adapter<BaseAdapter.MoreHolder> {
 
     @NonNull
     @Override
-    public MoreHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public BaseHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         ViewDataBinding binding = DataBindingUtil.inflate(inflater, layout, parent, false);
-        return new MoreHolder(binding);
+        return new BaseHolder(binding);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MoreHolder holder, int position) {
+    public void onBindViewHolder(@NonNull BaseHolder holder, int position) {
         holder.binding.setVariable(BR.viewmodel, list.get(position));
     }
 
@@ -48,11 +48,11 @@ public class BaseAdapter extends RecyclerView.Adapter<BaseAdapter.MoreHolder> {
         return list.size();
     }
 
-    static class MoreHolder extends RecyclerView.ViewHolder {
+    static class BaseHolder extends RecyclerView.ViewHolder {
 
-        private ViewDataBinding binding;
+        private final ViewDataBinding binding;
 
-        public MoreHolder(@NonNull ViewDataBinding binding) {
+        public BaseHolder(@NonNull ViewDataBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }

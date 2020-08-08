@@ -12,31 +12,25 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import org.jetbrains.annotations.NotNull;
 
-import pl.vemu.zsme.databinding.FragmentGalleryBinding;
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 public class GalleryFragment extends Fragment {
 
-    private FragmentGalleryBinding binding;
+    private ViewPager2 pager;
 
     public GalleryFragment() {
     }
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentGalleryBinding.inflate(inflater, container, false);
-        return binding.getRoot();
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
+        pager = new ViewPager2(getContext());
+        pager.setLayoutParams(new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
+        return pager;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         String[] images = GalleryFragmentArgs.fromBundle(getArguments()).getImages();
-        ViewPager2 viewPager = (ViewPager2) binding.getRoot();
-        viewPager.setAdapter(new GalleryPageAdapter(this, images));
+        pager.setAdapter(new GalleryPageAdapter(images));
     }
 }
