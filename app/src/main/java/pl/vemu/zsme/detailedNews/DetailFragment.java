@@ -2,6 +2,7 @@ package pl.vemu.zsme.detailedNews;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,7 +18,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import me.saket.bettermovementmethod.BetterLinkMovementMethod;
 import pl.vemu.zsme.R;
 import pl.vemu.zsme.databinding.FragmentDetailBinding;
 
@@ -35,8 +35,7 @@ public class DetailFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_detail, container, false);
         url = DetailFragmentArgs.fromBundle(getArguments()).getUrl();
-        DetailFragmentVM viewModel = new ViewModelProvider(this).get(DetailFragmentVM.class);
-        viewModel.init(url);
+        DetailFragmentVM viewModel = new ViewModelProvider(this, new DetailFragmentVMFactory(requireActivity().getApplication(), url)).get(DetailFragmentVM.class);
         binding.setLifecycleOwner(this);
         binding.setViewmodel(viewModel);
         return binding.getRoot();
@@ -45,7 +44,7 @@ public class DetailFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        binding.text.setMovementMethod(BetterLinkMovementMethod.getInstance());
+        binding.text.setMovementMethod(LinkMovementMethod.getInstance());
         if (url.startsWith("author")) {
             NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
             DetailFragmentDirections.ActionDetailFragmentToNewsFragment action =

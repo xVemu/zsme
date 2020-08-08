@@ -30,7 +30,6 @@
             android:layout_height="0dp"
             android:layout_margin="16dp"
             android:layout_weight="1"
-            android:textIsSelectable="true"
             android:text="@{viewmodel.text}"
             android:textSize="20sp"
             tools:text="@string/lorem" />

@@ -15,11 +15,8 @@ public class TableFragmentVM extends ViewModel {
         return list;
     }
 
-    public TableFragmentVM() {
+    public TableFragmentVM(String url) {
         list = DownloadTable.INSTANCE.getList();
-    }
-
-    public void init(String url) {
         DownloadTable.INSTANCE.downloadTimetable(url);
     }
 

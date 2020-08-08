@@ -32,8 +32,7 @@ public class TableFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         String url = TableFragmentArgs.fromBundle(getArguments()).getUrl();
         binding = FragmentTableBinding.inflate(inflater, container, false);
-        viewmodel = new ViewModelProvider(this).get(TableFragmentVM.class);
-        viewmodel.init(url);
+        viewmodel = new ViewModelProvider(this, new TableFragmentVMFactory(url)).get(TableFragmentVM.class);
         return binding.getRoot();
     }
 
