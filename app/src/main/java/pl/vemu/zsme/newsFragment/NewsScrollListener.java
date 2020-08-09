@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public class RecScrollListener extends RecyclerView.OnScrollListener {
+public class NewsScrollListener extends RecyclerView.OnScrollListener {
 
     private final NewsFragmentVM viewmodel;
     private final Queries query;

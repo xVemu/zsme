@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private NavController navController;
     private ActivityMainBinding binding;
 
+    //TODO rewrite
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

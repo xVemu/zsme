@@ -75,7 +75,7 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         adapter = new BaseAdapter(R.layout.item_news, new ArrayList<>(viewmodel.getList().getValue()));
         binding.recyclerView.setHasFixedSize(true);
         binding.recyclerView.setAdapter(adapter);
-        scrollListener = new RecScrollListener(viewmodel, new Queries.Page());
+        scrollListener = new NewsScrollListener(viewmodel, new Queries.Page());
         binding.recyclerView.addOnScrollListener(scrollListener);
         viewmodel.getList().observe(getViewLifecycleOwner(), newsItems -> {
             adapter.setList(new ArrayList<>(newsItems));
@@ -99,12 +99,11 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.menu_search, menu);
         searchView = (SearchView) menu.findItem(R.id.app_bar_search).getActionView();
-        searchView.setOnQueryTextListener(new QueryTextListener(viewmodel, binding.recyclerView));
+        searchView.setOnQueryTextListener(new NewsQueryTextListener(viewmodel, binding.recyclerView));
         searchView.setOnCloseListener(() -> {
             searchView.onActionViewCollapsed();
             binding.recyclerView.clearOnScrollListeners();
             binding.recyclerView.addOnScrollListener(scrollListener);
-            viewmodel.clearList();
             downloadFirstNews();
             return true;
         });
@@ -116,9 +115,9 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     @Override
     public void onRefresh() {
-        viewmodel.clearList();
-        if (!"".contentEquals(searchView.getQuery()))
+        if (!"".contentEquals(searchView.getQuery())) {
+            viewmodel.clearList();
             viewmodel.downloadNews(new Queries.Search(searchView.getQuery().toString()));
-        else downloadFirstNews();
+        } else downloadFirstNews();
     }
 }

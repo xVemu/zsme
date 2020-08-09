@@ -31,15 +31,12 @@ public class NewsFragmentVM extends ViewModel {
         return isRefreshing;
     }
 
-    public void setList(List<NewsItem> list) {
-        this.list.setValue(list);
-    }
-
     public void downloadNews(Queries query) {
         DownloadNews.INSTANCE.downloadNews(query);
     }
 
     public void clearList() {
+        notFound.postValue(false);
         list.postValue(new ArrayList<>());
         DownloadNews.INSTANCE.setPage(1);
     }
