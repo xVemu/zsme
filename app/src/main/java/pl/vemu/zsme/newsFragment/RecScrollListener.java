@@ -5,21 +5,19 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
 @AllArgsConstructor
 public class RecScrollListener extends RecyclerView.OnScrollListener {
 
-    private Queries query = new Queries.Page(2);
+    private final NewsFragmentVM viewmodel;
+    private final Queries query;
 
 
     @Override
     public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-        NewsAdapter adapter = (NewsAdapter) recyclerView.getAdapter();
         LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
-        if (manager != null && adapter != null && manager.findLastCompletelyVisibleItemPosition() == adapter.getNewsItems().size() - 1) {
-            new DownloadNews(query).execute(adapter);
+        if (manager != null && manager.findLastCompletelyVisibleItemPosition() == viewmodel.getList().getValue().size() - 1) {
+            viewmodel.downloadNews(query);
         }
     }
 }

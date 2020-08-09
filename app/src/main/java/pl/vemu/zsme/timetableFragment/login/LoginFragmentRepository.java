@@ -21,7 +21,7 @@ public enum LoginFragmentRepository {
                 String credentials = login + ":" + password;
                 String base64login = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
                 Login.INSTANCE.setBase64login(base64login);
-                Login.INSTANCE.login();
+                Login.INSTANCE.login("");
                 loginInterface.login();
             } catch (HttpStatusException e) {
                 loginInterface.reject(e.getStatusCode());

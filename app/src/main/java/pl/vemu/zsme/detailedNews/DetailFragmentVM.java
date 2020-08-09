@@ -9,20 +9,20 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.navigation.Navigation;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import pl.vemu.zsme.R;
 
 public class DetailFragmentVM extends AndroidViewModel implements View.OnClickListener {
     //TODO check if can be livedata with value in constructor
     private final MutableLiveData<Spanned> text;
-    private final MutableLiveData<Boolean> isUpdating;
-    private final MutableLiveData<ArrayList<String>> images;
+    private final MutableLiveData<Boolean> isRefreshing;
+    private final MutableLiveData<List<String>> images;
 
     public DetailFragmentVM(Application application, String url) {
         super(application);
         text = DetailFragmentRepository.INSTANCE.getText();
-        isUpdating = DetailFragmentRepository.INSTANCE.getIsUpdating();
+        isRefreshing = DetailFragmentRepository.INSTANCE.getIsRefreshing();
         images = DetailFragmentRepository.INSTANCE.getImages();
         if (!url.startsWith("http") && !url.startsWith("https"))
             url = application.getString(R.string.zsme_default_link) + url;
@@ -33,18 +33,18 @@ public class DetailFragmentVM extends AndroidViewModel implements View.OnClickLi
         return text;
     }
 
-    public LiveData<Boolean> getIsUpdating() {
-        return isUpdating;
+    public LiveData<Boolean> getIsRefreshing() {
+        return isRefreshing;
     }
 
-    public LiveData<ArrayList<String>> getImages() {
+    public LiveData<List<String>> getImages() {
         return images;
     }
 
     @Override
     protected void onCleared() {
         text.setValue(null);
-        isUpdating.setValue(false);
+        isRefreshing.setValue(false);
         images.setValue(null);
     }
 

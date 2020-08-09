@@ -13,11 +13,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 @RequiredArgsConstructor
 public class BaseAdapter extends RecyclerView.Adapter<BaseAdapter.BaseHolder> {
 
     private final int layout;
+    @Setter
     private List<Object> list;
 
     public BaseAdapter(int layout, List<Object> list) {

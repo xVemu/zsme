@@ -12,18 +12,23 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
+import lombok.Getter;
+
+@Getter
 public enum DetailFragmentRepository {
     INSTANCE;
 
     private final MutableLiveData<Spanned> text = new MutableLiveData<>();
-    private final MutableLiveData<Boolean> isUpdating = new MutableLiveData<>();
-    private final MutableLiveData<ArrayList<String>> images = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isRefreshing = new MutableLiveData<>(false);
+    private final MutableLiveData<List<String>> images = new MutableLiveData<>(new ArrayList<>());
+
     private String errorMessage;
 
     public void downloadText(String url, String errorMessage) {
         this.errorMessage = errorMessage;
-        isUpdating.setValue(true);
+        isRefreshing.setValue(true);
         downloadTextThread(url);
     }
 
@@ -55,24 +60,12 @@ public enum DetailFragmentRepository {
                 e.printStackTrace();
                 text.postValue(parseString(errorMessage));
             }
-            isUpdating.postValue(false);
+            isRefreshing.postValue(false);
         }).start();
     }
 
     //TODO sdk 23 * parse
     private Spanned parseString(String toSpan) {
         return HtmlCompat.fromHtml(toSpan, HtmlCompat.FROM_HTML_MODE_COMPACT);
-    }
-
-    public MutableLiveData<Spanned> getText() {
-        return text;
-    }
-
-    public MutableLiveData<Boolean> getIsUpdating() {
-        return isUpdating;
-    }
-
-    public MutableLiveData<ArrayList<String>> getImages() {
-        return images;
     }
 }

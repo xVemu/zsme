@@ -20,12 +20,8 @@ public enum Login {
     @Getter
     private boolean logged;
 
-    public Document login() throws IOException {
-        return login("");
-    }
-
     public Document login(String aurl) throws IOException {
-        String url = "https://www.iii-lo.tarnow.pl/plan/" + aurl;
+        String url = "https://www.zsme.tarnow.pl/plan/" + aurl;
         Connection.Response response = Jsoup.connect(url)
                 .timeout(30000)
                 .method(Connection.Method.GET)

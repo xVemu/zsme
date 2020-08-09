@@ -15,20 +15,26 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import java.util.ArrayList;
+
+import pl.vemu.zsme.BaseAdapter;
 import pl.vemu.zsme.R;
 import pl.vemu.zsme.databinding.FragmentNewsBinding;
 
-public class NewsFragment extends Fragment implements AsyncTaskContext, SwipeRefreshLayout.OnRefreshListener {
+public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
-    private NewsAdapter adapter;
+    private BaseAdapter adapter;
     private FragmentNewsBinding binding;
     private RecyclerView.OnScrollListener scrollListener;
     private SearchView searchView;
     private String author;
+    private NewsFragmentVM viewmodel;
 
     public NewsFragment() {
     }
@@ -36,14 +42,11 @@ public class NewsFragment extends Fragment implements AsyncTaskContext, SwipeRef
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = FragmentNewsBinding.inflate(inflater, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_news, container, false);
+        viewmodel = new ViewModelProvider(this).get(NewsFragmentVM.class);
+        binding.setLifecycleOwner(this);
+        binding.setViewmodel(viewmodel);
         return binding.getRoot();
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
     }
 
     @Override
@@ -51,8 +54,6 @@ public class NewsFragment extends Fragment implements AsyncTaskContext, SwipeRef
         author = NewsFragmentArgs.fromBundle(getArguments()).getAuthor();
 
         setupRecyclerView();
-
-        DownloadNews.setContext(this);
 
         setHasOptionsMenu(true);
 
@@ -71,36 +72,39 @@ public class NewsFragment extends Fragment implements AsyncTaskContext, SwipeRef
     }
 
     private void setupRecyclerView() {
-        adapter = new NewsAdapter();
+        adapter = new BaseAdapter(R.layout.item_news, new ArrayList<>(viewmodel.getList().getValue()));
         binding.recyclerView.setHasFixedSize(true);
         binding.recyclerView.setAdapter(adapter);
-        scrollListener = new RecScrollListener();
+        scrollListener = new RecScrollListener(viewmodel, new Queries.Page());
         binding.recyclerView.addOnScrollListener(scrollListener);
+        viewmodel.getList().observe(getViewLifecycleOwner(), newsItems -> {
+            adapter.setList(new ArrayList<>(newsItems));
+            adapter.notifyDataSetChanged();
+        });
     }
 
     private ConnectivityManager.NetworkCallback networkCallback = new ConnectivityManager.NetworkCallback() {
         @Override
         public void onAvailable(@NonNull Network network) {
-            getActivity().runOnUiThread(() -> {
-                if (author == null) downloadFirstNews();
-            });
+            if (author == null && viewmodel.getList().getValue().isEmpty()) downloadFirstNews();
         }
     };
 
     private void downloadFirstNews() {
-        new DownloadNews(new Queries.Page(1)).execute(adapter);
+        viewmodel.clearList();
+        viewmodel.downloadNews(new Queries.Page());
     }
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.menu_search, menu);
         searchView = (SearchView) menu.findItem(R.id.app_bar_search).getActionView();
-        searchView.setOnQueryTextListener(new QueryTextListener(binding.recyclerView));
+        searchView.setOnQueryTextListener(new QueryTextListener(viewmodel, binding.recyclerView));
         searchView.setOnCloseListener(() -> {
             searchView.onActionViewCollapsed();
             binding.recyclerView.clearOnScrollListeners();
             binding.recyclerView.addOnScrollListener(scrollListener);
-            adapter.removeAllItems();
+            viewmodel.clearList();
             downloadFirstNews();
             return true;
         });
@@ -111,29 +115,10 @@ public class NewsFragment extends Fragment implements AsyncTaskContext, SwipeRef
     }
 
     @Override
-    public void setIsFound(boolean isFound) {
-        if (binding != null) {
-            binding.refresh.setRefreshing(false);
-            if (isFound) {
-                binding.notFound.setVisibility(View.GONE);
-                binding.refresh.setVisibility(View.VISIBLE);
-            } else {
-                binding.notFound.setVisibility(View.VISIBLE);
-                binding.refresh.setVisibility(View.GONE);
-            }
-        }
-    }
-
-    @Override
-    public void startRefreshing() {
-        if (binding != null) binding.refresh.setRefreshing(true);
-    }
-
-    @Override
     public void onRefresh() {
-        adapter.removeAllItems();
+        viewmodel.clearList();
         if (!"".contentEquals(searchView.getQuery()))
-            new DownloadNews(new Queries.Search(searchView.getQuery().toString())).execute(adapter);
+            viewmodel.downloadNews(new Queries.Search(searchView.getQuery().toString()));
         else downloadFirstNews();
     }
 }

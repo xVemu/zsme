@@ -8,18 +8,18 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class QueryTextListener implements SearchView.OnQueryTextListener {
 
+    private final NewsFragmentVM viewmodel;
     private final RecyclerView recyclerView;
 
     @Override
     public boolean onQueryTextSubmit(String query) {
         recyclerView.clearOnScrollListeners();
-        NewsAdapter adapter = (NewsAdapter) recyclerView.getAdapter();
-        adapter.removeAllItems();
+        viewmodel.clearList();
         Queries queryObj;
         if (query.startsWith("author/")) queryObj = new Queries.Author(query);
         else queryObj = new Queries.Search(query);
-        new DownloadNews(queryObj).execute(adapter);
-        recyclerView.addOnScrollListener(new RecScrollListener(queryObj));
+        viewmodel.downloadNews(queryObj);
+        recyclerView.addOnScrollListener(new RecScrollListener(viewmodel, queryObj));
         return true;
     }
 
