@@ -50,6 +50,11 @@ public class BaseAdapter extends RecyclerView.Adapter<BaseAdapter.BaseHolder> {
         return list.size();
     }
 
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
     static class BaseHolder extends RecyclerView.ViewHolder {
 
         private final ViewDataBinding binding;

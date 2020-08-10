@@ -73,7 +73,7 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     private void setupRecyclerView() {
         adapter = new BaseAdapter(R.layout.item_news, new ArrayList<>(viewmodel.getList().getValue()));
-        binding.recyclerView.setHasFixedSize(true);
+        adapter.setHasStableIds(true);
         binding.recyclerView.setAdapter(adapter);
         scrollListener = new NewsScrollListener(viewmodel, new Queries.Page());
         binding.recyclerView.addOnScrollListener(scrollListener);
