@@ -22,7 +22,7 @@ public enum MoreItem {
     HOME_PAGE(R.drawable.ic_home_page, R.string.home_page) {
         @Override
         public View.OnClickListener onClick(Context context) {
-            return (view -> context.startActivity(Intent.createChooser(new Intent(Intent.ACTION_VIEW, Uri.parse("https://zsme.tarnow.pl")), "Przeglądaj za pomocą:")));
+            return (view -> context.startActivity(Intent.createChooser(new Intent(Intent.ACTION_VIEW, Uri.parse("https://zsme.tarnow.pl")), view.getContext().getString(R.string.open_in))));
         }
     },
     E_DZIENNIK(R.drawable.ic_e_dziennik, R.string.e_dziennik) {

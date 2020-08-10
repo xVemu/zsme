@@ -8,15 +8,18 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import pl.vemu.zsme.BaseAdapter;
 import pl.vemu.zsme.R;
-import pl.vemu.zsme.databinding.FragmentMoreBinding;
+
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 
 public class MoreFragment extends Fragment {
 
-    private FragmentMoreBinding binding;
+    private RecyclerView recyclerView;
 
     public MoreFragment() {
     }
@@ -24,19 +27,15 @@ public class MoreFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentMoreBinding.inflate(inflater, container, false);
-        return binding.getRoot();
+        recyclerView = new RecyclerView(inflater.getContext());
+        recyclerView.setLayoutManager(new LinearLayoutManager(inflater.getContext()));
+        recyclerView.setLayoutParams(new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
+        return recyclerView;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        binding.getRoot().setAdapter(new BaseAdapter(R.layout.item_more, MoreItem.values()));
-        binding.getRoot().setHasFixedSize(true);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        binding = null;
+        recyclerView.setAdapter(new BaseAdapter(R.layout.item_more, MoreItem.values()));
+        recyclerView.setHasFixedSize(true);
     }
 }

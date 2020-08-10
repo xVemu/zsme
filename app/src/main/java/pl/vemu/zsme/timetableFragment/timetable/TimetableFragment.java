@@ -44,7 +44,7 @@ public class TimetableFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         TableTimetableAdapter adapter = new TableTimetableAdapter(R.layout.item_timetable, (List) viewmodel.getList().getValue());
         binding.viewPager.setAdapter(adapter);
-        String[] names = {"Oddziały", "Nauczyciele", "Sale"};
+        String[] names = {getString(R.string.classes), getString(R.string.teachers), getString(R.string.schoolroom)};
         new TabLayoutMediator(binding.tabLayout, binding.viewPager, (tab, position) -> tab.setText(names[position])).attach();
         viewmodel.getList().observe(getViewLifecycleOwner(), lists -> {
             adapter.setList((List) lists);

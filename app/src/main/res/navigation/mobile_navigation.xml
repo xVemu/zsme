@@ -55,7 +55,7 @@
     <fragment
         android:id="@+id/loginFragment"
         android:name="pl.vemu.zsme.timetableFragment.login.LoginFragment"
-        android:label="Plan lekcji"
+        android:label="@string/timetable"
         tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_loginFragment_to_timetableFragment"
@@ -69,7 +69,7 @@
     <fragment
         android:id="@+id/timetableFragment"
         android:name="pl.vemu.zsme.timetableFragment.timetable.TimetableFragment"
-        android:label="Plan lekcji"
+        android:label="@string/timetable"
         tools:layout="@layout/fragment_timetable">
         <action
             android:id="@+id/action_timetableFragment_to_loginFragment"
@@ -93,8 +93,7 @@
     <fragment
         android:id="@+id/moreFragment"
         android:name="pl.vemu.zsme.moreFragment.more.MoreFragment"
-        android:label="@string/more"
-        tools:layout="@layout/fragment_more">
+        android:label="@string/more">
         <action
             android:id="@+id/action_moreFragment_to_settingsFragment"
             app:destination="@id/settingsFragment"
@@ -121,8 +120,7 @@
     <fragment
         android:id="@+id/settingsFragment"
         android:name="pl.vemu.zsme.moreFragment.SettingsFragment"
-        android:label="@string/settings"
-        tools:layout="@layout/fragment_settings" />
+        android:label="@string/settings" />
     <fragment
         android:id="@+id/contactFragment"
         android:name="pl.vemu.zsme.moreFragment.contact.ContactFragment"

@@ -16,9 +16,9 @@ public enum ContactItem implements View.OnClickListener {
     EMAIL(R.drawable.ic_mail, R.string.school_email, R.string.school_email_text, R.string.school_email_text),
     PHONE(R.drawable.ic_phone, R.string.school_phone, R.string.school_phone_text, R.string.school_phone_text),
     FAX(R.drawable.ic_phone, R.string.school_phone_fax, R.string.school_phone_fax_text, R.string.school_phone_fax_text),
-    HEADMASTER(R.drawable.ic_mail, R.string.school_headmaster, R.string.school_headmaster_text, R.string.school_headmaster_action),
-    VICE_HEADMASTER_1(R.drawable.ic_mail, R.string.school_vice_headmaster, R.string.school_vice1_text, R.string.school_vice1_text),
-    VICE_HEADMASTER_2(R.drawable.ic_mail, R.string.school_vice_headmaster, R.string.school_vice2_text, R.string.school_vice2_text);
+    HEADMASTER(R.drawable.ic_mail, R.string.school_principal, R.string.school_principal_text, R.string.school_principal_action),
+    VICE_HEADMASTER_1(R.drawable.ic_mail, R.string.school_vice_principal, R.string.school_vice1_text, R.string.school_vice1_text),
+    VICE_HEADMASTER_2(R.drawable.ic_mail, R.string.school_vice_principal, R.string.school_vice2_text, R.string.school_vice2_text);
 
     @Getter
     private final int icon, headerText, text, action;

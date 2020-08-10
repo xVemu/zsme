@@ -40,7 +40,7 @@
                 app:layout_constraintHorizontal_bias="0.4"
                 app:layout_constraintStart_toEndOf="@+id/thumbnail"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="@string/title" />
+                tools:text="@string/lorem_title" />
 
             <TextView
                 android:id="@+id/description"
@@ -82,7 +82,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/thumbnail"
                 app:layout_constraintTop_toBottomOf="@+id/description"
-                tools:text="@string/title" />
+                tools:text="@string/lorem_title" />
 
             <TextView
                 android:id="@+id/author"
@@ -98,7 +98,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/thumbnail"
                 app:layout_constraintTop_toBottomOf="@+id/date"
-                tools:text="@string/title" />
+                tools:text="@string/lorem_title" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

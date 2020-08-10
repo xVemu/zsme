@@ -46,7 +46,7 @@ public class TableFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         TableTimetableAdapter adapter = new TableTimetableAdapter(R.layout.item_table, (List) viewmodel.getList().getValue());
         binding.viewPager.setAdapter(adapter);
-        String[] names = {"Poniedziałek", "Wtorek", "Środa", "Czwartek", "Piątek"};
+        String[] names = {getString(R.string.monday), getString(R.string.tuesday), getString(R.string.wednesday), getString(R.string.thursday), getString(R.string.friday)};
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
             int day = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
             day = (day == 1) || (day == 7) ? 0 : day - 2;

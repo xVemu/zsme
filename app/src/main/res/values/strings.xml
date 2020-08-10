@@ -1,8 +1,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name">ZSME</string>
-    <string name="lorem">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
-    <string name="title">Lorem ipsum dolor sit amet, consectetur adipiscing elit</string>
-    <string name="thumbnail">Thumbnail</string>
+    <string name="app_name" translatable="false">ZSME</string>
+
+    <string name="lorem" translatable="false">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
+    <string name="lorem_title" translatable="false">Lorem ipsum dolor sit amet, consectetur adipiscing elit</string>
+    <string name="thumbnail" translatable="false">Thumbnail</string>
 
     <string name="search">Wyszukaj</string>
 
@@ -11,10 +12,10 @@
     <string name="login">Login</string>
     <string name="password">Hasło</string>
     <string name="log_in">Zaloguj</string>
-    <string name="wrong_password_or_login">Złe hasło lub login</string>
+    <string name="wrong_password_or_login">Złe login lub hasło</string>
     <string name="settings">Ustawienia</string>
     <string name="no_results">Brak wyników</string>
-    <string name="home_page">Strona główna</string>
+    <string name="home_page">Strona internetowa</string>
     <string name="more">Więcej</string>
     <string name="channel_name">Aktualności</string>
     <string name="e_dziennik">E-dziennik</string>
@@ -25,37 +26,48 @@
     <string name="school_name_text">Zespół Szkół Mechaniczno-Elektrycznych w Tarnowie</string>
 
     <string name="school_address" tools:ignore="Typos">Adres szkoły</string>
-    <string name="school_address_text">ul. Szujskiego 13, 33–100 Tarnów</string>
-    <string name="school_address_action">"https://www.google.com/maps/place/Zesp%C3%B3%C5%82+Szk%C3%B3%C5%82+Mechaniczno+-+Elektrycznych/@50.0154782,20.9749706,18.58z/data=!4m5!3m4!1s0x0:0xc3a2ae398241c00!8m2!3d50.0154716!4d20.975434"</string>
+    <string name="school_address_text" translatable="false">Szujskiego 13, 33–100 Tarnów</string>
+    <string name="school_address_action" translatable="false">https://goo.gl/maps/UCDb4Uky2bzUPQYy6</string>
 
-    <string name="school_email">E-mail</string>
-    <string name="school_email_text">sekretzsme@umt.tarnow.pl</string>
+    <string name="school_email" translatable="false">E-mail</string>
+    <string name="school_email_text" translatable="false">sekretzsme@umt.tarnow.pl</string>
 
     <string name="school_phone">Telefon</string>
-    <string name="school_phone_text">(014) 621 61 84</string>
+    <string name="school_phone_text" translatable="false">(014) 621 61 84</string>
 
     <string name="school_phone_fax">Telefon/Fax</string>
-    <string name="school_phone_fax_text">(014) 621 61 83</string>
+    <string name="school_phone_fax_text" translatable="false">(014) 621 61 83</string>
 
-    <string name="school_headmaster">Dyrektor</string>
-    <string name="school_headmaster_text">mgr Jan Onak</string>
-    <string name="school_headmaster_action">dyrzsme@umt.tarnow.pl</string>
+    <string name="school_principal">Dyrektor</string>
+    <string name="school_principal_text" translatable="false">mgr Jan Onak</string>
+    <string name="school_principal_action" translatable="false">dyrzsme@umt.tarnow.pl</string>
 
-    <string name="school_vice_headmaster">Zastępca dyrektora</string>
+    <string name="school_vice_principal">Zastępca dyrektora</string>
 
-    <string name="school_vice1_text">mgr Marta Piszczek</string>
-    <string name="school_vice1_action">m.piszczek@zsme.tarnow.pl</string>
+    <string name="school_vice1_text" translatable="false">mgr Marta Piszczek</string>
+    <string name="school_vice1_action" translatable="false">m.piszczek@zsme.tarnow.pl</string>
 
-    <string name="school_vice2_text">dr inż. Grzegorz Szerszeń</string>
-    <string name="school_vice2_action">g.szerszen@zsme.tarnow.pl</string>
+    <string name="school_vice2_text" translatable="false">dr inż. Grzegorz Szerszeń</string>
+    <string name="school_vice2_action" translatable="false">g.szerszen@zsme.tarnow.pl</string>
 
 
     <string name="share">Udostępnij</string>
     <string name="theme">Motyw</string>
     <string name="notification">Powiadomienia</string>
-    <string name="photo_gallery">Photo in gallery</string>
-    <string name="gallery">Galeria</string>
+    <string name="gallery">Zdjęcia</string>
     <string name="error">Wystąpił błąd</string>
-    <string name="zsme_default_link">https://zsme.tarnow.pl/wp/</string>
-    <string name="destination_button">Destionation button</string>
+    <string name="zsme_default_link" translatable="false">https://zsme.tarnow.pl/wp/</string>
+    <string name="destination_button" translatable="false">Destionation button</string>
+    <string name="teachers">Nauczyciele</string>
+    <string name="schoolroom">Sale</string>
+    <string name="classes">Oddziały</string>
+    <string name="monday">Poniedziałek</string>
+    <string name="tuesday">Wtorek</string>
+    <string name="wednesday">Środa</string>
+    <string name="thursday">Czwartek</string>
+    <string name="friday">Piątek</string>
+    <string name="light">Jasny</string>
+    <string name="dark">Ciemny</string>
+    <string name="default_system">Domyślny systemowy</string>
+    <string name="open_in">Otwórz w:</string>
 </resources>
