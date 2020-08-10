@@ -68,6 +68,9 @@
     <string name="friday">Piątek</string>
     <string name="light">Jasny</string>
     <string name="dark">Ciemny</string>
-    <string name="default_system">Domyślny systemowy</string>
+    <string name="system_default">Domyślny systemowy</string>
     <string name="open_in">Otwórz w:</string>
+    <string name="source_code">Kod źródłowy</string>
+    <string name="source_code_text" translatable="false">xVemu/zsme</string>
+    <string name="github_url" translatable="false">https://github.com/xVemu/zsme</string>
 </resources>

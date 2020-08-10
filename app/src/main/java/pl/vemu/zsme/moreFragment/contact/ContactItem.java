@@ -18,7 +18,8 @@ public enum ContactItem implements View.OnClickListener {
     FAX(R.drawable.ic_phone, R.string.school_phone_fax, R.string.school_phone_fax_text, R.string.school_phone_fax_text),
     HEADMASTER(R.drawable.ic_mail, R.string.school_principal, R.string.school_principal_text, R.string.school_principal_action),
     VICE_HEADMASTER_1(R.drawable.ic_mail, R.string.school_vice_principal, R.string.school_vice1_text, R.string.school_vice1_text),
-    VICE_HEADMASTER_2(R.drawable.ic_mail, R.string.school_vice_principal, R.string.school_vice2_text, R.string.school_vice2_text);
+    VICE_HEADMASTER_2(R.drawable.ic_mail, R.string.school_vice_principal, R.string.school_vice2_text, R.string.school_vice2_text),
+    SOURCE_CODE(R.drawable.ic_github, R.string.source_code, R.string.source_code_text, R.string.github_url);
 
     @Getter
     private final int icon, headerText, text, action;
@@ -36,7 +37,8 @@ public enum ContactItem implements View.OnClickListener {
                 intent = openEmail(actionString);
                 break;
             case R.drawable.ic_map:
-                intent = openLocation(actionString);
+            case R.drawable.ic_github:
+                intent = openPage(actionString);
                 break;
             default:
                 return;
@@ -51,8 +53,8 @@ public enum ContactItem implements View.OnClickListener {
         return new Intent(Intent.ACTION_DIAL, intentUri);
     }
 
-    private Intent openLocation(String location) {
-        Uri intentUri = Uri.parse(location);
+    private Intent openPage(String page) {
+        Uri intentUri = Uri.parse(page);
         return new Intent(Intent.ACTION_VIEW, intentUri);
     }
 

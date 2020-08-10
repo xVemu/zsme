@@ -36,6 +36,7 @@
     <string name="friday">Friday</string>
     <string name="light">Light</string>
     <string name="dark">Dark</string>
-    <string name="default_system">System default</string>
+    <string name="system_default">System default</string>
     <string name="open_in">Open in:</string>
+    <string name="source_code">Source code</string>
 </resources>
