@@ -31,13 +31,13 @@ enum DownloadNews {
     private void downloadNewsThread(Queries query) {
         new Thread(() -> {
             try {
-                String url = "https://zsme.tarnow.pl/wp/" + query.parseUrl(page);
-                page++;
+                String url = "https://zsme.tarnow.pl/wp/" + query.parseUrl(page).replaceAll(" ", "+");
                 Document document = Jsoup.connect(url).get();
-                if (document.selectFirst(".column-one") == null) {
+                if (document.selectFirst(".column-one") == null && page == 1) {
                     notFound.postValue(true);
                     return;
                 }
+                page++;
                 Elements columnOneNews = document.selectFirst(".column-one").children();
                 Elements columnTwoNews = document.selectFirst(".column-two").children();
                 List<NewsItem> newsItems = list.getValue();
@@ -49,7 +49,8 @@ enum DownloadNews {
                 list.postValue(newsItems);
             } catch (IOException e) {
                 e.printStackTrace();
-                notFound.postValue(true);
+                if (page == 1)
+                    notFound.postValue(true);
             } finally {
                 isRefreshing.postValue(false);
             }

@@ -13,7 +13,7 @@ public abstract class Queries {
 
         @Override
         public String parseUrl(int page) {
-            return author + "page/" + page;
+            return author + "/page/" + page;
         }
 
     }

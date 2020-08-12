@@ -16,7 +16,7 @@ public class BindingAdapters {
 
     @BindingAdapter("app:imgUrl")
     public static void setImageUrl(ImageView view, String url) {
-        Glide.with(view.getContext()).load(url).centerCrop().into(view);
+        Glide.with(view.getContext()).load(url).placeholder(R.drawable.zsme).centerCrop().into(view);
     }
 
     @BindingAdapter("app:refreshing")

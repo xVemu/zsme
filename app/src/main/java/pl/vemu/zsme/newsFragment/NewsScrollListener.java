@@ -16,7 +16,7 @@ public class NewsScrollListener extends RecyclerView.OnScrollListener {
     @Override
     public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
         LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
-        if (manager != null && manager.findLastCompletelyVisibleItemPosition() == viewmodel.getList().getValue().size() - 1) {
+        if (manager != null && viewmodel.getList().getValue().size() != 0 && manager.findLastCompletelyVisibleItemPosition() == viewmodel.getList().getValue().size() - 1) {
             viewmodel.downloadNews(query);
         }
     }

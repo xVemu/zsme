@@ -116,8 +116,7 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public void onRefresh() {
         if (!"".contentEquals(searchView.getQuery())) {
-            viewmodel.clearList();
-            viewmodel.downloadNews(new Queries.Search(searchView.getQuery().toString()));
+            searchView.setQuery(searchView.getQuery(), true);
         } else downloadFirstNews();
     }
 }
