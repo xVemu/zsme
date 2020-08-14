@@ -35,7 +35,6 @@ public class NewsFragmentVM extends ViewModel {
         DownloadNews.INSTANCE.downloadNews(query);
     }
 
-    //TODO fix refreshing
     public void clearList() {
         DownloadNews.INSTANCE.setPage(1);
         notFound.postValue(false);

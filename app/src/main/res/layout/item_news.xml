@@ -67,7 +67,7 @@
                 android:contentDescription="@string/thumbnail"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:imgUrl="@{viewmodel.imgUrl}"
+                imgUrl="@{viewmodel.imgUrl}"
                 tools:srcCompat="@drawable/zsme" />
 
             <TextView

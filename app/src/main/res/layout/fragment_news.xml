@@ -22,7 +22,7 @@
             android:id="@+id/refresh"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:refreshing="@{viewmodel.isRefreshing}"
+            refreshing="@{viewmodel.isRefreshing}"
             android:visibility="@{viewmodel.notFound ? View.GONE : View.VISIBLE}">
 
             <androidx.recyclerview.widget.RecyclerView

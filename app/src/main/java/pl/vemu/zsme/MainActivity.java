@@ -6,8 +6,11 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -17,6 +20,8 @@ import androidx.work.NetworkType;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
+import com.google.android.material.appbar.AppBarLayout;
+
 import java.util.concurrent.TimeUnit;
 
 import pl.vemu.zsme.databinding.ActivityMainBinding;
@@ -25,7 +30,7 @@ import pl.vemu.zsme.newsFragment.NewsWorker;
 import pl.vemu.zsme.timetableFragment.Login;
 import pl.vemu.zsme.timetableFragment.timetable.TimetableFragmentDirections;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavController.OnDestinationChangedListener {
 
     private NavController navController;
     private ActivityMainBinding binding;
@@ -35,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setSupportActionBar(binding.toolbar);
         setContentView(binding.getRoot());
         setupNavigationBar();
         createNotificationChannel();
@@ -65,18 +71,20 @@ public class MainActivity extends AppCompatActivity {
     private void setupNavigationBar() {
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         AppBarConfiguration configuration = new AppBarConfiguration.Builder(binding.bottomNav.getMenu()).build();
-        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-            if (!Login.INSTANCE.isLogged() && destination.getId() == R.id.timetableFragment)
-                navController.navigate(TimetableFragmentDirections.actionTimetableFragmentToLoginFragment());
-        });
-        NavigationUI.setupActionBarWithNavController(this, navController, configuration);
+        navController.addOnDestinationChangedListener(this);
         NavigationUI.setupWithNavController(binding.bottomNav, navController);
+        NavigationUI.setupWithNavController(binding.toolbar, navController, configuration);
     }
 
     @Override
-    public boolean onSupportNavigateUp() {
-        navController.navigateUp();
-        return super.onSupportNavigateUp();
+    public void onDestinationChanged(@NonNull NavController controller, @NonNull NavDestination destination, @Nullable Bundle arguments) {
+        AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) binding.toolbar.getLayoutParams();
+        if (destination.getId() == R.id.newsFragment)
+            params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
+                    | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
+        else params.setScrollFlags(0);
+        if (!Login.INSTANCE.isLogged() && destination.getId() == R.id.timetableFragment)
+            controller.navigate(TimetableFragmentDirections.actionTimetableFragmentToLoginFragment());
     }
 
     private void createNotificationChannel() {
@@ -88,4 +96,5 @@ public class MainActivity extends AppCompatActivity {
             notificationManager.createNotificationChannel(channel);
         }
     }
+
 }
