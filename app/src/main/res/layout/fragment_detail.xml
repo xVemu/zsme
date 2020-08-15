@@ -30,7 +30,7 @@
             android:layout_height="0dp"
             android:layout_margin="16dp"
             android:layout_weight="1"
-            android:text="@{viewmodel.text}"
+            android:text="@{viewmodel.detail.text}"
             android:textSize="20sp"
             tools:text="@string/lorem" />
 
@@ -39,7 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/gallery"
-            android:visibility="@{viewmodel.images.size() > 0 ? View.VISIBLE : View.GONE}"
+            android:visibility="@{viewmodel.detail.images != null ? View.VISIBLE : View.GONE}"
             android:onClick="@{viewmodel}" />
     </LinearLayout>
 </layout>

@@ -4,20 +4,26 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TableFragmentVM extends ViewModel {
 
-    private MutableLiveData<List<List<Lesson>>> list;
+    private final MutableLiveData<List<List<Table>>> list = new MutableLiveData<>(new ArrayList<>());
 
-    public LiveData<List<List<Lesson>>> getList() {
+    public LiveData<List<List<Table>>> getList() {
         return list;
     }
 
     public TableFragmentVM(String url) {
-        list = DownloadTable.INSTANCE.getList();
-        DownloadTable.INSTANCE.downloadTimetable(url);
+        new Thread(() -> {
+            try {
+                list.postValue(TableRepo.INSTANCE.downloadTimetable(url));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 
     @Override

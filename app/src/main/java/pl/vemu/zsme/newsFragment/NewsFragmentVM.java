@@ -4,20 +4,16 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class NewsFragmentVM extends ViewModel {
 
-    private final MutableLiveData<List<NewsItem>> list;
-    private final MutableLiveData<Boolean> notFound;
-    private final MutableLiveData<Boolean> isRefreshing;
-
-    public NewsFragmentVM() {
-        list = DownloadNews.INSTANCE.getList();
-        isRefreshing = DownloadNews.INSTANCE.getIsRefreshing();
-        notFound = DownloadNews.INSTANCE.getNotFound();
-    }
+    private final MutableLiveData<List<NewsItem>> list = new MutableLiveData<>(new ArrayList<>());
+    private final MutableLiveData<Boolean> notFound = new MutableLiveData<>(false);
+    private final MutableLiveData<Boolean> isRefreshing = new MutableLiveData<>(false);
+    private int page = 1;
 
     public LiveData<List<NewsItem>> getList() {
         return list;
@@ -32,11 +28,25 @@ public class NewsFragmentVM extends ViewModel {
     }
 
     public void downloadNews(Queries query) {
-        DownloadNews.INSTANCE.downloadNews(query);
+        new Thread(() -> {
+            isRefreshing.postValue(true);
+            try {
+                List<NewsItem> items = new ArrayList<>(list.getValue());
+                items.addAll(DownloadNews.INSTANCE.downloadNews(query, page));
+                list.postValue(items);
+                page++;
+            } catch (IOException e) {
+                e.printStackTrace();
+                if (page == 1)
+                    notFound.postValue(true);
+            } finally {
+                isRefreshing.postValue(false);
+            }
+        }).start();
     }
 
     public void clearList() {
-        DownloadNews.INSTANCE.setPage(1);
+        page = 1;
         notFound.postValue(false);
         list.postValue(new ArrayList<>());
     }

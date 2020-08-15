@@ -59,7 +59,7 @@
     <string name="zsme_default_link" translatable="false">https://zsme.tarnow.pl/wp/</string>
     <string name="destination_button" translatable="false">Destionation button</string>
     <string name="teachers">Nauczyciele</string>
-    <string name="schoolroom">Sale</string>
+    <string name="classroom">Sale</string>
     <string name="classes">Oddziały</string>
     <string name="monday">Poniedziałek</string>
     <string name="tuesday">Wtorek</string>

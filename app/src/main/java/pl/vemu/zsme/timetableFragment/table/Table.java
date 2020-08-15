@@ -5,6 +5,6 @@ import lombok.Value;
 
 @Value
 @Builder
-public class Lesson {
+public class Table {
     String name, room, teacher, timeStart, timeFinish, index;
 }

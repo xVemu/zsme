@@ -9,15 +9,14 @@ import java.io.IOException;
 import lombok.Getter;
 import lombok.Setter;
 
+@Getter
 public enum Login {
 
     INSTANCE;
 
-    @Getter
     @Setter
     private String base64login;
 
-    @Getter
     private boolean logged;
 
     public Document login(String aurl) throws IOException {
