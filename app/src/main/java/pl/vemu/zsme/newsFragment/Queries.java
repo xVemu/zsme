@@ -18,7 +18,7 @@ public abstract class Queries {
 
     }
 
-    static class Page extends Queries {
+    public static class Page extends Queries {
 
         @Override
         public String parseUrl(int page) {

@@ -11,10 +11,8 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-
 import java.io.IOException;
+import java.util.List;
 
 import pl.vemu.zsme.MainActivity;
 import pl.vemu.zsme.R;
@@ -29,30 +27,36 @@ public class NewsWorker extends Worker {
     @Override
     public Result doWork() {
         try {
-            Document document = Jsoup.connect("https://zsme.tarnow.pl/").get();
-            if (document.selectFirst(".column-one") == null) return Result.failure();
-            NewsItem downloaded = NewsItem.makeNewsItem(document.selectFirst(".column-one").child(0));
-            SharedPreferences memory = getApplicationContext().getSharedPreferences("savedValue", Context.MODE_PRIVATE);
-            String fromMemory = memory.getString("article-title", null);
-            if (fromMemory == null) {
+            List<NewsItem> downloaded = DownloadNews.INSTANCE.downloadNews(new Queries.Page(), 1);
+            NewsItem firstNewsItem = downloaded.get(0);
+            SharedPreferences memory = getApplicationContext().getSharedPreferences("latest-news", Context.MODE_PRIVATE);
+            int fromMemory = memory.getInt("article", 0);
+            if (fromMemory == 0) {
                 SharedPreferences.Editor editor = memory.edit();
-                editor.putString("article-title", downloaded.getTitle()).apply();
+                editor.putInt("article", firstNewsItem.hashCode()).apply();
                 return Result.retry();
-            } else if (fromMemory.equals(downloaded.getTitle())) return Result.failure();
+            } else if (fromMemory == firstNewsItem.hashCode())
+                return Result.failure();
             else {
                 SharedPreferences.Editor editor = memory.edit();
-                editor.putString("article-title", downloaded.getTitle()).apply();
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                intent.putExtra("url", downloaded.getUrl());
-                PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
-                NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), "ZSME")
-                        .setSmallIcon(R.drawable.zsme)
-                        .setContentTitle(downloaded.getTitle())
-                        .setStyle(new NotificationCompat.BigTextStyle().bigText(downloaded.getDescription()))
-                        .setContentIntent(pendingIntent)
-                        .setAutoCancel(true)
-                        .setPriority(NotificationCompat.PRIORITY_MIN);
-                NotificationManagerCompat.from(getApplicationContext()).notify(0, builder.build());
+                for (NewsItem item : downloaded) {
+                    if (fromMemory == item.hashCode()) break;
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    intent.putExtra("url", item.getUrl());
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                            | Intent.FLAG_ACTIVITY_CLEAR_TASK
+                            | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), item.hashCode(), intent, 0);
+                    NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), "ZSME")
+                            .setSmallIcon(R.drawable.ic_news)
+                            .setContentTitle(item.getTitle())
+                            .setStyle(new NotificationCompat.BigTextStyle().bigText(item.getDescription()))
+                            .setContentIntent(pendingIntent)
+                            .setAutoCancel(true)
+                            .setPriority(NotificationCompat.PRIORITY_MIN);
+                    NotificationManagerCompat.from(getApplicationContext()).notify(item.hashCode(), builder.build());
+                }
+                editor.putInt("article", firstNewsItem.hashCode()).apply();
                 return Result.success();
             }
         } catch (IOException e) {

@@ -1,6 +1,7 @@
 package pl.vemu.zsme;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -11,9 +12,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
+import pl.vemu.zsme.newsFragment.DownloadNews;
+import pl.vemu.zsme.newsFragment.NewsItem;
 import pl.vemu.zsme.newsFragment.NewsWorker;
+import pl.vemu.zsme.newsFragment.Queries;
 
 import static org.junit.Assert.assertEquals;
 
@@ -34,13 +39,13 @@ public class ExampleInstrumentedTest {
 
 
     @Test
-    public void notification() throws ExecutionException, InterruptedException {
-        // Context of the app under test.
-//        Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
+    public void notification() throws ExecutionException, InterruptedException, IOException {
+        SharedPreferences memory = mContext.getSharedPreferences("latest-news", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = memory.edit();
+        NewsItem downloaded = DownloadNews.INSTANCE.downloadNews(new Queries.Page(), 1).get(4);
+        editor.putInt("article", downloaded.hashCode()).apply();
         ListenableWorker worker = TestListenableWorkerBuilder.from(mContext, NewsWorker.class).build();
         ListenableWorker.Result result = worker.startWork().get();
         assertEquals(ListenableWorker.Result.success(), result);
-
-//        assertEquals("pl.vemu.zsme", appContext.getPackageName());
     }
 }

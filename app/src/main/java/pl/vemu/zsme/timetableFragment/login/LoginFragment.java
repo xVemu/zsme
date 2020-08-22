@@ -16,7 +16,6 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import pl.vemu.zsme.R;
-import pl.vemu.zsme.STATIC;
 import pl.vemu.zsme.databinding.FragmentLoginBinding;
 
 public class LoginFragment extends Fragment implements LoginInterface {
@@ -44,7 +43,6 @@ public class LoginFragment extends Fragment implements LoginInterface {
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
         NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
-        STATIC.LOGGED_IN = true;
         navController.navigate(LoginFragmentDirections.actionLoginFragmentToTimetableFragment());
     }
 }

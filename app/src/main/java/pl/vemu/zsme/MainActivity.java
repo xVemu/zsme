@@ -52,10 +52,10 @@ public class MainActivity extends AppCompatActivity implements NavController.OnD
     private void setupIntent() {
         Intent intent = getIntent();
         String action = intent.getAction();
-        String url = (String) intent.getSerializableExtra("url");
-        if (url != null)
+        String url = intent.getStringExtra("url");
+        if (url != null) {
             navController.navigate(NewsFragmentDirections.actionNewsToDetailFragment(url));
-        else if ("pl.vemu.zsme.shortcut.TIMETABLE".equals(action))
+        } else if ("pl.vemu.zsme.shortcut.TIMETABLE".equals(action))
             navController.navigate(R.id.timetableFragment);
         else if ("pl.vemu.zsme.shortcut.MORE".equals(action))
             navController.navigate(R.id.moreFragment);
@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements NavController.OnD
 
     private void createNotificationChannel() {
         NotificationManager notificationManager = getSystemService(NotificationManager.class);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && notificationManager.getNotificationChannel("ZSME") == null) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = getString(R.string.channel_name);
             int importance = NotificationManager.IMPORTANCE_MIN;
             NotificationChannel channel = new NotificationChannel("ZSME", name, importance);

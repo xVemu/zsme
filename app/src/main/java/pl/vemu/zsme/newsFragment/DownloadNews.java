@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-enum DownloadNews {
+public enum DownloadNews {
     INSTANCE;
 
     public List<NewsItem> downloadNews(Queries query, int page) throws IOException {
@@ -17,9 +17,14 @@ enum DownloadNews {
         if (document.selectFirst(".column-one") == null) {
             throw new IOException("Not found");
         }
+        List<NewsItem> newsItems = new ArrayList<>();
+        if (document.selectFirst(".single-post .article-entry") != null) {
+            newsItems.add(new NewsItem.NewsItemBuilder()
+                    .url("https://zsme.tarnow.pl")
+                    .description(document.selectFirst(".single-post .article-entry").text().substring(0, 300) + "...").build());
+        }
         Elements columnOneNews = document.selectFirst(".column-one").children();
         Elements columnTwoNews = document.selectFirst(".column-two").children();
-        List<NewsItem> newsItems = new ArrayList<>();
         for (int i = 0; i < columnOneNews.size(); i++) {
             newsItems.add(NewsItem.makeNewsItem(columnOneNews.get(i)));
             if (columnTwoNews.get(i).selectFirst(".article-title") != null)
