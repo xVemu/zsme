@@ -9,6 +9,7 @@ import com.bumptech.glide.Glide;
 import com.github.chrisbanes.photoview.PhotoView;
 
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
@@ -16,7 +17,8 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 public class GalleryPageAdapter extends RecyclerView.Adapter<GalleryPageAdapter.ViewHolder> {
 
     private final String[] images;
-    private final SetUIVisibility setUIVisibility;
+    @Setter
+    private static SetUIVisibility setUIVisibility;
 
     @NonNull
     @Override
@@ -29,7 +31,6 @@ public class GalleryPageAdapter extends RecyclerView.Adapter<GalleryPageAdapter.
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Glide.with(holder.photoView.getContext()).load(images[position]).into(holder.photoView);
-        holder.photoView.setOnClickListener(view -> setUIVisibility.setUiVisibility());
     }
 
     @Override
@@ -44,6 +45,7 @@ public class GalleryPageAdapter extends RecyclerView.Adapter<GalleryPageAdapter.
         public ViewHolder(@NonNull PhotoView itemView) {
             super(itemView);
             this.photoView = itemView;
+            this.photoView.setOnClickListener(view -> setUIVisibility.setUiVisibility());
         }
     }
 }

@@ -39,4 +39,7 @@
     <string name="system_default">System default</string>
     <string name="open_in">Open in:</string>
     <string name="source_code">Source code</string>
+    <string name="english">English</string>
+    <string name="polish">Polish</string>
+    <string name="language">Language</string>
 </resources>

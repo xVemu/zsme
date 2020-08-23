@@ -1,13 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <ListPreference
         android:defaultValue="-1"
-        android:entries="@array/theme"
-        android:entryValues="@array/themeMode"
+        android:entries="@array/theme_entries"
+        android:entryValues="@array/theme_values"
         android:icon="@drawable/ic_theme"
-        android:summary="%s"
+        app:useSimpleSummaryProvider="true"
         android:key="theme"
         android:title="@string/theme" />
+    <ListPreference
+        android:defaultValue="system"
+        android:entries="@array/app_language_entries"
+        android:entryValues="@array/app_language_values"
+        android:icon="@drawable/ic_language"
+        app:useSimpleSummaryProvider="true"
+        android:key="language"
+        android:title="@string/language" />
     <Preference
         android:title="@string/notification"
         android:key="notification"

@@ -73,4 +73,7 @@
     <string name="source_code">Kod źródłowy</string>
     <string name="source_code_text" translatable="false">xVemu/zsme</string>
     <string name="github_url" translatable="false">https://github.com/xVemu/zsme</string>
+    <string name="english">Angielski</string>
+    <string name="polish">Polski</string>
+    <string name="language">Język</string>
 </resources>

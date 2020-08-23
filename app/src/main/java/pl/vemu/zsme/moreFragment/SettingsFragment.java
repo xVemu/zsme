@@ -10,6 +10,8 @@ import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
+import com.yariksoffice.lingver.Lingver;
+
 import pl.vemu.zsme.R;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
@@ -21,6 +23,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.settings, rootKey);
         ListPreference theme = findPreference("theme");
+        ListPreference language = findPreference("language");
         Preference button = findPreference("notification");
         theme.setOnPreferenceChangeListener((preference, newValue) -> {
             AppCompatDelegate.setDefaultNightMode(Integer.parseInt((String) newValue));
@@ -35,6 +38,15 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 intent.putExtra("app_uid", getContext().getApplicationInfo().uid);
             }
             startActivity(intent);
+            return true;
+        });
+        language.setOnPreferenceChangeListener((preference, newValue) -> {
+            if (newValue == "system") {
+                Lingver.getInstance().setFollowSystemLocale(requireContext());
+            } else {
+                Lingver.getInstance().setLocale(requireContext(), (String) newValue);
+            }
+            requireActivity().recreate();
             return true;
         });
     }

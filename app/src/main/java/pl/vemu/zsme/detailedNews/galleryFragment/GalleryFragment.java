@@ -42,10 +42,8 @@ public class GalleryFragment extends Fragment implements SetUIVisibility {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         String[] images = GalleryFragmentArgs.fromBundle(getArguments()).getImages();
-        pager.setAdapter(new GalleryPageAdapter(images, this));
-        pager.setOnClickListener(view1 -> {
-            setUiVisibility();
-        });
+        GalleryPageAdapter.setSetUIVisibility(this);
+        pager.setAdapter(new GalleryPageAdapter(images));
         setUiVisibility();
     }
 
@@ -56,11 +54,12 @@ public class GalleryFragment extends Fragment implements SetUIVisibility {
         setUiVisibility();
     }
 
+    @Override
     public void setUiVisibility() {
-        Window window = getActivity().getWindow();
+        Window window = requireActivity().getWindow();
         View decorView = window.getDecorView();
-        BottomNavigationView bottom_nav = getActivity().findViewById(R.id.bottom_nav);
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        BottomNavigationView bottom_nav = requireActivity().findViewById(R.id.bottom_nav);
+        ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
         if (isUiVisible) {
             if (Build.VERSION.SDK_INT >= 30) {
                 decorView.getWindowInsetsController().hide(WindowInsets.Type.navigationBars() | WindowInsets.Type.statusBars());

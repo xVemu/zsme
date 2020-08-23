@@ -46,7 +46,7 @@ public class DetailFragment extends Fragment {
         setHasOptionsMenu(true);
         binding.text.setMovementMethod(LinkMovementMethod.getInstance());
         if (url.startsWith("author")) {
-            NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
+            NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
             DetailFragmentDirections.ActionDetailFragmentToNewsFragment action =
                     DetailFragmentDirections.actionDetailFragmentToNewsFragment();
             action.setAuthor(url);
