@@ -9,10 +9,6 @@
 
     <string name="news">Aktualności</string>
     <string name="timetable">Plan lekcji</string>
-    <string name="login">Login</string>
-    <string name="password">Hasło</string>
-    <string name="log_in">Zaloguj</string>
-    <string name="wrong_password_or_login">Złe login lub hasło</string>
     <string name="settings">Ustawienia</string>
     <string name="no_results">Brak wyników</string>
     <string name="home_page">Strona internetowa</string>
@@ -59,7 +55,6 @@
     <string name="zsme_default_link" translatable="false">https://zsme.tarnow.pl/wp/</string>
     <string name="destination_button" translatable="false">Destionation button</string>
     <string name="teachers">Nauczyciele</string>
-    <string name="classroom">Sale</string>
     <string name="classes">Oddziały</string>
     <string name="monday">Poniedziałek</string>
     <string name="tuesday">Wtorek</string>

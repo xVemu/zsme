@@ -1,6 +1,5 @@
 package pl.vemu.zsme.timetableFragment.table;
 
-import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.tabs.TabLayoutMediator;
 
+import java.util.Calendar;
 import java.util.List;
 
 import pl.vemu.zsme.R;
@@ -47,15 +47,13 @@ public class TableFragment extends Fragment {
         TableTimetableAdapter adapter = new TableTimetableAdapter(R.layout.item_table, (List) viewmodel.getList().getValue());
         binding.viewPager.setAdapter(adapter);
         String[] names = {getString(R.string.monday), getString(R.string.tuesday), getString(R.string.wednesday), getString(R.string.thursday), getString(R.string.friday)};
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            int day = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
-            day = (day == 1) || (day == 7) ? 0 : day - 2;
-            binding.viewPager.setCurrentItem(day);
-        }
         new TabLayoutMediator(binding.tabLayout, binding.viewPager, (tab, position) -> tab.setText(names[position])).attach();
         viewmodel.getList().observe(getViewLifecycleOwner(), lists -> {
             adapter.setList((List) lists);
             adapter.notifyDataSetChanged();
+            int day = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+            day = (day == 1) || (day == 7) ? 0 : day - 2;
+            binding.viewPager.setCurrentItem(day);
         });
     }
 }

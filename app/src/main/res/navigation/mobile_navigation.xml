@@ -2,7 +2,6 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mobile_navigation"
     app:startDestination="@+id/newsFragment">
 
     <fragment
@@ -17,9 +16,7 @@
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
-        <deepLink
-            android:id="@+id/deepLink"
-            app:uri="zsme.tarnow.pl" />
+        <deepLink app:uri="zsme.tarnow.pl" />
         <argument
             android:name="author"
             app:argType="string"
@@ -38,9 +35,7 @@
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
-        <deepLink
-            android:id="@+id/deepLink4"
-            app:uri="zsme.tarnow.pl/wp/{url}" />
+        <deepLink app:uri="zsme.tarnow.pl/wp/{url}" />
         <argument
             android:name="url"
             app:argType="string" />
@@ -53,32 +48,10 @@
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
     <fragment
-        android:id="@+id/loginFragment"
-        android:name="pl.vemu.zsme.timetableFragment.login.LoginFragment"
-        android:label="@string/timetable"
-        tools:layout="@layout/fragment_login">
-        <action
-            android:id="@+id/action_loginFragment_to_timetableFragment"
-            app:destination="@id/timetableFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim"
-            app:popUpTo="@+id/mobile_navigation" />
-    </fragment>
-    <fragment
         android:id="@+id/timetableFragment"
         android:name="pl.vemu.zsme.timetableFragment.timetable.TimetableFragment"
         android:label="@string/timetable"
         tools:layout="@layout/fragment_timetable">
-        <action
-            android:id="@+id/action_timetableFragment_to_loginFragment"
-            app:destination="@id/loginFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim"
-            app:popUpTo="@+id/mobile_navigation" />
         <action
             android:id="@+id/action_timetableFragment_to_tableFragment"
             app:destination="@id/tableFragment"
@@ -86,9 +59,7 @@
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
-        <deepLink
-            android:id="@+id/deepLink3"
-            app:uri="https://zsme.tarnow.pl/plan/" />
+        <deepLink app:uri="https://zsme.tarnow.pl/plan/" />
     </fragment>
     <fragment
         android:id="@+id/moreFragment"
@@ -125,9 +96,7 @@
         android:id="@+id/contactFragment"
         android:name="pl.vemu.zsme.moreFragment.contact.ContactFragment"
         android:label="@string/contact">
-        <deepLink
-            android:id="@+id/deepLink2"
-            app:uri="zsme.tarnow.pl/wp/kontakt/" />
+        <deepLink app:uri="zsme.tarnow.pl/wp/kontakt/" />
     </fragment>
     <fragment
         android:id="@+id/galleryFragment"

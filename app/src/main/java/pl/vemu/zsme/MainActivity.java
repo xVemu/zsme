@@ -27,8 +27,6 @@ import java.util.concurrent.TimeUnit;
 import pl.vemu.zsme.databinding.ActivityMainBinding;
 import pl.vemu.zsme.newsFragment.NewsFragmentDirections;
 import pl.vemu.zsme.newsFragment.NewsWorker;
-import pl.vemu.zsme.timetableFragment.Login;
-import pl.vemu.zsme.timetableFragment.timetable.TimetableFragmentDirections;
 
 public class MainActivity extends AppCompatActivity implements NavController.OnDestinationChangedListener {
 
@@ -83,8 +81,6 @@ public class MainActivity extends AppCompatActivity implements NavController.OnD
             params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
                     | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
         else params.setScrollFlags(0);
-        if (!Login.INSTANCE.isLogged() && destination.getId() == R.id.timetableFragment)
-            controller.navigate(TimetableFragmentDirections.actionTimetableFragmentToLoginFragment());
     }
 
     private void createNotificationChannel() {
