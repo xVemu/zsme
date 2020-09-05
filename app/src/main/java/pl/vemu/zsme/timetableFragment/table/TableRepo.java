@@ -26,27 +26,27 @@ public enum TableRepo {
         for (Element element : table) {
             Elements lessons = element.select(".l");
             String index = element.selectFirst(".nr").text();
-            String hour = element.selectFirst(".g").text();
+            String[] hour = element.selectFirst(".g").text().replaceAll("\\s+", "").split("-");
             for (int i = 0; i < lessons.size(); i++) {
-                if (lessons.get(i).selectFirst(".p") == null) continue;
                 Element lesson = lessons.get(i);
-                Table.TableBuilder lessonBuilder = new Table.TableBuilder();
+                if (lesson.text().isEmpty()) continue;
+                Table.TableBuilder lessonBuilder;
                 Table.TableBuilder lessonBuilder2 = null;
-                if ("GD 41 etyka".equals(lesson.text())) {
-                    lessonBuilder.name("etyka").room("41").teacher("GD");
-                } else if (lesson.select(".p").size() == 2 && "#wf3".equals(lesson.select(".p").get(1).text())) {
-                    lessonBuilder.name("wf 3/3").room(lesson.selectFirst(".s").text());
-                } else if (lesson.getElementsByAttributeValue("style", "font-size:85%").size() == 2) {
+                if (lesson.getElementsByAttributeValue("style", "font-size:85%").size() > 1) {
                     Elements spans = lesson.getElementsByAttributeValue("style", "font-size:85%");
                     lessonBuilder = buildLesson(spans.first());
-                    lessonBuilder2 = buildLesson(spans.last());
-                    String[] split = hour.replaceAll("\\s+", "").split("-");
-                    lessonBuilder2.index(index).timeStart(split[0]).timeFinish(split[1]);
+                    lessonBuilder2 = buildLesson(spans.get(1));
+                    lessonBuilder2.index(index).timeStart(hour[0]).timeFinish(hour[1]);
+                } else if (lesson.selectFirst("br") != null) {
+                    lessonBuilder = buildLesson(lesson.selectFirst("[style=font-size:85%]"));
+                    lesson.child(0).remove();
+                    lesson.child(0).remove();
+                    lessonBuilder2 = buildLesson(lesson);
+                    lessonBuilder2.index(index).timeStart(hour[0]).timeFinish(hour[1]);
                 } else {
                     lessonBuilder = buildLesson(lesson);
                 }
-                String[] split = hour.replaceAll("\\s+", "").split("-");
-                lessonBuilder.index(index).timeStart(split[0]).timeFinish(split[1]);
+                lessonBuilder.index(index).timeStart(hour[0]).timeFinish(hour[1]);
                 lessonsList.get(i).add(lessonBuilder.build());
                 if (lessonBuilder2 != null) lessonsList.get(i).add(lessonBuilder2.build());
             }
@@ -56,8 +56,8 @@ public enum TableRepo {
 
     private Table.TableBuilder buildLesson(Element lesson) {
         return Table.builder()
-                .name(lesson.select(".p").text())
-                .teacher(lesson.selectFirst(".n") == null ? (lesson.selectFirst(".o") == null ? "" : lesson.selectFirst(".o").text()) : lesson.selectFirst(".n").text())
-                .room(lesson.selectFirst(".s") == null ? lesson.selectFirst(".o").text() : lesson.selectFirst(".s").text());
+                .name(lesson.selectFirst(".p") != null ? lesson.selectFirst(".p").text() : lesson.text())
+                .teacher(lesson.selectFirst(".n") != null ? lesson.selectFirst(".n").text() : (lesson.selectFirst(".o") != null ? lesson.selectFirst(".o").text() : ""))
+                .room(lesson.selectFirst(".s") != null ? lesson.selectFirst(".s").text() : "");
     }
 }

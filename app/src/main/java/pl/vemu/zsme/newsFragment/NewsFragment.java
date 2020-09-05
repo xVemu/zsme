@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import pl.vemu.zsme.BaseAdapter;
 import pl.vemu.zsme.R;
@@ -51,7 +52,7 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        author = NewsFragmentArgs.fromBundle(getArguments()).getAuthor();
+        author = NewsFragmentArgs.fromBundle(requireArguments()).getAuthor();
 
         setupRecyclerView();
 
@@ -64,7 +65,7 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     }
 
     private void setupNetwork() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connectivityManager = (ConnectivityManager) requireContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkRequest networkRequest = new NetworkRequest.Builder().build();
         if (connectivityManager.getActiveNetwork() == null)
             Toast.makeText(getContext(), "Brak połaczenia z internetem", Toast.LENGTH_LONG).show();
@@ -72,7 +73,7 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     }
 
     private void setupRecyclerView() {
-        adapter = new BaseAdapter(R.layout.item_news, new ArrayList<>(viewmodel.getList().getValue()));
+        adapter = new BaseAdapter(R.layout.item_news, new ArrayList<>(Objects.requireNonNull(viewmodel.getList().getValue())));
         adapter.setHasStableIds(true);
         binding.recyclerView.setAdapter(adapter);
         scrollListener = new NewsScrollListener(viewmodel, new Queries.Page());
@@ -83,10 +84,11 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         });
     }
 
-    private ConnectivityManager.NetworkCallback networkCallback = new ConnectivityManager.NetworkCallback() {
+    private final ConnectivityManager.NetworkCallback networkCallback = new ConnectivityManager.NetworkCallback() {
         @Override
         public void onAvailable(@NonNull Network network) {
-            if (author == null && viewmodel.getList().getValue().isEmpty()) downloadFirstNews();
+            if (author == null && viewmodel.getList().getValue() != null && viewmodel.getList().getValue().isEmpty())
+                downloadFirstNews();
         }
     };
 

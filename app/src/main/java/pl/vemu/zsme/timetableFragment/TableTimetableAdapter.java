@@ -21,7 +21,7 @@ public class TableTimetableAdapter extends RecyclerView.Adapter<TableTimetableAd
 
     private int layoutID;
     @Setter
-    private List<List<Object>> list;
+    private List<List<?>> list;
 
     @NonNull
     @Override
@@ -29,6 +29,8 @@ public class TableTimetableAdapter extends RecyclerView.Adapter<TableTimetableAd
         RecyclerView recyclerView = new RecyclerView(parent.getContext());
         recyclerView.setLayoutManager(new LinearLayoutManager(parent.getContext()));
         recyclerView.setLayoutParams(new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
+        recyclerView.setVerticalScrollBarEnabled(false);
+        recyclerView.setHorizontalScrollBarEnabled(false);
         return new ViewHolder(recyclerView);
     }
 

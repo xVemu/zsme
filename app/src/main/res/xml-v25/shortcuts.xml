@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
     <shortcut
+        android:shortcutId="timetable"
         android:enabled="true"
-        android:icon="@drawable/ic_timetable">
+        android:icon="@drawable/ic_timetable"
+        android:shortcutShortLabel="@string/timetable"
+        android:shortcutLongLabel="@string/timetable">
         <intent
             android:action="pl.vemu.zsme.shortcut.TIMETABLE"
             android:targetPackage="pl.vemu.zsme"
             android:targetClass="pl.vemu.zsme.MainActivity" />
     </shortcut>
     <shortcut
+        android:shortcutId="more"
         android:enabled="true"
-        android:icon="@drawable/ic_more">
+        android:icon="@drawable/ic_more"
+        android:shortcutShortLabel="@string/more"
+        android:shortcutLongLabel="@string/more">
         <intent
             android:action="pl.vemu.zsme.shortcut.MORE"
             android:targetPackage="pl.vemu.zsme"

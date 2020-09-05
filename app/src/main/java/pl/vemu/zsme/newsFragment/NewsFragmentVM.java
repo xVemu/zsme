@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class NewsFragmentVM extends ViewModel {
 
@@ -31,7 +32,7 @@ public class NewsFragmentVM extends ViewModel {
         new Thread(() -> {
             isRefreshing.postValue(true);
             try {
-                List<NewsItem> items = new ArrayList<>(list.getValue());
+                List<NewsItem> items = new ArrayList<>(Objects.requireNonNull(list.getValue()));
                 items.addAll(DownloadNews.INSTANCE.downloadNews(query, page));
                 list.postValue(items);
                 page++;

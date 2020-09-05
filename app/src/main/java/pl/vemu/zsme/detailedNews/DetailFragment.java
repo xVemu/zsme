@@ -34,7 +34,7 @@ public class DetailFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_detail, container, false);
-        url = DetailFragmentArgs.fromBundle(getArguments()).getUrl();
+        url = DetailFragmentArgs.fromBundle(requireArguments()).getUrl();
         DetailFragmentVM viewModel = new ViewModelProvider(this, new DetailFragmentVMFactory(requireActivity().getApplication(), url)).get(DetailFragmentVM.class);
         binding.setLifecycleOwner(this);
         binding.setViewmodel(viewModel);

@@ -34,14 +34,14 @@ public class GalleryFragment extends Fragment implements SetUIVisibility {
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        pager = new ViewPager2(getContext());
+        pager = new ViewPager2(requireContext());
         pager.setLayoutParams(new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
         return pager;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        String[] images = GalleryFragmentArgs.fromBundle(getArguments()).getImages();
+        String[] images = GalleryFragmentArgs.fromBundle(requireArguments()).getImages();
         GalleryPageAdapter.setSetUIVisibility(this);
         pager.setAdapter(new GalleryPageAdapter(images));
         setUiVisibility();
@@ -60,8 +60,9 @@ public class GalleryFragment extends Fragment implements SetUIVisibility {
         View decorView = window.getDecorView();
         BottomNavigationView bottom_nav = requireActivity().findViewById(R.id.bottom_nav);
         ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
+        if (actionBar == null) return;
         if (isUiVisible) {
-            if (Build.VERSION.SDK_INT >= 30) {
+            if (Build.VERSION.SDK_INT >= 30 && decorView.getWindowInsetsController() != null) {
                 decorView.getWindowInsetsController().hide(WindowInsets.Type.navigationBars() | WindowInsets.Type.statusBars());
                 decorView.getWindowInsetsController().setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_BARS_BY_SWIPE);
             } else {
@@ -73,7 +74,7 @@ public class GalleryFragment extends Fragment implements SetUIVisibility {
             bottom_nav.setVisibility(View.GONE);
             isUiVisible = false;
         } else {
-            if (Build.VERSION.SDK_INT >= 30) {
+            if (Build.VERSION.SDK_INT >= 30 && decorView.getWindowInsetsController() != null) {
                 decorView.getWindowInsetsController().show(WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars());
             } else {
                 int flags = 0;

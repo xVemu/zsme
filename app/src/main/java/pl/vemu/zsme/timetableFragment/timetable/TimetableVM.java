@@ -12,7 +12,7 @@ public class TimetableVM extends ViewModel {
 
     private final MutableLiveData<List<List<Timetable>>> list = new MutableLiveData<>(new ArrayList<>());
 
-    public TimetableVM() {
+    public void downloadTimetable() {
         new Thread(() -> {
             try {
                 list.postValue(TimetableRepo.INSTANCE.downloadTimetable());

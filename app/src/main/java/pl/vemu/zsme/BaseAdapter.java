@@ -20,9 +20,9 @@ public class BaseAdapter extends RecyclerView.Adapter<BaseAdapter.BaseHolder> {
 
     private final int layout;
     @Setter
-    private List<Object> list;
+    private List<?> list;
 
-    public BaseAdapter(int layout, List<Object> list) {
+    public BaseAdapter(int layout, List<?> list) {
         this.layout = layout;
         this.list = list;
     }

@@ -55,6 +55,7 @@ public class DetailFragmentVM extends AndroidViewModel implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
+        if (detail.getValue() == null) return;
         String[] imagesArray = new String[detail.getValue().getImages().size()];
         detail.getValue().getImages().toArray(imagesArray);
         Navigation.findNavController(v).navigate(DetailFragmentDirections.actionDetailFragmentToGalleryFragment(imagesArray));

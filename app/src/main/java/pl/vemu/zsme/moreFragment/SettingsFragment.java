@@ -25,30 +25,36 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         ListPreference theme = findPreference("theme");
         ListPreference language = findPreference("language");
         Preference button = findPreference("notification");
-        theme.setOnPreferenceChangeListener((preference, newValue) -> {
-            AppCompatDelegate.setDefaultNightMode(Integer.parseInt((String) newValue));
-            return true;
-        });
-        button.setOnPreferenceClickListener(preference -> {
-            Intent intent = new Intent().setAction("android.settings.APP_NOTIFICATION_SETTINGS");
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                intent.putExtra("android.provider.extra.APP_PACKAGE", getContext().getPackageName());
-            } else {
-                intent.putExtra("app_package", getContext().getPackageName());
-                intent.putExtra("app_uid", getContext().getApplicationInfo().uid);
-            }
-            startActivity(intent);
-            return true;
-        });
-        language.setOnPreferenceChangeListener((preference, newValue) -> {
-            if (newValue == "system") {
-                Lingver.getInstance().setFollowSystemLocale(requireContext());
-            } else {
-                Lingver.getInstance().setLocale(requireContext(), (String) newValue);
-            }
-            requireActivity().recreate();
-            return true;
-        });
+        if (theme != null) {
+            theme.setOnPreferenceChangeListener((preference, newValue) -> {
+                AppCompatDelegate.setDefaultNightMode(Integer.parseInt((String) newValue));
+                return true;
+            });
+        }
+        if (button != null) {
+            button.setOnPreferenceClickListener(preference -> {
+                Intent intent = new Intent().setAction("android.settings.APP_NOTIFICATION_SETTINGS");
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    intent.putExtra("android.provider.extra.APP_PACKAGE", requireContext().getPackageName());
+                } else {
+                    intent.putExtra("app_package", requireContext().getPackageName());
+                    intent.putExtra("app_uid", requireContext().getApplicationInfo().uid);
+                }
+                startActivity(intent);
+                return true;
+            });
+        }
+        if (language != null) {
+            language.setOnPreferenceChangeListener((preference, newValue) -> {
+                if (newValue == "system") {
+                    Lingver.getInstance().setFollowSystemLocale(requireContext());
+                } else {
+                    Lingver.getInstance().setLocale(requireContext(), (String) newValue);
+                }
+                requireActivity().recreate();
+                return true;
+            });
+        }
     }
 
 }

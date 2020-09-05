@@ -12,10 +12,10 @@
         <action
             android:id="@+id/action_news_to_detailFragment"
             app:destination="@id/detailFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+            app:enterAnim="@anim/left_to_right"
+            app:exitAnim="@anim/left_to_right_out"
+            app:popEnterAnim="@anim/right_to_left"
+            app:popExitAnim="@anim/right_to_left_out" />
         <deepLink app:uri="zsme.tarnow.pl" />
         <argument
             android:name="author"
@@ -31,21 +31,17 @@
         <action
             android:id="@+id/action_detailFragment_to_galleryFragment"
             app:destination="@id/galleryFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+            app:enterAnim="@anim/left_to_right"
+            app:exitAnim="@anim/left_to_right_out"
+            app:popEnterAnim="@anim/right_to_left"
+            app:popExitAnim="@anim/right_to_left_out" />
         <deepLink app:uri="zsme.tarnow.pl/wp/{url}" />
         <argument
             android:name="url"
             app:argType="string" />
         <action
             android:id="@+id/action_detailFragment_to_newsFragment"
-            app:destination="@id/newsFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+            app:destination="@id/newsFragment" />
     </fragment>
     <fragment
         android:id="@+id/timetableFragment"
@@ -55,10 +51,10 @@
         <action
             android:id="@+id/action_timetableFragment_to_tableFragment"
             app:destination="@id/tableFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+            app:enterAnim="@anim/open_enter"
+            app:exitAnim="@anim/open_exit"
+            app:popEnterAnim="@anim/close_enter"
+            app:popExitAnim="@anim/close_exit" />
         <deepLink app:uri="https://zsme.tarnow.pl/plan/" />
     </fragment>
     <fragment
@@ -68,17 +64,17 @@
         <action
             android:id="@+id/action_moreFragment_to_settingsFragment"
             app:destination="@id/settingsFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+            app:enterAnim="@anim/left_to_right"
+            app:exitAnim="@anim/left_to_right_out"
+            app:popEnterAnim="@anim/right_to_left"
+            app:popExitAnim="@anim/right_to_left_out" />
         <action
             android:id="@+id/action_moreFragment_to_contactFragment"
             app:destination="@id/contactFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+            app:enterAnim="@anim/left_to_right"
+            app:exitAnim="@anim/left_to_right_out"
+            app:popEnterAnim="@anim/right_to_left"
+            app:popExitAnim="@anim/right_to_left_out" />
     </fragment>
     <fragment
         android:id="@+id/tableFragment"

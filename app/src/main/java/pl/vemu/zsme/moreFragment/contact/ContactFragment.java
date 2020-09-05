@@ -31,6 +31,8 @@ public class ContactFragment extends Fragment {
         recyclerView = new RecyclerView(inflater.getContext());
         recyclerView.setLayoutManager(new LinearLayoutManager(inflater.getContext()));
         recyclerView.setLayoutParams(new RecyclerView.LayoutParams(MATCH_PARENT, MATCH_PARENT));
+        recyclerView.setVerticalScrollBarEnabled(false);
+        recyclerView.setHorizontalScrollBarEnabled(false);
         return recyclerView;
     }
 
