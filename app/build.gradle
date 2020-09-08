@@ -8,8 +8,8 @@ android {
         applicationId "pl.vemu.zsme"
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 33
-        versionName "1.5.2"
+        versionCode 34
+        versionName "1.5.3"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

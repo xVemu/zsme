@@ -37,7 +37,7 @@ public enum TableRepo {
                     lessonBuilder = buildLesson(spans.first());
                     lessonBuilder2 = buildLesson(spans.get(1));
                     lessonBuilder2.index(index).timeStart(hour[0]).timeFinish(hour[1]);
-                } else if (lesson.selectFirst("br") != null) {
+                } else if (lesson.selectFirst(".p") != null && lesson.select(".p").eachText().contains("etyka")) {
                     lessonBuilder = buildLesson(lesson.selectFirst("[style=font-size:85%]"));
                     lesson.child(0).remove();
                     lesson.child(0).remove();
@@ -58,6 +58,6 @@ public enum TableRepo {
         return Table.builder()
                 .name(lesson.selectFirst(".p") != null ? lesson.selectFirst(".p").text() : lesson.text())
                 .teacher(lesson.selectFirst(".n") != null ? lesson.selectFirst(".n").text() : (lesson.selectFirst(".o") != null ? lesson.selectFirst(".o").text() : ""))
-                .room(lesson.selectFirst(".s") != null ? lesson.selectFirst(".s").text() : "");
+                .room(lesson.selectFirst(".s") != null ? lesson.selectFirst(".s").text() : (lesson.selectFirst(".o") != null ? lesson.selectFirst(".o").text() : ""));
     }
 }
