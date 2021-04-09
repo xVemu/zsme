@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements NavController.OnD
         NotificationManager notificationManager = getSystemService(NotificationManager.class);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = getString(R.string.channel_name);
-            int importance = NotificationManager.IMPORTANCE_MIN;
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
             NotificationChannel channel = new NotificationChannel("ZSME", name, importance);
             notificationManager.createNotificationChannel(channel);
         }

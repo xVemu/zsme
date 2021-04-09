@@ -53,7 +53,7 @@ public class NewsWorker extends Worker {
                             .setStyle(new NotificationCompat.BigTextStyle().bigText(item.getDescription()))
                             .setContentIntent(pendingIntent)
                             .setAutoCancel(true)
-                            .setPriority(NotificationCompat.PRIORITY_MIN);
+                            .setPriority(NotificationCompat.PRIORITY_DEFAULT);
                     NotificationManagerCompat.from(getApplicationContext()).notify(item.hashCode(), builder.build());
                 }
                 editor.putInt("article", firstNewsItem.hashCode()).apply();
