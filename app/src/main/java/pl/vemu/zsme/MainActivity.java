@@ -33,13 +33,12 @@ public class MainActivity extends AppCompatActivity implements NavController.OnD
     private NavController navController;
     private ActivityMainBinding binding;
 
-    //TODO rewrite
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setSupportActionBar(binding.toolbar);
         setContentView(binding.getRoot());
+        setSupportActionBar(binding.toolbar);
         setupNavigationBar();
         createNotificationChannel();
         setupNotification();
@@ -95,5 +94,4 @@ public class MainActivity extends AppCompatActivity implements NavController.OnD
             notificationManager.createNotificationChannel(channel);
         }
     }
-
 }

@@ -17,7 +17,7 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 
 @AllArgsConstructor
-public class TableTimetableAdapter extends RecyclerView.Adapter<TableTimetableAdapter.ViewHolder> {
+public class TimetableAdapter extends RecyclerView.Adapter<TimetableAdapter.ViewHolder> {
 
     private int layoutID;
     @Setter
@@ -25,7 +25,7 @@ public class TableTimetableAdapter extends RecyclerView.Adapter<TableTimetableAd
 
     @NonNull
     @Override
-    public TableTimetableAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public TimetableAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         RecyclerView recyclerView = new RecyclerView(parent.getContext());
         recyclerView.setLayoutManager(new LinearLayoutManager(parent.getContext()));
         recyclerView.setLayoutParams(new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
@@ -35,7 +35,7 @@ public class TableTimetableAdapter extends RecyclerView.Adapter<TableTimetableAd
     }
 
     @Override
-    public void onBindViewHolder(@NonNull TableTimetableAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull TimetableAdapter.ViewHolder holder, int position) {
         holder.recyclerView.setAdapter(new BaseAdapter(layoutID, new ArrayList<>(list.get(position))));
     }
 

@@ -33,7 +33,7 @@
             android:layout_height="match_parent"
             app:defaultNavHost="true"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            app:navGraph="@navigation/mobile_navigation" />
+            app:navGraph="@navigation/nav_graph" />
 
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
@@ -44,7 +44,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:elevation="@dimen/bottom_navigation_bar_elevation"
-        app:labelVisibilityMode="labeled"
         app:menu="@menu/bottom_navigation_menu" />
 
 </LinearLayout>

@@ -23,7 +23,7 @@ import java.util.Objects;
 
 import pl.vemu.zsme.R;
 import pl.vemu.zsme.databinding.FragmentTimetableBinding;
-import pl.vemu.zsme.timetableFragment.TableTimetableAdapter;
+import pl.vemu.zsme.timetableFragment.TimetableAdapter;
 
 public class TimetableFragment extends Fragment {
 
@@ -56,7 +56,7 @@ public class TimetableFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        TableTimetableAdapter adapter = new TableTimetableAdapter(R.layout.item_timetable, new ArrayList<>(Objects.requireNonNull(viewmodel.getList().getValue())));
+        TimetableAdapter adapter = new TimetableAdapter(R.layout.item_timetable, new ArrayList<>(Objects.requireNonNull(viewmodel.getList().getValue())));
         binding.viewPager.setAdapter(adapter);
         String[] names = {getString(R.string.classes), getString(R.string.teachers), getString(R.string.classroom)};
         new TabLayoutMediator(binding.tabLayout, binding.viewPager, (tab, position) -> tab.setText(names[position])).attach();

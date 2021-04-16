@@ -1,5 +1,6 @@
 package pl.vemu.zsme;
 
+import android.webkit.WebView;
 import android.widget.ImageView;
 
 import androidx.databinding.BindingAdapter;
@@ -17,5 +18,10 @@ public class BindingAdapters {
     @BindingAdapter("refreshing")
     public static void setRefreshing(SwipeRefreshLayout view, boolean isRefreshing) {
         view.setRefreshing(isRefreshing);
+    }
+
+    @BindingAdapter("webData")
+    public static void setWebData(WebView view, String data) {
+        view.loadData(data, "text/html", null);
     }
 }

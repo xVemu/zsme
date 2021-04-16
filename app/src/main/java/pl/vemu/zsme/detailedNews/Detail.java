@@ -1,7 +1,5 @@
 package pl.vemu.zsme.detailedNews;
 
-import android.text.Spanned;
-
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -12,6 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Detail {
-    Spanned text;
+    String html;
     List<String> images;
 }

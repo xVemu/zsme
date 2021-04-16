@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_margin="8dp"
-        android:onClick="@{Navigation.createNavigateOnClickListener(TimetableFragmentDirections.actionTimetableFragmentToTableFragment(viewmodel.url))}">
+        android:onClick="@{Navigation.createNavigateOnClickListener(TimetableFragmentDirections.actionTimetableFragmentToLessonFragment(viewmodel.url))}">
 
         <TextView
             android:layout_width="wrap_content"

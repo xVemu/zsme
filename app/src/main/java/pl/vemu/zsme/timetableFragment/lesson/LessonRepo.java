@@ -1,4 +1,4 @@
-package pl.vemu.zsme.timetableFragment.table;
+package pl.vemu.zsme.timetableFragment.lesson;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -11,14 +11,14 @@ import java.util.List;
 
 import pl.vemu.zsme.timetableFragment.Login;
 
-public enum TableRepo {
+public enum LessonRepo {
     INSTANCE;
 
-    public List<List<Table>> downloadTimetable(String url) throws IOException {
+    public List<List<Lesson>> downloadTimetable(String url) throws IOException {
         Document document = Login.INSTANCE.login(url);
         Elements table = document.selectFirst(".tabela").child(0).children();
         table.remove(0);
-        List<List<Table>> lessonsList = Arrays.asList(new ArrayList<>(),
+        List<List<Lesson>> lessonsList = Arrays.asList(new ArrayList<>(),
                 new ArrayList<>(),
                 new ArrayList<>(),
                 new ArrayList<>(),
@@ -30,19 +30,19 @@ public enum TableRepo {
             for (int i = 0; i < lessons.size(); i++) {
                 Element lesson = lessons.get(i);
                 if (lesson.text().isEmpty()) continue;
-                Table.TableBuilder lessonBuilder;
-                Table.TableBuilder lessonBuilder2 = null;
+                Lesson.LessonBuilder lessonBuilder;
+                Lesson.LessonBuilder lessonBuilder2 = null;
                 if (lesson.getElementsByAttributeValue("style", "font-size:85%").size() > 1) {
                     Elements spans = lesson.getElementsByAttributeValue("style", "font-size:85%");
                     lessonBuilder = buildLesson(spans.first());
                     lessonBuilder2 = buildLesson(spans.get(1));
-                    lessonBuilder2.index(index).timeStart(hour[0]).timeFinish(hour[1]);
+                    lessonBuilder2.index(null).timeStart(hour[0]).timeFinish(hour[1]);
                 } else if (lesson.selectFirst(".p") != null && lesson.select(".p").eachText().contains("etyka")) {
                     lessonBuilder = buildLesson(lesson.selectFirst("[style=font-size:85%]"));
                     lesson.child(0).remove();
                     lesson.child(0).remove();
                     lessonBuilder2 = buildLesson(lesson);
-                    lessonBuilder2.index(index).timeStart(hour[0]).timeFinish(hour[1]);
+                    lessonBuilder2.index(null).timeStart(hour[0]).timeFinish(hour[1]);
                 } else {
                     lessonBuilder = buildLesson(lesson);
                 }
@@ -54,8 +54,8 @@ public enum TableRepo {
         return lessonsList;
     }
 
-    private Table.TableBuilder buildLesson(Element lesson) {
-        return Table.builder()
+    private Lesson.LessonBuilder buildLesson(Element lesson) {
+        return Lesson.builder()
                 .name(lesson.selectFirst(".p") != null ? lesson.selectFirst(".p").text() : lesson.text())
                 .teacher(lesson.selectFirst(".n") != null ? lesson.selectFirst(".n").text() : (lesson.selectFirst(".o") != null ? lesson.selectFirst(".o").text() : ""))
                 .room(lesson.selectFirst(".s") != null ? lesson.selectFirst(".s").text() : (lesson.selectFirst(".o") != null ? lesson.selectFirst(".o").text() : ""));

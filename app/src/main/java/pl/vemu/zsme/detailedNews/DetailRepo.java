@@ -1,9 +1,5 @@
 package pl.vemu.zsme.detailedNews;
 
-import android.text.Spanned;
-
-import androidx.core.text.HtmlCompat;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -20,7 +16,8 @@ public enum DetailRepo {
 
     public Detail downloadText(String url) throws IOException {
         Document document = Jsoup.connect(url).get();
-
+        Element toRemove = document.selectFirst(".heateor_sss_sharing_container");
+        if (toRemove != null) toRemove.remove();
         Element s = document.selectFirst(".single-post");
         if (s == null) {
             return null;
@@ -39,12 +36,7 @@ public enum DetailRepo {
             }
             detail.setImages(imagesSrc);
         }
-        detail.setText(parseString(s.toString()));
+        detail.setHtml(s.toString());
         return detail;
-    }
-
-    //TODO sdk 23 * parse
-    private Spanned parseString(String toSpan) {
-        return HtmlCompat.fromHtml(toSpan, HtmlCompat.FROM_HTML_MODE_COMPACT);
     }
 }

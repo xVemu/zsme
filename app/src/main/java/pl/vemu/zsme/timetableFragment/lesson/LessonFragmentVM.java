@@ -1,4 +1,4 @@
-package pl.vemu.zsme.timetableFragment.table;
+package pl.vemu.zsme.timetableFragment.lesson;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -8,18 +8,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TableFragmentVM extends ViewModel {
+public class LessonFragmentVM extends ViewModel {
 
-    private final MutableLiveData<List<List<Table>>> list = new MutableLiveData<>(new ArrayList<>());
+    private final MutableLiveData<List<List<Lesson>>> list = new MutableLiveData<>(new ArrayList<>());
 
-    public LiveData<List<List<Table>>> getList() {
+    public LiveData<List<List<Lesson>>> getList() {
         return list;
     }
 
-    public TableFragmentVM(String url) {
+    public LessonFragmentVM(String url) {
         new Thread(() -> {
             try {
-                list.postValue(TableRepo.INSTANCE.downloadTimetable(url));
+                list.postValue(LessonRepo.INSTANCE.downloadTimetable(url));
             } catch (IOException e) {
                 e.printStackTrace();
             }

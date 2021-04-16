@@ -5,7 +5,7 @@
 
         <variable
             name="viewmodel"
-            type="pl.vemu.zsme.timetableFragment.table.Table" />
+            type="pl.vemu.zsme.timetableFragment.lesson.Lesson" />
     </data>
 
     <RelativeLayout

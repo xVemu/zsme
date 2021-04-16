@@ -1,8 +1,8 @@
 package pl.vemu.zsme.detailedNews;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
-import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,6 +17,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.webkit.WebSettingsCompat;
+import androidx.webkit.WebViewFeature;
 
 import pl.vemu.zsme.R;
 import pl.vemu.zsme.databinding.FragmentDetailBinding;
@@ -43,14 +45,29 @@ public class DetailFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        setHasOptionsMenu(true);
-        binding.text.setMovementMethod(LinkMovementMethod.getInstance());
         if (url.startsWith("author")) {
             NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
             DetailFragmentDirections.ActionDetailFragmentToNewsFragment action =
                     DetailFragmentDirections.actionDetailFragmentToNewsFragment();
             action.setAuthor(url);
             navController.navigate(action);
+        }
+        setHasOptionsMenu(true);
+        binding.webView.getSettings().setJavaScriptEnabled(true);
+        if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
+            int nightModeFlags =
+                    requireContext().getResources().getConfiguration().uiMode &
+                            Configuration.UI_MODE_NIGHT_MASK;
+            int theme = WebSettingsCompat.FORCE_DARK_ON;
+            switch (nightModeFlags) {
+                case Configuration.UI_MODE_NIGHT_YES:
+                    theme = WebSettingsCompat.FORCE_DARK_ON;
+                    break;
+                case Configuration.UI_MODE_NIGHT_NO:
+                    theme = WebSettingsCompat.FORCE_DARK_OFF;
+                    break;
+            }
+            WebSettingsCompat.setForceDark(binding.webView.getSettings(), theme);
         }
     }
 

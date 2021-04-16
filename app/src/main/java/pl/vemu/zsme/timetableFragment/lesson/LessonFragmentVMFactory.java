@@ -1,14 +1,14 @@
-package pl.vemu.zsme.timetableFragment.table;
+package pl.vemu.zsme.timetableFragment.lesson;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-public class TableFragmentVMFactory implements ViewModelProvider.Factory {
+public class LessonFragmentVMFactory implements ViewModelProvider.Factory {
 
     private final String url;
 
-    public TableFragmentVMFactory(String url) {
+    public LessonFragmentVMFactory(String url) {
         this.url = url;
     }
 
@@ -16,8 +16,8 @@ public class TableFragmentVMFactory implements ViewModelProvider.Factory {
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        if (modelClass.isAssignableFrom(TableFragmentVM.class))
-            return (T) new TableFragmentVM(url);
+        if (modelClass.isAssignableFrom(LessonFragmentVM.class))
+            return (T) new LessonFragmentVM(url);
         throw new IllegalArgumentException("ViewModel class not found");
     }
 }

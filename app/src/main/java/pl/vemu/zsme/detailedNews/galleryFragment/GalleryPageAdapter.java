@@ -18,7 +18,7 @@ public class GalleryPageAdapter extends RecyclerView.Adapter<GalleryPageAdapter.
 
     private final String[] images;
     @Setter
-    private static SetUIVisibility setUIVisibility;
+    private static SwitchUIVisibility switchUIVisibility;
 
     @NonNull
     @Override
@@ -45,7 +45,7 @@ public class GalleryPageAdapter extends RecyclerView.Adapter<GalleryPageAdapter.
         public ViewHolder(@NonNull PhotoView itemView) {
             super(itemView);
             this.photoView = itemView;
-            this.photoView.setOnClickListener(view -> setUIVisibility.setUiVisibility());
+            this.photoView.setOnClickListener(view -> switchUIVisibility.switchUiVisibility());
         }
     }
 }

@@ -2,6 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
     app:startDestination="@+id/newsFragment">
 
     <fragment
@@ -12,10 +13,10 @@
         <action
             android:id="@+id/action_news_to_detailFragment"
             app:destination="@id/detailFragment"
-            app:enterAnim="@anim/left_to_right"
-            app:exitAnim="@anim/left_to_right_out"
-            app:popEnterAnim="@anim/right_to_left"
-            app:popExitAnim="@anim/right_to_left_out" />
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
         <deepLink app:uri="zsme.tarnow.pl" />
         <argument
             android:name="author"
@@ -31,10 +32,10 @@
         <action
             android:id="@+id/action_detailFragment_to_galleryFragment"
             app:destination="@id/galleryFragment"
-            app:enterAnim="@anim/left_to_right"
-            app:exitAnim="@anim/left_to_right_out"
-            app:popEnterAnim="@anim/right_to_left"
-            app:popExitAnim="@anim/right_to_left_out" />
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
         <deepLink app:uri="zsme.tarnow.pl/wp/{url}" />
         <argument
             android:name="url"
@@ -49,8 +50,8 @@
         android:label="@string/timetable"
         tools:layout="@layout/fragment_timetable">
         <action
-            android:id="@+id/action_timetableFragment_to_tableFragment"
-            app:destination="@id/tableFragment"
+            android:id="@+id/action_timetableFragment_to_lessonFragment"
+            app:destination="@id/lessonFragment"
             app:enterAnim="@anim/open_enter"
             app:exitAnim="@anim/open_exit"
             app:popEnterAnim="@anim/close_enter"
@@ -64,22 +65,22 @@
         <action
             android:id="@+id/action_moreFragment_to_settingsFragment"
             app:destination="@id/settingsFragment"
-            app:enterAnim="@anim/left_to_right"
-            app:exitAnim="@anim/left_to_right_out"
-            app:popEnterAnim="@anim/right_to_left"
-            app:popExitAnim="@anim/right_to_left_out" />
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_moreFragment_to_contactFragment"
             app:destination="@id/contactFragment"
-            app:enterAnim="@anim/left_to_right"
-            app:exitAnim="@anim/left_to_right_out"
-            app:popEnterAnim="@anim/right_to_left"
-            app:popExitAnim="@anim/right_to_left_out" />
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
-        android:id="@+id/tableFragment"
-        android:name="pl.vemu.zsme.timetableFragment.table.TableFragment"
-        tools:layout="@layout/fragment_table">
+        android:id="@+id/lessonFragment"
+        android:name="pl.vemu.zsme.timetableFragment.lesson.LessonFragment"
+        tools:layout="@layout/fragment_lesson">
         <argument
             android:name="url"
             app:argType="string" />

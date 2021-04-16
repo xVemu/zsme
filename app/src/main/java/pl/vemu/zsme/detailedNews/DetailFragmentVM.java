@@ -3,7 +3,6 @@ package pl.vemu.zsme.detailedNews;
 import android.app.Application;
 import android.view.View;
 
-import androidx.core.text.HtmlCompat;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -32,7 +31,7 @@ public class DetailFragmentVM extends AndroidViewModel implements View.OnClickLi
                 detail.postValue(downloadedDetail);
             } catch (IOException e) {
                 e.printStackTrace();
-                detail.postValue(new Detail(HtmlCompat.fromHtml(application.getString(R.string.error), HtmlCompat.FROM_HTML_MODE_COMPACT), null));
+                detail.postValue(new Detail("Wystąpił błąd", null));
             } finally {
                 isRefreshing.postValue(false);
             }

@@ -24,7 +24,7 @@ import pl.vemu.zsme.R;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
-public class GalleryFragment extends Fragment implements SetUIVisibility {
+public class GalleryFragment extends Fragment implements SwitchUIVisibility {
 
     private ViewPager2 pager;
     private boolean isUiVisible = true;
@@ -42,20 +42,20 @@ public class GalleryFragment extends Fragment implements SetUIVisibility {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         String[] images = GalleryFragmentArgs.fromBundle(requireArguments()).getImages();
-        GalleryPageAdapter.setSetUIVisibility(this);
+        GalleryPageAdapter.setSwitchUIVisibility(this);
         pager.setAdapter(new GalleryPageAdapter(images));
-        setUiVisibility();
+        switchUiVisibility();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         isUiVisible = false;
-        setUiVisibility();
+        switchUiVisibility();
     }
 
     @Override
-    public void setUiVisibility() {
+    public void switchUiVisibility() {
         Window window = requireActivity().getWindow();
         View decorView = window.getDecorView();
         BottomNavigationView bottom_nav = requireActivity().findViewById(R.id.bottom_nav);

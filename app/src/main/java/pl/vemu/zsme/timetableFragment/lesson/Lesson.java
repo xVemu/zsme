@@ -1,10 +1,10 @@
-package pl.vemu.zsme.timetableFragment.table;
+package pl.vemu.zsme.timetableFragment.lesson;
 
 import lombok.Builder;
 import lombok.Value;
 
 @Value
 @Builder
-public class Table {
+public class Lesson {
     String name, room, teacher, timeStart, timeFinish, index;
 }

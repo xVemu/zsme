@@ -1,4 +1,4 @@
-package pl.vemu.zsme.timetableFragment.table;
+package pl.vemu.zsme.timetableFragment.lesson;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,23 +17,23 @@ import java.util.Calendar;
 import java.util.Objects;
 
 import pl.vemu.zsme.R;
-import pl.vemu.zsme.databinding.FragmentTableBinding;
-import pl.vemu.zsme.timetableFragment.TableTimetableAdapter;
+import pl.vemu.zsme.databinding.FragmentLessonBinding;
+import pl.vemu.zsme.timetableFragment.TimetableAdapter;
 
-public class TableFragment extends Fragment {
+public class LessonFragment extends Fragment {
 
-    private FragmentTableBinding binding;
-    private TableFragmentVM viewmodel;
+    private FragmentLessonBinding binding;
+    private LessonFragmentVM viewmodel;
 
-    public TableFragment() {
+    public LessonFragment() {
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        String url = TableFragmentArgs.fromBundle(requireArguments()).getUrl();
-        binding = FragmentTableBinding.inflate(inflater, container, false);
-        viewmodel = new ViewModelProvider(this, new TableFragmentVMFactory(url)).get(TableFragmentVM.class);
+        String url = LessonFragmentArgs.fromBundle(requireArguments()).getUrl();
+        binding = FragmentLessonBinding.inflate(inflater, container, false);
+        viewmodel = new ViewModelProvider(this, new LessonFragmentVMFactory(url)).get(LessonFragmentVM.class);
         return binding.getRoot();
     }
 
@@ -45,7 +45,7 @@ public class TableFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        TableTimetableAdapter adapter = new TableTimetableAdapter(R.layout.item_table, new ArrayList<>(Objects.requireNonNull(viewmodel.getList().getValue())));
+        TimetableAdapter adapter = new TimetableAdapter(R.layout.item_lesson, new ArrayList<>(Objects.requireNonNull(viewmodel.getList().getValue())));
         binding.viewPager.setAdapter(adapter);
         String[] names = {getString(R.string.monday), getString(R.string.tuesday), getString(R.string.wednesday), getString(R.string.thursday), getString(R.string.friday)};
         new TabLayoutMediator(binding.tabLayout, binding.viewPager, (tab, position) -> tab.setText(names[position])).attach();
