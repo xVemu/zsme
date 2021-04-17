@@ -60,6 +60,7 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         binding.refresh.setOnRefreshListener(this);
         binding.refresh.setColorSchemeResources(R.color.colorPrimary);
+        binding.refresh.setProgressBackgroundColorSchemeColor(getResources().getColor(R.color.swipeBackground, null));
 
         setupNetwork();
     }

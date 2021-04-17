@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements NavController.OnD
     private NavController navController;
     private ActivityMainBinding binding;
 
+    // TODO hilt
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

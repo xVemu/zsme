@@ -2,4 +2,5 @@
 <resources>
     <color name="colorPrimary">#8BC34A</color>
     <color name="colorPrimaryDark">#1F1B24</color>
+    <color name="swipeBackground">#ff383838</color>
 </resources>

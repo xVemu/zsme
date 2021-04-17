@@ -19,7 +19,7 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 @AllArgsConstructor
 public class TimetableAdapter extends RecyclerView.Adapter<TimetableAdapter.ViewHolder> {
 
-    private int layoutID;
+    private final int layoutID;
     @Setter
     private List<List<?>> list;
 

@@ -1,4 +1,5 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -8,7 +9,7 @@
             type="pl.vemu.zsme.timetableFragment.lesson.Lesson" />
     </data>
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingStart="8dp"
@@ -23,77 +24,82 @@
             android:gravity="center"
             android:includeFontPadding="false"
             android:maxLength="2"
-            android:textSize="32sp"
-            android:textColor="?android:textColorPrimary"
             android:text="@{viewmodel.index}"
+            android:textColor="?android:textColorPrimary"
+            android:textSize="32sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="5" />
 
         <TextView
+            android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="40dp"
-            android:layout_toEndOf="@+id/time_start"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textSize="15sp"
-            android:textColor="?android:textColorPrimary"
             android:text="@{viewmodel.name}"
+            android:textColor="?android:textColorPrimary"
+            android:textSize="15sp"
+            app:layout_constraintStart_toEndOf="@+id/time_start"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="@tools:sample/lorem" />
 
         <TextView
             android:id="@+id/time_start"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/number"
             android:layout_marginStart="8dp"
-            android:layout_alignTop="@id/number"
             android:maxLines="1"
+            android:text="@{viewmodel.timeStart}"
             android:textColor="?android:textColorSecondary"
             android:textSize="13sp"
-            android:text="@{viewmodel.timeStart}"
+            app:layout_constraintStart_toEndOf="@id/number"
+            app:layout_constraintTop_toTopOf="@id/number"
             tools:text="11:11" />
 
         <TextView
+            android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/number"
             android:layout_marginStart="8dp"
-            android:layout_alignBottom="@+id/number"
             android:maxLines="1"
+            android:text="@{viewmodel.timeFinish}"
             android:textColor="?android:textColorSecondary"
             android:textSize="13sp"
-            android:text="@{viewmodel.timeFinish}"
+            app:layout_constraintBottom_toBottomOf="@+id/number"
+            app:layout_constraintStart_toEndOf="@id/number"
             tools:text="12:00" />
 
         <TextView
             android:id="@+id/room"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/number"
             android:layout_marginStart="10dp"
-            android:layout_toEndOf="@+id/time_start"
             android:maxLines="1"
+            android:text="@{viewmodel.room}"
             android:textColor="?android:textColorSecondary"
             android:textSize="13sp"
-            android:text="@{viewmodel.room}"
+            app:layout_constraintBottom_toBottomOf="@+id/number"
+            app:layout_constraintStart_toEndOf="@+id/time_start"
             tools:text="22"
             tools:visibility="gone" />
 
         <TextView
+            android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/number"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="16dp"
-            android:layout_toEndOf="@id/room"
             android:ellipsize="end"
             android:maxLines="1"
+            android:text="@{viewmodel.teacher}"
             android:textColor="?android:textColorSecondary"
             android:textSize="13sp"
-            android:text="@{viewmodel.teacher}"
+            app:layout_constraintBottom_toBottomOf="@+id/number"
+            app:layout_constraintStart_toEndOf="@id/room"
             tools:text="Agata Kowalska - Błaszczyk" />
 
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
