@@ -9,7 +9,8 @@
         <intent
             android:action="pl.vemu.zsme.shortcut.TIMETABLE"
             android:targetPackage="pl.vemu.zsme"
-            android:targetClass="pl.vemu.zsme.MainActivity" />
+            android:targetClass="pl.vemu.zsme.MainActivity"
+            android:data="zsme://timetable" />
     </shortcut>
     <shortcut
         android:shortcutId="more"
@@ -20,6 +21,7 @@
         <intent
             android:action="pl.vemu.zsme.shortcut.MORE"
             android:targetPackage="pl.vemu.zsme"
-            android:targetClass="pl.vemu.zsme.MainActivity" />
+            android:targetClass="pl.vemu.zsme.MainActivity"
+            android:data="zsme://more" />
     </shortcut>
 </shortcuts>

@@ -57,6 +57,7 @@
             app:popEnterAnim="@anim/close_enter"
             app:popExitAnim="@anim/close_exit" />
         <deepLink app:uri="https://zsme.tarnow.pl/plan/" />
+        <deepLink app:uri="zsme://timetable" />
     </fragment>
     <fragment
         android:id="@+id/moreFragment"
@@ -76,6 +77,7 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <deepLink app:uri="zsme://more" />
     </fragment>
     <fragment
         android:id="@+id/lessonFragment"

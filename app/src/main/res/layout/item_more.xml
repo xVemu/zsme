@@ -15,7 +15,7 @@
         android:layout_height="56dp"
         android:background="?selectableItemBackground"
         android:orientation="horizontal"
-        android:onClick="@{viewmodel.onClick(context)}"
+        android:onClick="@{viewmodel.onClick}"
         android:paddingLeft="16dp"
         android:paddingTop="8dp"
         android:paddingRight="16dp"

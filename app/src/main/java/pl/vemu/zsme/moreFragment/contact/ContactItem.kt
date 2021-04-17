@@ -1,16 +1,11 @@
-package pl.vemu.zsme.moreFragment.contact;
+package pl.vemu.zsme.moreFragment.contact
 
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import android.view.View;
+import android.content.Intent
+import android.net.Uri
+import android.view.View
+import pl.vemu.zsme.R
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import pl.vemu.zsme.R;
-
-@AllArgsConstructor
-public enum ContactItem implements View.OnClickListener {
+enum class ContactItem(val icon: Int, val headerText: Int, val text: Int, private val action: Int) : View.OnClickListener {
     NAME(0, R.string.school_name, R.string.school_name_text, 0),
     ADRESS(R.drawable.ic_map, R.string.school_address, R.string.school_address_text, R.string.school_address_action),
     EMAIL(R.drawable.ic_mail, R.string.school_email, R.string.school_email_text, R.string.school_email_text),
@@ -21,46 +16,15 @@ public enum ContactItem implements View.OnClickListener {
     VICE_HEADMASTER_2(R.drawable.ic_mail, R.string.school_vice_principal, R.string.school_vice2_text, R.string.school_vice2_action),
     SOURCE_CODE(R.drawable.ic_github, R.string.source_code, R.string.source_code_text, R.string.github_url);
 
-    @Getter
-    private final int icon, headerText, text, action;
-
-    @Override
-    public void onClick(View view) {
-        Context context = view.getContext();
-        String actionString = context.getString(action);
-        Intent intent;
-        switch (icon) {
-            case R.drawable.ic_phone:
-                intent = openPhone(actionString);
-                break;
-            case R.drawable.ic_mail:
-                intent = openEmail(actionString);
-                break;
-            case R.drawable.ic_map:
-            case R.drawable.ic_github:
-                intent = openPage(actionString);
-                break;
-            default:
-                return;
+    override fun onClick(v: View) {
+        val context = v.context
+        val actionString = context.getString(action)
+        val intent = when (icon) {
+            R.drawable.ic_phone -> Intent(Intent.ACTION_DIAL, Uri.parse("tel:$actionString"))
+            R.drawable.ic_mail -> Intent(Intent.ACTION_SENDTO)
+                    .run { putExtra(Intent.EXTRA_EMAIL, arrayOf(actionString)) }
+            else -> Intent(Intent.ACTION_VIEW, Uri.parse(actionString))
         }
-        if (intent.resolveActivity(context.getPackageManager()) != null) {
-            context.startActivity(intent);
-        }
-    }
-
-    private Intent openPhone(String number) {
-        Uri intentUri = Uri.parse("tel:" + number);
-        return new Intent(Intent.ACTION_DIAL, intentUri);
-    }
-
-    private Intent openPage(String page) {
-        Uri intentUri = Uri.parse(page);
-        return new Intent(Intent.ACTION_VIEW, intentUri);
-    }
-
-    private Intent openEmail(String email) {
-        Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", email, null));
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{email});
-        return emailIntent;
+        context.startActivity(intent)
     }
 }
