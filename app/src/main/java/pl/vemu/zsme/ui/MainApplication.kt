@@ -1,4 +1,4 @@
-package pl.vemu.zsme
+package pl.vemu.zsme.ui
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate

@@ -1,4 +1,4 @@
-package pl.vemu.zsme
+package pl.vemu.zsme.ui
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -14,10 +14,13 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import androidx.work.*
 import com.google.android.material.appbar.AppBarLayout
+import dagger.hilt.android.AndroidEntryPoint
+import pl.vemu.zsme.R
 import pl.vemu.zsme.databinding.ActivityMainBinding
 import pl.vemu.zsme.newsFragment.NewsWorker
 import java.util.concurrent.TimeUnit
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity(), OnDestinationChangedListener {
 
     private lateinit var navController: NavController

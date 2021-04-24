@@ -8,7 +8,7 @@
         <import type="android.view.View" />
 
         <variable
-            name="viewmodel"
+            name="model"
             type="pl.vemu.zsme.moreFragment.contact.ContactItem" />
     </data>
 
@@ -32,7 +32,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@{viewmodel.headerText}"
+                android:text="@{model.headerText}"
                 android:textColor="?android:textColorSecondary"
                 android:textSize="12sp"
                 tools:text="@string/school_name" />
@@ -40,7 +40,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@{viewmodel.text}"
+                android:text="@{model.text}"
                 android:textIsSelectable="true"
                 android:textSize="17sp"
                 tools:text="@string/school_name_text" />
@@ -55,11 +55,11 @@
             android:layout_marginRight="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/destination_button"
-            android:onClick="@{viewmodel}"
+            android:onClick="@{model}"
             android:padding="4dp"
             android:tint="?colorPrimary"
-            android:visibility="@{viewmodel.icon != 0 ? View.VISIBLE : View.GONE}"
-            app:imageResource="@{viewmodel.icon}"
+            android:visibility="@{model.icon != 0 ? View.VISIBLE : View.GONE}"
+            app:imageResource="@{model.icon}"
             tools:src="@drawable/ic_mail"
             tools:visibility="visible" />
     </LinearLayout>

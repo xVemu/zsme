@@ -25,8 +25,15 @@
     <string name="school_address_text" translatable="false">Szujskiego 13, 33–100 Tarnów</string>
     <string name="school_address_action" translatable="false">https://goo.gl/maps/UCDb4Uky2bzUPQYy6</string>
 
-    <string name="school_email" translatable="false">E-mail</string>
-    <string name="school_email_text" translatable="false">sekretzsme@umt.tarnow.pl</string>
+    <string name="open_hours">Godziny otwarcia</string>
+    <string name="open_hours_text">poniedziałek–piątek 7:30–15:30</string>
+
+    <string name="secretariat_email">Sekretariat</string>
+    <string name="recruitment_email">Rekrutacja</string>
+    <string name="accountancy_email">Księgowość</string>
+    <string name="secretariat_email_text" translatable="false">sekretzsme@umt.tarnow.pl</string>
+    <string name="recruitment_email_text" translatable="false">rekrutacja@zsme.tarnow.pl</string>
+    <string name="accountancy_email_text" translatable="false">ksiegzsme@umt.tarnow.pl</string>
 
     <string name="school_phone">Telefon</string>
     <string name="school_phone_text" translatable="false">(014) 621 61 84</string>
@@ -35,7 +42,7 @@
     <string name="school_phone_fax_text" translatable="false">(014) 621 61 83</string>
 
     <string name="school_principal">Dyrektor</string>
-    <string name="school_principal_text" translatable="false">mgr Jan Onak</string>
+    <string name="school_principal_text" translatable="false">dr inż. Grzegorz Szerszeń</string>
     <string name="school_principal_action" translatable="false">dyrzsme@umt.tarnow.pl</string>
 
     <string name="school_vice_principal">Zastępca dyrektora</string>
@@ -43,8 +50,8 @@
     <string name="school_vice1_text" translatable="false">mgr Marta Piszczek</string>
     <string name="school_vice1_action" translatable="false">m.piszczek@zsme.tarnow.pl</string>
 
-    <string name="school_vice2_text" translatable="false">dr inż. Grzegorz Szerszeń</string>
-    <string name="school_vice2_action" translatable="false">g.szerszen@zsme.tarnow.pl</string>
+    <string name="school_vice2_text" translatable="false">mgr inż. Marcin Kowalski</string>
+    <string name="school_vice2_action" translatable="false">m.kowalski@zsme.tarnow.pl</string>
 
 
     <string name="share">Udostępnij</string>

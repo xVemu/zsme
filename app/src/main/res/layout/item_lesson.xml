@@ -5,7 +5,7 @@
     <data>
 
         <variable
-            name="viewmodel"
+            name="model"
             type="pl.vemu.zsme.timetableFragment.lesson.Lesson" />
     </data>
 
@@ -24,7 +24,7 @@
             android:gravity="center"
             android:includeFontPadding="false"
             android:maxLength="2"
-            android:text="@{viewmodel.index}"
+            android:text="@{model.index}"
             android:textColor="?android:textColorPrimary"
             android:textSize="32sp"
             app:layout_constraintStart_toStartOf="parent"
@@ -39,7 +39,7 @@
             android:layout_marginEnd="40dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{viewmodel.name}"
+            android:text="@{model.name}"
             android:textColor="?android:textColorPrimary"
             android:textSize="15sp"
             app:layout_constraintStart_toEndOf="@+id/time_start"
@@ -52,7 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:maxLines="1"
-            android:text="@{viewmodel.timeStart}"
+            android:text="@{model.timeStart}"
             android:textColor="?android:textColorSecondary"
             android:textSize="13sp"
             app:layout_constraintStart_toEndOf="@id/number"
@@ -65,7 +65,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:maxLines="1"
-            android:text="@{viewmodel.timeFinish}"
+            android:text="@{model.timeFinish}"
             android:textColor="?android:textColorSecondary"
             android:textSize="13sp"
             app:layout_constraintBottom_toBottomOf="@+id/number"
@@ -78,7 +78,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:maxLines="1"
-            android:text="@{viewmodel.room}"
+            android:text="@{model.room}"
             android:textColor="?android:textColorSecondary"
             android:textSize="13sp"
             app:layout_constraintBottom_toBottomOf="@+id/number"
@@ -94,7 +94,7 @@
             android:layout_marginEnd="16dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{viewmodel.teacher}"
+            android:text="@{model.teacher}"
             android:textColor="?android:textColorSecondary"
             android:textSize="13sp"
             app:layout_constraintBottom_toBottomOf="@+id/number"

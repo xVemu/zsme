@@ -14,8 +14,8 @@ import androidx.work.WorkerParameters;
 import java.io.IOException;
 import java.util.List;
 
-import pl.vemu.zsme.MainActivity;
 import pl.vemu.zsme.R;
+import pl.vemu.zsme.ui.MainActivity;
 
 public class NewsWorker extends Worker {
 

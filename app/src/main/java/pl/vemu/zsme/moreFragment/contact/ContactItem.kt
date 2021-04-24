@@ -8,9 +8,12 @@ import pl.vemu.zsme.R
 enum class ContactItem(val icon: Int, val headerText: Int, val text: Int, private val action: Int) : View.OnClickListener {
     NAME(0, R.string.school_name, R.string.school_name_text, 0),
     ADRESS(R.drawable.ic_map, R.string.school_address, R.string.school_address_text, R.string.school_address_action),
-    EMAIL(R.drawable.ic_mail, R.string.school_email, R.string.school_email_text, R.string.school_email_text),
+    OPEN(0, R.string.open_hours, R.string.open_hours_text, 0),
     PHONE(R.drawable.ic_phone, R.string.school_phone, R.string.school_phone_text, R.string.school_phone_text),
     FAX(R.drawable.ic_phone, R.string.school_phone_fax, R.string.school_phone_fax_text, R.string.school_phone_fax_text),
+    SECRETARIAT(R.drawable.ic_mail, R.string.secretariat_email, R.string.secretariat_email_text, R.string.secretariat_email_text),
+    RECRUITMENT(R.drawable.ic_mail, R.string.recruitment_email, R.string.recruitment_email_text, R.string.recruitment_email_text),
+    ACCOUNTANCY(R.drawable.ic_mail, R.string.accountancy_email, R.string.accountancy_email_text, R.string.accountancy_email_text),
     HEADMASTER(R.drawable.ic_mail, R.string.school_principal, R.string.school_principal_text, R.string.school_principal_action),
     VICE_HEADMASTER_1(R.drawable.ic_mail, R.string.school_vice_principal, R.string.school_vice1_text, R.string.school_vice1_action),
     VICE_HEADMASTER_2(R.drawable.ic_mail, R.string.school_vice_principal, R.string.school_vice2_text, R.string.school_vice2_action),

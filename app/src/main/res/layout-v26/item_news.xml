@@ -12,8 +12,8 @@
         <import type="android.view.View" />
 
         <variable
-            name="viewmodel"
-            type="pl.vemu.zsme.newsFragment.NewsItem" />
+            name="model"
+            type="pl.vemu.zsme.model.Post" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:minHeight="150dp"
-        android:onClick="@{Navigation.createNavigateOnClickListener(NewsFragmentDirections.actionNewsToDetailFragment(viewmodel.url))}">
+        android:onClick="@{Navigation.createNavigateOnClickListener(NewsFragmentDirections.actionNewsToDetailFragment(model.link))}">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -37,8 +37,8 @@
                 android:layout_marginEnd="8dp"
                 android:textAlignment="center"
                 android:textStyle="bold"
-                android:text="@{viewmodel.title}"
-                android:visibility="@{viewmodel.title != null ? View.VISIBLE : View.GONE}"
+                android:text="@{model.title}"
+                android:visibility="@{model.title != null ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.4"
                 app:layout_constraintStart_toEndOf="@+id/thumbnail"
@@ -53,7 +53,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
                 android:justificationMode="inter_word"
-                android:text="@{viewmodel.description}"
+                android:text="@{model.excerpt}"
                 app:layout_constraintBottom_toTopOf="@+id/date"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -70,8 +70,8 @@
                 android:contentDescription="@string/thumbnail"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                imgUrl="@{viewmodel.imgUrl}"
                 tools:srcCompat="@drawable/zsme" />
+            <!--                imgUrl="@{model.imgUrl}"-->
 
             <TextView
                 android:id="@+id/date"
@@ -80,10 +80,10 @@
                 android:layout_margin="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
-                android:text="@{viewmodel.date}"
+                android:text="@{model.date.toString()}"
                 android:textColor="@color/colorPrimary"
                 android:textSize="12sp"
-                android:visibility="@{viewmodel.date != null ? View.VISIBLE : View.GONE}"
+                android:visibility="@{model.date != null ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toTopOf="@+id/author"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/thumbnail"
@@ -99,13 +99,13 @@
                 android:layout_marginBottom="8dp"
                 android:textColor="@color/colorPrimary"
                 android:textSize="12sp"
-                android:text="@{viewmodel.author}"
-                android:visibility="@{viewmodel.author != null ? View.VISIBLE : View.GONE}"
+                android:text="@{Integer.toString(model.author)}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/thumbnail"
                 app:layout_constraintTop_toBottomOf="@+id/date"
                 tools:text="@string/lorem_title" />
+            <!--                android:visibility="@{model.author != null ? View.VISIBLE : View.GONE}"-->
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -2,14 +2,42 @@ package pl.vemu.zsme.newsFragment;
 
 import org.jsoup.nodes.Element;
 
-import lombok.Builder;
-import lombok.Value;
-
-@Value
-@Builder
 public class NewsItem {
 
-    String title, description, imgUrl, url, author, date;
+    private final String title, description, imgUrl, url, author, date;
+
+    public NewsItem(String title, String description, String imgUrl, String url, String author, String date) {
+        this.title = title;
+        this.description = description;
+        this.imgUrl = imgUrl;
+        this.url = url;
+        this.author = author;
+        this.date = date;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public String getDate() {
+        return date;
+    }
 
     static NewsItem makeNewsItem(Element element) {
         NewsItem.NewsItemBuilder newsItemBuilder = NewsItem.builder();
@@ -23,5 +51,47 @@ public class NewsItem {
             return newsItemBuilder.build();
         }
         return null;
+    }
+
+    public static NewsItemBuilder builder() {
+        return new NewsItemBuilder();
+    }
+
+    public static class NewsItemBuilder {
+        private String title, description, imgUrl, url, author, date;
+
+        public NewsItemBuilder title(String title) {
+            this.title = title;
+            return this;
+        }
+
+        public NewsItemBuilder description(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public NewsItemBuilder imgUrl(String imgUrl) {
+            this.imgUrl = imgUrl;
+            return this;
+        }
+
+        public NewsItemBuilder url(String url) {
+            this.url = url;
+            return this;
+        }
+
+        public NewsItemBuilder author(String author) {
+            this.author = author;
+            return this;
+        }
+
+        public NewsItemBuilder date(String date) {
+            this.date = date;
+            return this;
+        }
+
+        public NewsItem build() {
+            return new NewsItem(title, description, imgUrl, url, author, date);
+        }
     }
 }

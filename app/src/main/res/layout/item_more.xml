@@ -6,7 +6,7 @@
     <data>
 
         <variable
-            name="viewmodel"
+            name="model"
             type="pl.vemu.zsme.moreFragment.more.MoreItem" />
     </data>
 
@@ -15,7 +15,7 @@
         android:layout_height="56dp"
         android:background="?selectableItemBackground"
         android:orientation="horizontal"
-        android:onClick="@{viewmodel.onClick}"
+        android:onClick="@{model.onClick}"
         android:paddingLeft="16dp"
         android:paddingTop="8dp"
         android:paddingRight="16dp"
@@ -25,7 +25,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_gravity="center_vertical"
-            app:imageResource="@{viewmodel.icon}"
+            app:imageResource="@{model.icon}"
             app:tint="?colorOnBackground"
             tools:ignore="ContentDescription"
             tools:srcCompat="@drawable/ic_home_page" />
@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="32dp"
-            android:text="@{viewmodel.text}"
+            android:text="@{model.text}"
             android:textSize="16sp"
             tools:text="@string/settings" />
     </LinearLayout>

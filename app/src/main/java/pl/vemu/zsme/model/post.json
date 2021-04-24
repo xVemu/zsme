@@ -1,0 +1,42 @@
+{
+  "id": 26588,
+  "date": "2021-04-19T09:36:18",
+  "link": "https://zsme.tarnow.pl/wp/wydzial-politechniczny-pwsz/",
+  "title": {
+    "rendered": "Wydział Politechniczny PWSZ"
+  },
+  "content": {
+    "rendered": "\n<p>Studiuj na kierunku: ELEKTRONIKA I TELEKOMUNIKACJA! Studia 1-go stopnia o profilu praktycznym na kierunku Elektronika i_Telekomunikacja trwają 3.5 roku (siedem semestrów), a po ukończeniu studiów absolwent otrzymuje tytuł zawodowy inżyniera elektroniki i telekomunikacji.</p>\n\n\n\n<div class=\"wp-block-file aligncenter\"><a href=\"https://zsme.tarnow.pl/wp/wp-content/uploads/2021/04/pwsz.pdf\">Wydział Politechniczny &#8211; plakat</a><a href=\"https://zsme.tarnow.pl/wp/wp-content/uploads/2021/04/pwsz.pdf\" class=\"wp-block-file__button\" download>Pobierz</a></div>\n\n\n\n<figure class=\"wp-block-image size-large\"><img loading=\"lazy\" width=\"738\" height=\"1024\" src=\"https://zsme.tarnow.pl/wp/wp-content/uploads/2021/04/image-738x1024.png\" alt=\"\" class=\"wp-image-26591\" srcset=\"https://zsme.tarnow.pl/wp/wp-content/uploads/2021/04/image-738x1024.png 738w, https://zsme.tarnow.pl/wp/wp-content/uploads/2021/04/image-216x300.png 216w, https://zsme.tarnow.pl/wp/wp-content/uploads/2021/04/image-72x100.png 72w, https://zsme.tarnow.pl/wp/wp-content/uploads/2021/04/image.png 741w\" sizes=\"(max-width: 738px) 100vw, 738px\" /></figure>\n"
+  },
+  "excerpt": {
+    "rendered": "<p>Studiuj na kierunku: ELEKTRONIKA I TELEKOMUNIKACJA! Studia 1-go stopnia o profilu praktycznym na kierunku Elektronika i_Telekomunikacja trwają 3.5 roku (siedem semestrów), a po ukończeniu studiów absolwent otrzymuje tytuł zawodowy inżyniera elektroniki i telekomunikacji.</p>\n"
+  },
+  "author": 2,
+  "featured_media": 26589,
+  "categories": [
+    8
+  ],
+  "_links": {
+    "author": [
+      {
+        "href": "https://zsme.tarnow.pl/wp/wp-json/wp/v2/users/2"
+      }
+    ],
+    "wp:featuredmedia": [
+      {
+        "href": "https://zsme.tarnow.pl/wp/wp-json/wp/v2/media/26589"
+      }
+    ],
+    "wp:attachment": [
+      {
+        "href": "https://zsme.tarnow.pl/wp/wp-json/wp/v2/media?parent=26588"
+      }
+    ],
+    "wp:term": [
+      {
+        "taxonomy": "category",
+        "href": "https://zsme.tarnow.pl/wp/wp-json/wp/v2/categories?post=26588"
+      }
+    ]
+  }
+}

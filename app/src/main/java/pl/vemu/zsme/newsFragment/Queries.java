@@ -1,15 +1,16 @@
 package pl.vemu.zsme.newsFragment;
 
-import lombok.RequiredArgsConstructor;
-
 public abstract class Queries {
 
     abstract String parseUrl(int page);
 
-    @RequiredArgsConstructor
     static class Author extends Queries {
 
         private final String author;
+
+        Author(String author) {
+            this.author = author;
+        }
 
         @Override
         public String parseUrl(int page) {
@@ -26,10 +27,13 @@ public abstract class Queries {
         }
     }
 
-    @RequiredArgsConstructor
     static class Search extends Queries {
 
         private final String query;
+
+        Search(String query) {
+            this.query = query;
+        }
 
         @Override
         public String parseUrl(int page) {

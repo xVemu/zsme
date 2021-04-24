@@ -5,20 +5,25 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.github.chrisbanes.photoview.PhotoView;
 
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import coil.Coil;
+import coil.request.ImageRequest;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
-@RequiredArgsConstructor
 public class GalleryPageAdapter extends RecyclerView.Adapter<GalleryPageAdapter.ViewHolder> {
 
     private final String[] images;
-    @Setter
     private static SwitchUIVisibility switchUIVisibility;
+
+    public static void setSwitchUIVisibility(SwitchUIVisibility switchUIVisibility) {
+        GalleryPageAdapter.switchUIVisibility = switchUIVisibility;
+    }
+
+    public GalleryPageAdapter(String[] images) {
+        this.images = images;
+    }
 
     @NonNull
     @Override
@@ -30,7 +35,12 @@ public class GalleryPageAdapter extends RecyclerView.Adapter<GalleryPageAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Glide.with(holder.photoView.getContext()).load(images[position]).into(holder.photoView);
+        ImageRequest request = new ImageRequest.Builder(holder.photoView.getContext())
+                .data(images[position])
+                .crossfade(true)
+                .target(holder.photoView)
+                .build();
+        Coil.imageLoader(holder.photoView.getContext()).enqueue(request);
     }
 
     @Override

@@ -38,4 +38,9 @@
     <string name="english">English</string>
     <string name="polish">Polish</string>
     <string name="language">Language</string>
+    <string name="secretariat_email">Secretariat</string>
+    <string name="accountancy_email">Accountancy</string>
+    <string name="recruitment_email">Recruitment</string>
+    <string name="open_hours">Open hours</string>
+    <string name="open_hours_text">monday-friday 7:30am-5:30pm</string>
 </resources>
