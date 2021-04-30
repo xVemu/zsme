@@ -5,18 +5,18 @@ import androidx.room.Room
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.android.scopes.ViewModelScoped
+import dagger.hilt.components.SingletonComponent
 import pl.vemu.zsme.db.Database
+import javax.inject.Singleton
 
 
 @Module
-@InstallIn(ViewModelComponent::class)
+@InstallIn(SingletonComponent::class)
 class RoomModule {
 
+    @Singleton
     @Provides
-    @ViewModelScoped
     fun provideDatabase(@ApplicationContext context: Context) = Room.databaseBuilder(
             context,
             Database::class.java,
@@ -24,8 +24,8 @@ class RoomModule {
     ).build()
 
 
+    @Singleton
     @Provides
-    @ViewModelScoped
     fun providePostDAO(database: Database) = database.postDao()
 
 }

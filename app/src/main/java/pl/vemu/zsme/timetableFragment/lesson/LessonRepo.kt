@@ -6,11 +6,11 @@ import java.util.*
 
 object LessonRepo {
 
-    fun downloadLessons(url: String): Array<Array<Lesson>> {
+    fun downloadLessons(url: String): List<List<Lesson>> {
         val document = login(url)
         val table = document.selectFirst(".tabela").child(0).children()
         table.removeAt(0)
-        val lessonsList = Array(5) { mutableListOf<Lesson>() }
+        val lessonsList = List(5) { mutableListOf<Lesson>() }
         //TODO rewrite
         table.forEachIndexed { i, it ->
             val lessons = it.select(".l")
@@ -46,9 +46,7 @@ object LessonRepo {
                 }
             }
         }
-        return lessonsList.map {
-            it.toTypedArray()
-        }.toTypedArray()
+        return lessonsList
     }
 
     //TODO rewrite

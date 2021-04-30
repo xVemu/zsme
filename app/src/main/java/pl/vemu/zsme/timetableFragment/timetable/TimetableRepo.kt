@@ -5,9 +5,9 @@ import pl.vemu.zsme.login
 
 object TimetableRepo {
 
-    fun downloadTimetable(): Array<Array<Timetable>> {
+    fun downloadTimetable(): List<List<Timetable>> {
         val document = login("lista.html")
-        return arrayOf(
+        return listOf(
                 makeArrayOfLinks(document.selectFirst("#oddzialy")),
                 makeArrayOfLinks(document.selectFirst("#nauczyciele")),
                 makeArrayOfLinks(document.selectFirst("#sale")),
@@ -16,5 +16,5 @@ object TimetableRepo {
 
     private fun makeArrayOfLinks(element: Element) = element.children().map {
         Timetable(it.text(), it.child(0).attr("href"))
-    }.toTypedArray()
+    }
 }

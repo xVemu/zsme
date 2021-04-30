@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 import pl.vemu.zsme.SimpleAdapter
 import pl.vemu.zsme.makeSimple
 
-class TimetableAdapter<T>(private val layoutID: Int, var list: Array<Array<T>>) : RecyclerView.Adapter<TimetableAdapter.TimetableHolder>() {
+class TimetableAdapter<T>(private val layoutID: Int, var list: List<List<T>>) : RecyclerView.Adapter<TimetableAdapter.TimetableHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TimetableHolder {
         val recyclerView = RecyclerView(parent.context).makeSimple()

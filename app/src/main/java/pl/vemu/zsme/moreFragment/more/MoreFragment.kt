@@ -20,6 +20,6 @@ class MoreFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        recyclerView.adapter = SimpleAdapter(R.layout.item_more, MoreItem.values())
+        recyclerView.adapter = SimpleAdapter(R.layout.item_more, MoreItem.values().toList())
     }
 }

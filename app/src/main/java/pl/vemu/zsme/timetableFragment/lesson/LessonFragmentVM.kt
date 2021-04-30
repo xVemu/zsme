@@ -8,14 +8,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class LessonFragmentVM(url: String) : ViewModel() {
-    private val _list: MutableLiveData<Array<Array<Lesson>>> by lazy {
-        MutableLiveData<Array<Array<Lesson>>>().also {
+    private val _list: MutableLiveData<List<List<Lesson>>> by lazy {
+        MutableLiveData<List<List<Lesson>>>().also {
             CoroutineScope(Dispatchers.IO).launch {
                 it.postValue(LessonRepo.downloadLessons(url))
             }
         }
     }
-    val list: LiveData<Array<Array<Lesson>>>
+    val list: LiveData<List<List<Lesson>>>
         get() = _list
 
     /*override fun onCleared() {

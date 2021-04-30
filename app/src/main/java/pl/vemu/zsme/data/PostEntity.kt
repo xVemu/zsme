@@ -11,10 +11,8 @@ data class PostEntity(
         val title: Title,
         val content: Content,
         val excerpt: Excerpt,
-        val author: Int,
-        @SerializedName("featured_media")
-        val featuredMedia: Int,
-        val categories: List<Int>,
+        @SerializedName("_embedded")
+        val embedded: Embedded,
 )
 
 data class Title(
@@ -27,4 +25,40 @@ data class Content(
 
 data class Excerpt(
         val rendered: String,
+)
+
+data class Embedded(
+        val author: List<Author>,
+        @SerializedName("wp:featuredmedia")
+        val wpFeaturedmedia: List<WpFeaturedmedia>,
+        @SerializedName("wp:term")
+        val category: List<List<Category>>,
+)
+
+data class WpFeaturedmedia(
+        @SerializedName("media_details")
+        val mediaDetails: MediaDetails,
+)
+
+data class MediaDetails(
+        val sizes: Sizes,
+)
+
+data class Sizes(
+        val thumbnail: Thumbnail,
+)
+
+data class Thumbnail(
+        @SerializedName("source_url")
+        val sourceUrl: String,
+)
+
+data class Author(
+        val id: Int,
+        val name: String,
+)
+
+data class Category(
+        val id: Int,
+        val name: String,
 )

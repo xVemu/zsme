@@ -1,29 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context=".newsFragment.NewsFragment"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <data>
-
-        <import type="android.view.View" />
-
-        <variable
-            name="viewmodel"
-            type="pl.vemu.zsme.newsFragment.NewsFragmentVM" />
-    </data>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".newsFragment.NewsFragment">
-
-        <!-- TODO <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/refresh"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            refreshing="@{viewmodel.isRefreshing}"
-            android:visibility="@{viewmodel.notFound ? View.GONE : View.VISIBLE}">-->
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
@@ -34,18 +22,9 @@
             android:scrollbars="none"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-        <!--        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>-->
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-        <!--        TODO show bottom nav hiding fix-->
-        <!--<TextView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_marginTop="32dp"
-            android:textAlignment="center"
-            android:text="@string/no_results"
-            android:textSize="18sp"
-            android:visibility="@{viewmodel.notFound ? View.VISIBLE : View.GONE}" />-->
+    <!--        TODO show bottom nav hiding fix-->
+    <!--    TODO databinding with stateflow when android studio 4.3 be released-->
 
-    </LinearLayout>
-</layout>
+</LinearLayout>

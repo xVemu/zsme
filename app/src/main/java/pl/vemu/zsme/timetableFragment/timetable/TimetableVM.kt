@@ -8,8 +8,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class TimetableVM : ViewModel() {
-    private val _list = MutableLiveData<Array<Array<Timetable>>>(emptyArray())
-    val list: LiveData<Array<Array<Timetable>>>
+    private val _list = MutableLiveData<List<List<Timetable>>>(emptyList())
+    val list: LiveData<List<List<Timetable>>>
         get() = _list
 
     fun downloadTimetable() {

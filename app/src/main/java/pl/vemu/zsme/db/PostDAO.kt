@@ -4,18 +4,18 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import pl.vemu.zsme.model.Post
+import pl.vemu.zsme.model.PostModel
 
 @Dao
 interface PostDAO {
 
-    @Query("SELECT * FROM Post")
-    suspend fun getAll(): List<Post>
+    @Query("SELECT * FROM Posts")
+    suspend fun getAll(): List<PostModel>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertAll(posts: List<Post>)
+    suspend fun insertAll(postModels: List<PostModel>)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(post: Post)
+    suspend fun insert(postModel: PostModel)
 
 }

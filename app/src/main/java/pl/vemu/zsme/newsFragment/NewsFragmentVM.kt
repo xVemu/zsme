@@ -1,14 +1,14 @@
 package pl.vemu.zsme.newsFragment
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import pl.vemu.zsme.model.Post
+import pl.vemu.zsme.State
+import pl.vemu.zsme.model.PostModel
 import pl.vemu.zsme.repo.NewsRepo
 import javax.inject.Inject
 
@@ -18,27 +18,27 @@ class NewsFragmentVM @Inject constructor(
         private val newsRepo: NewsRepo,
 ) : ViewModel() {
 
-    private val _list: MutableLiveData<Array<Post>> by lazy {
-        MutableLiveData<Array<Post>>().also {
-            CoroutineScope(Dispatchers.IO).launch {
-                it.postValue(newsRepo.getPosts().toTypedArray())
+    private val _posts = MutableStateFlow<State<List<PostModel>>>(State.Success(emptyList()))
+
+    val posts: StateFlow<State<List<PostModel>>>
+        get() = _posts
+
+    init {
+        fetchPosts()
+    }
+
+    fun fetchPosts() {
+        viewModelScope.launch {
+            _posts.emit(State.Loading())
+            try {
+                _posts.emit(State.Success(newsRepo.getPosts()))
+            } catch (e: Exception) {
+                _posts.emit(State.Error(Throwable(e.message)))
             }
         }
     }
-    val list: LiveData<Array<Post>>
-        get() = _list
 
-    /* TODO private val notFound = MutableLiveData(false)
-    private val isRefreshing = MutableLiveData(false)
-    private var page = 1
-
-    fun getNotFound(): LiveData<Boolean> {
-        return notFound
-    }
-
-    fun getIsRefreshing(): LiveData<Boolean> {
-        return isRefreshing
-    }*/
+    /*private var page = 1*/
 
     /*fun downloadNews(query: Queries?) {
         Thread {

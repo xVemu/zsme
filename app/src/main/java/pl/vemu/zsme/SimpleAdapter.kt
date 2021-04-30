@@ -7,7 +7,7 @@ import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import pl.vemu.zsme.SimpleAdapter.SimpleHolder
 
-class SimpleAdapter<T>(private val layout: Int, var list: Array<T>/*TODO change to List*/) : RecyclerView.Adapter<SimpleHolder>() {
+class SimpleAdapter<T>(private val layout: Int, var list: List<T>) : RecyclerView.Adapter<SimpleHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SimpleHolder {
         val inflater = LayoutInflater.from(parent.context)

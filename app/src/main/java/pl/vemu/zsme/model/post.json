@@ -1,42 +1,46 @@
 {
-  "id": 26588,
-  "date": "2021-04-19T09:36:18",
-  "link": "https://zsme.tarnow.pl/wp/wydzial-politechniczny-pwsz/",
+  "id": 26643,
+  "date": "2021-04-26T12:48:32",
+  "link": "https://zsme.tarnow.pl/wp/konkurs-miedzynarodowy-dzien-mediacji/",
   "title": {
-    "rendered": "Wydział Politechniczny PWSZ"
+    "rendered": "Konkurs &#8211; Międzynarodowy Dzień Mediacji"
   },
   "content": {
-    "rendered": "\n<p>Studiuj na kierunku: ELEKTRONIKA I TELEKOMUNIKACJA! Studia 1-go stopnia o profilu praktycznym na kierunku Elektronika i_Telekomunikacja trwają 3.5 roku (siedem semestrów), a po ukończeniu studiów absolwent otrzymuje tytuł zawodowy inżyniera elektroniki i telekomunikacji.</p>\n\n\n\n<div class=\"wp-block-file aligncenter\"><a href=\"https://zsme.tarnow.pl/wp/wp-content/uploads/2021/04/pwsz.pdf\">Wydział Politechniczny &#8211; plakat</a><a href=\"https://zsme.tarnow.pl/wp/wp-content/uploads/2021/04/pwsz.pdf\" class=\"wp-block-file__button\" download>Pobierz</a></div>\n\n\n\n<figure class=\"wp-block-image size-large\"><img loading=\"lazy\" width=\"738\" height=\"1024\" src=\"https://zsme.tarnow.pl/wp/wp-content/uploads/2021/04/image-738x1024.png\" alt=\"\" class=\"wp-image-26591\" srcset=\"https://zsme.tarnow.pl/wp/wp-content/uploads/2021/04/image-738x1024.png 738w, https://zsme.tarnow.pl/wp/wp-content/uploads/2021/04/image-216x300.png 216w, https://zsme.tarnow.pl/wp/wp-content/uploads/2021/04/image-72x100.png 72w, https://zsme.tarnow.pl/wp/wp-content/uploads/2021/04/image.png 741w\" sizes=\"(max-width: 738px) 100vw, 738px\" /></figure>\n"
+    "rendered": "\n<p>Uprzejmie informujemy, że Ministerstwo Sprawiedliwości organizuje, skierowany do dzieci i młodzieży konkurs.&nbsp;<strong>Zadanie konkursowe polega na stworzeniu plakatu promującego mediację i Międzynarodowy Dzień Mediacji.</strong></p>\n\n\n\n<p><a href=\"https://www.gov.pl/web/sprawiedliwosc/konkurs-na-plakat-promujacy-miedzynarodowy-dzien-mediacji\">https://www.gov.pl/web/sprawiedliwosc/konkurs-na-plakat-promujacy-miedzynarodowy-dzien-mediacji</a></p>\n\n\n\n<p>Każdy uczestnik otrzyma pamiątkowy dyplom, a dla zwycięzców przygotowaliśmy atrakcyjne nagrody, m.in. tablet, aparaty instax, słuchawki bezprzewodowe oraz zaproszenia na spotkanie w Ministerstwie Sprawiedliwości.</p>\n\n\n\n<p>Na prace czekamy do <strong>18 czerwca 2021 roku</strong>. Szczegóły w regulaminie. Zachęcamy również do polubienia naszego fanpage’a MEDIACJA na facebook’u <a href=\"https://www.facebook.com/mediacja.gov/\">https://www.facebook.com/mediacja.gov/</a>, na którym opublikujemy galerię<br>z pracami uczestników.</p>\n\n\n\n<p>ADRIANNA AFTAŃSKA<br>Starszy Specjalista<br>Wydział do spraw Mediacji <br>Departament Strategii i Funduszy Europejskich</p>\n\n\n\n<p></p>\n"
   },
   "excerpt": {
-    "rendered": "<p>Studiuj na kierunku: ELEKTRONIKA I TELEKOMUNIKACJA! Studia 1-go stopnia o profilu praktycznym na kierunku Elektronika i_Telekomunikacja trwają 3.5 roku (siedem semestrów), a po ukończeniu studiów absolwent otrzymuje tytuł zawodowy inżyniera elektroniki i telekomunikacji.</p>\n"
+    "rendered": "<p>Uprzejmie informujemy, że Ministerstwo Sprawiedliwości organizuje, skierowany do dzieci i młodzieży konkurs.&nbsp;Zadanie konkursowe polega na stworzeniu plakatu promującego mediację i Międzynarodowy Dzień Mediacji. https://www.gov.pl/web/sprawiedliwosc/konkurs-na-plakat-promujacy-miedzynarodowy-dzien-mediacji Każdy uczestnik otrzyma pamiątkowy dyplom, a dla zwycięzców przygotowaliśmy atrakcyjne nagrody, m.in. tablet, aparaty instax, słuchawki bezprzewodowe oraz zaproszenia na spotkanie w Ministerstwie Sprawiedliwości. Na prace czekamy do 18 czerwca 2021 [&hellip;]</p>\n"
   },
-  "author": 2,
-  "featured_media": 26589,
+  "author": 28,
+  "featured_media": 26645,
   "categories": [
-    8
+    9
   ],
-  "_links": {
+  "_embedded": {
     "author": [
       {
-        "href": "https://zsme.tarnow.pl/wp/wp-json/wp/v2/users/2"
+        "id": 28,
+        "name": "Małgorzata Cichoń"
       }
     ],
     "wp:featuredmedia": [
       {
-        "href": "https://zsme.tarnow.pl/wp/wp-json/wp/v2/media/26589"
-      }
-    ],
-    "wp:attachment": [
-      {
-        "href": "https://zsme.tarnow.pl/wp/wp-json/wp/v2/media?parent=26588"
+        "media_details": {
+          "sizes": {
+            "thumbnail": {
+              "source_url": "https://zsme.tarnow.pl/wp/wp-content/uploads/2021/04/thumb-1-100x100.png"
+            }
+          }
+        }
       }
     ],
     "wp:term": [
-      {
-        "taxonomy": "category",
-        "href": "https://zsme.tarnow.pl/wp/wp-json/wp/v2/categories?post=26588"
-      }
+      [
+        {
+          "id": 9,
+          "name": "Konkursy i turnieje"
+        }
+      ]
     ]
   }
 }

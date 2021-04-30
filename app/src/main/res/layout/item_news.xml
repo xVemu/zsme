@@ -9,11 +9,13 @@
 
         <import type="androidx.navigation.Navigation" />
 
-        <import type="android.view.View" />
+        <import type="androidx.core.text.HtmlCompat" />
+
+        <import type="kotlin.text.StringsKt" />
 
         <variable
-            name="viewmodel"
-            type="pl.vemu.zsme.model.Post" />
+            name="model"
+            type="pl.vemu.zsme.model.PostModel" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
@@ -22,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:minHeight="150dp"
-        android:onClick="@{Navigation.createNavigateOnClickListener(NewsFragmentDirections.actionNewsToDetailFragment(viewmodel.link))}">
+        android:onClick="@{Navigation.createNavigateOnClickListener(NewsFragmentDirections.actionNewsToDetailFragment(model.link))}">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -35,59 +37,60 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:text="@{HtmlCompat.fromHtml(model.title, HtmlCompat.FROM_HTML_MODE_COMPACT)}"
                 android:textAlignment="center"
                 android:textStyle="bold"
-                android:text="@{viewmodel.title}"
-                android:visibility="@{viewmodel.title != null ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toTopOf="@+id/description"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.4"
                 app:layout_constraintStart_toEndOf="@+id/thumbnail"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="@string/lorem_title" />
+                tools:text="@tools:sample/lorem"
+                tools:maxLength="25" />
 
             <TextView
                 android:id="@+id/description"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                android:text="@{viewmodel.excerpt}"
+                android:text="@{StringsKt.trimEnd(HtmlCompat.fromHtml(model.excerpt, HtmlCompat.FROM_HTML_MODE_COMPACT))}"
                 app:layout_constraintBottom_toTopOf="@+id/date"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@+id/thumbnail"
                 app:layout_constraintTop_toBottomOf="@+id/title"
-                tools:text="@string/lorem" />
+                tools:text="@tools:sample/lorem/random"
+                tools:maxLength="350" />
 
-            <!--TODO <ImageView
+            <ImageView
                 android:id="@+id/thumbnail"
+                imgUrl="@{model.thumbnail}"
                 android:layout_width="108dp"
                 android:layout_height="108dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
                 android:contentDescription="@string/thumbnail"
+                android:scaleType="centerCrop"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                imgUrl="@{viewmodel.imgUrl}"
-                tools:srcCompat="@drawable/zsme" />-->
+                app:layout_constraintTop_toTopOf="@+id/description"
+                tools:srcCompat="@drawable/zsme" />
 
             <TextView
                 android:id="@+id/date"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
                 android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                android:text="@{viewmodel.date.toString()}"
+                android:layout_marginBottom="8dp"
+                android:text="@{model.date.toLocaleString()}"
                 android:textColor="@color/colorPrimary"
                 android:textSize="12sp"
-                android:visibility="@{viewmodel.date != null ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toTopOf="@+id/author"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/thumbnail"
                 app:layout_constraintTop_toBottomOf="@+id/description"
-                tools:text="@string/lorem_title" />
+                tools:text="@tools:sample/date/ddmmyy" />
 
             <TextView
                 android:id="@+id/author"
@@ -96,15 +99,32 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
+                android:text="@{model.author}"
                 android:textColor="@color/colorPrimary"
                 android:textSize="12sp"
-                android:text="@{viewmodel.author}"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/category"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/thumbnail"
                 app:layout_constraintTop_toBottomOf="@+id/date"
-                tools:text="@string/lorem_title" />
-            <!--                android:visibility="@{viewmodel.author != null ? View.VISIBLE : View.GONE}"-->
+                tools:text="@tools:sample/lorem/random"
+                tools:maxLength="50" />
+
+            <TextView
+                android:id="@+id/category"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:text="@{model.category}"
+                android:textColor="@color/colorPrimary"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/thumbnail"
+                app:layout_constraintTop_toBottomOf="@+id/author"
+                tools:text="@tools:sample/lorem/random"
+                tools:maxLength="50" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

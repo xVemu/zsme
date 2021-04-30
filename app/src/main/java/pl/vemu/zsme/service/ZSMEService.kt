@@ -5,6 +5,6 @@ import retrofit2.http.GET
 
 interface ZSMEService {
 
-    @GET("posts")
+    @GET("posts?_embed")
     suspend fun getPosts(): List<PostEntity>
 }
