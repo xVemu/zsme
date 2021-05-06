@@ -9,7 +9,7 @@
 
         <variable
             name="model"
-            type="pl.vemu.zsme.moreFragment.contact.ContactItem" />
+            type="pl.vemu.zsme.ui.more.ContactItem" />
     </data>
 
     <LinearLayout

@@ -4,9 +4,11 @@
 
     <data>
 
+        <import type="java.util.Objects" />
+
         <variable
             name="model"
-            type="pl.vemu.zsme.timetableFragment.lesson.Lesson" />
+            type="pl.vemu.zsme.model.LessonModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -23,8 +25,7 @@
             android:layout_height="40dp"
             android:gravity="center"
             android:includeFontPadding="false"
-            android:maxLength="2"
-            android:text="@{model.index}"
+            android:text="@{Objects.toString(model.index, ``)}"
             android:textColor="?android:textColorPrimary"
             android:textSize="32sp"
             app:layout_constraintStart_toStartOf="parent"

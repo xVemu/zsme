@@ -1,4 +1,4 @@
-package pl.vemu.zsme.ui
+package pl.vemu.zsme.ui.news
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -28,7 +28,7 @@ class NewsFragmentVM @Inject constructor(
             try {
                 _posts.emit(State.Success(newsRepo.getPosts()))
             } catch (e: Exception) {
-                _posts.emit(State.Error(Throwable(e.message)))
+                _posts.emit(State.Error(e))
             }
         }
     }

@@ -1,6 +1,6 @@
-package pl.vemu.zsme.timetableFragment.lesson
+package pl.vemu.zsme.model
 
-data class Lesson(
+data class LessonModel(
         val name: String,
         val room: String,
         val teacher: String,

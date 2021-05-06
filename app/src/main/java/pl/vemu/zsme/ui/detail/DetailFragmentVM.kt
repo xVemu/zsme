@@ -1,7 +1,8 @@
-package pl.vemu.zsme.ui
+package pl.vemu.zsme.ui.detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -10,7 +11,7 @@ import pl.vemu.zsme.model.DetailModel
 import pl.vemu.zsme.repo.DetailRepo
 
 class DetailFragmentVM constructor(
-        private val detailRepo: DetailRepo,
+        detailRepo: DetailRepo,
         content: String,
 ) : ViewModel() {
     private val _detail = MutableStateFlow<State<DetailModel>>(State.Loading())
@@ -20,12 +21,12 @@ class DetailFragmentVM constructor(
 
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _detail.emit(State.Loading())
             try {
                 _detail.emit(State.Success(detailRepo.getDetail(content)))
             } catch (e: Exception) {
-                _detail.emit(State.Error(Throwable(e.message)))
+                _detail.emit(State.Error(e))
             }
         }
     }

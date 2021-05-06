@@ -1,11 +1,13 @@
-package pl.vemu.zsme.timetableFragment.timetable
+package pl.vemu.zsme.ui.timetable
 
 import org.jsoup.nodes.Element
 import pl.vemu.zsme.login
+import pl.vemu.zsme.model.TimetableModel
+import javax.inject.Inject
 
-object TimetableRepo {
+class TimetableRepo @Inject constructor() {
 
-    fun downloadTimetable(): List<List<Timetable>> {
+    fun getTimetable(): List<List<TimetableModel>> {
         val document = login("lista.html")
         return listOf(
                 makeArrayOfLinks(document.selectFirst("#oddzialy")),
@@ -15,6 +17,6 @@ object TimetableRepo {
     }
 
     private fun makeArrayOfLinks(element: Element) = element.children().map {
-        Timetable(it.text(), it.child(0).attr("href"))
+        TimetableModel(it.text(), it.child(0).attr("href"))
     }
 }

@@ -1,4 +1,4 @@
-package pl.vemu.zsme.ui
+package pl.vemu.zsme.ui.detail
 
 import android.os.Build
 import android.os.Bundle

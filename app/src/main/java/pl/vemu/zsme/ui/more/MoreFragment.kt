@@ -1,4 +1,4 @@
-package pl.vemu.zsme.moreFragment.more
+package pl.vemu.zsme.ui.more
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,6 +10,7 @@ import pl.vemu.zsme.R
 import pl.vemu.zsme.SimpleAdapter
 import pl.vemu.zsme.makeSimple
 
+//TODO arrow back remove
 class MoreFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView

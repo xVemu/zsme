@@ -1,4 +1,4 @@
-package pl.vemu.zsme.moreFragment
+package pl.vemu.zsme.ui.more
 
 import android.content.Intent
 import android.os.Build

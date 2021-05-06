@@ -1,26 +1,28 @@
-package pl.vemu.zsme.timetableFragment.lesson
+package pl.vemu.zsme.repo
 
 import org.jsoup.nodes.Element
 import pl.vemu.zsme.login
+import pl.vemu.zsme.model.LessonModel
 import java.util.*
+import javax.inject.Inject
 
-object LessonRepo {
+class LessonRepo @Inject constructor() {
 
-    fun downloadLessons(url: String): List<List<Lesson>> {
+    fun getLesson(url: String): List<List<LessonModel>> {
         val document = login(url)
         val table = document.selectFirst(".tabela").child(0).children()
         table.removeAt(0)
-        val lessonsList = List(5) { mutableListOf<Lesson>() }
+        val lessonsList = List(5) { mutableListOf<LessonModel>() }
         //TODO rewrite
-        table.forEachIndexed { i, it ->
+        table.forEach {
             val lessons = it.select(".l")
             val lessonIndex = it.selectFirst(".nr").text().toInt()
             val (lessonTimeStart, lessonTimeFinish) = it.selectFirst(".g").text()
                     .replace("\\s".toRegex(), "").split("-")
-            lessons.forEach { item ->
+            lessons.forEachIndexed { i, item ->
                 if (item.text().isEmpty()) return@forEach
-                val lesson1: Lesson
-                var lesson2: Lesson? = null
+                val lesson1: LessonModel
+                var lesson2: LessonModel? = null
                 if (item.getElementsByAttributeValue("style", "font-size:85%").size > 1) {
                     val (lesson1Span, lesson2Span) = item.getElementsByAttributeValue("style", "font-size:85%")
                     lesson1 = buildLesson(lesson1Span)
@@ -42,7 +44,7 @@ object LessonRepo {
                 lesson2?.apply {
                     timeStart = lessonTimeStart
                     timeFinish = lessonTimeFinish
-                    lessonsList[i].add(lesson2)
+                    lessonsList[i].add(this)
                 }
             }
         }
@@ -50,8 +52,8 @@ object LessonRepo {
     }
 
     //TODO rewrite
-    private fun buildLesson(lesson: Element): Lesson {
-        return Lesson(
+    private fun buildLesson(lesson: Element): LessonModel {
+        return LessonModel(
                 name = if (lesson.selectFirst(".p") != null)
                     lesson.selectFirst(".p").text()
                 else lesson.text(),

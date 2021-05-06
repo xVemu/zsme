@@ -7,7 +7,7 @@
 
         <variable
             name="model"
-            type="pl.vemu.zsme.moreFragment.more.MoreItem" />
+            type="pl.vemu.zsme.ui.more.MoreItem" />
     </data>
 
     <LinearLayout

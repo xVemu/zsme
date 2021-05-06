@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/newsFragment"
-        android:name="pl.vemu.zsme.ui.NewsFragment"
+        android:name="pl.vemu.zsme.ui.news.NewsFragment"
         android:label="@string/news"
         tools:layout="@layout/fragment_news">
         <action
@@ -26,7 +26,7 @@
     </fragment>
     <fragment
         android:id="@+id/detailFragment"
-        android:name="pl.vemu.zsme.ui.DetailFragment"
+        android:name="pl.vemu.zsme.ui.detail.DetailFragment"
         android:label="@string/news"
         tools:layout="@layout/fragment_detail">
         <action
@@ -46,7 +46,7 @@
     </fragment>
     <fragment
         android:id="@+id/timetableFragment"
-        android:name="pl.vemu.zsme.timetableFragment.timetable.TimetableFragment"
+        android:name="pl.vemu.zsme.ui.timetable.TimetableFragment"
         android:label="@string/timetable"
         tools:layout="@layout/fragment_timetable">
         <action
@@ -61,7 +61,7 @@
     </fragment>
     <fragment
         android:id="@+id/moreFragment"
-        android:name="pl.vemu.zsme.moreFragment.more.MoreFragment"
+        android:name="pl.vemu.zsme.ui.more.MoreFragment"
         android:label="@string/more">
         <action
             android:id="@+id/action_moreFragment_to_settingsFragment"
@@ -81,7 +81,7 @@
     </fragment>
     <fragment
         android:id="@+id/lessonFragment"
-        android:name="pl.vemu.zsme.timetableFragment.lesson.LessonFragment"
+        android:name="pl.vemu.zsme.ui.timetable.LessonFragment"
         tools:layout="@layout/fragment_timetable">
         <argument
             android:name="url"
@@ -92,17 +92,17 @@
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="pl.vemu.zsme.moreFragment.SettingsFragment"
+        android:name="pl.vemu.zsme.ui.more.SettingsFragment"
         android:label="@string/settings" />
     <fragment
         android:id="@+id/contactFragment"
-        android:name="pl.vemu.zsme.moreFragment.contact.ContactFragment"
+        android:name="pl.vemu.zsme.ui.more.ContactFragment"
         android:label="@string/contact">
         <deepLink app:uri="zsme.tarnow.pl/wp/kontakt/" />
     </fragment>
     <fragment
         android:id="@+id/galleryFragment"
-        android:name="pl.vemu.zsme.ui.GalleryFragment"
+        android:name="pl.vemu.zsme.ui.detail.GalleryFragment"
         android:label="@string/gallery">
         <argument
             android:name="images"

@@ -1,4 +1,4 @@
-package pl.vemu.zsme.moreFragment.contact
+package pl.vemu.zsme.ui.more
 
 import android.os.Bundle
 import android.view.LayoutInflater

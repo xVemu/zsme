@@ -3,13 +3,13 @@
 
     <data>
 
-        <import type="pl.vemu.zsme.timetableFragment.timetable.TimetableFragmentDirections" />
+        <import type="pl.vemu.zsme.ui.timetable.TimetableFragmentDirections" />
 
         <import type="androidx.navigation.Navigation" />
 
         <variable
             name="model"
-            type="pl.vemu.zsme.timetableFragment.timetable.Timetable" />
+            type="pl.vemu.zsme.model.TimetableModel" />
     </data>
 
     <!--    TODO only textview programatically-->

@@ -1,4 +1,4 @@
-package pl.vemu.zsme.ui
+package pl.vemu.zsme.ui.news
 
 import android.content.Context
 import android.net.ConnectivityManager
@@ -32,7 +32,7 @@ class NewsFragment : Fragment(), OnRefreshListener {
     private var scrollListener: RecyclerView.OnScrollListener? = null //TODO remove
     private var searchView: SearchView? = null //TODO remove
     private val args: NewsFragmentArgs by navArgs()
-    private val viewmodel: NewsFragmentVM by viewModels()
+    private val viewModel: NewsFragmentVM by viewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentNewsBinding.inflate(inflater, container, false)
@@ -45,6 +45,7 @@ class NewsFragment : Fragment(), OnRefreshListener {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        setHasOptionsMenu(true)
         setupRecyclerView()
         binding.refresh.apply {
             setOnRefreshListener(this@NewsFragment)
@@ -61,7 +62,7 @@ class NewsFragment : Fragment(), OnRefreshListener {
         cm.registerNetworkCallback(networkRequest, object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) {
                 lifecycleScope.launch {
-                    viewmodel.fetchPosts()
+                    viewModel.fetchPosts()
                 }
             }
         })
@@ -72,10 +73,10 @@ class NewsFragment : Fragment(), OnRefreshListener {
             setHasStableIds(true)
         }
         binding.recyclerView.adapter = adapter
-        //        scrollListener = NewsScrollListener(viewmodel, Queries.Page())
+        //        scrollListener = NewsScrollListener(viewModel, Queries.Page())
         //        binding.recyclerView.addOnScrollListener(scrollListener)
         lifecycleScope.launchWhenStarted {
-            viewmodel.posts.collect {
+            viewModel.posts.collect {
                 when (it) {
                     is State.Success -> {
                         binding.refresh.isRefreshing = false
@@ -95,7 +96,7 @@ class NewsFragment : Fragment(), OnRefreshListener {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_search, menu)
         /*searchView = menu.findItem(R.id.app_bar_search).actionView as SearchView
-        searchView!!.setOnQueryTextListener(NewsQueryTextListener(viewmodel, binding.recyclerView))
+        searchView!!.setOnQueryTextListener(NewsQueryTextListener(viewModel, binding.recyclerView))
         searchView!!.setOnCloseListener {
             searchView!!.onActionViewCollapsed()
             binding.recyclerView.clearOnScrollListeners()
@@ -119,6 +120,6 @@ class NewsFragment : Fragment(), OnRefreshListener {
         /*if (!"".contentEquals(searchView!!.query)) {
             searchView!!.setQuery(searchView!!.query, true)
         } else downloadFirstNews()*/
-        viewmodel.fetchPosts()
+        viewModel.fetchPosts()
     }
 }

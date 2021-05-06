@@ -5,7 +5,7 @@
 
     <data>
 
-        <import type="pl.vemu.zsme.ui.NewsFragmentDirections" />
+        <import type="pl.vemu.zsme.ui.news.NewsFragmentDirections" />
 
         <import type="androidx.navigation.Navigation" />
 
