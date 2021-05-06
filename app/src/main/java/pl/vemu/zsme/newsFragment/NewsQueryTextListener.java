@@ -3,6 +3,8 @@ package pl.vemu.zsme.newsFragment;
 import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import pl.vemu.zsme.ui.NewsFragmentVM;
+
 public class NewsQueryTextListener implements SearchView.OnQueryTextListener {
 
     private final NewsFragmentVM viewmodel;

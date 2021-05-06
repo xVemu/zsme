@@ -1,45 +1,58 @@
-package pl.vemu.zsme.detailedNews
+package pl.vemu.zsme.ui
 
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.*
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import androidx.webkit.WebSettingsCompat
 import androidx.webkit.WebViewFeature
+import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import pl.vemu.zsme.DetailFragmentVMFactory
 import pl.vemu.zsme.R
-import pl.vemu.zsme.VMFactory
+import pl.vemu.zsme.State
 import pl.vemu.zsme.databinding.FragmentDetailBinding
-import pl.vemu.zsme.detailedNews.DetailFragmentDirections.ActionDetailFragmentToNewsFragment
+import pl.vemu.zsme.repo.DetailRepo
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class DetailFragment : Fragment() {
 
     private var _binding: FragmentDetailBinding? = null
     private val binding get() = _binding!!
+
+    @Inject
+    lateinit var repo: DetailRepo
     private val args: DetailFragmentArgs by navArgs()
     private val viewModel: DetailFragmentVM by viewModels() {
-        VMFactory(args.url)
+        DetailFragmentVMFactory(repo, args.postModel.content)
     }
 
-
+    //TODO takes long to open
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_detail, container, false)
-        binding.lifecycleOwner = this
-        binding.viewmodel = viewModel
+        _binding = FragmentDetailBinding.inflate(inflater, container, false)
         return binding.root
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        if (args.url.startsWith("author")) {
+        /*if (args.url.startsWith("author")) {
             val navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
             val action: ActionDetailFragmentToNewsFragment = DetailFragmentDirections.actionDetailFragmentToNewsFragment()
             action.author = args.url
             navController.navigate(action)
-        }
-        //        setHasOptionsMenu(true) TODO remove
+        }*/
+        setHasOptionsMenu(true) /*TODO is needed?*/
         binding.webView.settings.javaScriptEnabled = true
         if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
             val nightModeFlags = requireContext().resources.configuration.uiMode and
@@ -51,23 +64,44 @@ class DetailFragment : Fragment() {
             }
             WebSettingsCompat.setForceDark(binding.webView.settings, theme)
         }
+        lifecycleScope.launchWhenStarted {
+            viewModel.detail.collect {
+                when (it) {
+                    is State.Success -> {
+                        binding.progressBar.visibility = View.GONE
+                        binding.webView.loadData(it.data.html, "text/html", null)
+                        it.data.images?.let { images ->
+                            binding.gallery.visibility = View.VISIBLE
+                            binding.gallery.setOnClickListener(Navigation.createNavigateOnClickListener(DetailFragmentDirections.actionDetailFragmentToGalleryFragment(images.toTypedArray())))
+                        }
+                    }
+                    is State.Loading -> binding.progressBar.visibility = View.VISIBLE
+                    is State.Error -> {
+                        binding.progressBar.visibility = View.GONE
+                        Snackbar.make(binding.root, R.string.error, Snackbar.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_share, menu)
     }
 
-    /*override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
         R.id.app_bar_share -> {
             val intent = Intent().apply {
                 action = Intent.ACTION_SEND
-                putExtra(Intent.EXTRA_TEXT, viewModel.getDetail().value.link)
+                putExtra(Intent.EXTRA_TEXT, args.postModel.link)
+                putExtra(Intent.EXTRA_TITLE, args.postModel.title)
                 type = "text/plain"
             }
-            val shareIntent = Intent.createChooser(intent, viewModel.getDetail().value.title)
+            val shareIntent = Intent.createChooser(intent, "Wybierz")
             startActivity(shareIntent)
             true
         }
         else -> super.onOptionsItemSelected(item)
-    }*/
+    }
+
 }

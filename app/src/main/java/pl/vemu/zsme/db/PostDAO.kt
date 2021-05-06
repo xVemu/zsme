@@ -9,13 +9,10 @@ import pl.vemu.zsme.model.PostModel
 @Dao
 interface PostDAO {
 
-    @Query("SELECT * FROM Posts")
+    @Query("SELECT * FROM Posts ORDER by id DESC")
     suspend fun getAll(): List<PostModel>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertAll(postModels: List<PostModel>)
-
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(postModel: PostModel)
+    suspend fun insertAll(postmodels: List<PostModel>)
 
 }

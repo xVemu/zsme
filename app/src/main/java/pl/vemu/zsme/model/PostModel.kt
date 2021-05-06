@@ -1,10 +1,13 @@
 package pl.vemu.zsme.model
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
 import java.util.*
 
 @Entity(tableName = "Posts")
+@Parcelize
 data class PostModel(
         @PrimaryKey(autoGenerate = false)
         val id: Int,
@@ -16,4 +19,4 @@ data class PostModel(
         val author: String,
         val thumbnail: String,
         val category: String,
-)
+) : Parcelable

@@ -1,11 +1,10 @@
-package pl.vemu.zsme.newsFragment
+package pl.vemu.zsme.ui
 
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkRequest
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
@@ -18,6 +17,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import pl.vemu.zsme.R
 import pl.vemu.zsme.SimpleAdapter
 import pl.vemu.zsme.State
@@ -46,7 +46,6 @@ class NewsFragment : Fragment(), OnRefreshListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setupRecyclerView()
-        //        setHasOptionsMenu(true) TODO remvoe
         binding.refresh.apply {
             setOnRefreshListener(this@NewsFragment)
             setColorSchemeColors(resources.getColor(R.color.colorPrimary, null))
@@ -61,7 +60,9 @@ class NewsFragment : Fragment(), OnRefreshListener {
         if (cm.activeNetwork == null) Toast.makeText(context, "Brak połaczenia z internetem", Toast.LENGTH_LONG).show()
         cm.registerNetworkCallback(networkRequest, object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) {
-                //                viewmodel.fetchPosts()
+                lifecycleScope.launch {
+                    viewmodel.fetchPosts()
+                }
             }
         })
     }
@@ -84,7 +85,6 @@ class NewsFragment : Fragment(), OnRefreshListener {
                     is State.Loading -> binding.refresh.isRefreshing = true
                     is State.Error -> {
                         binding.refresh.isRefreshing = false
-                        it.throwable.message?.let { message -> Log.e("ZSMEDebug", message) }
                         Snackbar.make(binding.root, R.string.error, Snackbar.LENGTH_SHORT).show()
                     }
                 }
@@ -92,14 +92,9 @@ class NewsFragment : Fragment(), OnRefreshListener {
         }
     }
 
-    /*private fun downloadFirstNews() {
-        viewmodel.clearList()
-        viewmodel.downloadNews(Queries.Page())
-    }*/
-
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_search, menu)
-        searchView = menu.findItem(R.id.app_bar_search).actionView as SearchView
+        /*searchView = menu.findItem(R.id.app_bar_search).actionView as SearchView
         searchView!!.setOnQueryTextListener(NewsQueryTextListener(viewmodel, binding.recyclerView))
         searchView!!.setOnCloseListener {
             searchView!!.onActionViewCollapsed()
@@ -111,8 +106,14 @@ class NewsFragment : Fragment(), OnRefreshListener {
         if (args.author != null) {
             searchView!!.onActionViewExpanded()
             searchView!!.setQuery(args.author, true)
-        }
+        }*/
     }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+        R.id.app_bar_search -> true
+        else -> super.onOptionsItemSelected(item)
+    }
+
 
     override fun onRefresh() {
         /*if (!"".contentEquals(searchView!!.query)) {

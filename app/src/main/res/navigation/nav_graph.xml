@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/newsFragment"
-        android:name="pl.vemu.zsme.newsFragment.NewsFragment"
+        android:name="pl.vemu.zsme.ui.NewsFragment"
         android:label="@string/news"
         tools:layout="@layout/fragment_news">
         <action
@@ -26,7 +26,7 @@
     </fragment>
     <fragment
         android:id="@+id/detailFragment"
-        android:name="pl.vemu.zsme.detailedNews.DetailFragment"
+        android:name="pl.vemu.zsme.ui.DetailFragment"
         android:label="@string/news"
         tools:layout="@layout/fragment_detail">
         <action
@@ -38,8 +38,8 @@
             app:popExitAnim="@anim/slide_out_right" />
         <deepLink app:uri="zsme.tarnow.pl/wp/{url}" />
         <argument
-            android:name="url"
-            app:argType="string" />
+            android:name="postModel"
+            app:argType="pl.vemu.zsme.model.PostModel" />
         <action
             android:id="@+id/action_detailFragment_to_newsFragment"
             app:destination="@id/newsFragment" />
@@ -102,7 +102,7 @@
     </fragment>
     <fragment
         android:id="@+id/galleryFragment"
-        android:name="pl.vemu.zsme.detailedNews.galleryFragment.GalleryFragment"
+        android:name="pl.vemu.zsme.ui.GalleryFragment"
         android:label="@string/gallery">
         <argument
             android:name="images"

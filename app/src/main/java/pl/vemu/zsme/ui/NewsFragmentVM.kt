@@ -1,9 +1,9 @@
-package pl.vemu.zsme.newsFragment
+package pl.vemu.zsme.ui
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -14,7 +14,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NewsFragmentVM @Inject constructor(
-        private val savedStateHandle: SavedStateHandle,
         private val newsRepo: NewsRepo,
 ) : ViewModel() {
 
@@ -23,12 +22,8 @@ class NewsFragmentVM @Inject constructor(
     val posts: StateFlow<State<List<PostModel>>>
         get() = _posts
 
-    init {
-        fetchPosts()
-    }
-
     fun fetchPosts() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _posts.emit(State.Loading())
             try {
                 _posts.emit(State.Success(newsRepo.getPosts()))

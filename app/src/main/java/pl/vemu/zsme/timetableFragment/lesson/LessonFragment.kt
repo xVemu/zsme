@@ -11,8 +11,8 @@ import androidx.navigation.fragment.navArgs
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import pl.vemu.zsme.LessonFragmentVMFactory
 import pl.vemu.zsme.R
-import pl.vemu.zsme.VMFactory
 import pl.vemu.zsme.databinding.FragmentTimetableBinding
 import pl.vemu.zsme.timetableFragment.TimetableAdapter
 import java.time.LocalDate
@@ -26,7 +26,7 @@ class LessonFragment : Fragment() {
 
     private val args: LessonFragmentArgs by navArgs()
     private val viewmodel: LessonFragmentVM by viewModels() {
-        VMFactory(args.url)
+        LessonFragmentVMFactory(args.url)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {

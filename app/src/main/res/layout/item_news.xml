@@ -5,7 +5,7 @@
 
     <data>
 
-        <import type="pl.vemu.zsme.newsFragment.NewsFragmentDirections" />
+        <import type="pl.vemu.zsme.ui.NewsFragmentDirections" />
 
         <import type="androidx.navigation.Navigation" />
 
@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:minHeight="150dp"
-        android:onClick="@{Navigation.createNavigateOnClickListener(NewsFragmentDirections.actionNewsToDetailFragment(model.link))}">
+        android:onClick="@{Navigation.createNavigateOnClickListener(NewsFragmentDirections.actionNewsToDetailFragment(model))}">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -55,6 +55,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
+                android:justificationMode="inter_word"
                 android:text="@{StringsKt.trimEnd(HtmlCompat.fromHtml(model.excerpt, HtmlCompat.FROM_HTML_MODE_COMPACT))}"
                 app:layout_constraintBottom_toTopOf="@+id/date"
                 app:layout_constraintEnd_toEndOf="parent"

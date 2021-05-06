@@ -1,6 +1,7 @@
 package pl.vemu.zsme
 
 import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.jsoup.Connection
@@ -9,7 +10,7 @@ import org.jsoup.nodes.Document
 
 fun RecyclerView.makeSimple() = apply {
     layoutManager = LinearLayoutManager(context)
-    layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+    layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT) //TODO remove?
     isVerticalScrollBarEnabled = false
     isHorizontalScrollBarEnabled = false
     setHasFixedSize(true)

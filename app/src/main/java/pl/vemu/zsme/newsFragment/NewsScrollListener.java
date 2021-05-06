@@ -3,6 +3,8 @@ package pl.vemu.zsme.newsFragment;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import pl.vemu.zsme.ui.NewsFragmentVM;
+
 public class NewsScrollListener extends RecyclerView.OnScrollListener {
 
     private final NewsFragmentVM viewmodel;
