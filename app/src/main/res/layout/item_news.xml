@@ -15,7 +15,7 @@
 
         <variable
             name="model"
-            type="pl.vemu.zsme.model.PostModel" />
+            type="pl.vemu.zsme.data.model.PostModel" />
     </data>
 
     <com.google.android.material.card.MaterialCardView

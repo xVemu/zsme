@@ -1,10 +1,9 @@
-package pl.vemu.zsme.db
+package pl.vemu.zsme.data.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import pl.vemu.zsme.Converters
-import pl.vemu.zsme.model.PostModel
+import pl.vemu.zsme.data.model.PostModel
 
 @Database(entities = [PostModel::class], version = 1)
 @TypeConverters(Converters::class)

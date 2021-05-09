@@ -2,59 +2,24 @@ package pl.vemu.zsme.ui.news
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
-import pl.vemu.zsme.State
-import pl.vemu.zsme.model.PostModel
-import pl.vemu.zsme.repo.NewsRepo
+import kotlinx.coroutines.flow.flatMapLatest
+import pl.vemu.zsme.data.repo.PostRepo
 import javax.inject.Inject
 
+//TODO change name to PostViewModel, others viewmodels too and change News to Post
 @HiltViewModel
 class NewsFragmentVM @Inject constructor(
-        private val newsRepo: NewsRepo,
+        private val postRepo: PostRepo,
 ) : ViewModel() {
 
-    private val _posts = MutableStateFlow<State<List<PostModel>>>(State.Success(emptyList()))
+    val query = MutableStateFlow("")
 
-    val posts: StateFlow<State<List<PostModel>>>
-        get() = _posts
+    var posts = query.flatMapLatest { postRepo.searchPosts(it) }.cachedIn(viewModelScope)
 
     fun fetchPosts() {
-        viewModelScope.launch(Dispatchers.IO) {
-            _posts.emit(State.Loading())
-            try {
-                _posts.emit(State.Success(newsRepo.getPosts()))
-            } catch (e: Exception) {
-                _posts.emit(State.Error(e))
-            }
-        }
+        posts = postRepo.searchPosts(query.value).cachedIn(viewModelScope)
     }
-
-    /*private var page = 1*/
-
-    /*fun downloadNews(query: Queries?) {
-        Thread {
-            isRefreshing.postValue(true)
-            try {
-                val items: MutableList<NewsItem> = ArrayList(Objects.requireNonNull(list.value))
-                items.addAll(DownloadNews.INSTANCE.downloadNews(query, page))
-                list.postValue(items)
-                page++
-            } catch (e: IOException) {
-                e.printStackTrace()
-                if (page == 1) notFound.postValue(true)
-            } finally {
-                isRefreshing.postValue(false)
-            }
-        }.start()
-    }
-
-    fun clearList() {
-        page = 1
-        notFound.postValue(false)
-        list.postValue(ArrayList())
-    }*/
 }

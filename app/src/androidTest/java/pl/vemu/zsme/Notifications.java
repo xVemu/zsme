@@ -15,10 +15,7 @@ import org.junit.runner.RunWith;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
-import pl.vemu.zsme.newsFragment.DownloadNews;
-import pl.vemu.zsme.newsFragment.NewsItem;
 import pl.vemu.zsme.newsFragment.NewsWorker;
-import pl.vemu.zsme.newsFragment.Queries;
 
 import static org.junit.Assert.assertEquals;
 

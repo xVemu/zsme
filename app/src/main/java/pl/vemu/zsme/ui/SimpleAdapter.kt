@@ -1,11 +1,12 @@
-package pl.vemu.zsme
+package pl.vemu.zsme.ui
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
-import pl.vemu.zsme.SimpleAdapter.SimpleHolder
+import pl.vemu.zsme.BR
+import pl.vemu.zsme.ui.SimpleAdapter.SimpleHolder
 
 class SimpleAdapter<T>(private val layout: Int, var list: List<T>) : RecyclerView.Adapter<SimpleHolder>() {
 

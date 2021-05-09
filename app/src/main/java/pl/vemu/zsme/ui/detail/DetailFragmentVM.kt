@@ -7,8 +7,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import pl.vemu.zsme.State
-import pl.vemu.zsme.model.DetailModel
-import pl.vemu.zsme.repo.DetailRepo
+import pl.vemu.zsme.data.model.DetailModel
+import pl.vemu.zsme.data.repo.DetailRepo
 
 class DetailFragmentVM constructor(
         detailRepo: DetailRepo,

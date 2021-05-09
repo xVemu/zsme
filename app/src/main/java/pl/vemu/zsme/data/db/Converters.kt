@@ -1,4 +1,4 @@
-package pl.vemu.zsme
+package pl.vemu.zsme.data.db
 
 import androidx.room.TypeConverter
 import java.util.*

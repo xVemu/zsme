@@ -1,4 +1,4 @@
-package pl.vemu.zsme.di
+package pl.vemu.zsme.injection
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -6,7 +6,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import pl.vemu.zsme.service.ZSMEService
+import pl.vemu.zsme.data.service.ZSMEService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton

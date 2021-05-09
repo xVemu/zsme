@@ -18,9 +18,9 @@ import kotlinx.coroutines.flow.collect
 import pl.vemu.zsme.LessonFragmentVMFactory
 import pl.vemu.zsme.R
 import pl.vemu.zsme.State
+import pl.vemu.zsme.data.model.LessonModel
+import pl.vemu.zsme.data.repo.LessonRepo
 import pl.vemu.zsme.databinding.FragmentTimetableBinding
-import pl.vemu.zsme.model.LessonModel
-import pl.vemu.zsme.repo.LessonRepo
 import java.time.LocalDate
 import java.util.*
 import javax.inject.Inject

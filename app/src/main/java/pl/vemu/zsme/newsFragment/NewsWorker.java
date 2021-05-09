@@ -1,21 +1,10 @@
 package pl.vemu.zsme.newsFragment;
 
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
-
-import java.io.IOException;
-import java.util.List;
-
-import pl.vemu.zsme.R;
-import pl.vemu.zsme.ui.MainActivity;
 
 public class NewsWorker extends Worker {
 
@@ -26,8 +15,8 @@ public class NewsWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-        try {
-            List<NewsItem> downloaded = DownloadNews.INSTANCE.downloadNews(new Queries.Page(), 1);
+//        try {
+            /*List<NewsItem> downloaded = DownloadNews.INSTANCE.downloadNews(new Queries.Page(), 1);
             NewsItem firstNewsItem = downloaded.get(0);
             SharedPreferences memory = getApplicationContext().getSharedPreferences("latest-news", Context.MODE_PRIVATE);
             int fromMemory = memory.getInt("article", 0);
@@ -56,12 +45,15 @@ public class NewsWorker extends Worker {
                             .setPriority(NotificationCompat.PRIORITY_DEFAULT);
                     NotificationManagerCompat.from(getApplicationContext()).notify(item.hashCode(), builder.build());
                 }
-                editor.putInt("article", firstNewsItem.hashCode()).apply();
-                return Result.success();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return Result.failure();
+                editor.putInt("article", firstNewsItem.hashCode()).apply();*/
+        return Result.success();
     }
+    /*} catch(
+    IOException e)
+
+    {
+        e.printStackTrace();
+    }
+        return Result.failure();
+}*/
 }

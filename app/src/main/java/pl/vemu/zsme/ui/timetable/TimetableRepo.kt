@@ -1,8 +1,8 @@
 package pl.vemu.zsme.ui.timetable
 
 import org.jsoup.nodes.Element
+import pl.vemu.zsme.data.model.TimetableModel
 import pl.vemu.zsme.login
-import pl.vemu.zsme.model.TimetableModel
 import javax.inject.Inject
 
 class TimetableRepo @Inject constructor() {

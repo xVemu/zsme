@@ -1,7 +1,7 @@
-package pl.vemu.zsme.repo
+package pl.vemu.zsme.data.repo
 
 import org.jsoup.Jsoup
-import pl.vemu.zsme.model.DetailModel
+import pl.vemu.zsme.data.model.DetailModel
 import javax.inject.Inject
 
 class DetailRepo @Inject constructor() {

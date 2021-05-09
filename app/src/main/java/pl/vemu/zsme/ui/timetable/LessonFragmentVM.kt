@@ -7,8 +7,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import pl.vemu.zsme.State
-import pl.vemu.zsme.model.LessonModel
-import pl.vemu.zsme.repo.LessonRepo
+import pl.vemu.zsme.data.model.LessonModel
+import pl.vemu.zsme.data.repo.LessonRepo
 
 class LessonFragmentVM constructor(
         lessonRepo: LessonRepo,

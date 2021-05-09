@@ -1,4 +1,4 @@
-package pl.vemu.zsme.data
+package pl.vemu.zsme.data.model
 
 import com.google.gson.annotations.SerializedName
 import java.util.*

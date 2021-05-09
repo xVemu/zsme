@@ -1,4 +1,4 @@
-package pl.vemu.zsme.model
+package pl.vemu.zsme.data.model
 
 data class LessonModel(
         val name: String,

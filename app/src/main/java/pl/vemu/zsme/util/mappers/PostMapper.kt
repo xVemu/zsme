@@ -1,7 +1,6 @@
-package pl.vemu.zsme.mappers
+package pl.vemu.zsme.util.mappers
 
-import pl.vemu.zsme.data.*
-import pl.vemu.zsme.model.PostModel
+import pl.vemu.zsme.data.model.*
 import pl.vemu.zsme.util.EntityMapper
 import javax.inject.Inject
 

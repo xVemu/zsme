@@ -1,8 +1,8 @@
-package pl.vemu.zsme.repo
+package pl.vemu.zsme.data.repo
 
 import org.jsoup.nodes.Element
+import pl.vemu.zsme.data.model.LessonModel
 import pl.vemu.zsme.login
-import pl.vemu.zsme.model.LessonModel
 import java.util.*
 import javax.inject.Inject
 

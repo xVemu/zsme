@@ -8,7 +8,7 @@
 
         <variable
             name="model"
-            type="pl.vemu.zsme.model.LessonModel" />
+            type="pl.vemu.zsme.data.model.LessonModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -1,10 +1,10 @@
-package pl.vemu.zsme.db
+package pl.vemu.zsme.data.db
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import pl.vemu.zsme.model.PostModel
+import pl.vemu.zsme.data.model.PostModel
 
 @Dao
 interface PostDAO {

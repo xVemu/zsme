@@ -12,27 +12,24 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import pl.vemu.zsme.R
-import pl.vemu.zsme.SimpleAdapter
-import pl.vemu.zsme.State
 import pl.vemu.zsme.databinding.FragmentNewsBinding
-import pl.vemu.zsme.model.PostModel
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class NewsFragment : Fragment(), OnRefreshListener {
 
     private var _binding: FragmentNewsBinding? = null
     private val binding get() = _binding!!
-    private var scrollListener: RecyclerView.OnScrollListener? = null //TODO remove
-    private var searchView: SearchView? = null //TODO remove
     private val args: NewsFragmentArgs by navArgs()
     private val viewModel: NewsFragmentVM by viewModels()
+
+    @Inject
+    lateinit var postAdapter: PostAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentNewsBinding.inflate(inflater, container, false)
@@ -69,50 +66,41 @@ class NewsFragment : Fragment(), OnRefreshListener {
     }
 
     private fun setupRecyclerView() {
-        val adapter = SimpleAdapter<PostModel>(R.layout.item_news, emptyList()).apply {
-            setHasStableIds(true)
-        }
-        binding.recyclerView.adapter = adapter
-        //        scrollListener = NewsScrollListener(viewModel, Queries.Page())
-        //        binding.recyclerView.addOnScrollListener(scrollListener)
-        lifecycleScope.launchWhenStarted {
-            viewModel.posts.collect {
-                when (it) {
-                    is State.Success -> {
-                        binding.refresh.isRefreshing = false
-                        adapter.list = it.data
-                        adapter.notifyDataSetChanged()
-                    }
-                    is State.Loading -> binding.refresh.isRefreshing = true
-                    is State.Error -> {
-                        binding.refresh.isRefreshing = false
-                        Snackbar.make(binding.root, R.string.error, Snackbar.LENGTH_SHORT).show()
-                    }
-                }
+        binding.recyclerView.adapter = postAdapter.withLoadStateHeaderAndFooter(
+                header = PostLoadStateAdapter(postAdapter::retry),
+                footer = PostLoadStateAdapter(postAdapter::retry),
+        )
+        viewLifecycleOwner.lifecycleScope.launch { //TODO remove viewLifecycleOwner?
+            viewModel.posts.collectLatest {
+                postAdapter.submitData(viewLifecycleOwner.lifecycle, it)
             }
         }
     }
 
+    //TODO wrong color on dark mode
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.menu_search, menu)
-        /*searchView = menu.findItem(R.id.app_bar_search).actionView as SearchView
-        searchView!!.setOnQueryTextListener(NewsQueryTextListener(viewModel, binding.recyclerView))
-        searchView!!.setOnCloseListener {
-            searchView!!.onActionViewCollapsed()
-            binding.recyclerView.clearOnScrollListeners()
-            binding.recyclerView.addOnScrollListener(scrollListener!!)
-            //            downloadFirstNews()
+        val searchView = menu.findItem(R.id.app_bar_search).actionView as SearchView
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean = query?.let {
+                binding.recyclerView.scrollToPosition(0)
+                viewModel.query.value = it
+                searchView.clearFocus()
+                true
+            } ?: false
+
+            override fun onQueryTextChange(newText: String?): Boolean = true
+        })
+        searchView.setOnCloseListener {
+            viewModel.query.value = ""
+            searchView.onActionViewCollapsed()
             true
         }
-        if (args.author != null) {
-            searchView!!.onActionViewExpanded()
-            searchView!!.setQuery(args.author, true)
+        /*if (args.author != null) {
+            searchView.onActionViewExpanded()
+            searchView.setQuery(args.author, true)
         }*/
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
-        R.id.app_bar_search -> true
-        else -> super.onOptionsItemSelected(item)
     }
 
 

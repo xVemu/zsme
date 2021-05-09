@@ -9,7 +9,7 @@
 
         <variable
             name="model"
-            type="pl.vemu.zsme.model.TimetableModel" />
+            type="pl.vemu.zsme.data.model.TimetableModel" />
     </data>
 
     <!--    TODO only textview programatically-->

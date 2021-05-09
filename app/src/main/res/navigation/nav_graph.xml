@@ -39,7 +39,7 @@
         <deepLink app:uri="zsme.tarnow.pl/wp/{url}" />
         <argument
             android:name="postModel"
-            app:argType="pl.vemu.zsme.model.PostModel" />
+            app:argType="pl.vemu.zsme.data.model.PostModel" />
         <action
             android:id="@+id/action_detailFragment_to_newsFragment"
             app:destination="@id/newsFragment" />

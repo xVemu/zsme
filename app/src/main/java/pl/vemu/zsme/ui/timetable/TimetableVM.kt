@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import pl.vemu.zsme.State
-import pl.vemu.zsme.model.TimetableModel
+import pl.vemu.zsme.data.model.TimetableModel
 import javax.inject.Inject
 
 @HiltViewModel

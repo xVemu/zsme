@@ -2,8 +2,8 @@ package pl.vemu.zsme
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import pl.vemu.zsme.repo.DetailRepo
-import pl.vemu.zsme.repo.LessonRepo
+import pl.vemu.zsme.data.repo.DetailRepo
+import pl.vemu.zsme.data.repo.LessonRepo
 import pl.vemu.zsme.ui.detail.DetailFragmentVM
 import pl.vemu.zsme.ui.timetable.LessonFragmentVM
 

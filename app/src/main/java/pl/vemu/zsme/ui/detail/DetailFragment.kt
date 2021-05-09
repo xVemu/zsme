@@ -17,8 +17,8 @@ import kotlinx.coroutines.flow.collect
 import pl.vemu.zsme.DetailFragmentVMFactory
 import pl.vemu.zsme.R
 import pl.vemu.zsme.State
+import pl.vemu.zsme.data.repo.DetailRepo
 import pl.vemu.zsme.databinding.FragmentDetailBinding
-import pl.vemu.zsme.repo.DetailRepo
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -68,16 +68,16 @@ class DetailFragment : Fragment() {
             viewModel.detail.collect {
                 when (it) {
                     is State.Success -> {
-                        binding.progressBar.visibility = View.GONE
+                        binding.progressBarDetail.visibility = View.GONE
                         binding.webView.loadData(it.data.html, "text/html", null)
                         it.data.images?.let { images ->
                             binding.gallery.visibility = View.VISIBLE
                             binding.gallery.setOnClickListener(Navigation.createNavigateOnClickListener(DetailFragmentDirections.actionDetailFragmentToGalleryFragment(images.toTypedArray())))
                         }
                     }
-                    is State.Loading -> binding.progressBar.visibility = View.VISIBLE
+                    is State.Loading -> binding.progressBarDetail.visibility = View.VISIBLE
                     is State.Error -> {
-                        binding.progressBar.visibility = View.GONE
+                        binding.progressBarDetail.visibility = View.GONE
                         Snackbar.make(binding.root, R.string.error, Snackbar.LENGTH_SHORT).show()
                     }
                 }

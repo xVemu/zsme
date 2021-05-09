@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import pl.vemu.zsme.R
-import pl.vemu.zsme.SimpleAdapter
 import pl.vemu.zsme.makeSimple
+import pl.vemu.zsme.ui.SimpleAdapter
 
 //TODO arrow back remove
 class MoreFragment : Fragment() {

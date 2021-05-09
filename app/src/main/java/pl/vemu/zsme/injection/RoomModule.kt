@@ -1,4 +1,4 @@
-package pl.vemu.zsme.di
+package pl.vemu.zsme.injection
 
 import android.content.Context
 import androidx.room.Room
@@ -7,7 +7,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import pl.vemu.zsme.db.Database
+import pl.vemu.zsme.data.db.Database
 import javax.inject.Singleton
 
 

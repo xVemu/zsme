@@ -19,8 +19,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import pl.vemu.zsme.R
 import pl.vemu.zsme.State
+import pl.vemu.zsme.data.model.TimetableModel
 import pl.vemu.zsme.databinding.FragmentTimetableBinding
-import pl.vemu.zsme.model.TimetableModel
 
 //TODO arrow back remove
 @AndroidEntryPoint
