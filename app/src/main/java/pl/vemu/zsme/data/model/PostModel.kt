@@ -6,10 +6,11 @@ import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
 import java.util.*
 
+//change table name to lowercase
 @Entity(tableName = "Posts")
 @Parcelize
 data class PostModel(
-        @PrimaryKey(autoGenerate = false)
+        @PrimaryKey
         val id: Int,
         val date: Date,
         val link: String,

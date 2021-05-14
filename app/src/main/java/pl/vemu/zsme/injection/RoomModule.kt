@@ -28,4 +28,8 @@ class RoomModule {
     @Provides
     fun providePostDAO(database: Database) = database.postDao()
 
+    @Singleton
+    @Provides
+    fun provideRemoteKeyDAO(database: Database) = database.remoteKeyDao()
+
 }
