@@ -5,10 +5,6 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface ZSMEService {
-
-    @GET("posts?_embed")
-    suspend fun getPosts(): List<PostEntity>
-
     @GET("posts?_embed")
     suspend fun searchPosts(
             @Query("search") query: String,

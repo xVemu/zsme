@@ -10,17 +10,13 @@ import pl.vemu.zsme.data.model.PostModel
 @Dao
 interface PostDAO {
 
-    @Query("SELECT * FROM Posts ORDER by id DESC")
-    suspend fun getAll(): List<PostModel>
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(postmodels: List<PostModel>)
 
-    @Query("SELECT * FROM Posts WHERE excerpt LIKE :query")
+    @Query("SELECT * FROM Posts WHERE excerpt LIKE '%' || :query || '%' ORDER by id DESC")
     fun searchPosts(query: String): PagingSource<Int, PostModel>
 
     @Query("DELETE FROM Posts")
     suspend fun clearAll()
-
 
 }

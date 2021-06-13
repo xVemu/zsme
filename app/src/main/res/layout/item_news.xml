@@ -64,6 +64,7 @@
                 tools:text="@tools:sample/lorem/random"
                 tools:maxLength="350" />
 
+            <!--            TODO link to worse quality because loading is too long-->
             <ImageView
                 android:id="@+id/thumbnail"
                 imgUrl="@{model.thumbnail}"
