@@ -17,6 +17,7 @@ class PostMapper @Inject constructor() : EntityMapper<PostEntity, PostModel> {
             category = entity.embedded.category[0][0].name,
     )
 
+    //TODO delete
     override fun mapToEntity(model: PostModel) = PostEntity(
             id = model.id,
             date = model.date,

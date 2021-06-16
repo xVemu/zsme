@@ -3,7 +3,6 @@ package pl.vemu.zsme.data.repo
 import org.jsoup.nodes.Element
 import pl.vemu.zsme.data.model.LessonModel
 import pl.vemu.zsme.login
-import java.util.*
 import javax.inject.Inject
 
 class LessonRepo @Inject constructor() {
@@ -20,13 +19,13 @@ class LessonRepo @Inject constructor() {
             val (lessonTimeStart, lessonTimeFinish) = it.selectFirst(".g").text()
                     .replace("\\s".toRegex(), "").split("-")
             lessons.forEachIndexed { i, item ->
-                if (item.text().isEmpty()) return@forEach
+                if (item.text().isEmpty()) return@forEachIndexed
                 val lesson1: LessonModel
                 var lesson2: LessonModel? = null
-                if (item.getElementsByAttributeValue("style", "font-size:85%").size > 1) {
-                    val (lesson1Span, lesson2Span) = item.getElementsByAttributeValue("style", "font-size:85%")
-                    lesson1 = buildLesson(lesson1Span)
-                    lesson2 = buildLesson(lesson2Span)
+                if (item.select("[style=font-size:85%]").isNotEmpty()) {
+                    val lessonSpans = item.select("[style=font-size:85%]")
+                    lesson1 = buildLesson(lessonSpans[0])
+                    lesson2 = lessonSpans.getOrNull(1)?.let { span -> buildLesson(span) } //TODO systemy czwartek
                 } else if (item.selectFirst(".p") != null && item.select(".p").eachText().contains("etyka")) {
                     lesson1 = buildLesson(item.selectFirst("[style=font-size:85%]"))
                     item.child(0).remove()
