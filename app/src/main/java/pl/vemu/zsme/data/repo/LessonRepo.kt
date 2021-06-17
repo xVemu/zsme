@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 class LessonRepo @Inject constructor() {
 
-    fun getLesson(url: String): List<List<LessonModel>> {
+    suspend fun getLesson(url: String): List<List<LessonModel>> {
         val document = login(url)
         val table = document.selectFirst(".tabela").child(0).children()
         table.removeAt(0)
@@ -25,7 +25,7 @@ class LessonRepo @Inject constructor() {
                 if (item.select("[style=font-size:85%]").isNotEmpty()) {
                     val lessonSpans = item.select("[style=font-size:85%]")
                     lesson1 = buildLesson(lessonSpans[0])
-                    lesson2 = lessonSpans.getOrNull(1)?.let { span -> buildLesson(span) } //TODO systemy czwartek
+                    lesson2 = lessonSpans.getOrNull(1)?.let { span -> buildLesson(span) }
                 } else if (item.selectFirst(".p") != null && item.select(".p").eachText().contains("etyka")) {
                     lesson1 = buildLesson(item.selectFirst("[style=font-size:85%]"))
                     item.child(0).remove()

@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 class TimetableRepo @Inject constructor() {
 
-    fun getTimetable(): List<List<TimetableModel>> {
+    suspend fun getTimetable(): List<List<TimetableModel>> {
         val document = login("lista.html")
         return listOf(
                 makeArrayOfLinks(document.selectFirst("#oddzialy")),
