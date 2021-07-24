@@ -34,11 +34,15 @@ class LessonFragment : Fragment() {
     @Inject
     lateinit var lessonRepo: LessonRepo
     private val args: LessonFragmentArgs by navArgs()
-    private val viewModel: LessonFragmentVM by viewModels() {
+    private val viewModel: LessonVM by viewModels() {
         LessonFragmentVMFactory(lessonRepo, args.url)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentTimetableBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -70,8 +74,17 @@ class LessonFragment : Fragment() {
         }
         binding.viewPager.adapter = adapter
         binding.tabLayout.tabMode = TabLayout.MODE_AUTO
-        val names = arrayOf(getString(R.string.monday), getString(R.string.tuesday), getString(R.string.wednesday), getString(R.string.thursday), getString(R.string.friday))
-        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab: TabLayout.Tab, position: Int -> tab.text = names[position] }.attach()
+        val names = arrayOf(
+            getString(R.string.monday),
+            getString(R.string.tuesday),
+            getString(R.string.wednesday),
+            getString(R.string.thursday),
+            getString(R.string.friday)
+        )
+        TabLayoutMediator(
+            binding.tabLayout,
+            binding.viewPager
+        ) { tab: TabLayout.Tab, position: Int -> tab.text = names[position] }.attach()
         val day = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val dayOfWeek = LocalDate.now().dayOfWeek.value
             if (dayOfWeek >= 6) 0 else dayOfWeek - 1

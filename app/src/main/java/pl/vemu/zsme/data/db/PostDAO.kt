@@ -13,7 +13,7 @@ interface PostDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(postmodels: List<PostModel>)
 
-    @Query("SELECT * FROM Posts WHERE excerpt LIKE '%' || :query || '%' ORDER by id DESC")
+    @Query("SELECT * FROM Posts WHERE excerpt LIKE '%' || :query || '%' ORDER by date DESC")
     fun searchPosts(query: String): PagingSource<Int, PostModel>
 
     @Query("DELETE FROM Posts")

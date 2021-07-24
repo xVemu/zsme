@@ -38,13 +38,21 @@ class MainActivity : AppCompatActivity(), OnDestinationChangedListener {
     }
 
     private fun setupNotification() {
-        val constraints = Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
-        val worker = PeriodicWorkRequestBuilder<NewsWorker>(30L, TimeUnit.MINUTES, 15L, TimeUnit.MINUTES).setConstraints(constraints).build()
-        WorkManager.getInstance(applicationContext).enqueueUniquePeriodicWork("SyncNewsWorker", ExistingPeriodicWorkPolicy.KEEP, worker)
+        val constraints =
+            Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
+        val worker = PeriodicWorkRequestBuilder<NewsWorker>(
+            30L,
+            TimeUnit.MINUTES,
+            15L,
+            TimeUnit.MINUTES
+        ).setConstraints(constraints).build()
+        WorkManager.getInstance(applicationContext)
+            .enqueueUniquePeriodicWork("SyncNewsWorker", ExistingPeriodicWorkPolicy.KEEP, worker)
     }
 
     private fun setupNavigationBar() {
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
         val configuration = AppBarConfiguration(navController.graph)
         binding.toolbar.setupWithNavController(navController, configuration)
@@ -52,10 +60,15 @@ class MainActivity : AppCompatActivity(), OnDestinationChangedListener {
         navController.addOnDestinationChangedListener(this)
     }
 
-    override fun onDestinationChanged(controller: NavController, destination: NavDestination, arguments: Bundle?) {
+    override fun onDestinationChanged(
+        controller: NavController,
+        destination: NavDestination,
+        arguments: Bundle?
+    ) {
         val params = binding.toolbar.layoutParams as AppBarLayout.LayoutParams
-        if (destination.id == R.id.newsFragment) params.scrollFlags = (AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
-                or AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS)
+        if (destination.id == R.id.newsFragment) params.scrollFlags =
+            (AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
+                    or AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS)
         else params.scrollFlags = 0
     }
 
@@ -64,7 +77,8 @@ class MainActivity : AppCompatActivity(), OnDestinationChangedListener {
             val name = getString(R.string.channel_name)
             val importance = NotificationManager.IMPORTANCE_DEFAULT
             val channel = NotificationChannel("ZSME", name, importance)
-            val notificationManager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
         }
     }
@@ -72,8 +86,6 @@ class MainActivity : AppCompatActivity(), OnDestinationChangedListener {
     * internet refresh
     * shortcuts
     * notification
-    * scrolling hide toolbar
     * detail from link
-    *
     * */
 }

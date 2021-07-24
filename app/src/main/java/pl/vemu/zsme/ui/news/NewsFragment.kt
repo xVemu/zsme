@@ -2,7 +2,6 @@ package pl.vemu.zsme.ui.news
 
 import android.content.Context
 import android.net.ConnectivityManager
-import android.net.Network
 import android.net.NetworkRequest
 import android.os.Bundle
 import android.view.*
@@ -11,8 +10,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.navArgs
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
+import androidx.paging.ExperimentalPagingApi
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -21,17 +19,21 @@ import pl.vemu.zsme.databinding.FragmentNewsBinding
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class NewsFragment : Fragment(), OnRefreshListener {
+@ExperimentalPagingApi
+class NewsFragment : Fragment() {
 
     private var _binding: FragmentNewsBinding? = null
     private val binding get() = _binding!!
-    private val args: NewsFragmentArgs by navArgs()
     private val viewModel: NewsFragmentVM by viewModels()
 
     @Inject
     lateinit var postAdapter: PostAdapter
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentNewsBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -45,7 +47,7 @@ class NewsFragment : Fragment(), OnRefreshListener {
         setHasOptionsMenu(true)
         setupRecyclerView()
         binding.refresh.apply {
-            setOnRefreshListener(this@NewsFragment)
+            setOnRefreshListener { postAdapter.refresh() } //TODO refreshing
             setColorSchemeColors(resources.getColor(R.color.colorPrimary, null))
             setProgressBackgroundColorSchemeColor(resources.getColor(R.color.swipeBackground, null))
         }
@@ -55,24 +57,29 @@ class NewsFragment : Fragment(), OnRefreshListener {
     private fun setupNetwork() {
         val cm = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networkRequest = NetworkRequest.Builder().build()
-        if (cm.activeNetwork == null) Toast.makeText(context, "Brak połaczenia z internetem", Toast.LENGTH_LONG).show()
-        cm.registerNetworkCallback(networkRequest, object : ConnectivityManager.NetworkCallback() {
+        if (cm.activeNetwork == null) Toast.makeText(
+            context,
+            "Brak połaczenia z internetem",
+            Toast.LENGTH_LONG
+        ).show()
+        /*cm.registerNetworkCallback(networkRequest, object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) {
                 lifecycleScope.launch {
                     viewModel.fetchPosts()
                 }
             }
-        })
+        })TODO*/
     }
+
 
     private fun setupRecyclerView() {
         binding.recyclerView.adapter = postAdapter.withLoadStateHeaderAndFooter(
-                header = PostLoadStateAdapter(postAdapter::retry),
-                footer = PostLoadStateAdapter(postAdapter::retry),
+            header = PostLoadStateAdapter(postAdapter::retry),
+            footer = PostLoadStateAdapter(postAdapter::retry),
         )
         viewLifecycleOwner.lifecycleScope.launch { //TODO remove viewLifecycleOwner?
             viewModel.posts.collectLatest {
-                postAdapter.submitData(viewLifecycleOwner.lifecycle, it)
+                postAdapter.submitData(it)
             }
         }
     }
@@ -84,9 +91,9 @@ class NewsFragment : Fragment(), OnRefreshListener {
         val searchView = menu.findItem(R.id.app_bar_search).actionView as SearchView
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean = query?.let {
-                binding.recyclerView.scrollToPosition(0)
                 viewModel.query.value = it
                 searchView.clearFocus()
+                binding.recyclerView.scrollToPosition(0)
                 true
             } ?: false
 
@@ -95,19 +102,8 @@ class NewsFragment : Fragment(), OnRefreshListener {
         searchView.setOnCloseListener {
             viewModel.query.value = ""
             searchView.onActionViewCollapsed()
+            binding.recyclerView.scrollToPosition(0)
             true
         }
-        /*if (args.author != null) {
-            searchView.onActionViewExpanded()
-            searchView.setQuery(args.author, true)
-        }*/
-    }
-
-
-    override fun onRefresh() {
-        /*if (!"".contentEquals(searchView!!.query)) {
-            searchView!!.setQuery(searchView!!.query, true)
-        } else downloadFirstNews()*/
-        viewModel.fetchPosts()
     }
 }

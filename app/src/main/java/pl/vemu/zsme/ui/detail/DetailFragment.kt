@@ -30,12 +30,16 @@ class DetailFragment : Fragment() {
     @Inject
     lateinit var repo: DetailRepo
     private val args: DetailFragmentArgs by navArgs()
-    private val viewModel: DetailFragmentVM by viewModels() {
+    private val viewModel: DetailVM by viewModels() {
         DetailFragmentVMFactory(repo, args.postModel.content)
     }
 
     //TODO takes long to open
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentDetailBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -72,7 +76,13 @@ class DetailFragment : Fragment() {
                         binding.webView.loadData(it.data.html, "text/html", null)
                         it.data.images?.let { images ->
                             binding.gallery.visibility = View.VISIBLE
-                            binding.gallery.setOnClickListener(Navigation.createNavigateOnClickListener(DetailFragmentDirections.actionDetailFragmentToGalleryFragment(images.toTypedArray())))
+                            binding.gallery.setOnClickListener(
+                                Navigation.createNavigateOnClickListener(
+                                    DetailFragmentDirections.actionDetailFragmentToGalleryFragment(
+                                        images.toTypedArray()
+                                    )
+                                )
+                            )
                         }
                     }
                     is State.Loading -> binding.progressBarDetail.visibility = View.VISIBLE

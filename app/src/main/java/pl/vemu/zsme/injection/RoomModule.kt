@@ -18,10 +18,12 @@ class RoomModule {
     @Singleton
     @Provides
     fun provideDatabase(@ApplicationContext context: Context) = Room.databaseBuilder(
-            context,
-            Database::class.java,
-            "zsme-database"
-    ).build()
+        context,
+        Database::class.java,
+        "zsme-database"
+    )
+        .fallbackToDestructiveMigration()
+        .build()
 
 
     @Singleton

@@ -10,9 +10,9 @@ import pl.vemu.zsme.State
 import pl.vemu.zsme.data.model.DetailModel
 import pl.vemu.zsme.data.repo.DetailRepo
 
-class DetailFragmentVM constructor(
-        detailRepo: DetailRepo,
-        content: String,
+class DetailVM constructor(
+    detailRepo: DetailRepo,
+    content: String,
 ) : ViewModel() {
     private val _detail = MutableStateFlow<State<DetailModel>>(State.Loading())
 

@@ -7,8 +7,8 @@ import retrofit2.http.Query
 interface ZSMEService {
     @GET("posts?_embed")
     suspend fun searchPosts(
-            @Query("search") query: String,
-            @Query("page") page: Int,
-            @Query("per_page") perPage: Int,
+        @Query("search") query: String,
+        @Query("page") page: Int,
+        @Query("per_page") perPage: Int,
     ): List<PostEntity>
 }

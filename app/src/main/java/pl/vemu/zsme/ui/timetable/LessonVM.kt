@@ -10,9 +10,9 @@ import pl.vemu.zsme.State
 import pl.vemu.zsme.data.model.LessonModel
 import pl.vemu.zsme.data.repo.LessonRepo
 
-class LessonFragmentVM constructor(
-        lessonRepo: LessonRepo,
-        url: String,
+class LessonVM constructor(
+    lessonRepo: LessonRepo,
+    url: String,
 ) : ViewModel() {
     private val _list = MutableStateFlow<State<List<List<LessonModel>>>>(State.Success(emptyList()))
     val list: StateFlow<State<List<List<LessonModel>>>>

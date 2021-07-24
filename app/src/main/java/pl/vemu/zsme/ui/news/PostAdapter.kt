@@ -9,10 +9,11 @@ import pl.vemu.zsme.databinding.ItemNewsBinding
 import pl.vemu.zsme.util.PostComparator
 import javax.inject.Inject
 
-class PostAdapter @Inject constructor(diffCallback: PostComparator) : PagingDataAdapter<PostModel, PostAdapter.PostViewHolder>(diffCallback) {
+class PostAdapter @Inject constructor(diffCallback: PostComparator) :
+    PagingDataAdapter<PostModel, PostAdapter.PostViewHolder>(diffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder =
-            PostViewHolder(ItemNewsBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        PostViewHolder(ItemNewsBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
         holder.binding.model = getItem(position)
