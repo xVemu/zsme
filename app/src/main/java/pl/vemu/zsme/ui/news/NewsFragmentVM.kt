@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import pl.vemu.zsme.data.repo.PostRepo
 import javax.inject.Inject
 
-//TODO change name to PostViewModel, others viewmodels too and change News to Post
+//TODO change News to Post
 @HiltViewModel
 class NewsFragmentVM @Inject constructor(
     postRepo: PostRepo,

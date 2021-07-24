@@ -12,9 +12,12 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.ExperimentalPagingApi
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import pl.vemu.zsme.R
+import pl.vemu.zsme.data.db.PostDAO
 import pl.vemu.zsme.databinding.FragmentNewsBinding
 import javax.inject.Inject
 
@@ -28,6 +31,9 @@ class NewsFragment : Fragment() {
 
     @Inject
     lateinit var postAdapter: PostAdapter
+
+    @Inject
+    lateinit var postDao: PostDAO
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,7 +53,15 @@ class NewsFragment : Fragment() {
         setHasOptionsMenu(true)
         setupRecyclerView()
         binding.refresh.apply {
-            setOnRefreshListener { postAdapter.refresh() } //TODO refreshing
+            setOnRefreshListener {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    postDao.clearAll()
+                    withContext(Dispatchers.Main) {
+                        postAdapter.refresh()
+                        this@apply.isRefreshing = false
+                    }
+                }
+            }
             setColorSchemeColors(resources.getColor(R.color.colorPrimary, null))
             setProgressBackgroundColorSchemeColor(resources.getColor(R.color.swipeBackground, null))
         }
