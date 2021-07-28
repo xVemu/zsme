@@ -5,7 +5,7 @@
 
     <data>
 
-        <import type="pl.vemu.zsme.ui.news.NewsFragmentDirections" />
+        <import type="pl.vemu.zsme.ui.post.PostFragmentDirections" />
 
         <import type="androidx.navigation.Navigation" />
 
@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:minHeight="150dp"
-        android:onClick="@{Navigation.createNavigateOnClickListener(NewsFragmentDirections.actionNewsToDetailFragment(model))}">
+        android:onClick="@{Navigation.createNavigateOnClickListener(PostFragmentDirections.actionPostToDetailFragment(model))}">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -64,7 +64,6 @@
                 tools:text="@tools:sample/lorem/random"
                 tools:maxLength="350" />
 
-            <!--            TODO link to worse quality because loading is too long-->
             <ImageView
                 android:id="@+id/thumbnail"
                 imgUrl="@{model.thumbnail}"

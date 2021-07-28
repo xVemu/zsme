@@ -3,15 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@+id/newsFragment">
+    app:startDestination="@+id/postFragment">
 
     <fragment
-        android:id="@+id/newsFragment"
-        android:name="pl.vemu.zsme.ui.news.NewsFragment"
+        android:id="@+id/postFragment"
+        android:name="pl.vemu.zsme.ui.post.PostFragment"
         android:label="@string/news"
-        tools:layout="@layout/fragment_news">
+        tools:layout="@layout/fragment_post">
         <action
-            android:id="@+id/action_news_to_detailFragment"
+            android:id="@+id/action_post_to_detailFragment"
             app:destination="@id/detailFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
@@ -42,7 +42,7 @@
             app:argType="pl.vemu.zsme.data.model.PostModel" />
         <action
             android:id="@+id/action_detailFragment_to_newsFragment"
-            app:destination="@id/newsFragment" />
+            app:destination="@id/postFragment" />
     </fragment>
     <fragment
         android:id="@+id/timetableFragment"

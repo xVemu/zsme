@@ -34,7 +34,7 @@ class LessonFragment : Fragment() {
     @Inject
     lateinit var lessonRepo: LessonRepo
     private val args: LessonFragmentArgs by navArgs()
-    private val viewModel: LessonVM by viewModels() {
+    private val viewModel: LessonVM by viewModels {
         LessonFragmentVMFactory(lessonRepo, args.url)
     }
 
@@ -56,12 +56,20 @@ class LessonFragment : Fragment() {
         val toolbar: MaterialToolbar = requireActivity().findViewById(R.id.toolbar)
         toolbar.title = args.title
         val adapter = TimetableAdapter<LessonModel>(R.layout.item_lesson, emptyList())
+        val day = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val dayOfWeek = LocalDate.now().dayOfWeek.value
+            if (dayOfWeek >= 6) 0 else dayOfWeek - 1
+        } else {
+            val dayOfWeek = Calendar.getInstance()[Calendar.DAY_OF_WEEK]
+            if ((dayOfWeek == 1) or (dayOfWeek == 7)) 0 else dayOfWeek - 2
+        }
         lifecycleScope.launchWhenStarted {
             viewModel.list.collect {
                 when (it) {
                     is State.Success -> {
                         adapter.list = it.data
                         adapter.notifyDataSetChanged()
+                        binding.viewPager.setCurrentItem(day, false)
                     }
                     is State.Error -> {
                         Snackbar.make(binding.root, R.string.error, Snackbar.LENGTH_SHORT).show()
@@ -85,13 +93,5 @@ class LessonFragment : Fragment() {
             binding.tabLayout,
             binding.viewPager
         ) { tab: TabLayout.Tab, position: Int -> tab.text = names[position] }.attach()
-        val day = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val dayOfWeek = LocalDate.now().dayOfWeek.value
-            if (dayOfWeek >= 6) 0 else dayOfWeek - 1
-        } else {
-            val dayOfWeek = Calendar.getInstance()[Calendar.DAY_OF_WEEK]
-            if (dayOfWeek == 1 or 7) 0 else dayOfWeek - 2
-        }
-        binding.viewPager.currentItem = day
     }
 }

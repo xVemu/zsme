@@ -34,7 +34,6 @@ class DetailFragment : Fragment() {
         DetailFragmentVMFactory(repo, args.postModel.content)
     }
 
-    //TODO takes long to open
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -50,13 +49,7 @@ class DetailFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        /*if (args.url.startsWith("author")) {
-            val navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
-            val action: ActionDetailFragmentToNewsFragment = DetailFragmentDirections.actionDetailFragmentToNewsFragment()
-            action.author = args.url
-            navController.navigate(action)
-        }*/
-        setHasOptionsMenu(true) /*TODO is needed?*/
+        setHasOptionsMenu(true)
         binding.webView.settings.javaScriptEnabled = true
         if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
             val nightModeFlags = requireContext().resources.configuration.uiMode and
@@ -73,7 +66,7 @@ class DetailFragment : Fragment() {
                 when (it) {
                     is State.Success -> {
                         binding.progressBarDetail.visibility = View.GONE
-                        binding.webView.loadData(it.data.html, "text/html", null)
+                        binding.webView.loadData(it.data.html, "text/html; charset=UTF-8", null)
                         it.data.images?.let { images ->
                             binding.gallery.visibility = View.VISIBLE
                             binding.gallery.setOnClickListener(

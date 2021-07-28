@@ -14,20 +14,22 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 class RetrofitModule {
-    @Singleton //TODO can remove?
+
+    @Singleton
     @Provides
     fun provideGson(): Gson = GsonBuilder()
-            .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
-            .create()
+        .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+        .create()
 
     @Singleton
     @Provides
     fun provideRetrofit(gson: Gson): Retrofit = Retrofit.Builder()
-            .baseUrl("https://zsme.tarnow.pl/wp/wp-json/wp/v2/")
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .build()
+        .baseUrl("https://zsme.tarnow.pl/wp/wp-json/wp/v2/")
+        .addConverterFactory(GsonConverterFactory.create(gson))
+        .build()
 
     @Singleton
     @Provides
-    fun provideZSMEService(retrofit: Retrofit): ZSMEService = retrofit.create(ZSMEService::class.java)
+    fun provideZSMEService(retrofit: Retrofit): ZSMEService =
+        retrofit.create(ZSMEService::class.java)
 }

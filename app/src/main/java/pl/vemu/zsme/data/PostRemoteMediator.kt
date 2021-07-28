@@ -31,16 +31,15 @@ class PostRemoteMediator constructor(
     override suspend fun load(
         loadType: LoadType, state: PagingState<Int, PostModel>
     ): MediatorResult { //TODO rewrite
-        val page = when (val pageKeyData = getKeyPageData(loadType, state)) {
-            is MediatorResult.Success -> {
-                return pageKeyData
-            }
-            else -> {
-                pageKeyData as Int
-            }
-        }
-
         try {
+            val page = when (val pageKeyData = getKeyPageData(loadType, state)) {
+                is MediatorResult.Success -> {
+                    return pageKeyData
+                }
+                else -> {
+                    pageKeyData as Int
+                }
+            }
             val response = zsmeService.searchPosts(query, page, state.config.pageSize)
             val isEndOfList = response.isEmpty()
             db.withTransaction {
@@ -67,26 +66,24 @@ class PostRemoteMediator constructor(
     private suspend fun getKeyPageData(
         loadType: LoadType,
         state: PagingState<Int, PostModel>
-    ): Any {
-        return when (loadType) {
+    ) =
+        when (loadType) {
             LoadType.REFRESH -> {
                 val remoteKeys = getRemoteKeyClosestToCurrentPosition(state)
                 remoteKeys?.nextKey?.minus(1) ?: DEFAULT_PAGE
             }
             LoadType.APPEND -> {
-                val remoteKeys = getLastRemoteKey(state)
+                val remoteKeys = getRemoteKeyForLastItem(state)
                 val nextKey = remoteKeys?.nextKey
-                return nextKey ?: MediatorResult.Success(endOfPaginationReached = false)
+                nextKey ?: MediatorResult.Success(endOfPaginationReached = false)
             }
             LoadType.PREPEND -> {
-                val remoteKeys = getFirstRemoteKey(state)
-                val prevKey = remoteKeys?.prevKey ?: return MediatorResult.Success(
-                    endOfPaginationReached = false
-                )
-                prevKey
+                val remoteKeys = getRemoteKeyForFirstItem(state)
+                val prevKey = remoteKeys?.prevKey
+                prevKey ?: MediatorResult.Success(endOfPaginationReached = false)
             }
+
         }
-    }
 
     private suspend fun getRemoteKeyClosestToCurrentPosition(state: PagingState<Int, PostModel>): RemoteKeyModel? {
         return state.anchorPosition?.let { position ->
@@ -96,11 +93,11 @@ class PostRemoteMediator constructor(
         }
     }
 
-    private suspend fun getLastRemoteKey(state: PagingState<Int, PostModel>): RemoteKeyModel? =
+    private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, PostModel>): RemoteKeyModel? =
         state.lastItemOrNull()?.let { cat -> remoteKeyDAO.remoteKeyByQueryId(cat.id) }
 
 
-    private suspend fun getFirstRemoteKey(state: PagingState<Int, PostModel>): RemoteKeyModel? =
+    private suspend fun getRemoteKeyForFirstItem(state: PagingState<Int, PostModel>): RemoteKeyModel? =
         state.firstItemOrNull()?.let { cat -> remoteKeyDAO.remoteKeyByQueryId(cat.id) }
 
 }

@@ -1,4 +1,4 @@
-package pl.vemu.zsme.ui.news
+package pl.vemu.zsme.ui.post
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,9 +10,8 @@ import kotlinx.coroutines.flow.flatMapLatest
 import pl.vemu.zsme.data.repo.PostRepo
 import javax.inject.Inject
 
-//TODO change News to Post
 @HiltViewModel
-class NewsFragmentVM @Inject constructor(
+class PostVM @Inject constructor(
     postRepo: PostRepo,
 ) : ViewModel() {
 

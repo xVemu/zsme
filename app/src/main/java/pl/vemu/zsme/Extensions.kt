@@ -12,7 +12,7 @@ import org.jsoup.nodes.Document
 
 fun RecyclerView.makeSimple() = apply {
     layoutManager = LinearLayoutManager(context)
-    layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT) //TODO remove?
+    layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT)
     isVerticalScrollBarEnabled = false
     isHorizontalScrollBarEnabled = false
     setHasFixedSize(true)

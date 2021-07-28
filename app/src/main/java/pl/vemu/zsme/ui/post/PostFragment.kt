@@ -1,4 +1,4 @@
-package pl.vemu.zsme.ui.news
+package pl.vemu.zsme.ui.post
 
 import android.content.Context
 import android.net.ConnectivityManager
@@ -18,16 +18,16 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import pl.vemu.zsme.R
 import pl.vemu.zsme.data.db.PostDAO
-import pl.vemu.zsme.databinding.FragmentNewsBinding
+import pl.vemu.zsme.databinding.FragmentPostBinding
 import javax.inject.Inject
 
 @AndroidEntryPoint
 @ExperimentalPagingApi
-class NewsFragment : Fragment() {
+class PostFragment : Fragment() {
 
-    private var _binding: FragmentNewsBinding? = null
+    private var _binding: FragmentPostBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: NewsFragmentVM by viewModels()
+    private val viewModel: PostVM by viewModels()
 
     @Inject
     lateinit var postAdapter: PostAdapter
@@ -40,7 +40,7 @@ class NewsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentNewsBinding.inflate(inflater, container, false)
+        _binding = FragmentPostBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -91,7 +91,7 @@ class NewsFragment : Fragment() {
             header = PostLoadStateAdapter(postAdapter::retry),
             footer = PostLoadStateAdapter(postAdapter::retry),
         )
-        viewLifecycleOwner.lifecycleScope.launch { //TODO remove viewLifecycleOwner?
+        viewLifecycleOwner.lifecycleScope.launch {
             viewModel.posts.collectLatest {
                 postAdapter.submitData(it)
             }

@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity(), OnDestinationChangedListener {
             TimeUnit.MINUTES
         ).setConstraints(constraints).build()
         WorkManager.getInstance(applicationContext)
-            .enqueueUniquePeriodicWork("SyncNewsWorker", ExistingPeriodicWorkPolicy.KEEP, worker)
+            .enqueueUniquePeriodicWork("SyncPostWorker", ExistingPeriodicWorkPolicy.KEEP, worker)
     }
 
     private fun setupNavigationBar() {
@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity(), OnDestinationChangedListener {
         arguments: Bundle?
     ) {
         val params = binding.toolbar.layoutParams as AppBarLayout.LayoutParams
-        if (destination.id == R.id.newsFragment) params.scrollFlags =
+        if (destination.id == R.id.postFragment) params.scrollFlags =
             (AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
                     or AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS)
         else params.scrollFlags = 0

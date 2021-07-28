@@ -20,9 +20,13 @@ class GalleryFragment : Fragment() {
     private val args: GalleryFragmentArgs by navArgs()
 
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         pager = ViewPager2(requireContext())
-        pager.layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT) //TODO remove?
+        pager.layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT)
         return pager
     }
 
@@ -45,7 +49,8 @@ class GalleryFragment : Fragment() {
         if (isUiVisible) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 decorView.windowInsetsController?.hide(WindowInsets.Type.navigationBars() or WindowInsets.Type.statusBars())
-                decorView.windowInsetsController?.systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_BARS_BY_SWIPE
+                decorView.windowInsetsController?.systemBarsBehavior =
+                    WindowInsetsController.BEHAVIOR_SHOW_BARS_BY_SWIPE
             } else {
                 decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_IMMERSIVE
                         or View.SYSTEM_UI_FLAG_FULLSCREEN

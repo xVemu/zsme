@@ -1,4 +1,4 @@
-package pl.vemu.zsme.ui.news
+package pl.vemu.zsme.ui.post
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,17 +8,24 @@ import androidx.paging.LoadStateAdapter
 import androidx.recyclerview.widget.RecyclerView
 import pl.vemu.zsme.databinding.ItemPostLoadStateBinding
 
-class PostLoadStateAdapter(private val retry: () -> Unit) : LoadStateAdapter<PostLoadStateAdapter.PostLoadStateViewHolder>() {
+class PostLoadStateAdapter(private val retry: () -> Unit) :
+    LoadStateAdapter<PostLoadStateAdapter.PostLoadStateViewHolder>() {
 
     override fun onBindViewHolder(holder: PostLoadStateViewHolder, loadState: LoadState) {
         holder.bind(loadState)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, loadState: LoadState) =
-            PostLoadStateViewHolder(ItemPostLoadStateBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        PostLoadStateViewHolder(
+            ItemPostLoadStateBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
 
     inner class PostLoadStateViewHolder(
-            private val binding: ItemPostLoadStateBinding,
+        private val binding: ItemPostLoadStateBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
 
         init {

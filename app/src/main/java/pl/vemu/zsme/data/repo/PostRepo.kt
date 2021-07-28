@@ -23,7 +23,7 @@ class PostRepo @Inject constructor(
     fun searchPosts(query: String) = Pager(
         config = PagingConfig(
             pageSize = PAGE_SIZE,
-            enablePlaceholders = false,
+            enablePlaceholders = false, //TODO
             maxSize = PAGE_SIZE + (2 * PAGE_SIZE),
         ),
         remoteMediator = PostRemoteMediator(
@@ -35,7 +35,6 @@ class PostRepo @Inject constructor(
             postMapper,
         )
     ) {
-        //TODO crash when first launch
         postDAO.searchPosts(query)
     }.flow
 }
