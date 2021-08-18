@@ -2,6 +2,10 @@ package pl.vemu.zsme
 
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.Dispatchers
@@ -28,3 +32,8 @@ suspend fun login(aurl: String): Document = withContext(Dispatchers.IO) {
         execute()
     }.parse()
 }
+
+fun Modifier.paddingStart(size: Dp = 0.dp) = this.padding(size, 0.dp, 0.dp, 0.dp)
+fun Modifier.paddingTop(size: Dp = 0.dp) = this.padding(0.dp, size, 0.dp, 0.dp)
+fun Modifier.paddingEnd(size: Dp = 0.dp) = this.padding(0.dp, 0.dp, size, 0.dp)
+fun Modifier.paddingBottom(size: Dp = 0.dp) = this.padding(0.dp, 0.dp, 0.dp, size)

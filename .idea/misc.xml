@@ -1,5 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="../../../../layout/compose-model-1627636646718.xml" value="0.2639358108108108" />
+        <entry key="../../../../layout/compose-model-1627652767893.xml" value="0.5" />
+        <entry key="../../../../layout/compose-model-1627664002176.xml" value="0.33" />
+        <entry key="../../../../layout/compose-model-1627722416259.xml" value="0.6268518518518519" />
+        <entry key="../../../../layout/compose-model-1627733668250.xml" value="0.25" />
+        <entry key="../../../../layout/compose-model-1627737136202.xml" value="0.375" />
+        <entry key="../../../../layout/compose-model-1627931893666.xml" value="2.0" />
+        <entry key="../../../../layout/compose-model-1627932045538.xml" value="0.75" />
+        <entry key="../../../../layout/compose-model-1627992521383.xml" value="0.67" />
+        <entry key="app/src/main/res/drawable/ic_contact.xml" value="0.3151041666666667" />
+        <entry key="app/src/main/res/drawable/ic_github.xml" value="0.3151041666666667" />
+        <entry key="app/src/main/res/drawable/ic_mail.xml" value="0.3151041666666667" />
+        <entry key="app/src/main/res/drawable/ic_map.xml" value="0.3151041666666667" />
+        <entry key="app/src/main/res/drawable/ic_phone.xml" value="0.3151041666666667" />
+        <entry key="app/src/main/res/layout/item_contact.xml" value="0.1852355072463768" />
+        <entry key="app/src/main/res/layout/item_more.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/item_post.xml" value="0.25" />
+        <entry key="app/src/main/res/xml/settings.xml" value="0.2989583333333333" />
+      </map>
+    </option>
+  </component>
   <component name="EntryPointsManager">
     <pattern value="pl.vemu.zsme.newsFragment.OnItemSelectedListener" />
   </component>

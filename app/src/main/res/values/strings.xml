@@ -5,7 +5,7 @@
 
     <string name="search">Wyszukaj</string>
 
-    <string name="news">Aktualności</string>
+    <string name="post">Aktualności</string>
     <string name="timetable">Plan lekcji</string>
     <string name="settings">Ustawienia</string>
     <string name="no_results">Brak wyników</string>
@@ -58,9 +58,9 @@
     <string name="gallery">Zdjęcia</string>
     <string name="error">Wystąpił błąd</string>
     <string name="zsme_default_link" translatable="false">https://zsme.tarnow.pl/wp/</string>
-    <string name="destination_button" translatable="false">Destionation button</string>
+    <string name="destination_button" translatable="false">Open in app</string>
     <string name="teachers">Nauczyciele</string>
-    <string name="classroom">Sale</string>
+    <string name="classrooms">Sale</string>
     <string name="classes">Oddziały</string>
     <string name="monday">Poniedziałek</string>
     <string name="tuesday">Wtorek</string>
@@ -77,4 +77,7 @@
     <string name="english">Angielski</string>
     <string name="polish">Polski</string>
     <string name="language">Język</string>
+    <string name="no_app">Brak aplikacji.</string>
+    <string name="notification_summary">Zarządzaj powiadomieniami</string>
+    <string name="image">Zdjęcie</string>
 </resources>

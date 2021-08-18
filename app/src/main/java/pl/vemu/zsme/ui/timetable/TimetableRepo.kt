@@ -7,12 +7,13 @@ import javax.inject.Inject
 
 class TimetableRepo @Inject constructor() {
 
+    //TODO
     suspend fun getTimetable(): List<List<TimetableModel>> {
         val document = login("lista.html")
         return listOf(
-                makeArrayOfLinks(document.selectFirst("#oddzialy")),
-                makeArrayOfLinks(document.selectFirst("#nauczyciele")),
-                makeArrayOfLinks(document.selectFirst("#sale")),
+            makeArrayOfLinks(document.selectFirst("#oddzialy")!!),
+            makeArrayOfLinks(document.selectFirst("#nauczyciele")!!),
+            makeArrayOfLinks(document.selectFirst("#sale")!!),
         )
     }
 

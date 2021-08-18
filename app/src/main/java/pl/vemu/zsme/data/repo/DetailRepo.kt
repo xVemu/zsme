@@ -1,12 +1,15 @@
 package pl.vemu.zsme.data.repo
 
 import org.jsoup.Jsoup
+import pl.vemu.zsme.data.db.PostDAO
 import pl.vemu.zsme.data.model.DetailModel
 import javax.inject.Inject
 
-class DetailRepo @Inject constructor() {
+class DetailRepo @Inject constructor(private val postDAO: PostDAO) {
 
-    fun getDetail(content: String): DetailModel {
+    suspend fun getPostModelById(id: Int) = postDAO.getById(id)
+
+    fun getDetail(content: String): DetailModel { /*TODO*/
         val document = Jsoup.parse(content)
         val imgs = document.select("img")
         document.select(".wp-block-image, .wp-block-gallery").remove()

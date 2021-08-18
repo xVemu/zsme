@@ -19,7 +19,7 @@ class PostRepo @Inject constructor(
     private val zsmeService: ZSMEService,
     private val postMapper: PostMapper,
 ) {
-    @ExperimentalPagingApi
+    @OptIn(ExperimentalPagingApi::class)
     fun searchPosts(query: String) = Pager(
         config = PagingConfig(
             pageSize = PAGE_SIZE,

@@ -16,6 +16,9 @@ interface PostDAO {
     @Query("SELECT * FROM Posts WHERE excerpt LIKE '%' || :query || '%' ORDER by date DESC")
     fun searchPosts(query: String): PagingSource<Int, PostModel>
 
+    @Query("SELECT * FROM Posts WHERE id=:id")
+    suspend fun getById(id: Int): PostModel
+
     @Query("DELETE FROM Posts")
     suspend fun clearAll()
 

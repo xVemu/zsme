@@ -7,8 +7,8 @@
 
     <fragment
         android:id="@+id/postFragment"
-        android:name="pl.vemu.zsme.ui.post.PostFragment"
-        android:label="@string/news"
+        android:name="pl.vemu.zsme.ui.post.Post"
+        android:label="@string/post"
         tools:layout="@layout/fragment_post">
         <action
             android:id="@+id/action_post_to_detailFragment"
@@ -27,7 +27,7 @@
     <fragment
         android:id="@+id/detailFragment"
         android:name="pl.vemu.zsme.ui.detail.DetailFragment"
-        android:label="@string/news"
+        android:label="@string/post"
         tools:layout="@layout/fragment_detail">
         <action
             android:id="@+id/action_detailFragment_to_galleryFragment"
@@ -61,7 +61,7 @@
     </fragment>
     <fragment
         android:id="@+id/moreFragment"
-        android:name="pl.vemu.zsme.ui.more.MoreFragment"
+        android:name="pl.vemu.zsme.ui.more.More"
         android:label="@string/more">
         <action
             android:id="@+id/action_moreFragment_to_settingsFragment"

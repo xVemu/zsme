@@ -31,7 +31,11 @@ class TimetableFragment : Fragment() {
 
     private val viewModel: TimetableVM by viewModels()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentTimetableBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -44,7 +48,11 @@ class TimetableFragment : Fragment() {
     private fun setupNetwork() {
         val cm = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networkRequest = NetworkRequest.Builder().build()
-        if (cm.activeNetwork == null) Toast.makeText(context, "Brak połaczenia z internetem", Toast.LENGTH_LONG).show()
+        if (cm.activeNetwork == null) Toast.makeText(
+            context,
+            "Brak połaczenia z internetem",
+            Toast.LENGTH_LONG
+        ).show()
         cm.registerNetworkCallback(networkRequest, object : NetworkCallback() {
             override fun onAvailable(network: Network) {
                 viewModel.fetchTimetable()
@@ -61,15 +69,25 @@ class TimetableFragment : Fragment() {
                         adapter.list = it.data
                         adapter.notifyDataSetChanged()
                     }
-                    is State.Error -> Snackbar.make(binding.root, R.string.error, Snackbar.LENGTH_SHORT).show()
+                    is State.Error -> Snackbar.make(
+                        binding.root,
+                        R.string.error,
+                        Snackbar.LENGTH_SHORT
+                    ).show()
                     else -> {
                     }
                 }
             }
         }
         binding.viewPager.adapter = adapter
-        val names = arrayOf(getString(R.string.classes), getString(R.string.teachers), getString(R.string.classroom))
-        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position -> tab.text = names[position] }.attach()
+        val names = arrayOf(
+            getString(R.string.classes),
+            getString(R.string.teachers),
+            getString(R.string.classrooms)
+        )
+        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
+            tab.text = names[position]
+        }.attach()
         setupNetwork()
     }
 }

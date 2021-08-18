@@ -2,40 +2,31 @@ package pl.vemu.zsme.ui.detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import pl.vemu.zsme.State
 import pl.vemu.zsme.data.model.DetailModel
+import pl.vemu.zsme.data.model.PostModel
 import pl.vemu.zsme.data.repo.DetailRepo
+import javax.inject.Inject
 
-class DetailVM constructor(
-    detailRepo: DetailRepo,
-    content: String,
+@HiltViewModel
+class DetailVM @Inject constructor(
+    private val detailRepo: DetailRepo
 ) : ViewModel() {
-    private val _detail = MutableStateFlow<State<DetailModel>>(State.Loading())
+    private val _detail = MutableStateFlow<DetailModel?>(null)
+    private val _postModel = MutableStateFlow<PostModel?>(null)
 
-    val detail: StateFlow<State<DetailModel>>
-        get() = _detail
+    val detail = _detail.asStateFlow()
+    val postModel = _postModel.asStateFlow()
 
-
-    init {
+    fun init(id: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            _detail.emit(State.Loading())
-            try {
-                _detail.emit(State.Success(detailRepo.getDetail(content)))
-            } catch (e: Exception) {
-                _detail.emit(State.Error(e))
-            }
+            val postModelById = detailRepo.getPostModelById(id)
+            _postModel.value = postModelById
+            _detail.value = detailRepo.getDetail(postModelById.content)
         }
     }
-
-    /*override fun onCleared() {
-        detail.value = null
-    }*/
-
-    /*init {
-        val finalUrl = if (!url.startsWith("http") && !url.startsWith("https")) application.getString(R.string.zsme_default_link) + url else url
-    }*/
 }

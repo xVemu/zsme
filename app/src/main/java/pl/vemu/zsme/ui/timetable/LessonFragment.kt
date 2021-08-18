@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
-import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -53,8 +52,8 @@ class LessonFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val toolbar: MaterialToolbar = requireActivity().findViewById(R.id.toolbar)
-        toolbar.title = args.title
+        /*val toolbar: MaterialToolbar = requireActivity().findViewById(R.id.toolbar)
+        toolbar.title = args.title*/
         val adapter = TimetableAdapter<LessonModel>(R.layout.item_lesson, emptyList())
         val day = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val dayOfWeek = LocalDate.now().dayOfWeek.value
