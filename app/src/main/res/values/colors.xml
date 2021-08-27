@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#8BC34A</color>
-    <color name="colorPrimaryDark">#4CAF50</color>
-    <color name="swipeBackground">#fff</color>
+    <color name="primary">@android:color/white</color>
+    <color name="primaryVariant">@android:color/white</color>
+    <color name="secondary">#2B65B4</color>
+    <color name="secondaryVariant">#6eb3ed</color>
+    <color name="onPrimary">@android:color/black</color>
+    <color name="onSecondary">@android:color/white</color>
 </resources>
