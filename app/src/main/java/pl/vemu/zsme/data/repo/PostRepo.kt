@@ -23,7 +23,7 @@ class PostRepo @Inject constructor(
     fun searchPosts(query: String) = Pager(
         config = PagingConfig(
             pageSize = PAGE_SIZE,
-            enablePlaceholders = false, //TODO
+            enablePlaceholders = false,
             maxSize = PAGE_SIZE + (2 * PAGE_SIZE),
         ),
         remoteMediator = PostRemoteMediator(

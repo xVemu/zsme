@@ -1,4 +1,4 @@
-package pl.vemu.zsme.ui.detail
+package pl.vemu.zsme.ui.post.detail
 
 import android.view.ViewGroup
 import androidx.compose.runtime.Composable
@@ -18,7 +18,7 @@ import com.google.gson.reflect.TypeToken
 fun Gallery(imagesJson: String) {
     val imageType = object : TypeToken<List<String>>() {}.type
     val images: List<String> = Gson().fromJson(imagesJson, imageType)
-    HorizontalPager(state = rememberPagerState(pageCount = images.size)) { page ->
+    HorizontalPager(state = rememberPagerState(0), count = images.size) { page ->
         PhotoView(image = images[page])                 // setOnClickListener { fragment.switchUiVisibility() }
     }
 }

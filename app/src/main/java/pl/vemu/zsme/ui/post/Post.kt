@@ -37,8 +37,8 @@ fun Post(
 ) {
     val context = LocalContext.current
     val pagingItems = vm.posts.collectAsLazyPagingItems()
-    LazyColumn {
-        items(pagingItems) { post -> //TODO placeholder
+    LazyColumn { // TODO remember position when back
+        items(pagingItems) { post ->
             post?.let {
                 Card(
                     modifier = Modifier
@@ -120,9 +120,6 @@ fun HTMLText(
         }
     )
 }
-
-
-/*TODO show bottom nav hiding fix*/
 
 
 /*

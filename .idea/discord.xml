@@ -2,8 +2,6 @@
 <project version="4">
   <component name="DiscordProjectSettings">
     <option name="show" value="PROJECT_FILES" />
-  </component>
-  <component name="ProjectNotificationSettings">
-    <option name="askShowProject" value="false" />
+    <option name="description" value="" />
   </component>
 </project>

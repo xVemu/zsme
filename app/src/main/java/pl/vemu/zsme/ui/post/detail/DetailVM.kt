@@ -1,4 +1,4 @@
-package pl.vemu.zsme.ui.detail
+package pl.vemu.zsme.ui.post.detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

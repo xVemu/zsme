@@ -6,6 +6,7 @@
     <string name="search">Wyszukaj</string>
 
     <string name="post">Aktualności</string>
+    <string name="detail">@string/post</string>
     <string name="timetable">Plan lekcji</string>
     <string name="settings">Ustawienia</string>
     <string name="no_results">Brak wyników</string>

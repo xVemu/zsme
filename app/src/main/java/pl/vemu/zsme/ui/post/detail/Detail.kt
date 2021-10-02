@@ -1,4 +1,4 @@
-package pl.vemu.zsme.ui.detail
+package pl.vemu.zsme.ui.post.detail
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
@@ -27,10 +27,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.webkit.WebSettingsCompat
 import androidx.webkit.WebViewFeature
+import com.google.gson.Gson
 import pl.vemu.zsme.R
+import pl.vemu.zsme.paddingStart
 import pl.vemu.zsme.paddingTop
 import pl.vemu.zsme.ui.post.HTMLText
-import pl.vemu.zsme.ui.post.SmallColoredText
 
 @Composable
 fun Detail(
@@ -46,11 +47,11 @@ fun Detail(
         detailByVm?.let { detailModel ->
             Scaffold(
                 floatingActionButton = {
-                    detailModel.images?.let {
+                    detailModel.images?.let { images ->
                         ExtendedFloatingActionButton(
                             text = { Text(text = stringResource(id = R.string.gallery)) },
                             onClick = {
-                                navController.navigate("gallery")
+                                navController.navigate("gallery?images=" + Gson().toJson(images))
                             },
                             icon = {
                                 Icon(
@@ -77,11 +78,13 @@ fun Detail(
                     SelectionContainer {
                         WebView(html = detailModel.html)
                     }
-                    SmallColoredText(
-                        text = DateFormat.getMediumDateFormat(context).format(postModel.date)
-                    )
-                    SmallColoredText(text = postModel.author)
-                    SmallColoredText(text = postModel.category)
+                    Column(
+                        modifier = Modifier.paddingStart(8.dp)
+                    ) {
+                        Text(text = DateFormat.getMediumDateFormat(context).format(postModel.date))
+                        Text(text = postModel.author)
+                        Text(text = postModel.category)
+                    }
                 }
             }
         }
@@ -123,46 +126,6 @@ private fun WebView(
 @AndroidEntryPoint
 class DetailFragment : Fragment() {
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        setHasOptionsMenu(true)
-        binding.webView.settings.javaScriptEnabled = true
-        if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
-            val nightModeFlags = requireContext().resources.configuration.uiMode and
-                    Configuration.UI_MODE_NIGHT_MASK
-            val theme = when (nightModeFlags) {
-                Configuration.UI_MODE_NIGHT_YES -> WebSettingsCompat.FORCE_DARK_ON
-                Configuration.UI_MODE_NIGHT_NO -> WebSettingsCompat.FORCE_DARK_OFF
-                else -> WebSettingsCompat.FORCE_DARK_ON
-            }
-            WebSettingsCompat.setForceDark(binding.webView.settings, theme)
-        }
-        lifecycleScope.launchWhenStarted {
-            viewModel.detail.collect {
-                when (it) {
-                    is State.Success -> {
-                        binding.progressBarDetail.visibility = View.GONE
-                        binding.webView.loadData(it.data.html, "text/html; charset=UTF-8", null)
-                        it.data.images?.let { images ->
-                            binding.gallery.visibility = View.VISIBLE
-                            binding.gallery.setOnClickListener(
-                                Navigation.createNavigateOnClickListener(
-                                    DetailFragmentDirections.actionDetailFragmentToGalleryFragment(
-                                        images.toTypedArray()
-                                    )
-                                )
-                            )
-                        }
-                    }
-                    is State.Loading -> binding.progressBarDetail.visibility = View.VISIBLE
-                    is State.Error -> {
-                        binding.progressBarDetail.visibility = View.GONE
-                        Snackbar.make(binding.root, R.string.error, Snackbar.LENGTH_SHORT).show()
-                    }
-                }
-            }
-        }
-    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
         R.id.app_bar_share -> {
             val intent = Intent().apply {
@@ -179,12 +142,3 @@ class DetailFragment : Fragment() {
     }
 
 }*/
-/*      <ProgressBar
-        android:id="@+id/progress_bar_detail"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />*/

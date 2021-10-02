@@ -4,6 +4,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
@@ -33,12 +34,14 @@ private val DarkColors = darkColors( //TODO
 @Composable
 fun MainTheme(darkTheme: Boolean, content: @Composable () -> Unit) {
     val systemUiController = rememberSystemUiController()
-    /*SideEffect {
+    SideEffect {
+        //        statusbar #282828
+        //        navbar #2e2e2e
         systemUiController.setSystemBarsColor(
-            color = Color.Transparent,
+            color = if (darkTheme) DarkColors.surface else Color.Transparent,
             darkIcons = !darkTheme
         )
-    }*/
+    }
     MaterialTheme(
         colors = if (darkTheme) DarkColors else LightColors,
         content = content

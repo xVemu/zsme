@@ -27,7 +27,7 @@ fun Contact() {
                 Column(
                     modifier = Modifier
                         .weight(1F)
-                        .padding(12.dp, 7.dp) //TODO
+                        .padding(8.dp)
                 ) {
                     Text(
                         text = stringResource(id = item.headerText),
@@ -43,8 +43,6 @@ fun Contact() {
                 item.icon?.let {
                     IconButton(
                         onClick = { item.onClick(context) },
-                        modifier = Modifier
-                            .padding(8.dp)
                     ) {
                         Icon(
                             painter = painterResource(id = item.icon),
