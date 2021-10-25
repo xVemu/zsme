@@ -18,6 +18,6 @@ class TimetableRepo @Inject constructor() {
     }
 
     private fun makeArrayOfLinks(element: Element) = element.children().map {
-        TimetableModel(it.text(), it.child(0).attr("href"))
+        TimetableModel(it.text(), it.child(0).attr("href").removePrefix("plany/"))
     }
 }

@@ -1,22 +1,14 @@
-package pl.vemu.zsme.newsFragment;
+package pl.vemu.zsme.newsFragment
 
-import android.content.Context;
+import android.content.Context
+import androidx.work.Worker
+import androidx.work.WorkerParameters
 
-import androidx.annotation.NonNull;
-import androidx.work.Worker;
-import androidx.work.WorkerParameters;
-
-public class NewsWorker extends Worker {
-
-    public NewsWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
-        super(context, workerParams);
-    }
-
-    @NonNull
-    @Override
-    public Result doWork() {
+class NewsWorker(context: Context, workerParams: WorkerParameters) :
+    Worker(context, workerParams) {
+    override fun doWork(): Result {
 //        try {
-            /*List<NewsItem> downloaded = DownloadNews.INSTANCE.downloadNews(new Queries.Page(), 1);
+        /*List<NewsItem> downloaded = DownloadNews.INSTANCE.downloadNews(new Queries.Page(), 1);
             NewsItem firstNewsItem = downloaded.get(0);
             SharedPreferences memory = getApplicationContext().getSharedPreferences("latest-news", Context.MODE_PRIVATE);
             int fromMemory = memory.getInt("article", 0);
@@ -46,9 +38,8 @@ public class NewsWorker extends Worker {
                     NotificationManagerCompat.from(getApplicationContext()).notify(item.hashCode(), builder.build());
                 }
                 editor.putInt("article", firstNewsItem.hashCode()).apply();*/
-        return Result.success();
-    }
-    /*} catch(
+        return Result.success()
+    } /*} catch(
     IOException e)
 
     {

@@ -15,8 +15,6 @@ import org.junit.runner.RunWith;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
-import pl.vemu.zsme.newsFragment.NewsWorker;
-
 import static org.junit.Assert.assertEquals;
 
 /**

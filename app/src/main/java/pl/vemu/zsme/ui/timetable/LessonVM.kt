@@ -2,33 +2,25 @@ package pl.vemu.zsme.ui.timetable
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import pl.vemu.zsme.State
 import pl.vemu.zsme.data.model.LessonModel
 import pl.vemu.zsme.data.repo.LessonRepo
+import javax.inject.Inject
 
-class LessonVM constructor(
-    lessonRepo: LessonRepo,
-    url: String,
+@HiltViewModel
+class LessonVM @Inject constructor(
+    private val lessonRepo: LessonRepo
 ) : ViewModel() {
-    private val _list = MutableStateFlow<State<List<List<LessonModel>>>>(State.Success(emptyList()))
+    private val _list = MutableStateFlow<List<List<LessonModel>>>(emptyList())
     val list = _list.asStateFlow()
 
-    init {
+    fun init(url: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            _list.emit(State.Loading())
-            try {
-                _list.emit(State.Success(lessonRepo.getLesson(url)))
-            } catch (e: Exception) {
-                _list.emit(State.Error(e))
-            }
+            _list.value = lessonRepo.getLesson(url)
         }
     }
-
-    /*override fun onCleared() {
-        list.value = ArrayList()
-    }*/
 }

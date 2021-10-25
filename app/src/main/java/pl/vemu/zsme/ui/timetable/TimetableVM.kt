@@ -7,7 +7,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import pl.vemu.zsme.State
 import pl.vemu.zsme.data.model.TimetableModel
 import javax.inject.Inject
 
@@ -16,21 +15,12 @@ class TimetableVM @Inject constructor(
     private val timetableRepo: TimetableRepo,
 ) : ViewModel() {
     private val _list =
-        MutableStateFlow<State<List<List<TimetableModel>>>>(State.Success(emptyList()))
+        MutableStateFlow<List<List<TimetableModel>>>(emptyList())
     val list = _list.asStateFlow()
 
-    fun fetchTimetable() {
+    init {
         viewModelScope.launch(Dispatchers.IO) {
-            _list.emit(State.Loading())
-            try {
-                _list.emit(State.Success(timetableRepo.getTimetable()))
-            } catch (e: Exception) {
-                _list.emit(State.Error(e))
-            }
+            _list.value = timetableRepo.getTimetable()
         }
     }
-
-    /*override fun onCleared() {
-        list.value = ArrayList()
-    }*/
 }

@@ -79,3 +79,4 @@ lint/tmp/
 # lint/reports/
 /.idea/saveactions_settings.xml
 .DS_Store
+/app/schemas/pl.vemu.zsme.data.db.Database/

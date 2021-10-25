@@ -27,8 +27,8 @@ private val LightColors = lightColors(
 private val DarkColors = darkColors( //TODO
     primary = Color(0xFF2B65B4),
     primaryVariant = Color(0xFF6eb3ed),
-    secondary = Color(0xFFb47b2b),
-    secondaryVariant = Color(0xFFdac58b)
+    secondary = Color(0xFF2B65B4),
+    secondaryVariant = Color(0xFF6eb3ed)
 )
 
 @Composable

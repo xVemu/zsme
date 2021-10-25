@@ -39,6 +39,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.paging.ExperimentalPagingApi
 import androidx.work.*
+import com.google.accompanist.pager.ExperimentalPagerApi
 import dagger.hilt.android.AndroidEntryPoint
 import de.schnettler.datastore.manager.DataStoreManager
 import de.schnettler.datastore.manager.PreferenceRequest
@@ -50,7 +51,8 @@ import pl.vemu.zsme.ui.more.Settings
 import pl.vemu.zsme.ui.post.Post
 import pl.vemu.zsme.ui.post.detail.Detail
 import pl.vemu.zsme.ui.post.detail.Gallery
-import pl.vemu.zsme.ui.timetable.TimetableFragment
+import pl.vemu.zsme.ui.timetable.Lesson
+import pl.vemu.zsme.ui.timetable.Timetable
 import java.util.concurrent.TimeUnit
 
 val Context.dataStore by preferencesDataStore(name = "settings")
@@ -62,20 +64,21 @@ val Context.dataStore by preferencesDataStore(name = "settings")
 class MainActivity : AppCompatActivity()/*, OnDestinationChangedListener*/ {
 
     private val theme = PreferenceRequest(
-            key = stringPreferencesKey("theme"),
-            defaultValue = "-1"
+        key = stringPreferencesKey("theme"),
+        defaultValue = "-1"
     )
     private val language = PreferenceRequest(
-            key = stringPreferencesKey("language"),
-            defaultValue = "system"
+        key = stringPreferencesKey("language"),
+        defaultValue = "system"
     )
 
+    @ExperimentalPagerApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val dataStoreManager = DataStoreManager(this.dataStore)
         setContent {
             val themeFlow by dataStoreManager.getPreferenceFlow(theme)
-                    .collectAsState(initial = "system")
+                .collectAsState(initial = "system")
             MainTheme(if (themeFlow == "system") isSystemInDarkTheme() else themeFlow.toBoolean()) {
                 Main()
             }
@@ -94,6 +97,7 @@ class MainActivity : AppCompatActivity()/*, OnDestinationChangedListener*/ {
     }
 
 
+    @ExperimentalPagerApi
     @Preview
     @Composable
     private fun Main() {
@@ -101,44 +105,56 @@ class MainActivity : AppCompatActivity()/*, OnDestinationChangedListener*/ {
         val backStack by navController.currentBackStackEntryAsState()
         val currentDestination = backStack?.destination
         Scaffold(
-                topBar = {
-                    TopBar(currentDestination)
-                },
-                bottomBar = {
-                    BottomBar(currentDestination, navController)
-                }) { innerPadding ->
+            topBar = {
+                TopBar(currentDestination)
+            },
+            bottomBar = {
+                BottomBar(currentDestination, navController)
+            }) { innerPadding ->
             NavHost(
-                    navController = navController,
-                    startDestination = "post",
-                    modifier = Modifier.padding(innerPadding)
+                navController = navController,
+                startDestination = "post",
+                modifier = Modifier.padding(innerPadding)
             ) {
                 composable(BottomNavItem.POST.route) { Post(navController) }
                 composable(
-                        route = "detail/{postModelId}",
-                        arguments = listOf(
-                                navArgument(
-                                        "postModelId"
-                                ) {
-                                    type = NavType.IntType /*TODO change to parcerable*/
-                                }
-                        )
+                    route = "detail/{postModelId}",
+                    arguments = listOf(
+                        navArgument(
+                            "postModelId"
+                        ) {
+                            type = NavType.IntType /*TODO change to parcerable*/
+                        }
+                    )
                 ) { backStack ->
                     backStack.arguments?.getInt("postModelId")
-                            ?.let { postModelId -> Detail(navController, postModelId) }
+                        ?.let { postModelId -> Detail(navController, postModelId) }
                 }
                 composable(
-                        route = "gallery?images={images}",
-                        arguments = listOf(
-                                navArgument("images") {
-                                    nullable = true
-                                    type = NavType.StringType
-                                }
-                        )
+                    route = "gallery?images={images}",
+                    arguments = listOf(
+                        navArgument("images") {
+                            nullable = true
+                            type = NavType.StringType
+                        }
+                    )
                 ) { backStack ->
                     backStack.arguments?.getString("images")?.let { Gallery(it) }
                 } /*TODO argmuments string array*/
 
-                composable(BottomNavItem.TIMETABLE.route) { TimetableFragment() }
+                composable(BottomNavItem.TIMETABLE.route) { Timetable(navController) }
+                composable(
+                    route = "lesson/{url}",
+                    arguments = listOf(
+                        navArgument("url") {
+                            type = NavType.StringType
+                        }
+                    )
+                ) { backStack ->
+                    backStack.arguments?.getString("url")?.let { url ->
+                        Lesson(url)
+                    }
+                }
 
                 //                navigation(startDestination = BottomNavItem.MORE.route)
                 composable(BottomNavItem.MORE.route) { More(navController) }
@@ -150,31 +166,31 @@ class MainActivity : AppCompatActivity()/*, OnDestinationChangedListener*/ {
 
     @Composable
     private fun BottomBar(
-            currentDestination: NavDestination?,
-            navController: NavHostController
+        currentDestination: NavDestination?,
+        navController: NavHostController
     ) {
         BottomNavigation {
             BottomNavItem.values().forEach { item ->
                 BottomNavigationItem(
-                        icon = {
-                            Icon(
-                                    imageVector = item.icon,
-                                    contentDescription = stringResource(id = item.title)
-                            )
-                        },
-                        label = { Text(text = stringResource(id = item.title)) },
-                        selected = currentDestination?.hierarchy?.any { it.route == item.route } == true, //TODO backstack
-                        selectedContentColor = MaterialTheme.colors.secondary,
-                        unselectedContentColor = Color.Gray,
-                        onClick = {
-                            navController.navigate(item.route) {
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
+                    icon = {
+                        Icon(
+                            imageVector = item.icon,
+                            contentDescription = stringResource(id = item.title)
+                        )
+                    },
+                    label = { Text(text = stringResource(id = item.title)) },
+                    selected = currentDestination?.hierarchy?.any { it.route == item.route } == true, //TODO backstack
+                    selectedContentColor = MaterialTheme.colors.secondary,
+                    unselectedContentColor = Color.Gray,
+                    onClick = {
+                        navController.navigate(item.route) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
                             }
+                            launchSingleTop = true
+                            restoreState = true
                         }
+                    }
                 )
             }
         }
@@ -184,40 +200,40 @@ class MainActivity : AppCompatActivity()/*, OnDestinationChangedListener*/ {
     @Composable
     private fun TopBar(currentDestination: NavDestination?) {
         TopAppBar(
-                title = {
-                    Text(
-                            text = "ZSME"
-                            /*TODO stringResource(
-                                id = resources.getIdentifier(
-                                    currentDestination?.route ?: "app_name",
-                                    "string",
-                                    packageName
+            title = {
+                Text(
+                    text = "ZSME"
+                    /*TODO stringResource(
+                        id = resources.getIdentifier(
+                            currentDestination?.route ?: "app_name",
+                            "string",
+                            packageName
+                        )
+                    )*/,
+                    style = MaterialTheme.typography.h6,
+                    modifier = Modifier.padding(20.dp, 4.dp, 4.dp, 4.dp)
+                )
+            },
+            actions =
+            {
+                currentDestination?.route?.let {
+                    when {
+                        it == "post" -> {
+
+                        }
+                        it.startsWith("detail") -> {
+                            IconButton(onClick = {
+
+                            }) { //TODO
+                                Icon(
+                                    imageVector = Icons.Rounded.Share,
+                                    contentDescription = stringResource(R.string.share)
                                 )
-                            )*/,
-                            style = MaterialTheme.typography.h6,
-                            modifier = Modifier.padding(20.dp, 4.dp, 4.dp, 4.dp)
-                    )
-                },
-                actions =
-                {
-                    currentDestination?.route?.let {
-                        when {
-                            it == "post" -> {
-
-                            }
-                            it.startsWith("detail") -> {
-                                IconButton(onClick = {
-
-                                }) { //TODO
-                                    Icon(
-                                            imageVector = Icons.Rounded.Share,
-                                            contentDescription = stringResource(R.string.share)
-                                    )
-                                }
                             }
                         }
                     }
                 }
+            }
         )
     }
 
@@ -231,15 +247,15 @@ class MainActivity : AppCompatActivity()/*, OnDestinationChangedListener*/ {
 
     private fun setupNotification() { //TODO
         val constraints =
-                Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
+            Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
         val worker = PeriodicWorkRequestBuilder<NewsWorker>(
-                30L,
-                TimeUnit.MINUTES,
-                15L,
-                TimeUnit.MINUTES
+            30L,
+            TimeUnit.MINUTES,
+            15L,
+            TimeUnit.MINUTES
         ).setConstraints(constraints).build()
         WorkManager.getInstance(applicationContext)
-                .enqueueUniquePeriodicWork("SyncPostWorker", ExistingPeriodicWorkPolicy.KEEP, worker)
+            .enqueueUniquePeriodicWork("SyncPostWorker", ExistingPeriodicWorkPolicy.KEEP, worker)
     }
 
     /*override fun onDestinationChanged(
@@ -260,7 +276,7 @@ class MainActivity : AppCompatActivity()/*, OnDestinationChangedListener*/ {
             val importance = NotificationManager.IMPORTANCE_DEFAULT
             val channel = NotificationChannel("ZSME", name, importance)
             val notificationManager: NotificationManager =
-                    getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
         }
     }
