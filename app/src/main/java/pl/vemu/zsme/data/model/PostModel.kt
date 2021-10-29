@@ -17,6 +17,6 @@ data class PostModel(
     val content: String,
     val excerpt: String,
     val author: String,
-    val thumbnail: String,
+    val thumbnail: String?,
     val category: String,
 ) : Parcelable

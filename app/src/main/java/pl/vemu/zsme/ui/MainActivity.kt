@@ -14,7 +14,6 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.DynamicFeed
 import androidx.compose.material.icons.rounded.EventNote
-import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material.icons.rounded.Subject
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -44,13 +43,13 @@ import dagger.hilt.android.AndroidEntryPoint
 import de.schnettler.datastore.manager.DataStoreManager
 import de.schnettler.datastore.manager.PreferenceRequest
 import pl.vemu.zsme.R
-import pl.vemu.zsme.newsFragment.NewsWorker
 import pl.vemu.zsme.ui.more.Contact
 import pl.vemu.zsme.ui.more.More
 import pl.vemu.zsme.ui.more.Settings
 import pl.vemu.zsme.ui.post.Post
-import pl.vemu.zsme.ui.post.detail.Detail
+import pl.vemu.zsme.ui.post.PostWorker
 import pl.vemu.zsme.ui.post.detail.Gallery
+import pl.vemu.zsme.ui.post.detail.detail
 import pl.vemu.zsme.ui.timetable.Lesson
 import pl.vemu.zsme.ui.timetable.Timetable
 import java.util.concurrent.TimeUnit
@@ -61,17 +60,18 @@ val Context.dataStore by preferencesDataStore(name = "settings")
 
 @ExperimentalPagingApi
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity()/*, OnDestinationChangedListener*/ {
+class MainActivity : AppCompatActivity() {
 
     private val theme = PreferenceRequest(
         key = stringPreferencesKey("theme"),
-        defaultValue = "-1"
+        defaultValue = "system"
     )
     private val language = PreferenceRequest(
         key = stringPreferencesKey("language"),
         defaultValue = "system"
     )
 
+    @ExperimentalMaterialApi
     @ExperimentalPagerApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,6 +83,7 @@ class MainActivity : AppCompatActivity()/*, OnDestinationChangedListener*/ {
                 Main()
             }
         }
+        setupNotification()
         /*lifecycleScope.launch {
             dataStoreManager.getPreferenceFlow(language).collect { lang ->
                 Lingver.getInstance().apply {
@@ -97,6 +98,7 @@ class MainActivity : AppCompatActivity()/*, OnDestinationChangedListener*/ {
     }
 
 
+    @ExperimentalMaterialApi
     @ExperimentalPagerApi
     @Preview
     @Composable
@@ -104,9 +106,10 @@ class MainActivity : AppCompatActivity()/*, OnDestinationChangedListener*/ {
         val navController = rememberNavController()
         val backStack by navController.currentBackStackEntryAsState()
         val currentDestination = backStack?.destination
+        var action = @Composable {}
         Scaffold(
             topBar = {
-                TopBar(currentDestination)
+                TopBar(action)
             },
             bottomBar = {
                 BottomBar(currentDestination, navController)
@@ -123,12 +126,14 @@ class MainActivity : AppCompatActivity()/*, OnDestinationChangedListener*/ {
                         navArgument(
                             "postModelId"
                         ) {
-                            type = NavType.IntType /*TODO change to parcerable*/
+                            type = NavType.IntType /*TODO change to parcelable*/
                         }
                     )
                 ) { backStack ->
                     backStack.arguments?.getInt("postModelId")
-                        ?.let { postModelId -> Detail(navController, postModelId) }
+                        ?.let { postModelId ->
+                            action = detail(navController, postModelId)
+                        }
                 }
                 composable(
                     route = "gallery?images={images}",
@@ -198,7 +203,9 @@ class MainActivity : AppCompatActivity()/*, OnDestinationChangedListener*/ {
 
     /*TODO hide when scrolling*/
     @Composable
-    private fun TopBar(currentDestination: NavDestination?) {
+    private fun TopBar(
+        action: @Composable () -> Unit
+    ) {
         TopAppBar(
             title = {
                 Text(
@@ -214,26 +221,7 @@ class MainActivity : AppCompatActivity()/*, OnDestinationChangedListener*/ {
                     modifier = Modifier.padding(20.dp, 4.dp, 4.dp, 4.dp)
                 )
             },
-            actions =
-            {
-                currentDestination?.route?.let {
-                    when {
-                        it == "post" -> {
-
-                        }
-                        it.startsWith("detail") -> {
-                            IconButton(onClick = {
-
-                            }) { //TODO
-                                Icon(
-                                    imageVector = Icons.Rounded.Share,
-                                    contentDescription = stringResource(R.string.share)
-                                )
-                            }
-                        }
-                    }
-                }
-            }
+            actions = { action() }
         )
     }
 
@@ -248,7 +236,7 @@ class MainActivity : AppCompatActivity()/*, OnDestinationChangedListener*/ {
     private fun setupNotification() { //TODO
         val constraints =
             Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
-        val worker = PeriodicWorkRequestBuilder<NewsWorker>(
+        val worker = PeriodicWorkRequestBuilder<PostWorker>(
             30L,
             TimeUnit.MINUTES,
             15L,

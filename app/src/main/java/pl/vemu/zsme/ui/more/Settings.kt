@@ -43,7 +43,7 @@ private fun theme() =
     PreferenceItem.ListPreference(
         request = PreferenceRequest(
             key = stringPreferencesKey("theme"),
-            defaultValue = "-1"
+            defaultValue = "system"
         ),
         title = stringResource(R.string.theme),
         summary = stringResource(R.string.system_default),

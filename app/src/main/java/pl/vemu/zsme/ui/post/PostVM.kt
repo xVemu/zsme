@@ -16,6 +16,5 @@ class PostVM @Inject constructor(
 
     val query = MutableStateFlow("")
 
-
     val posts = query.flatMapLatest { postRepo.searchPosts(it) }.cachedIn(viewModelScope)
 }

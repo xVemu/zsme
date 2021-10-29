@@ -1,6 +1,7 @@
 package pl.vemu.zsme.ui.post.detail
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.res.Configuration
 import android.text.format.DateFormat
 import android.webkit.WebView
@@ -9,12 +10,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ExtendedFloatingActionButton
-import androidx.compose.material.Icon
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.PhotoLibrary
+import androidx.compose.material.icons.rounded.Share
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -34,11 +33,11 @@ import pl.vemu.zsme.paddingTop
 import pl.vemu.zsme.ui.post.HTMLText
 
 @Composable
-fun Detail(
+fun detail(
     navController: NavController,
     postModelId: Int,
     vm: DetailVM = hiltViewModel()
-) {
+): @Composable () -> Unit { // returns action in top appbar
     vm.init(postModelId)
     val context = LocalContext.current
     val postModelByVm by vm.postModel.collectAsState()
@@ -89,6 +88,23 @@ fun Detail(
             }
         }
     }
+    return {
+        IconButton(onClick = {
+            val intent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, postModelByVm?.link)
+                type = "text/plain"
+            }
+            val shareIntent = Intent.createChooser(intent, null)
+            context.startActivity(shareIntent)
+        }) {
+            Icon(
+                imageVector = Icons.Rounded.Share,
+                contentDescription = stringResource(R.string.share)
+            )
+        }
+    }
+
 }
 
 @SuppressLint("SetJavaScriptEnabled")
@@ -121,24 +137,3 @@ private fun WebView(
             it.loadData(html, "text/html; charset=UTF-8", null)
         })
 }
-
-/*
-@AndroidEntryPoint
-class DetailFragment : Fragment() {
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
-        R.id.app_bar_share -> {
-            val intent = Intent().apply {
-                action = Intent.ACTION_SEND
-                putExtra(Intent.EXTRA_TEXT, args.postModel.link)
-                putExtra(Intent.EXTRA_TITLE, args.postModel.title)
-                type = "text/plain"
-            }
-            val shareIntent = Intent.createChooser(intent, "Wybierz")
-            startActivity(shareIntent)
-            true
-        }
-        else -> super.onOptionsItemSelected(item)
-    }
-
-}*/

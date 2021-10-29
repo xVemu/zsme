@@ -1,5 +1,6 @@
 package pl.vemu.zsme.ui.post
 
+import android.content.Context
 import android.graphics.Typeface
 import android.text.format.DateFormat
 import android.view.View
@@ -11,7 +12,7 @@ import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -22,14 +23,19 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.text.HtmlCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import coil.compose.rememberImagePainter
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import pl.vemu.zsme.R
+import pl.vemu.zsme.data.model.PostModel
 import pl.vemu.zsme.paddingBottom
 
 
-@OptIn(ExperimentalMaterialApi::class)
+@ExperimentalMaterialApi
 @Composable
 fun Post(
     navController: NavController,
@@ -37,52 +43,118 @@ fun Post(
 ) {
     val context = LocalContext.current
     val pagingItems = vm.posts.collectAsLazyPagingItems()
-    LazyColumn { // TODO remember position when back
-        items(pagingItems) { post ->
-            post?.let {
-                Card(
-                    modifier = Modifier
-                        .heightIn(150.dp)
-                        .padding(8.dp),
-                    elevation = 2.dp,
-                    onClick = {
-                        navController.navigate("detail/${it.id}")
-                    }
-                ) {
-                    Row {
-                        Image(
-                            painter = rememberImagePainter(it.thumbnail) {
-                                placeholder(R.drawable.zsme)
-                                crossfade(true)
-                            },
-                            contentDescription = stringResource(R.string.thumbnail),
-                            modifier = Modifier
-                                .size(108.dp)
-                                .padding(8.dp),
-                            contentScale = ContentScale.Crop
+    var isLoading by remember { mutableStateOf(false) }
+    pagingItems.apply {
+        isLoading = when {
+            loadState.refresh is LoadState.Loading -> true
+            loadState.append is LoadState.Loading -> false
+            else -> false
+        }
+    }
+    SwipeRefresh(
+        state = rememberSwipeRefreshState(isRefreshing = isLoading),
+        onRefresh = { pagingItems.refresh() },
+        indicator = { state, trigger ->
+            SwipeRefreshIndicator(
+                state = state,
+                refreshTriggerDistance = trigger,
+                contentColor = MaterialTheme.colors.secondary
+            )
+        }
+    ) {
+        /*lazyMovieItems.apply {
+            when {
+                loadState.refresh is LoadState.Loading -> {
+                    item { LoadingView(modifier = Modifier.fillParentMaxSize()) }
+                }
+                loadState.append is LoadState.Loading -> {
+                    item { LoadingItem() }
+                }
+                loadState.refresh is LoadState.Error -> {
+                    val e = lazyMovieItems.loadState.refresh as LoadState.Error
+                    item {
+                        ErrorItem(
+                            message = e.error.localizedMessage!!,
+                            modifier = Modifier.fillParentMaxSize(),
+                            onClickRetry = { retry() }
                         )
-                        Column(
-                            modifier = Modifier.padding(8.dp)
-                        ) {
-                            HTMLText(
-                                html = it.title,
-                                bold = true,
-                                centered = true
-                            )
-                            HTMLText(
-                                html = it.excerpt,
-                                modifier = Modifier.paddingBottom(8.dp)
-                            )
-                            SmallColoredText(
-                                text = DateFormat.getMediumDateFormat(context).format(it.date)
-                            )
-                            SmallColoredText(text = it.author)
-                            SmallColoredText(text = it.category)
-                        }
                     }
+                }
+                loadState.append is LoadState.Error -> {
+                    val e = lazyMovieItems.loadState.append as LoadState.Error
+                    item {
+                        ErrorItem(
+                            message = e.error.localizedMessage!!,
+                            onClickRetry = { retry() }
+                        )
+                    }
+                }
+            }*/
+        LazyColumn { // TODO remember position when back
+            items(pagingItems) { post ->
+                post?.let {
+                    PostCard(navController, it, context)
                 }
             }
         }
+    }
+}
+
+@ExperimentalMaterialApi
+@Composable
+private fun PostCard(
+    navController: NavController,
+    postModel: PostModel,
+    context: Context
+) {
+    Card(
+        modifier = Modifier
+            .heightIn(150.dp)
+            .padding(8.dp),
+        elevation = 2.dp,
+        onClick = {
+            navController.navigate("detail/${postModel.id}")
+        }
+    ) {
+        Row {
+            Image(
+                painter = rememberImagePainter(postModel.thumbnail) {
+                    placeholder(R.drawable.zsme)
+                    crossfade(true)
+                },
+                contentDescription = stringResource(R.string.thumbnail),
+                modifier = Modifier
+                    .size(108.dp)
+                    .padding(8.dp),
+                contentScale = ContentScale.Crop
+            )
+            PostText(postModel, context)
+        }
+    }
+}
+
+@Composable
+private fun PostText(
+    postModel: PostModel,
+    context: Context
+) {
+    Column(
+        modifier = Modifier.padding(8.dp)
+    ) {
+        HTMLText(
+            html = postModel.title,
+            bold = true,
+            centered = true
+        )
+        HTMLText(
+            html = postModel.excerpt,
+            modifier = Modifier.paddingBottom(8.dp)
+        )
+        SmallColoredText(
+            text = DateFormat.getMediumDateFormat(context).format(postModel.date)
+        )
+        SmallColoredText(text = postModel.author)
+        SmallColoredText(text = postModel.category)
     }
 }
 
@@ -123,12 +195,6 @@ fun HTMLText(
 
 
 /*
-    @Inject
-    lateinit var postAdapter: PostAdapter
-
-    @Inject
-    lateinit var postDao: PostDAO
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setHasOptionsMenu(true)
         setupRecyclerView()

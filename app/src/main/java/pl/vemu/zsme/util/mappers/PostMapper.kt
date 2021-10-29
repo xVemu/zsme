@@ -13,7 +13,7 @@ class PostMapper @Inject constructor() : EntityMapper<PostEntity, PostModel> {
         content = entity.content.rendered,
         excerpt = entity.excerpt.rendered,
         author = entity.embedded.author[0].name,
-        thumbnail = entity.embedded.wpFeaturedmedia[0].mediaDetails.sizes.thumbnail.sourceUrl,
+        thumbnail = entity.embedded.wpFeaturedmedia?.get(0)?.mediaDetails?.sizes?.thumbnail?.sourceUrl,
         category = entity.embedded.category[0][0].name,
     )
 

@@ -71,8 +71,8 @@ fun Timetable(
                             fontSize = 18.sp,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(8.dp)
                                 .clickable { navController.navigate("lesson/" + item.url) }
+                                .padding(8.dp)
                         )
                     }
             }
