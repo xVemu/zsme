@@ -81,4 +81,5 @@
     <string name="no_app">Brak aplikacji.</string>
     <string name="notification_summary">Zarządzaj powiadomieniami</string>
     <string name="image">Zdjęcie</string>
+    <string name="back_button">Cofnij</string>
 </resources>

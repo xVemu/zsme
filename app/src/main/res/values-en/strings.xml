@@ -47,4 +47,5 @@
     <string name="notification_summary">Manage your notifications</string>
     <string name="image">Image</string>
     <string name="detail">@string/post</string>
+    <string name="back_button">Back arrow</string>
 </resources>

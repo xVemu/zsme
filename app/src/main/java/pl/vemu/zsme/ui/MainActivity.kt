@@ -12,10 +12,9 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.DynamicFeed
-import androidx.compose.material.icons.rounded.EventNote
-import androidx.compose.material.icons.rounded.Subject
+import androidx.compose.material.icons.rounded.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -23,25 +22,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import androidx.navigation.NavDestination
+import androidx.navigation.*
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import androidx.paging.ExperimentalPagingApi
 import androidx.work.*
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.yariksoffice.lingver.Lingver
 import dagger.hilt.android.AndroidEntryPoint
 import de.schnettler.datastore.manager.DataStoreManager
 import de.schnettler.datastore.manager.PreferenceRequest
+import kotlinx.coroutines.flow.collectLatest
 import pl.vemu.zsme.R
 import pl.vemu.zsme.ui.more.Contact
 import pl.vemu.zsme.ui.more.More
@@ -62,11 +59,11 @@ val Context.dataStore by preferencesDataStore(name = "settings")
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    private val theme = PreferenceRequest(
+    private val themePreference = PreferenceRequest(
         key = stringPreferencesKey("theme"),
         defaultValue = "system"
     )
-    private val language = PreferenceRequest(
+    private val languagePreference = PreferenceRequest(
         key = stringPreferencesKey("language"),
         defaultValue = "system"
     )
@@ -77,22 +74,21 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val dataStoreManager = DataStoreManager(this.dataStore)
         setContent {
-            val themeFlow by dataStoreManager.getPreferenceFlow(theme)
+            val theme by dataStoreManager.getPreferenceFlow(themePreference)
                 .collectAsState(initial = "system")
-            MainTheme(if (themeFlow == "system") isSystemInDarkTheme() else themeFlow.toBoolean()) {
+            MainTheme(if (theme == "system") isSystemInDarkTheme() else theme.toBoolean()) {
                 Main()
+            }
+            LaunchedEffect("changeLanguage") {
+                dataStoreManager.getPreferenceFlow(languagePreference).collectLatest { lang ->
+                    Lingver.getInstance().apply {
+                        if (lang == "system") setFollowSystemLocale(this@MainActivity)
+                        else setLocale(this@MainActivity, lang)
+                    }
+                }
             }
         }
         setupNotification()
-        /*lifecycleScope.launch {
-            dataStoreManager.getPreferenceFlow(language).collect { lang ->
-                Lingver.getInstance().apply {
-                    if (lang == "system") setFollowSystemLocale(this@MainActivity)
-                    else setLocale(this@MainActivity, lang)
-                }
-                this@MainActivity.recreate()
-            }
-        }TODO*/
         //        createNotificationChannel()
         //        setupNotification()
     }
@@ -109,62 +105,67 @@ class MainActivity : AppCompatActivity() {
         var action = @Composable {}
         Scaffold(
             topBar = {
-                TopBar(action)
+                TopBar(navController, currentDestination, action)
             },
             bottomBar = {
                 BottomBar(currentDestination, navController)
             }) { innerPadding ->
             NavHost(
                 navController = navController,
-                startDestination = "post",
+                startDestination = BottomNavItem.POST.route,
                 modifier = Modifier.padding(innerPadding)
             ) {
-                composable(BottomNavItem.POST.route) { Post(navController) }
-                composable(
-                    route = "detail/{postModelId}",
-                    arguments = listOf(
-                        navArgument(
-                            "postModelId"
-                        ) {
-                            type = NavType.IntType /*TODO change to parcelable*/
-                        }
-                    )
-                ) { backStack ->
-                    backStack.arguments?.getInt("postModelId")
-                        ?.let { postModelId ->
-                            action = detail(navController, postModelId)
-                        }
+                navigation("post", BottomNavItem.POST.route) {
+                    composable("post") { Post(navController) }
+                    composable(
+                        route = "detail/{postModelId}",
+                        arguments = listOf(
+                            navArgument(
+                                "postModelId"
+                            ) {
+                                type = NavType.IntType /*TODO change to parcelable*/
+                            }
+                        )
+                    ) { backStack ->
+                        backStack.arguments?.getInt("postModelId")
+                            ?.let { postModelId ->
+                                action = detail(navController, postModelId)
+                            }
+                    }
+                    composable(
+                        route = "gallery?images={images}",
+                        arguments = listOf(
+                            navArgument("images") {
+                                nullable = true
+                                type = NavType.StringType
+                            }
+                        )
+                    ) { backStack ->
+                        backStack.arguments?.getString("images")?.let { Gallery(it) }
+                    } /*TODO argmuments string array*/
                 }
-                composable(
-                    route = "gallery?images={images}",
-                    arguments = listOf(
-                        navArgument("images") {
-                            nullable = true
-                            type = NavType.StringType
-                        }
-                    )
-                ) { backStack ->
-                    backStack.arguments?.getString("images")?.let { Gallery(it) }
-                } /*TODO argmuments string array*/
 
-                composable(BottomNavItem.TIMETABLE.route) { Timetable(navController) }
-                composable(
-                    route = "lesson/{url}",
-                    arguments = listOf(
-                        navArgument("url") {
-                            type = NavType.StringType
+                navigation("timetable", BottomNavItem.TIMETABLE.route) {
+                    composable("timetable") { Timetable(navController) }
+                    composable(
+                        route = "lesson/{url}",
+                        arguments = listOf(
+                            navArgument("url") {
+                                type = NavType.StringType
+                            }
+                        )
+                    ) { backStack ->
+                        backStack.arguments?.getString("url")?.let { url ->
+                            Lesson(url)
                         }
-                    )
-                ) { backStack ->
-                    backStack.arguments?.getString("url")?.let { url ->
-                        Lesson(url)
                     }
                 }
 
-                //                navigation(startDestination = BottomNavItem.MORE.route)
-                composable(BottomNavItem.MORE.route) { More(navController) }
-                composable("contact") { Contact() }
-                composable("settings") { Settings() }
+                navigation("more", BottomNavItem.MORE.route) {
+                    composable("more") { More(navController) }
+                    composable("contact") { Contact() }
+                    composable("settings") { Settings() }
+                }
             }
         }
     }
@@ -184,7 +185,7 @@ class MainActivity : AppCompatActivity() {
                         )
                     },
                     label = { Text(text = stringResource(id = item.title)) },
-                    selected = currentDestination?.hierarchy?.any { it.route == item.route } == true, //TODO backstack
+                    selected = currentDestination?.hierarchy?.any { it.route == item.route } == true,
                     selectedContentColor = MaterialTheme.colors.secondary,
                     unselectedContentColor = Color.Gray,
                     onClick = {
@@ -204,32 +205,49 @@ class MainActivity : AppCompatActivity() {
     /*TODO hide when scrolling*/
     @Composable
     private fun TopBar(
+        navController: NavController,
+        currentDestination: NavDestination?,
         action: @Composable () -> Unit
     ) {
-        TopAppBar(
-            title = {
-                Text(
-                    text = "ZSME"
-                    /*TODO stringResource(
-                        id = resources.getIdentifier(
-                            currentDestination?.route ?: "app_name",
-                            "string",
-                            packageName
-                        )
-                    )*/,
-                    style = MaterialTheme.typography.h6,
-                    modifier = Modifier.padding(20.dp, 4.dp, 4.dp, 4.dp)
+        val backArrow = @Composable {
+            IconButton(onClick = {
+                navController.popBackStack()
+            }) {
+                Icon(
+                    imageVector = Icons.Rounded.ArrowBack,
+                    contentDescription = stringResource(id = R.string.back_button),
                 )
-            },
+            }
+        }
+        val startDestination = currentDestination?.parent?.startDestinationRoute
+        val text = @Composable {
+            Text(
+                text = stringResource(
+                    id = resources.getIdentifier(
+                        startDestination ?: "app_name",
+                        "string",
+                        packageName
+                    )
+                )
+            )
+        }
+        if (startDestination != currentDestination?.route)
+            TopAppBar(
+                navigationIcon = backArrow,
+                title = text,
+                actions = { action() }
+            )
+        else TopAppBar(
+            title = text,
             actions = { action() }
         )
     }
 
     enum class BottomNavItem(val route: String, val icon: ImageVector, @StringRes val title: Int) {
 
-        POST("post", Icons.Rounded.DynamicFeed, R.string.post), //TODO web icon?
-        TIMETABLE("timetable", Icons.Rounded.EventNote, R.string.timetable),
-        MORE("more", Icons.Rounded.Subject, R.string.more);
+        POST("postNav", Icons.Rounded.DynamicFeed, R.string.post), //TODO web icon?
+        TIMETABLE("timetableNav", Icons.Rounded.EventNote, R.string.timetable),
+        MORE("moreNav", Icons.Rounded.Subject, R.string.more);
 
     }
 
@@ -246,17 +264,17 @@ class MainActivity : AppCompatActivity() {
             .enqueueUniquePeriodicWork("SyncPostWorker", ExistingPeriodicWorkPolicy.KEEP, worker)
     }
 
-    /*override fun onDestinationChanged(
-        controller: NavController,
-        destination: NavDestination,
-        arguments: Bundle?
-    ) {
-        val params = binding.toolbar.layoutParams as AppBarLayout.LayoutParams
-        if (destination.id == R.id.postFragment) params.scrollFlags =
-            (AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
-                    or AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS)
-        else params.scrollFlags = 0
-    }*/
+/*override fun onDestinationChanged(
+    controller: NavController,
+    destination: NavDestination,
+    arguments: Bundle?
+) {
+    val params = binding.toolbar.layoutParams as AppBarLayout.LayoutParams
+    if (destination.id == R.id.postFragment) params.scrollFlags =
+        (AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
+                or AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS)
+    else params.scrollFlags = 0
+}*/
 
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -268,10 +286,11 @@ class MainActivity : AppCompatActivity() {
             notificationManager.createNotificationChannel(channel)
         }
     }
-    /* TODO check
-    * internet refresh
-    * shortcuts
-    * notification
-    * detail from link
-    * */
+/* TODO check
+* lingver change language when aab instead of apk
+* internet refresh
+* shortcuts
+* notification
+* detail from link
+* */
 }
