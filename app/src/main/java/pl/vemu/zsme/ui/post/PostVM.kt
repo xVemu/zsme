@@ -2,8 +2,10 @@ package pl.vemu.zsme.ui.post
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.ExperimentalPagingApi
 import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import pl.vemu.zsme.data.repo.PostRepo
@@ -16,5 +18,7 @@ class PostVM @Inject constructor(
 
     val query = MutableStateFlow("")
 
+    @ExperimentalCoroutinesApi
+    @ExperimentalPagingApi
     val posts = query.flatMapLatest { postRepo.searchPosts(it) }.cachedIn(viewModelScope)
 }

@@ -7,7 +7,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.*
+import androidx.compose.material.ContentAlpha
+import androidx.compose.material.Tab
+import androidx.compose.material.TabRow
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -24,7 +28,6 @@ import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 import pl.vemu.zsme.R
 
-//TODO arrow back remove
 @ExperimentalPagerApi
 @Composable
 fun Timetable(
@@ -41,16 +44,15 @@ fun Timetable(
     val timetableList by vm.list.collectAsState()
     Column(Modifier.fillMaxSize()) {
         TabRow(
-            /*TODO elevation same as TopAppBar*/
             selectedTabIndex = pagerState.currentPage,
-            contentColor = MaterialTheme.colors.secondary,
+            backgroundColor = MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.primary
         ) {
             names.forEachIndexed { index, name ->
                 Tab(
-                    text = { Text(text = name) },
+                    text = { androidx.compose.material.Text(text = name) },
                     selected = pagerState.currentPage == index,
-                    selectedContentColor = MaterialTheme.colors.secondary,
-                    unselectedContentColor = MaterialTheme.colors.onBackground.copy(alpha = ContentAlpha.medium),
+                    unselectedContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = ContentAlpha.medium),
                     onClick = {
                         coroutines.launch {
                             pagerState.animateScrollToPage(index)
@@ -63,7 +65,7 @@ fun Timetable(
             count = names.size,
             state = pagerState,
         ) { page ->
-            LazyColumn {
+            LazyColumn { /*TODO grid*/
                 if (timetableList.isNotEmpty())
                     items(timetableList[page]) { item ->
                         Text(

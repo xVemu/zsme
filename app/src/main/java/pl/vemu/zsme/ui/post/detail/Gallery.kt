@@ -13,7 +13,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 
-@OptIn(ExperimentalPagerApi::class)
+@ExperimentalPagerApi
 @Composable
 fun Gallery(imagesJson: String) {
     val imageType = object : TypeToken<List<String>>() {}.type

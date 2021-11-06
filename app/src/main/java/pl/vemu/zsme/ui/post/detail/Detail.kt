@@ -6,14 +6,13 @@ import android.content.res.Configuration
 import android.text.format.DateFormat
 import android.webkit.WebView
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.PhotoLibrary
 import androidx.compose.material.icons.rounded.Share
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -32,6 +31,7 @@ import pl.vemu.zsme.paddingStart
 import pl.vemu.zsme.paddingTop
 import pl.vemu.zsme.ui.post.HTMLText
 
+@ExperimentalMaterial3Api
 @Composable
 fun detail(
     navController: NavController,
@@ -67,12 +67,10 @@ fun detail(
                 ) {
                     HTMLText(
                         html = postModel.title,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .paddingTop(8.dp),
-                        bold = true,
+                        modifier = Modifier.paddingTop(8.dp),
                         centered = true,
-                        fontSize = 18F
+                        color = MaterialTheme.colorScheme.primary,
+                        textStyle = MaterialTheme.typography.bodyLarge
                     )
                     SelectionContainer {
                         WebView(html = detailModel.html)

@@ -18,7 +18,6 @@
         android:theme="@style/MainTheme">
         <activity
             android:name=".ui.MainActivity"
-            android:theme="@style/MainTheme.NoActionBar"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

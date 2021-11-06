@@ -22,7 +22,8 @@ import de.schnettler.datastore.manager.PreferenceRequest
 import pl.vemu.zsme.R
 import pl.vemu.zsme.ui.dataStore
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterialApi::class)
+@ExperimentalMaterialApi
+@ExperimentalComposeUiApi
 @Preview
 @Composable
 fun Settings() {

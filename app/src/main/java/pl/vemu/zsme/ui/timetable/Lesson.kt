@@ -4,7 +4,11 @@ import android.os.Build
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.*
+import androidx.compose.material.ContentAlpha
+import androidx.compose.material.ScrollableTabRow
+import androidx.compose.material.Tab
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -55,15 +59,15 @@ fun Lesson(
     Column(Modifier.fillMaxSize()) {
         ScrollableTabRow( /*TODO elevation same as TopAppBar*/
             selectedTabIndex = pagerState.currentPage,
-            contentColor = MaterialTheme.colors.secondary,
+            contentColor = MaterialTheme.colorScheme.secondary,
             edgePadding = 0.dp
         ) {
             names.forEachIndexed { index, name ->
                 Tab(
                     text = { Text(text = name) },
                     selected = pagerState.currentPage == index,
-                    selectedContentColor = MaterialTheme.colors.secondary,
-                    unselectedContentColor = MaterialTheme.colors.onBackground.copy(alpha = ContentAlpha.medium),
+                    selectedContentColor = MaterialTheme.colorScheme.secondary,
+                    unselectedContentColor = MaterialTheme.colorScheme.onBackground.copy(alpha = ContentAlpha.medium),
                     onClick = {
                         coroutines.launch {
                             pagerState.animateScrollToPage(index)
@@ -113,14 +117,14 @@ private fun LessonItem(
                 Text(
                     text = it,
                     fontSize = 13.sp,
-                    color = MaterialTheme.colors.onBackground.copy(alpha = ContentAlpha.medium)
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = ContentAlpha.medium)
                 )
             }
             item.timeFinish?.let {
                 Text(
                     text = it,
                     fontSize = 13.sp,
-                    color = MaterialTheme.colors.onBackground.copy(alpha = ContentAlpha.medium)
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = ContentAlpha.medium)
                 )
             }
         }
@@ -143,7 +147,7 @@ private fun LessonItem(
                     Text(
                         text = it,
                         fontSize = 13.sp,
-                        color = MaterialTheme.colors.onBackground.copy(alpha = ContentAlpha.medium),
+                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = ContentAlpha.medium),
                         modifier = Modifier.paddingEnd(10.dp)
                     )
                 }
@@ -151,7 +155,7 @@ private fun LessonItem(
                     Text(
                         text = it,
                         fontSize = 13.sp,
-                        color = MaterialTheme.colors.onBackground.copy(alpha = ContentAlpha.medium)
+                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = ContentAlpha.medium)
                     )
                 }
             }

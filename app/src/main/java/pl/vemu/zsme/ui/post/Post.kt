@@ -1,7 +1,6 @@
 package pl.vemu.zsme.ui.post
 
 import android.content.Context
-import android.graphics.Typeface
 import android.text.format.DateFormat
 import android.view.View
 import android.widget.TextView
@@ -10,31 +9,39 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.text.HtmlCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
+import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import pl.vemu.zsme.R
 import pl.vemu.zsme.data.model.PostModel
 import pl.vemu.zsme.paddingBottom
 
 
+@ExperimentalCoilApi
+@ExperimentalCoroutinesApi
+@ExperimentalPagingApi
 @ExperimentalMaterialApi
 @Composable
 fun Post(
@@ -58,7 +65,7 @@ fun Post(
             SwipeRefreshIndicator(
                 state = state,
                 refreshTriggerDistance = trigger,
-                contentColor = MaterialTheme.colors.secondary
+                contentColor = MaterialTheme.colorScheme.primary
             )
         }
     ) {
@@ -90,7 +97,7 @@ fun Post(
                     }
                 }
             }*/
-        LazyColumn { // TODO remember position when back
+        LazyColumn {
             items(pagingItems) { post ->
                 post?.let {
                     PostCard(navController, it, context)
@@ -100,6 +107,7 @@ fun Post(
     }
 }
 
+@ExperimentalCoilApi
 @ExperimentalMaterialApi
 @Composable
 private fun PostCard(
@@ -143,28 +151,27 @@ private fun PostText(
     ) {
         HTMLText(
             html = postModel.title,
-            bold = true,
-            centered = true
+            centered = true,
+            color = MaterialTheme.colorScheme.primary,
+            textStyle = MaterialTheme.typography.labelLarge
         )
         HTMLText(
             html = postModel.excerpt,
             modifier = Modifier.paddingBottom(8.dp)
         )
-        SmallColoredText(
+        SmallText(
             text = DateFormat.getMediumDateFormat(context).format(postModel.date)
         )
-        SmallColoredText(text = postModel.author)
-        SmallColoredText(text = postModel.category)
+        SmallText(text = postModel.author)
+        SmallText(text = postModel.category)
     }
 }
 
 @Composable
-fun SmallColoredText(text: String, modifier: Modifier = Modifier) {
+fun SmallText(text: String) {
     Text(
         text = text,
-        color = MaterialTheme.colors.secondary,
-        fontSize = 12.sp,
-        modifier = modifier
+        style = MaterialTheme.typography.bodyMedium
     )
 }
 
@@ -172,19 +179,21 @@ fun SmallColoredText(text: String, modifier: Modifier = Modifier) {
 fun HTMLText(
     html: String,
     modifier: Modifier = Modifier,
-    bold: Boolean = false,
     centered: Boolean = false,
-    fontSize: Float? = null
+    color: Color = MaterialTheme.colorScheme.onSurface,
+    textStyle: TextStyle = MaterialTheme.typography.bodyMedium
 ) {
     AndroidView(
-        modifier = modifier,
+        modifier = modifier.fillMaxWidth(),
         factory = { context ->
             TextView(context).apply {
                 text = HtmlCompat.fromHtml(html, HtmlCompat.FROM_HTML_MODE_COMPACT).trimEnd()
                 if (centered) textAlignment =
-                    View.TEXT_ALIGNMENT_CENTER // TODO rekrutacja 2021/2022 is not centered
-                if (bold) setTypeface(typeface, Typeface.BOLD)
-                fontSize?.let { textSize = it }
+                    View.TEXT_ALIGNMENT_CENTER
+                setTextColor(color.toArgb())
+                textSize = textStyle.fontSize.value
+                setLineSpacing(textStyle.lineHeight.value - textStyle.fontSize.value, 1F)
+                letterSpacing = textStyle.letterSpacing.value * 0.0624F
             }
         },
         update = {
@@ -195,25 +204,6 @@ fun HTMLText(
 
 
 /*
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        setHasOptionsMenu(true)
-        setupRecyclerView()
-        binding.refresh.apply {
-            setOnRefreshListener {
-                lifecycleScope.launch(Dispatchers.IO) {
-                    postDao.clearAll()
-                    withContext(Dispatchers.Main) {
-                        postAdapter.refresh()
-                        this@apply.isRefreshing = false
-                    }
-                }
-            }
-            setColorSchemeColors(resources.getColor(R.color.colorPrimary, null))
-            setProgressBackgroundColorSchemeColor(resources.getColor(R.color.swipeBackground, null))
-        }
-        setupNetwork()
-    }
-
     private fun setupNetwork() {
         val cm = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networkRequest = NetworkRequest.Builder().build()

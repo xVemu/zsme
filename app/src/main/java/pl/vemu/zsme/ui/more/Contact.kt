@@ -6,10 +6,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -31,12 +31,12 @@ fun Contact() {
                 ) {
                     Text(
                         text = stringResource(id = item.headerText),
-                        style = MaterialTheme.typography.body2
+                        style = MaterialTheme.typography.labelLarge
                     )
                     SelectionContainer {
                         Text(
                             text = stringResource(id = item.text),
-                            style = MaterialTheme.typography.body1
+                            style = MaterialTheme.typography.bodyLarge
                         )
                     }
                 }
@@ -47,7 +47,7 @@ fun Contact() {
                         Icon(
                             painter = painterResource(id = item.icon),
                             contentDescription = stringResource(R.string.destination_button),
-                            tint = MaterialTheme.colors.secondary
+                            tint = MaterialTheme.colorScheme.primary
                         )
                     }
                 }

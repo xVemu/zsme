@@ -15,6 +15,7 @@ class MainApplication : Application(), Configuration.Provider {
 
     override fun onCreate() {
         super.onCreate()
+        // DynamicColors.applyToActivitiesIfAvailable(this)
         Lingver.init(this)
     }
 

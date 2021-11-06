@@ -10,15 +10,16 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.*
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -47,6 +48,7 @@ import pl.vemu.zsme.ui.post.Post
 import pl.vemu.zsme.ui.post.PostWorker
 import pl.vemu.zsme.ui.post.detail.Gallery
 import pl.vemu.zsme.ui.post.detail.detail
+import pl.vemu.zsme.ui.theme.MainTheme
 import pl.vemu.zsme.ui.timetable.Lesson
 import pl.vemu.zsme.ui.timetable.Timetable
 import java.util.concurrent.TimeUnit
@@ -68,7 +70,9 @@ class MainActivity : AppCompatActivity() {
         defaultValue = "system"
     )
 
+    @ExperimentalComposeUiApi
     @ExperimentalMaterialApi
+    @ExperimentalMaterial3Api
     @ExperimentalPagerApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,7 +98,9 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+    @ExperimentalComposeUiApi
     @ExperimentalMaterialApi
+    @ExperimentalMaterial3Api
     @ExperimentalPagerApi
     @Preview
     @Composable
@@ -175,19 +181,23 @@ class MainActivity : AppCompatActivity() {
         currentDestination: NavDestination?,
         navController: NavHostController
     ) {
-        BottomNavigation {
+        NavigationBar(
+            contentColor = MaterialTheme.colorScheme.primary
+        ) {
             BottomNavItem.values().forEach { item ->
-                BottomNavigationItem(
+                NavigationBarItem(
+                    label = { Text(text = stringResource(id = item.title)) },
+                    selected = currentDestination?.hierarchy?.any { it.route == item.route } == true,
                     icon = {
                         Icon(
                             imageVector = item.icon,
                             contentDescription = stringResource(id = item.title)
                         )
                     },
-                    label = { Text(text = stringResource(id = item.title)) },
-                    selected = currentDestination?.hierarchy?.any { it.route == item.route } == true,
-                    selectedContentColor = MaterialTheme.colors.secondary,
-                    unselectedContentColor = Color.Gray,
+                    colors = NavigationBarItemDefaults.colors(
+                        selectedIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                        indicatorColor = MaterialTheme.colorScheme.primaryContainer
+                    ),
                     onClick = {
                         navController.navigate(item.route) {
                             popUpTo(navController.graph.findStartDestination().id) {
@@ -231,13 +241,13 @@ class MainActivity : AppCompatActivity() {
                 )
             )
         }
-        if (startDestination != currentDestination?.route)
-            TopAppBar(
+        if (startDestination != currentDestination?.route) //TODO scroll behaviour
+            SmallTopAppBar(
                 navigationIcon = backArrow,
                 title = text,
                 actions = { action() }
             )
-        else TopAppBar(
+        else CenterAlignedTopAppBar(
             title = text,
             actions = { action() }
         )
