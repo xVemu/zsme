@@ -8,16 +8,14 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -34,11 +32,13 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.paging.ExperimentalPagingApi
 import androidx.work.*
+import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.yariksoffice.lingver.Lingver
 import dagger.hilt.android.AndroidEntryPoint
 import de.schnettler.datastore.manager.DataStoreManager
 import de.schnettler.datastore.manager.PreferenceRequest
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import pl.vemu.zsme.R
 import pl.vemu.zsme.ui.more.Contact
@@ -70,6 +70,9 @@ class MainActivity : AppCompatActivity() {
         defaultValue = "system"
     )
 
+    @ExperimentalFoundationApi
+    @ExperimentalCoilApi
+    @ExperimentalCoroutinesApi
     @ExperimentalComposeUiApi
     @ExperimentalMaterialApi
     @ExperimentalMaterial3Api
@@ -98,6 +101,9 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+    @ExperimentalFoundationApi
+    @ExperimentalCoroutinesApi
+    @ExperimentalCoilApi
     @ExperimentalComposeUiApi
     @ExperimentalMaterialApi
     @ExperimentalMaterial3Api
@@ -297,6 +303,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 /* TODO check
+* fontsize to fontstyle
+* deep links
 * lingver change language when aab instead of apk
 * internet refresh
 * shortcuts

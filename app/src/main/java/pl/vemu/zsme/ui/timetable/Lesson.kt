@@ -57,17 +57,17 @@ fun Lesson(
     val lessonsList by vm.list.collectAsState()
     LaunchedEffect("scrollToDay") { pagerState.scrollToPage(day) }
     Column(Modifier.fillMaxSize()) {
-        ScrollableTabRow( /*TODO elevation same as TopAppBar*/
+        ScrollableTabRow(
             selectedTabIndex = pagerState.currentPage,
-            contentColor = MaterialTheme.colorScheme.secondary,
+            backgroundColor = MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.primary,
             edgePadding = 0.dp
         ) {
             names.forEachIndexed { index, name ->
                 Tab(
-                    text = { Text(text = name) },
+                    text = { androidx.compose.material.Text(text = name) },
                     selected = pagerState.currentPage == index,
-                    selectedContentColor = MaterialTheme.colorScheme.secondary,
-                    unselectedContentColor = MaterialTheme.colorScheme.onBackground.copy(alpha = ContentAlpha.medium),
+                    unselectedContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = ContentAlpha.medium),
                     onClick = {
                         coroutines.launch {
                             pagerState.animateScrollToPage(index)
