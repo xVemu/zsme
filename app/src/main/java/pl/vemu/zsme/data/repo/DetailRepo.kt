@@ -9,7 +9,7 @@ class DetailRepo @Inject constructor(private val postDAO: PostDAO) {
 
     suspend fun getPostModelById(id: Int) = postDAO.getById(id)
 
-    fun getDetail(content: String): DetailModel { /*TODO suspend*/
+    suspend fun getDetail(content: String): DetailModel {
         val document = Jsoup.parse(content)
         val imgs = document.select("img")
         document.select(".wp-block-image, .ngg-gallery-thumbnail-box, .wp-block-gallery").remove()

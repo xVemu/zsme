@@ -30,7 +30,7 @@ class PostRemoteMediator constructor(
 
     override suspend fun load(
         loadType: LoadType, state: PagingState<Int, PostModel>
-    ): MediatorResult { //TODO rewrite
+    ): MediatorResult {
         try {
             val page = when (val pageKeyData = getKeyPageData(loadType, state)) {
                 is MediatorResult.Success -> {
@@ -85,13 +85,13 @@ class PostRemoteMediator constructor(
 
         }
 
-    private suspend fun getRemoteKeyClosestToCurrentPosition(state: PagingState<Int, PostModel>): RemoteKeyModel? {
-        return state.anchorPosition?.let { position ->
+    private suspend fun getRemoteKeyClosestToCurrentPosition(state: PagingState<Int, PostModel>): RemoteKeyModel? =
+        state.anchorPosition?.let { position ->
             state.closestItemToPosition(position)?.id?.let { repoId ->
                 remoteKeyDAO.remoteKeyByQueryId(repoId)
             }
         }
-    }
+
 
     private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, PostModel>): RemoteKeyModel? =
         state.lastItemOrNull()?.let { cat -> remoteKeyDAO.remoteKeyByQueryId(cat.id) }

@@ -57,7 +57,7 @@ fun Lesson(
     val lessonsList by vm.list.collectAsState()
     LaunchedEffect("scrollToDay") { pagerState.scrollToPage(day) }
     Column(Modifier.fillMaxSize()) {
-        ScrollableTabRow(
+        ScrollableTabRow( //TODO change to material3 card
             selectedTabIndex = pagerState.currentPage,
             backgroundColor = MaterialTheme.colorScheme.surface,
             contentColor = MaterialTheme.colorScheme.primary,

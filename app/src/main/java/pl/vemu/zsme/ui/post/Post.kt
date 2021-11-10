@@ -69,7 +69,7 @@ fun Post(
             )
         }
     ) {
-        /*lazyMovieItems.apply {
+        /*lazyMovieItems.apply { TODO
             when {
                 loadState.refresh is LoadState.Loading -> {
                     item { LoadingView(modifier = Modifier.fillParentMaxSize()) }
@@ -120,6 +120,7 @@ private fun PostCard(
             .heightIn(150.dp)
             .padding(8.dp),
         elevation = 2.dp,
+        backgroundColor = MaterialTheme.colorScheme.surface,
         onClick = {
             navController.navigate("detail/${postModel.id}")
         }

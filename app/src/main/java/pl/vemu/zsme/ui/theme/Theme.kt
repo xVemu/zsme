@@ -1,37 +1,9 @@
 package pl.vemu.zsme.ui.theme
 
 import android.os.Build
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.material3.lightColorScheme
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
-
-/*private val LightColors = lightColorScheme(
-    primary = Color(0xFF215ead),
-    secondary = Color(0xFF855300)
-)
-
-*//*private val LightColors = lightColorScheme(
-    primary = Color.White,
-//    primaryVariant = Color.White,
-    secondary = Color(0xFF2B65B4),
-//    secondaryVariant = Color(0xFF6eb3ed),
-    onPrimary = Color.Black,
-    onSecondary = Color.White
-)*//*
-
-private val DarkColors = darkColorScheme(
-    //TODO dynamicDarkColorScheme
-    primary = Color(0xFFa8c7ff),
-//    primaryVariant = Color(0xFF6eb3ed),
-    secondary = Color(0xFFffb959),
-//    secondaryVariant = Color(0xFF6eb3ed)
-)*/
 
 private val LightThemeColors = lightColorScheme(
     primary = md_theme_light_primary,
@@ -90,18 +62,10 @@ private val DarkThemeColors = darkColorScheme(
 
 @Composable
 fun MainTheme(darkTheme: Boolean, content: @Composable () -> Unit) {
-    val systemUiController = rememberSystemUiController()
-    SideEffect {
-        //       TODO statusbar #282828
-        //        navbar #2e2e2e
-        systemUiController.setSystemBarsColor(
-            color = if (darkTheme) DarkThemeColors.surface else Color.Transparent,
-            darkIcons = !darkTheme
-        )
-    }
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
         MaterialTheme(
-            colorScheme = dynamicLightColorScheme(LocalContext.current),
+            colorScheme = if (darkTheme) dynamicDarkColorScheme(LocalContext.current)
+            else dynamicLightColorScheme(LocalContext.current),
             content = content,
             typography = AppTypography
         )

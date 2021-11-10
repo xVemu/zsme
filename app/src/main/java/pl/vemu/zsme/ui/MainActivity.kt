@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.navigation.*
@@ -34,6 +35,7 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.work.*
 import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.yariksoffice.lingver.Lingver
 import dagger.hilt.android.AndroidEntryPoint
 import de.schnettler.datastore.manager.DataStoreManager
@@ -41,6 +43,7 @@ import de.schnettler.datastore.manager.PreferenceRequest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import pl.vemu.zsme.R
+import pl.vemu.zsme.surfaceColorWithElevation
 import pl.vemu.zsme.ui.more.Contact
 import pl.vemu.zsme.ui.more.More
 import pl.vemu.zsme.ui.more.Settings
@@ -96,8 +99,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
         setupNotification()
-        //        createNotificationChannel()
-        //        setupNotification()
     }
 
 
@@ -115,6 +116,7 @@ class MainActivity : AppCompatActivity() {
         val backStack by navController.currentBackStackEntryAsState()
         val currentDestination = backStack?.destination
         var action = @Composable {}
+        changeSystemBars()
         Scaffold(
             topBar = {
                 TopBar(navController, currentDestination, action)
@@ -180,6 +182,17 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    @Composable
+    private fun changeSystemBars() {
+        val systemUiController = rememberSystemUiController()
+        systemUiController.setNavigationBarColor(
+            MaterialTheme.colorScheme.surfaceColorWithElevation(
+                3.dp
+            )
+        )
+        systemUiController.setStatusBarColor(MaterialTheme.colorScheme.surface)
     }
 
     @Composable

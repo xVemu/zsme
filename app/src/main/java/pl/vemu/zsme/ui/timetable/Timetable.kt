@@ -49,7 +49,7 @@ fun Timetable(
             contentColor = MaterialTheme.colorScheme.primary
         ) {
             names.forEachIndexed { index, name ->
-                Tab(
+                Tab( //TODO change to material3 card
                     text = { androidx.compose.material.Text(text = name) },
                     selected = pagerState.currentPage == index,
                     unselectedContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = ContentAlpha.medium),
@@ -73,6 +73,7 @@ fun Timetable(
                         Card( // TODO change to material 3 card
                             onClick = { navController.navigate("lesson/${item.url}") },
                             elevation = 2.dp,
+                            backgroundColor = MaterialTheme.colorScheme.surface,
                             modifier = Modifier
                                 .height((LocalConfiguration.current.screenWidthDp / 3).dp)
                                 .padding(8.dp)

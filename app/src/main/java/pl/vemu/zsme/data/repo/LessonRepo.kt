@@ -1,19 +1,20 @@
 package pl.vemu.zsme.data.repo
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import pl.vemu.zsme.data.model.LessonModel
-import pl.vemu.zsme.login
 import javax.inject.Inject
 
 class LessonRepo @Inject constructor() {
 
-    //TODO
-    suspend fun getLesson(url: String): List<List<LessonModel>> {
-        val document = login("plany/$url")
+    @Suppress("BlockingMethodInNonBlockingContext")
+    suspend fun getLesson(url: String): List<List<LessonModel>> = withContext(Dispatchers.IO) {
+        val document = Jsoup.connect("https://www.zsme.tarnow.pl/plan/plany/$url").get()
         val table = document.selectFirst(".tabela")!!.child(0).children()
         table.removeAt(0)
         val lessonsList = List(5) { mutableListOf<LessonModel>() }
-        //TODO rewrite
         table.forEach {
             val lessons = it.select(".l")
             val lessonIndex = it.selectFirst(".nr")!!.text().toInt()
@@ -41,7 +42,7 @@ class LessonRepo @Inject constructor() {
                 }
             }
         }
-        return lessonsList
+        return@withContext lessonsList
     }
 
     private fun buildLesson(lesson: Element) =
