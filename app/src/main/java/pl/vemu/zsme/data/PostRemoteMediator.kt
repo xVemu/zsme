@@ -18,7 +18,7 @@ import java.io.IOException
 const val DEFAULT_PAGE = 1
 const val PAGE_SIZE = 10
 
-@ExperimentalPagingApi
+@OptIn(ExperimentalPagingApi::class)
 class PostRemoteMediator constructor(
     private val query: String,
     private val postDAO: PostDAO,

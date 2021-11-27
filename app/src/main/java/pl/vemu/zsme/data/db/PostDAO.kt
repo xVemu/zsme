@@ -5,6 +5,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 import pl.vemu.zsme.data.model.PostModel
 
 @Dao
@@ -13,8 +14,14 @@ interface PostDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(postmodels: List<PostModel>)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(postModel: PostModel)
+
     @Query("SELECT * FROM Posts WHERE excerpt LIKE '%' || :query || '%' ORDER by date DESC")
     fun searchPosts(query: String): PagingSource<Int, PostModel>
+
+    @Query("SELECT * FROM Posts")
+    fun getAll(): Flow<PostModel>
 
     @Query("SELECT * FROM Posts WHERE id=:id")
     suspend fun getById(id: Int): PostModel

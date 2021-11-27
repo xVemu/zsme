@@ -4,11 +4,14 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.LocalContentColor
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.BrightnessMedium
 import androidx.compose.material.icons.rounded.Language
 import androidx.compose.material.icons.rounded.Notifications
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -22,21 +25,22 @@ import de.schnettler.datastore.manager.PreferenceRequest
 import pl.vemu.zsme.R
 import pl.vemu.zsme.ui.dataStore
 
-@ExperimentalMaterialApi
-@ExperimentalComposeUiApi
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterialApi::class)
 @Preview
 @Composable
 fun Settings() {
     val context = LocalContext.current
     val dataStoreManager = DataStoreManager(context.dataStore)
-    PreferenceScreen(
-        items = listOf(
-            theme(),
-            language(),
-            notification(context)
-        ),
-        dataStoreManager = dataStoreManager
-    )
+    CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurface) {
+        PreferenceScreen(
+            items = listOf(
+                theme(),
+                language(),
+                notification(context)
+            ),
+            dataStoreManager = dataStoreManager
+        )
+    }
 }
 
 @Composable

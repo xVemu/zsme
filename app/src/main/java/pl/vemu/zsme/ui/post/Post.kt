@@ -11,10 +11,12 @@ import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -24,7 +26,6 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.text.HtmlCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
@@ -33,19 +34,15 @@ import coil.compose.rememberImagePainter
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import pl.vemu.zsme.R
 import pl.vemu.zsme.data.model.PostModel
 import pl.vemu.zsme.paddingBottom
 
 
-@ExperimentalCoilApi
-@ExperimentalCoroutinesApi
-@ExperimentalPagingApi
-@ExperimentalMaterialApi
 @Composable
 fun Post(
     navController: NavController,
+    scrollBehavior: TopAppBarScrollBehavior,
     vm: PostVM = hiltViewModel()
 ) {
     val context = LocalContext.current
@@ -67,7 +64,8 @@ fun Post(
                 refreshTriggerDistance = trigger,
                 contentColor = MaterialTheme.colorScheme.primary
             )
-        }
+        },
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) {
         /*lazyMovieItems.apply { TODO
             when {
@@ -107,8 +105,7 @@ fun Post(
     }
 }
 
-@ExperimentalCoilApi
-@ExperimentalMaterialApi
+@OptIn(ExperimentalMaterialApi::class, ExperimentalCoilApi::class)
 @Composable
 private fun PostCard(
     navController: NavController,

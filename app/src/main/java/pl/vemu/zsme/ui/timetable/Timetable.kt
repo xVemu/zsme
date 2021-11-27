@@ -26,9 +26,11 @@ import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 import pl.vemu.zsme.R
 
-@ExperimentalMaterialApi
-@ExperimentalFoundationApi
-@ExperimentalPagerApi
+@OptIn(
+    ExperimentalPagerApi::class,
+    ExperimentalFoundationApi::class,
+    ExperimentalMaterialApi::class
+)
 @Composable
 fun Timetable(
     navController: NavController,

@@ -6,19 +6,17 @@ import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.compose.setContent
-import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.animation.*
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -27,20 +25,16 @@ import androidx.datastore.preferences.preferencesDataStore
 import androidx.navigation.*
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
-import androidx.paging.ExperimentalPagingApi
 import androidx.work.*
-import coil.annotation.ExperimentalCoilApi
-import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.composable
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.yariksoffice.lingver.Lingver
 import dagger.hilt.android.AndroidEntryPoint
 import de.schnettler.datastore.manager.DataStoreManager
 import de.schnettler.datastore.manager.PreferenceRequest
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import pl.vemu.zsme.R
 import pl.vemu.zsme.surfaceColorWithElevation
@@ -60,7 +54,6 @@ val Context.dataStore by preferencesDataStore(name = "settings")
 
 /*TODO change theme in xml*/
 
-@ExperimentalPagingApi
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
@@ -73,13 +66,6 @@ class MainActivity : AppCompatActivity() {
         defaultValue = "system"
     )
 
-    @ExperimentalFoundationApi
-    @ExperimentalCoilApi
-    @ExperimentalCoroutinesApi
-    @ExperimentalComposeUiApi
-    @ExperimentalMaterialApi
-    @ExperimentalMaterial3Api
-    @ExperimentalPagerApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val dataStoreManager = DataStoreManager(this.dataStore)
@@ -98,52 +84,68 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+        createNotificationChannel()
         setupNotification()
     }
 
-
-    @ExperimentalFoundationApi
-    @ExperimentalCoroutinesApi
-    @ExperimentalCoilApi
-    @ExperimentalComposeUiApi
-    @ExperimentalMaterialApi
-    @ExperimentalMaterial3Api
-    @ExperimentalPagerApi
+    @OptIn(ExperimentalAnimationApi::class, ExperimentalMaterial3Api::class)
     @Preview
     @Composable
     private fun Main() {
-        val navController = rememberNavController()
+        val navController = rememberAnimatedNavController()
         val backStack by navController.currentBackStackEntryAsState()
         val currentDestination = backStack?.destination
-        var action = @Composable {}
-        changeSystemBars()
+        var action = @Composable {} // TODO not changing to share button on detail
+        val scrollBehavior = remember { TopAppBarDefaults.enterAlwaysScrollBehavior() }
+        ChangeSystemBars()
         Scaffold(
             topBar = {
-                TopBar(navController, currentDestination, action)
+                TopBar(navController, currentDestination, scrollBehavior, action)
             },
             bottomBar = {
                 BottomBar(currentDestination, navController)
             }) { innerPadding ->
-            NavHost(
+            AnimatedNavHost(
                 navController = navController,
                 startDestination = BottomNavItem.POST.route,
-                modifier = Modifier.padding(innerPadding)
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
             ) {
-                navigation("post", BottomNavItem.POST.route) {
-                    composable("post") { Post(navController) }
+                navigation(BottomNavItem.POST.startDestination, BottomNavItem.POST.route) {
                     composable(
-                        route = "detail/{postModelId}",
+                        route = BottomNavItem.POST.startDestination,
+                        deepLinks = listOf(navDeepLink { uriPattern = "https://zsme.tarnow.pl/" }),
+                        exitTransition = Transitions.exitTransitionStartDestination,
+                        popEnterTransition = Transitions.popEnterTransitionStartDestination
+                    ) { Post(navController, scrollBehavior) }
+                    composable(
+                        route = "detail/{postModelId}?slug={slug}",
                         arguments = listOf(
-                            navArgument(
-                                "postModelId"
-                            ) {
+                            navArgument("postModelId") {
+                                defaultValue = 0
                                 type = NavType.IntType /*TODO change to parcelable*/
+                            },
+                            navArgument("slug") {
+                                nullable = true
+                                type = NavType.StringType
                             }
-                        )
+                        ),
+                        deepLinks = listOf(
+                            navDeepLink { uriPattern = "https://zsme.tarnow.pl/wp/{slug}/" },
+                            navDeepLink { uriPattern = "https://zsme.tarnow.pl/wp/{slug}" },
+                            navDeepLink { uriPattern = "zsme://detail/{postModelId}" }
+                        ),
+                        enterTransition = Transitions.enterTransition,
+                        popExitTransition = Transitions.popExitTransition,
+                        exitTransition = Transitions.exitTransitionStartDestination,
+                        popEnterTransition = Transitions.popEnterTransitionStartDestination
                     ) { backStack ->
-                        backStack.arguments?.getInt("postModelId")
+                        backStack.arguments?.getString("slug")?.let { slug ->
+                            action = detail(navController, 0, slug = slug) //TODO slug handle
+                        } ?: backStack.arguments?.getInt("postModelId")
                             ?.let { postModelId ->
-                                action = detail(navController, postModelId)
+                                action = detail(navController, postModelId = postModelId)
                             }
                     }
                     composable(
@@ -153,21 +155,40 @@ class MainActivity : AppCompatActivity() {
                                 nullable = true
                                 type = NavType.StringType
                             }
-                        )
+                        ),
+                        enterTransition = Transitions.enterTransition,
+                        popExitTransition = Transitions.popExitTransition
                     ) { backStack ->
                         backStack.arguments?.getString("images")?.let { Gallery(it) }
                     } /*TODO argmuments string array*/
                 }
 
-                navigation("timetable", BottomNavItem.TIMETABLE.route) {
-                    composable("timetable") { Timetable(navController) }
+                navigation(
+                    BottomNavItem.TIMETABLE.startDestination,
+                    BottomNavItem.TIMETABLE.route
+                ) {
+                    composable(
+                        route = BottomNavItem.TIMETABLE.startDestination,
+                        deepLinks = listOf(
+                            navDeepLink { uriPattern = "zsme://timetable" },
+                            navDeepLink { uriPattern = "https://zsme.tarnow.pl/plan/" }
+                        ),
+                        exitTransition = Transitions.fadeOutStartDestination,
+                        popEnterTransition = Transitions.fadeInStartDestination
+                    ) { Timetable(navController) }
                     composable(
                         route = "lesson/{url}",
                         arguments = listOf(
                             navArgument("url") {
                                 type = NavType.StringType
                             }
-                        )
+                        ),
+                        enterTransition = { _, _ ->
+                            expandIn(expandFrom = Alignment.Center) + fadeIn()
+                        },
+                        popExitTransition = { _, _ ->
+                            shrinkOut(shrinkTowards = Alignment.Center) + fadeOut()
+                        }
                     ) { backStack ->
                         backStack.arguments?.getString("url")?.let { url ->
                             Lesson(url)
@@ -175,22 +196,38 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
-                navigation("more", BottomNavItem.MORE.route) {
-                    composable("more") { More(navController) }
-                    composable("contact") { Contact() }
-                    composable("settings") { Settings() }
+                navigation(BottomNavItem.MORE.startDestination, BottomNavItem.MORE.route) {
+                    composable(
+                        route = BottomNavItem.MORE.startDestination,
+                        deepLinks = listOf(navDeepLink { uriPattern = "zsme://more" }),
+                        exitTransition = Transitions.exitTransitionStartDestination,
+                        popEnterTransition = Transitions.popEnterTransitionStartDestination
+                    ) {
+                        More(navController)
+                    }
+                    composable(
+                        route = "contact",
+                        deepLinks = listOf(navDeepLink { //TODO backstack
+                            uriPattern = "https://zsme.tarnow.pl/wp/kontakt/"
+                        }),
+                        enterTransition = Transitions.enterTransition,
+                        popExitTransition = Transitions.popExitTransition
+                    ) { Contact() }
+                    composable(
+                        route = "settings",
+                        enterTransition = Transitions.enterTransition,
+                        popExitTransition = Transitions.popExitTransition
+                    ) { Settings() }
                 }
             }
         }
     }
 
     @Composable
-    private fun changeSystemBars() {
+    private fun ChangeSystemBars() {
         val systemUiController = rememberSystemUiController()
         systemUiController.setNavigationBarColor(
-            MaterialTheme.colorScheme.surfaceColorWithElevation(
-                3.dp
-            )
+            MaterialTheme.colorScheme.surfaceColorWithElevation(3.dp)
         )
         systemUiController.setStatusBarColor(MaterialTheme.colorScheme.surface)
     }
@@ -231,11 +268,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    /*TODO hide when scrolling*/
+    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     private fun TopBar(
         navController: NavController,
         currentDestination: NavDestination?,
+        scrollBehavior: TopAppBarScrollBehavior,
         action: @Composable () -> Unit
     ) {
         val backArrow = @Composable {
@@ -268,29 +306,41 @@ class MainActivity : AppCompatActivity() {
             )
         else CenterAlignedTopAppBar(
             title = text,
-            actions = { action() }
+            actions = { action() },
+            scrollBehavior = if (currentDestination?.route == "post") {
+                scrollBehavior
+            } else null
         )
     }
 
-    enum class BottomNavItem(val route: String, val icon: ImageVector, @StringRes val title: Int) {
-
-        POST("postNav", Icons.Rounded.DynamicFeed, R.string.post), //TODO web icon?
-        TIMETABLE("timetableNav", Icons.Rounded.EventNote, R.string.timetable),
-        MORE("moreNav", Icons.Rounded.Subject, R.string.more);
-
-    }
-
-    private fun setupNotification() { //TODO
+    private fun setupNotification() {
         val constraints =
             Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
         val worker = PeriodicWorkRequestBuilder<PostWorker>(
-            30L,
-            TimeUnit.MINUTES,
+            3L,
+            TimeUnit.HOURS,
             15L,
             TimeUnit.MINUTES
         ).setConstraints(constraints).build()
         WorkManager.getInstance(applicationContext)
-            .enqueueUniquePeriodicWork("SyncPostWorker", ExistingPeriodicWorkPolicy.KEEP, worker)
+            .enqueueUniquePeriodicWork(
+                "SyncPostWorker",
+                ExistingPeriodicWorkPolicy.KEEP,
+                worker
+            )
+    }
+
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                getString(R.string.app_name),
+                getString(R.string.channel_name),
+                NotificationManager.IMPORTANCE_LOW
+            )
+            val notificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
     }
 
 /*override fun onDestinationChanged(
@@ -305,23 +355,9 @@ class MainActivity : AppCompatActivity() {
     else params.scrollFlags = 0
 }*/
 
-    private fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = getString(R.string.channel_name)
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel("ZSME", name, importance)
-            val notificationManager: NotificationManager =
-                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
-        }
-    }
 /* TODO check
-* fontsize to fontstyle
+* previews
 * deep links
-* lingver change language when aab instead of apk
 * internet refresh
-* shortcuts
-* notification
-* detail from link
 * */
 }

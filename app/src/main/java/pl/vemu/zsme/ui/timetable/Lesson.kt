@@ -31,7 +31,7 @@ import pl.vemu.zsme.paddingStart
 import java.time.LocalDate
 import java.util.*
 
-@ExperimentalPagerApi
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun Lesson(
     url: String,
@@ -103,7 +103,7 @@ private fun LessonItem(
     ) {
         Text(
             text = (item.index ?: "").toString(),
-            fontSize = 32.sp,
+            style = MaterialTheme.typography.headlineLarge,
             textAlign = TextAlign.Center,
             modifier = Modifier.size(40.dp)
         )

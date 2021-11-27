@@ -5,6 +5,7 @@ buildscript {
     }
     ext {
         compose_version = '1.0.5'
+        accompanist = '0.20.2'
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:7.0.3'

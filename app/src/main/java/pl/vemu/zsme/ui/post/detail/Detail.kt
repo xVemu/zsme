@@ -31,11 +31,12 @@ import pl.vemu.zsme.paddingStart
 import pl.vemu.zsme.paddingTop
 import pl.vemu.zsme.ui.post.HTMLText
 
-@ExperimentalMaterial3Api
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun detail(
     navController: NavController,
     postModelId: Int,
+    slug: String? = null,
     vm: DetailVM = hiltViewModel()
 ): @Composable () -> Unit { // returns action in top appbar
     vm.init(postModelId)

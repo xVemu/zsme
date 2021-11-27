@@ -42,7 +42,7 @@
     <string name="accountancy_email">Accountancy</string>
     <string name="recruitment_email">Recruitment</string>
     <string name="open_hours">Open hours</string>
-    <string name="open_hours_text">monday-friday 7:30am-5:30pm</string>
+    <string name="open_hours_text">Mon-Fri 7:30am-5:30pm</string>
     <string name="no_app">No app to perform action.</string>
     <string name="notification_summary">Manage your notifications</string>
     <string name="image">Image</string>

@@ -1,62 +1,86 @@
 package pl.vemu.zsme.ui.post
 
+import android.app.PendingIntent
+import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationCompat.VISIBILITY_PUBLIC
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.text.HtmlCompat
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.first
+import pl.vemu.zsme.R
 import pl.vemu.zsme.data.db.PostDAO
+import pl.vemu.zsme.data.service.ZSMEService
+import pl.vemu.zsme.ui.MainActivity
+import pl.vemu.zsme.util.mappers.PostMapper
 
 @HiltWorker
 class PostWorker @AssistedInject constructor(
-    @Assisted context: Context,
+    @Assisted private val context: Context,
     @Assisted workerParams: WorkerParameters,
-    private val postDAO: PostDAO
+    private val postDAO: PostDAO,
+    private val zsmeService: ZSMEService,
+    private val postMapper: PostMapper
 ) : CoroutineWorker(context, workerParams) {
-    override suspend fun doWork(): Result = coroutineScope {
 
-        postDAO.searchPosts("siema")
-        Result.success()
-    }
-//        try { TODO
-    /*List<NewsItem> downloaded = DownloadNews.INSTANCE.downloadNews(new Queries.Page(), 1);
-        NewsItem firstNewsItem = downloaded.get(0);
-        SharedPreferences memory = getApplicationContext().getSharedPreferences("latest-news", Context.MODE_PRIVATE);
-        int fromMemory = memory.getInt("article", 0);
-        if (fromMemory == 0) {
-            SharedPreferences.Editor editor = memory.edit();
-            editor.putInt("article", firstNewsItem.hashCode()).apply();
-            return Result.retry();
-        } else if (fromMemory == firstNewsItem.hashCode())
-            return Result.failure();
-        else {
-            SharedPreferences.Editor editor = memory.edit();
-            for (NewsItem item : downloaded) {
-                if (fromMemory == item.hashCode()) break;
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                intent.putExtra("url", item.getUrl());
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                        | Intent.FLAG_ACTIVITY_CLEAR_TASK
-                        | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), item.hashCode(), intent, 0);
-                NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), "ZSME")
+    override suspend fun doWork(): Result =
+        coroutineScope { // TODO too much notifications
+            val postModels = postDAO.getAll()
+            val response = zsmeService.searchPosts("", 1, 20)
+            val postModelsFromService = postMapper.mapFromEntityList(response)
+            if (postModels.first() == postModelsFromService[0]) return@coroutineScope Result.failure()
+            postModelsFromService.forEach { item ->
+                if (item == postModels.first()) return@forEach
+                val intent = Intent(context, MainActivity::class.java).apply {
+                    data = Uri.parse("zsme://detail/${item.id}")
+                    flags = (Intent.FLAG_ACTIVITY_NEW_TASK
+                            or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                            or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                }
+                val pendingIntent =
+                    PendingIntent.getActivity(
+                        context,
+                        item.hashCode(),
+                        intent,
+                        FLAG_IMMUTABLE
+                    )
+                val builder =
+                    NotificationCompat.Builder(
+                        context,
+                        context.getString(R.string.app_name)
+                    )
                         .setSmallIcon(R.drawable.ic_news)
-                        .setContentTitle(item.getTitle())
-                        .setStyle(new NotificationCompat.BigTextStyle().bigText(item.getDescription()))
+                        .setContentTitle(item.title)
+                        .setContentText(
+                            HtmlCompat.fromHtml(
+                                item.excerpt,
+                                HtmlCompat.FROM_HTML_MODE_COMPACT
+                            )
+                        )
+                        .setStyle(
+                            NotificationCompat.BigTextStyle().bigText(
+                                HtmlCompat.fromHtml(
+                                    item.excerpt,
+                                    HtmlCompat.FROM_HTML_MODE_COMPACT
+                                )
+                            )
+                        )
                         .setContentIntent(pendingIntent)
                         .setAutoCancel(true)
-                        .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-                NotificationManagerCompat.from(getApplicationContext()).notify(item.hashCode(), builder.build());
+                        .setVisibility(VISIBILITY_PUBLIC)
+                        .setPriority(NotificationCompat.PRIORITY_LOW)
+                NotificationManagerCompat.from(context)
+                    .notify(item.hashCode(), builder.build())
+                postDAO.insert(item)
             }
-            editor.putInt("article", firstNewsItem.hashCode()).apply();*/
-    /*} catch(
-    IOException e)
-
-    {
-        e.printStackTrace();
-    }
-        return Result.failure();
-}*/
+            Result.success()
+        }
 }

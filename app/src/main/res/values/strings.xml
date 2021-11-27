@@ -25,7 +25,7 @@
     <string name="school_address_action" translatable="false">https://goo.gl/maps/UCDb4Uky2bzUPQYy6</string>
 
     <string name="open_hours">Godziny otwarcia</string>
-    <string name="open_hours_text">poniedziałek–piątek 7:30–15:30</string>
+    <string name="open_hours_text">Pon–Pią 7:30–15:30</string>
 
     <string name="secretariat_email">Sekretariat</string>
     <string name="recruitment_email">Rekrutacja</string>
