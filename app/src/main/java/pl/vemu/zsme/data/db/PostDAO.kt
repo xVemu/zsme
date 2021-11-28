@@ -20,7 +20,7 @@ interface PostDAO {
     @Query("SELECT * FROM Posts WHERE excerpt LIKE '%' || :query || '%' ORDER by date DESC")
     fun searchPosts(query: String): PagingSource<Int, PostModel>
 
-    @Query("SELECT * FROM Posts")
+    @Query("SELECT * FROM Posts ORDER by date DESC")
     fun getAll(): Flow<PostModel>
 
     @Query("SELECT * FROM Posts WHERE id=:id")

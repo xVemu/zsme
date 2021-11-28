@@ -32,7 +32,7 @@ class PostWorker @AssistedInject constructor(
 ) : CoroutineWorker(context, workerParams) {
 
     override suspend fun doWork(): Result =
-        coroutineScope { // TODO too much notifications
+        coroutineScope {
             val postModels = postDAO.getAll()
             val response = zsmeService.searchPosts("", 1, 20)
             val postModelsFromService = postMapper.mapFromEntityList(response)
