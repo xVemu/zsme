@@ -116,8 +116,8 @@ class MainActivity : AppCompatActivity() {
                     composable(
                         route = BottomNavItem.POST.startDestination,
                         deepLinks = listOf(navDeepLink { uriPattern = "https://zsme.tarnow.pl/" }),
-                        exitTransition = Transitions.exitTransitionStartDestination,
-                        popEnterTransition = Transitions.popEnterTransitionStartDestination
+                        exitTransition = Transitions.exitTransition,
+                        popEnterTransition = Transitions.popEnterTransition
                     ) { Post(navController, scrollBehavior) }
                     composable(
                         route = "detail/{postModelId}?slug={slug}",
@@ -138,8 +138,8 @@ class MainActivity : AppCompatActivity() {
                         ),
                         enterTransition = Transitions.enterTransition,
                         popExitTransition = Transitions.popExitTransition,
-                        exitTransition = Transitions.exitTransitionStartDestination,
-                        popEnterTransition = Transitions.popEnterTransitionStartDestination
+                        exitTransition = Transitions.exitTransition,
+                        popEnterTransition = Transitions.popEnterTransition
                     ) { backStack ->
                         backStack.arguments?.getString("slug")?.let { slug ->
                             action = detail(navController, 0, slug = slug) //TODO slug handle
@@ -173,8 +173,8 @@ class MainActivity : AppCompatActivity() {
                             navDeepLink { uriPattern = "zsme://timetable" },
                             navDeepLink { uriPattern = "https://zsme.tarnow.pl/plan/" }
                         ),
-                        exitTransition = Transitions.fadeOutStartDestination,
-                        popEnterTransition = Transitions.fadeInStartDestination
+                        exitTransition = Transitions.fadeOut,
+                        popEnterTransition = Transitions.fadeIn
                     ) { Timetable(navController) }
                     composable(
                         route = "lesson/{url}",
@@ -200,8 +200,8 @@ class MainActivity : AppCompatActivity() {
                     composable(
                         route = BottomNavItem.MORE.startDestination,
                         deepLinks = listOf(navDeepLink { uriPattern = "zsme://more" }),
-                        exitTransition = Transitions.exitTransitionStartDestination,
-                        popEnterTransition = Transitions.popEnterTransitionStartDestination
+                        exitTransition = Transitions.exitTransition,
+                        popEnterTransition = Transitions.popEnterTransition
                     ) {
                         More(navController)
                     }
@@ -224,7 +224,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     @Composable
-    private fun ChangeSystemBars() {
+    fun ChangeSystemBars() {
         val systemUiController = rememberSystemUiController()
         systemUiController.setNavigationBarColor(
             MaterialTheme.colorScheme.surfaceColorWithElevation(3.dp)
@@ -307,9 +307,7 @@ class MainActivity : AppCompatActivity() {
         else CenterAlignedTopAppBar(
             title = text,
             actions = { action() },
-            scrollBehavior = if (currentDestination?.route == "post") {
-                scrollBehavior
-            } else null
+            scrollBehavior = if (currentDestination?.route == "post") scrollBehavior else null
         )
     }
 
@@ -342,18 +340,6 @@ class MainActivity : AppCompatActivity() {
             notificationManager.createNotificationChannel(channel)
         }
     }
-
-/*override fun onDestinationChanged(
-    controller: NavController,
-    destination: NavDestination,
-    arguments: Bundle?
-) {
-    val params = binding.toolbar.layoutParams as AppBarLayout.LayoutParams
-    if (destination.id == R.id.postFragment) params.scrollFlags =
-        (AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
-                or AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS)
-    else params.scrollFlags = 0
-}*/
 
 /* TODO check
 * previews

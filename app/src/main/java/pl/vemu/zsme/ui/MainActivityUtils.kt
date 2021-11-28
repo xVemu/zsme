@@ -12,45 +12,26 @@ import pl.vemu.zsme.R
 
 @OptIn(ExperimentalAnimationApi::class)
 object Transitions {
-    val enterTransition: AnimatedContentScope<String>.(initial: NavBackStackEntry, target: NavBackStackEntry) -> EnterTransition? =
-        { _, _ -> slideInHorizontally(initialOffsetX = { it / 2 }) + fadeIn() }
-    val exitTransitionStartDestination: AnimatedContentScope<String>.(initial: NavBackStackEntry, target: NavBackStackEntry) -> ExitTransition? =
+    val enterTransition =
+        makeTransition(slideInHorizontally(initialOffsetX = { it / 2 }) + fadeIn())
+    val exitTransition =
+        makeTransition(slideOutHorizontally() + fadeOut())
+    val popEnterTransition =
+        makeTransition(slideInHorizontally() + fadeIn())
+    val popExitTransition =
+        makeTransition(slideOutHorizontally(targetOffsetX = { it / 2 }) + fadeOut())
+    val fadeIn =
+        makeTransition(fadeIn())
+    val fadeOut =
+        makeTransition(fadeOut())
+
+    private fun <T> makeTransition(transition: T):
+            AnimatedContentScope<String>.(initial: NavBackStackEntry, target: NavBackStackEntry) -> T? =
         { initial, target ->
-            if (BottomNavItem.values()
-                    .any { it.startDestination == initial.destination.route }
-                && BottomNavItem.values()
-                    .any { it.startDestination == target.destination.route }
-            ) null
-            else slideOutHorizontally() + fadeOut()
-        }
-    val popEnterTransitionStartDestination: AnimatedContentScope<String>.(initial: NavBackStackEntry, target: NavBackStackEntry) -> EnterTransition? =
-        { initial, target ->
-            if (BottomNavItem.values()
-                    .any { it.startDestination == initial.destination.route }
-                && BottomNavItem.values()
-                    .any { it.startDestination == target.destination.route }
-            ) null
-            else slideInHorizontally() + fadeIn()
-        }
-    val popExitTransition: AnimatedContentScope<String>.(initial: NavBackStackEntry, target: NavBackStackEntry) -> ExitTransition? =
-        { _, _ -> slideOutHorizontally(targetOffsetX = { it / 2 }) + fadeOut() }
-    val fadeInStartDestination: AnimatedContentScope<String>.(initial: NavBackStackEntry, target: NavBackStackEntry) -> EnterTransition? =
-        { initial, target ->
-            if (BottomNavItem.values()
-                    .any { it.startDestination == initial.destination.route }
-                && BottomNavItem.values()
-                    .any { it.startDestination == target.destination.route }
-            ) null
-            else fadeIn()
-        }
-    val fadeOutStartDestination: AnimatedContentScope<String>.(initial: NavBackStackEntry, target: NavBackStackEntry) -> ExitTransition? =
-        { initial, target ->
-            if (BottomNavItem.values()
-                    .any { it.startDestination == initial.destination.route }
-                && BottomNavItem.values()
-                    .any { it.startDestination == target.destination.route }
-            ) null
-            else fadeOut()
+            if (initial.destination.parent?.startDestinationRoute ==
+                target.destination.parent?.startDestinationRoute
+            ) transition
+            else null
         }
 }
 

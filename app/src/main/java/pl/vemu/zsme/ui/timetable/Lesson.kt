@@ -3,8 +3,9 @@ package pl.vemu.zsme.ui.timetable
 import android.os.Build
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.ContentAlpha
+import androidx.compose.material.Divider
 import androidx.compose.material.ScrollableTabRow
 import androidx.compose.material.Tab
 import androidx.compose.material3.MaterialTheme
@@ -57,7 +58,7 @@ fun Lesson(
     val lessonsList by vm.list.collectAsState()
     LaunchedEffect("scrollToDay") { pagerState.scrollToPage(day) }
     Column(Modifier.fillMaxSize()) {
-        ScrollableTabRow( //TODO change to material3 card
+        ScrollableTabRow( //TODO change to material3
             selectedTabIndex = pagerState.currentPage,
             backgroundColor = MaterialTheme.colorScheme.surface,
             contentColor = MaterialTheme.colorScheme.primary,
@@ -81,10 +82,14 @@ fun Lesson(
             state = pagerState,
         ) { page ->
             LazyColumn(modifier = Modifier.fillMaxHeight()) {
-                if (lessonsList.isNotEmpty())
-                    items(lessonsList[page]) { item ->
-                        LessonItem(item)
-                    }
+                if (lessonsList.isEmpty()) return@LazyColumn
+                val lessonsPage = lessonsList[page]
+                itemsIndexed(lessonsPage) { index, item ->
+                    LessonItem(
+                        item = item,
+                        divider = !(index >= lessonsPage.size - 1 || lessonsPage[index + 1].index == null)
+                    )
+                }
             }
         }
     }
@@ -93,7 +98,8 @@ fun Lesson(
 @Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
 @Composable
 private fun LessonItem(
-    @PreviewParameter(LessonModelPreviewParameterProvider::class) item: LessonModel
+    @PreviewParameter(LessonModelPreviewParameterProvider::class) item: LessonModel,
+    divider: Boolean = true//TODO
 ) {
     Row(
         modifier = Modifier
@@ -161,6 +167,7 @@ private fun LessonItem(
             }
         }
     }
+    if (divider) Divider(modifier = Modifier.padding(horizontal = 8.dp))
 }
 
 

@@ -70,27 +70,26 @@ fun Timetable(
             LazyVerticalGrid(
                 cells = GridCells.Fixed(count = 3)
             ) {
-                if (timetableList.isNotEmpty()) {
-                    items(timetableList[page]) { item ->
-                        Card( // TODO change to material 3 card
-                            onClick = { navController.navigate("lesson/${item.url}") },
-                            elevation = 2.dp,
-                            backgroundColor = MaterialTheme.colorScheme.surface,
-                            modifier = Modifier
-                                .height((LocalConfiguration.current.screenWidthDp / 3).dp)
-                                .padding(8.dp)
+                if (timetableList.isEmpty()) return@LazyVerticalGrid
+                items(timetableList[page]) { item ->
+                    Card( // TODO change to material 3 card
+                        onClick = { navController.navigate("lesson/${item.url}") },
+                        elevation = 2.dp,
+                        backgroundColor = MaterialTheme.colorScheme.surface,
+                        modifier = Modifier
+                            .height((LocalConfiguration.current.screenWidthDp / 3).dp)
+                            .padding(8.dp)
+                    ) {
+                        Column(
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Column(
-                                verticalArrangement = Arrangement.Center,
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                Text(
-                                    text = item.name,
-                                    style = MaterialTheme.typography.bodyLarge,
-                                    textAlign = TextAlign.Center,
-                                    modifier = Modifier.padding(8.dp)
-                                )
-                            }
+                            Text(
+                                text = item.name,
+                                style = MaterialTheme.typography.bodyLarge,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.padding(8.dp)
+                            )
                         }
                     }
                 }
