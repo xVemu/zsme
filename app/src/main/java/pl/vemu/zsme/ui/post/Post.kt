@@ -37,6 +37,7 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import pl.vemu.zsme.R
 import pl.vemu.zsme.data.model.PostModel
 import pl.vemu.zsme.paddingBottom
+import pl.vemu.zsme.paddingTop
 
 
 @Composable
@@ -112,7 +113,7 @@ private fun PostCard(
     postModel: PostModel,
     context: Context
 ) {
-    Card(
+    Card( // TODO change to material 3 card
         modifier = Modifier
             .heightIn(150.dp)
             .padding(8.dp),
@@ -123,26 +124,37 @@ private fun PostCard(
         }
     ) {
         Row {
-            Image(
-                painter = rememberImagePainter(postModel.thumbnail) {
-                    placeholder(R.drawable.zsme)
-                    crossfade(true)
-                },
-                contentDescription = stringResource(R.string.thumbnail),
-                modifier = Modifier
-                    .size(108.dp)
-                    .padding(8.dp),
-                contentScale = ContentScale.Crop
-            )
-            PostText(postModel, context)
+            Column(modifier = Modifier.padding(8.dp)) {
+                Image(
+                    painter = rememberImagePainter(postModel.thumbnail) {
+                        placeholder(R.drawable.zsme)
+                        crossfade(true)
+                    },
+                    contentDescription = stringResource(R.string.thumbnail),
+                    modifier = Modifier
+                        .size(108.dp),
+                    contentScale = ContentScale.Crop
+                )
+                Column(
+                    modifier = Modifier
+                        .width(108.dp)
+                        .paddingTop(24.dp)
+                ) {
+                    SmallText(
+                        text = DateFormat.getMediumDateFormat(context).format(postModel.date)
+                    )
+                    SmallText(text = postModel.author)
+                    SmallText(text = postModel.category)
+                }
+            }
+            MainText(postModel)
         }
     }
 }
 
 @Composable
-private fun PostText(
-    postModel: PostModel,
-    context: Context
+private fun MainText(
+    postModel: PostModel
 ) {
     Column(
         modifier = Modifier.padding(8.dp)
@@ -157,11 +169,6 @@ private fun PostText(
             html = postModel.excerpt,
             modifier = Modifier.paddingBottom(8.dp)
         )
-        SmallText(
-            text = DateFormat.getMediumDateFormat(context).format(postModel.date)
-        )
-        SmallText(text = postModel.author)
-        SmallText(text = postModel.category)
     }
 }
 

@@ -12,9 +12,12 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.*
+import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -22,6 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.*
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -36,6 +40,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import de.schnettler.datastore.manager.DataStoreManager
 import de.schnettler.datastore.manager.PreferenceRequest
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import pl.vemu.zsme.R
 import pl.vemu.zsme.surfaceColorWithElevation
 import pl.vemu.zsme.ui.more.Contact
@@ -75,12 +80,12 @@ class MainActivity : AppCompatActivity() {
             MainTheme(if (theme == "system") isSystemInDarkTheme() else theme.toBoolean()) {
                 Main()
             }
-            LaunchedEffect("changeLanguage") {
-                dataStoreManager.getPreferenceFlow(languagePreference).collectLatest { lang ->
-                    Lingver.getInstance().apply {
-                        if (lang == "system") setFollowSystemLocale(this@MainActivity)
-                        else setLocale(this@MainActivity, lang)
-                    }
+        }
+        lifecycleScope.launch {
+            dataStoreManager.getPreferenceFlow(languagePreference).collectLatest { lang ->
+                Lingver.getInstance().apply {
+                    if (lang == "system") setFollowSystemLocale(this@MainActivity)
+                    else setLocale(this@MainActivity, lang)
                 }
             }
         }
