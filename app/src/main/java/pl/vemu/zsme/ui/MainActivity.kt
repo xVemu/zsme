@@ -35,10 +35,17 @@ import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.install.InstallException
+import com.google.android.play.core.install.model.AppUpdateType
+import com.google.android.play.core.install.model.UpdateAvailability
+import com.google.android.play.core.ktx.*
+import com.google.android.play.core.review.ReviewManagerFactory
 import com.yariksoffice.lingver.Lingver
 import dagger.hilt.android.AndroidEntryPoint
 import de.schnettler.datastore.manager.DataStoreManager
 import de.schnettler.datastore.manager.PreferenceRequest
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import pl.vemu.zsme.R
@@ -91,6 +98,38 @@ class MainActivity : AppCompatActivity() {
         }
         createNotificationChannel()
         setupNotification()
+        lifecycleScope.launchWhenCreated {
+            updateApp()
+            reviewApp()
+        }
+    }
+
+    private suspend fun reviewApp() { // TODO days delay https://developer.android.com/guide/playcore/in-app-review/test
+        val manager = ReviewManagerFactory.create(applicationContext)
+        val request = manager.requestReview()
+        manager.launchReview(this, request)
+    }
+
+    private suspend fun updateApp() { // TODO https://developer.android.com/guide/playcore/in-app-updates/test
+        try {
+            val manager = AppUpdateManagerFactory.create(applicationContext)
+            val appUpdateInfo = manager.requestAppUpdateInfo()
+            if (!(appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+                        && appUpdateInfo.isFlexibleUpdateAllowed
+                        && (appUpdateInfo.clientVersionStalenessDays ?: -1) >= 7
+                        )
+            ) return
+            manager.startUpdateFlowForResult(
+                appUpdateInfo,
+                AppUpdateType.FLEXIBLE,
+                this,
+                0
+            )
+            manager.requestUpdateFlow().collect { appUpdateResult ->
+                if (appUpdateResult is AppUpdateResult.Downloaded) appUpdateResult.completeUpdate()
+            }
+        } catch (e: InstallException) {
+        }
     }
 
     @OptIn(ExperimentalAnimationApi::class, ExperimentalMaterial3Api::class)
