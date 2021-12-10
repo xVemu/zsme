@@ -104,34 +104,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun reviewApp() { // TODO days delay https://developer.android.com/guide/playcore/in-app-review/test
-        val manager = ReviewManagerFactory.create(applicationContext)
-        val request = manager.requestReview()
-        manager.launchReview(this, request)
-    }
-
-    private suspend fun updateApp() { // TODO https://developer.android.com/guide/playcore/in-app-updates/test
-        try {
-            val manager = AppUpdateManagerFactory.create(applicationContext)
-            val appUpdateInfo = manager.requestAppUpdateInfo()
-            if (!(appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
-                        && appUpdateInfo.isFlexibleUpdateAllowed
-                        && (appUpdateInfo.clientVersionStalenessDays ?: -1) >= 7
-                        )
-            ) return
-            manager.startUpdateFlowForResult(
-                appUpdateInfo,
-                AppUpdateType.FLEXIBLE,
-                this,
-                0
-            )
-            manager.requestUpdateFlow().collect { appUpdateResult ->
-                if (appUpdateResult is AppUpdateResult.Downloaded) appUpdateResult.completeUpdate()
-            }
-        } catch (e: InstallException) {
-        }
-    }
-
     @OptIn(ExperimentalAnimationApi::class, ExperimentalMaterial3Api::class)
     @Preview
     @Composable
@@ -382,6 +354,34 @@ class MainActivity : AppCompatActivity() {
             val notificationManager =
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
+        }
+    }
+
+    private suspend fun reviewApp() { // TODO days delay https://developer.android.com/guide/playcore/in-app-review/test
+        val manager = ReviewManagerFactory.create(applicationContext)
+        val request = manager.requestReview()
+        manager.launchReview(this, request)
+    }
+
+    private suspend fun updateApp() { // TODO https://developer.android.com/guide/playcore/in-app-updates/test
+        try {
+            val manager = AppUpdateManagerFactory.create(applicationContext)
+            val appUpdateInfo = manager.requestAppUpdateInfo()
+            if (!(appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+                        && appUpdateInfo.isFlexibleUpdateAllowed
+                        && (appUpdateInfo.clientVersionStalenessDays ?: -1) >= 7
+                        )
+            ) return
+            manager.startUpdateFlowForResult(
+                appUpdateInfo,
+                AppUpdateType.FLEXIBLE,
+                this,
+                0
+            )
+            manager.requestUpdateFlow().collect { appUpdateResult ->
+                if (appUpdateResult is AppUpdateResult.Downloaded) appUpdateResult.completeUpdate()
+            }
+        } catch (e: InstallException) {
         }
     }
 
