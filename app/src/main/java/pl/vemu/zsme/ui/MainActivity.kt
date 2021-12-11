@@ -323,7 +323,7 @@ class MainActivity : AppCompatActivity() {
                 )
             )
         }
-        if (startDestination != currentDestination?.route) //TODO scroll behaviour
+        if (startDestination != currentDestination?.route)
             SmallTopAppBar(
                 navigationIcon = backArrow,
                 title = text,

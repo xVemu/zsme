@@ -37,8 +37,8 @@ class PostWorker @AssistedInject constructor(
             val response = zsmeService.searchPosts("", 1, 20)
             val postModelsFromService = postMapper.mapFromEntityList(response)
             if (postModels.first() == postModelsFromService[0]) return@coroutineScope Result.failure()
-            postModelsFromService.forEach { item ->
-                if (item == postModels.first()) return@forEach
+            for (item in postModelsFromService) {
+                if (item == postModels.first()) break
                 val intent = Intent(context, MainActivity::class.java).apply {
                     data = Uri.parse("zsme://detail/${item.id}")
                     flags = (Intent.FLAG_ACTIVITY_NEW_TASK
