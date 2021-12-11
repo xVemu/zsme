@@ -82,4 +82,7 @@
     <string name="notification_summary">Zarządzaj powiadomieniami</string>
     <string name="image">Zdjęcie</string>
     <string name="back_button">Cofnij</string>
+    <string name="date">"Ostatnia modyfikacja: "</string>
+    <string name="author">"Opublikowane przez: "</string>
+    <string name="category">"Kategoria: "</string>
 </resources>

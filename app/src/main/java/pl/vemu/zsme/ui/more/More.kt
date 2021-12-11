@@ -30,11 +30,11 @@ fun More(navController: NavController) {
             ) {
                 Icon(
                     imageVector = item.icon,
-                    contentDescription = stringResource(id = item.text),
+                    contentDescription = stringResource(item.text),
                 )
                 Spacer(modifier = Modifier.width(32.dp))
                 Text(
-                    text = stringResource(id = item.text),
+                    text = stringResource(item.text),
                     modifier = Modifier.align(Alignment.CenterVertically),
                     style = MaterialTheme.typography.bodyLarge
                 )

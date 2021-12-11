@@ -30,12 +30,12 @@ fun Contact() {
                         .padding(8.dp)
                 ) {
                     Text(
-                        text = stringResource(id = item.headerText),
+                        text = stringResource(item.headerText),
                         style = MaterialTheme.typography.labelLarge
                     )
                     SelectionContainer {
                         Text(
-                            text = stringResource(id = item.text),
+                            text = stringResource(item.text),
                             style = MaterialTheme.typography.bodyLarge
                         )
                     }
@@ -45,7 +45,7 @@ fun Contact() {
                         onClick = { item.onClick(context) },
                     ) {
                         Icon(
-                            painter = painterResource(id = item.icon),
+                            painter = painterResource(item.icon),
                             contentDescription = stringResource(R.string.destination_button),
                             tint = MaterialTheme.colorScheme.primary
                         )

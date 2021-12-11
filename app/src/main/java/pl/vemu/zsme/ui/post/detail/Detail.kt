@@ -37,7 +37,7 @@ fun detail(
     slug: String? = null,
     vm: DetailVM = hiltViewModel()
 ): String? { // returns postModelLink to use it in share button
-    vm.init(postModelId)
+    vm.init(postModelId) // TODO optimize
     val context = LocalContext.current
     val postModelByVm by vm.postModel.collectAsState()
     val detailByVm by vm.detail.collectAsState()
@@ -47,14 +47,14 @@ fun detail(
                 floatingActionButton = {
                     detailModel.images?.let { images ->
                         ExtendedFloatingActionButton(
-                            text = { Text(text = stringResource(id = R.string.gallery)) },
+                            text = { Text(text = stringResource(R.string.gallery)) },
                             onClick = {
                                 navController.navigate("gallery?images=" + Gson().toJson(images))
                             },
                             icon = {
                                 Icon(
                                     imageVector = Icons.Rounded.PhotoLibrary,
-                                    contentDescription = stringResource(id = R.string.gallery)
+                                    contentDescription = stringResource(R.string.gallery)
                                 )
                             }
                         )
@@ -77,9 +77,13 @@ fun detail(
                     Column(
                         modifier = Modifier.paddingStart(8.dp)
                     ) {
-                        Text(text = DateFormat.getMediumDateFormat(context).format(postModel.date))
-                        Text(text = postModel.author)
-                        Text(text = postModel.category)
+                        Text(
+                            text = stringResource(R.string.date) + DateFormat.getMediumDateFormat(
+                                context
+                            ).format(postModel.date)
+                        )
+                        Text(text = stringResource(R.string.author) + postModel.author)
+                        Text(text = stringResource(R.string.category) + postModel.category)
                     }
                 }
             }

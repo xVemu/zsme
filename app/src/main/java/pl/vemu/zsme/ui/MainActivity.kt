@@ -268,12 +268,12 @@ class MainActivity : AppCompatActivity() {
         ) {
             BottomNavItem.values().forEach { item ->
                 NavigationBarItem(
-                    label = { Text(text = stringResource(id = item.title)) },
+                    label = { Text(text = stringResource(item.title)) },
                     selected = currentDestination?.hierarchy?.any { it.route == item.route } == true,
                     icon = {
                         Icon(
                             imageVector = item.icon,
-                            contentDescription = stringResource(id = item.title)
+                            contentDescription = stringResource(item.title)
                         )
                     },
                     colors = NavigationBarItemDefaults.colors(
@@ -307,7 +307,7 @@ class MainActivity : AppCompatActivity() {
             }) {
                 Icon(
                     imageVector = Icons.Rounded.ArrowBack,
-                    contentDescription = stringResource(id = R.string.back_button),
+                    contentDescription = stringResource(R.string.back_button),
                 )
             }
         }
@@ -315,7 +315,7 @@ class MainActivity : AppCompatActivity() {
         val text = @Composable {
             Text(
                 text = stringResource(
-                    id = resources.getIdentifier(
+                    resources.getIdentifier(
                         startDestination ?: "app_name",
                         "string",
                         packageName
@@ -335,7 +335,7 @@ class MainActivity : AppCompatActivity() {
             )
         else CenterAlignedTopAppBar(
             title = text,
-            scrollBehavior = if (currentDestination?.route == BottomNavItem.POST.route) scrollBehavior else null
+            scrollBehavior = if (currentDestination?.route == BottomNavItem.POST.startDestination) scrollBehavior else null
         )
     }
 
