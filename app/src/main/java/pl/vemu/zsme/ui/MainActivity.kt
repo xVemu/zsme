@@ -2,7 +2,10 @@ package pl.vemu.zsme.ui
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.assist.AssistContent
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -13,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -20,6 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -33,6 +38,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.work.*
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
+import com.google.accompanist.navigation.animation.navigation
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
@@ -78,6 +84,8 @@ class MainActivity : AppCompatActivity() {
         defaultValue = "system"
     )
 
+    private var postLink: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val dataStoreManager = DataStoreManager(this.dataStore)
@@ -111,12 +119,11 @@ class MainActivity : AppCompatActivity() {
         val navController = rememberAnimatedNavController()
         val backStack by navController.currentBackStackEntryAsState()
         val currentDestination = backStack?.destination
-        var action = @Composable {} // TODO not changing to share button on detail
         val scrollBehavior = remember { TopAppBarDefaults.enterAlwaysScrollBehavior() }
         ChangeSystemBars()
         Scaffold(
             topBar = {
-                TopBar(navController, currentDestination, scrollBehavior, action)
+                TopBar(navController, currentDestination, scrollBehavior)
             },
             bottomBar = {
                 BottomBar(currentDestination, navController)
@@ -134,7 +141,10 @@ class MainActivity : AppCompatActivity() {
                         deepLinks = listOf(navDeepLink { uriPattern = "https://zsme.tarnow.pl/" }),
                         exitTransition = Transitions.exitTransition,
                         popEnterTransition = Transitions.popEnterTransition
-                    ) { Post(navController, scrollBehavior) }
+                    ) {
+                        postLink = null
+                        Post(navController, scrollBehavior)
+                    }
                     composable(
                         route = "detail/{postModelId}?slug={slug}",
                         arguments = listOf(
@@ -158,10 +168,10 @@ class MainActivity : AppCompatActivity() {
                         popEnterTransition = Transitions.popEnterTransition
                     ) { backStack ->
                         backStack.arguments?.getString("slug")?.let { slug ->
-                            action = detail(navController, 0, slug = slug) //TODO slug handle
+                            postLink = detail(navController, 0, slug = slug) //TODO slug handle
                         } ?: backStack.arguments?.getInt("postModelId")
                             ?.let { postModelId ->
-                                action = detail(navController, postModelId = postModelId)
+                                postLink = detail(navController, postModelId = postModelId)
                             }
                     }
                     composable(
@@ -240,7 +250,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     @Composable
-    fun ChangeSystemBars() {
+    private fun ChangeSystemBars() {
         val systemUiController = rememberSystemUiController()
         systemUiController.setNavigationBarColor(
             MaterialTheme.colorScheme.surfaceColorWithElevation(3.dp)
@@ -289,8 +299,7 @@ class MainActivity : AppCompatActivity() {
     private fun TopBar(
         navController: NavController,
         currentDestination: NavDestination?,
-        scrollBehavior: TopAppBarScrollBehavior,
-        action: @Composable () -> Unit
+        scrollBehavior: TopAppBarScrollBehavior
     ) {
         val backArrow = @Composable {
             IconButton(onClick = {
@@ -318,13 +327,35 @@ class MainActivity : AppCompatActivity() {
             SmallTopAppBar(
                 navigationIcon = backArrow,
                 title = text,
-                actions = { action() }
+                actions = {
+                    if (currentDestination?.route?.startsWith("detail") == true) {
+                        ShareButton()
+                    }
+                }
             )
         else CenterAlignedTopAppBar(
             title = text,
-            actions = { action() },
-            scrollBehavior = if (currentDestination?.route == "post") scrollBehavior else null
+            scrollBehavior = if (currentDestination?.route == BottomNavItem.POST.route) scrollBehavior else null
         )
+    }
+
+    @Composable
+    private fun ShareButton() {
+        val context = LocalContext.current
+        IconButton(onClick = {
+            val intent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, postLink)
+                type = "text/plain"
+            }
+            val shareIntent = Intent.createChooser(intent, null)
+            context.startActivity(shareIntent)
+        }) {
+            Icon(
+                imageVector = Icons.Rounded.Share,
+                contentDescription = stringResource(R.string.share)
+            )
+        }
     }
 
     private fun setupNotification() {
@@ -382,6 +413,13 @@ class MainActivity : AppCompatActivity() {
                 if (appUpdateResult is AppUpdateResult.Downloaded) appUpdateResult.completeUpdate()
             }
         } catch (e: InstallException) {
+        }
+    }
+
+    override fun onProvideAssistContent(outContent: AssistContent?) {
+        super.onProvideAssistContent(outContent)
+        postLink?.let {
+            outContent?.webUri = Uri.parse(it)
         }
     }
 

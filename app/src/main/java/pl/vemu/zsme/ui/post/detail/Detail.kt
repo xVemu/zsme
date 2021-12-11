@@ -1,7 +1,6 @@
 package pl.vemu.zsme.ui.post.detail
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.content.res.Configuration
 import android.text.format.DateFormat
 import android.webkit.WebView
@@ -11,7 +10,6 @@ import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.PhotoLibrary
-import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -38,7 +36,7 @@ fun detail(
     postModelId: Int,
     slug: String? = null,
     vm: DetailVM = hiltViewModel()
-): @Composable () -> Unit { // returns action in top appbar
+): String? { // returns postModelLink to use it in share button
     vm.init(postModelId)
     val context = LocalContext.current
     val postModelByVm by vm.postModel.collectAsState()
@@ -87,23 +85,7 @@ fun detail(
             }
         }
     }
-    return {
-        IconButton(onClick = {
-            val intent = Intent().apply {
-                action = Intent.ACTION_SEND
-                putExtra(Intent.EXTRA_TEXT, postModelByVm?.link)
-                type = "text/plain"
-            }
-            val shareIntent = Intent.createChooser(intent, null)
-            context.startActivity(shareIntent)
-        }) {
-            Icon(
-                imageVector = Icons.Rounded.Share,
-                contentDescription = stringResource(R.string.share)
-            )
-        }
-    }
-
+    return postModelByVm?.link
 }
 
 @SuppressLint("SetJavaScriptEnabled")

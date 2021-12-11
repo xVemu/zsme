@@ -77,6 +77,7 @@ lint/generated/
 lint/outputs/
 lint/tmp/
 # lint/reports/
-/.idea/saveactions_settings.xml
+.idea/saveactions_settings.xml
 .DS_Store
-/app/schemas/pl.vemu.zsme.data.db.Database/
+app/schemas/pl.vemu.zsme.data.db.Database/
+.idea/deploymentTargetDropDown.xml
