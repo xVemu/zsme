@@ -13,7 +13,7 @@ android {
         minSdk 23
         targetSdk 31
         versionCode 35
-        versionName "1.5.3.1"
+        versionName "2.0.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -45,11 +45,6 @@ android {
     }
     composeOptions {
         kotlinCompilerExtensionVersion compose_version
-    }
-    packagingOptions {
-        exclude "META-INF/*"
-        exclude "**/attach_hotspot_windows.dll"
-        exclude "META-INF/licenses/**"
     }
 }
 
