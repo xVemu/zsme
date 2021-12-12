@@ -15,7 +15,7 @@ import com.google.gson.reflect.TypeToken
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun Gallery(imagesJson: String) { // TODO offline error
+fun Gallery(imagesJson: String) {
     val imageType = object : TypeToken<List<String>>() {}.type
     val images: List<String> = Gson().fromJson(imagesJson, imageType)
     HorizontalPager(state = rememberPagerState(0), count = images.size) { page ->

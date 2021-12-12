@@ -8,8 +8,8 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.*
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
@@ -42,7 +42,6 @@ import com.google.accompanist.navigation.animation.navigation
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
-import com.google.android.play.core.install.InstallException
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.android.play.core.ktx.*
@@ -73,7 +72,7 @@ val Context.dataStore by preferencesDataStore(name = "settings")
 /*TODO change theme in xml*/
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : ComponentActivity() {
 
     private val themePreference = PreferenceRequest(
         key = stringPreferencesKey("theme"),
@@ -107,8 +106,11 @@ class MainActivity : AppCompatActivity() {
         createNotificationChannel()
         setupNotification()
         lifecycleScope.launchWhenCreated {
-            updateApp()
-            reviewApp()
+            try {
+                updateApp()
+                reviewApp()
+            } catch (e: Exception) {
+            }
         }
     }
 
@@ -395,24 +397,21 @@ class MainActivity : AppCompatActivity() {
     }
 
     private suspend fun updateApp() { // TODO https://developer.android.com/guide/playcore/in-app-updates/test
-        try {
-            val manager = AppUpdateManagerFactory.create(applicationContext)
-            val appUpdateInfo = manager.requestAppUpdateInfo()
-            if (!(appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
-                        && appUpdateInfo.isFlexibleUpdateAllowed
-                        && (appUpdateInfo.clientVersionStalenessDays ?: -1) >= 7
-                        )
-            ) return
-            manager.startUpdateFlowForResult(
-                appUpdateInfo,
-                AppUpdateType.FLEXIBLE,
-                this,
-                0
-            )
-            manager.requestUpdateFlow().collect { appUpdateResult ->
-                if (appUpdateResult is AppUpdateResult.Downloaded) appUpdateResult.completeUpdate()
-            }
-        } catch (e: InstallException) {
+        val manager = AppUpdateManagerFactory.create(applicationContext)
+        val appUpdateInfo = manager.requestAppUpdateInfo()
+        if (!(appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+                    && appUpdateInfo.isFlexibleUpdateAllowed
+                    && (appUpdateInfo.clientVersionStalenessDays ?: -1) >= 7
+                    )
+        ) return
+        manager.startUpdateFlowForResult(
+            appUpdateInfo,
+            AppUpdateType.FLEXIBLE,
+            this,
+            0
+        )
+        manager.requestUpdateFlow().collect { appUpdateResult ->
+            if (appUpdateResult is AppUpdateResult.Downloaded) appUpdateResult.completeUpdate()
         }
     }
 
@@ -425,7 +424,6 @@ class MainActivity : AppCompatActivity() {
 
 /* TODO check
 * previews
-* deep links
 * internet refresh
 * */
 }

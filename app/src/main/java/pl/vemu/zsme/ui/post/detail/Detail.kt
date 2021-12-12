@@ -25,6 +25,7 @@ import androidx.webkit.WebSettingsCompat
 import androidx.webkit.WebViewFeature
 import com.google.gson.Gson
 import pl.vemu.zsme.R
+import pl.vemu.zsme.isNetworkAvailable
 import pl.vemu.zsme.paddingStart
 import pl.vemu.zsme.paddingTop
 import pl.vemu.zsme.ui.post.HTMLText
@@ -37,7 +38,7 @@ fun detail(
     slug: String? = null,
     vm: DetailVM = hiltViewModel()
 ): String? { // returns postModelLink to use it in share button
-    vm.init(postModelId) // TODO optimize
+    vm.init(postModelId)
     val context = LocalContext.current
     val postModelByVm by vm.postModel.collectAsState()
     val detailByVm by vm.detail.collectAsState()
@@ -45,6 +46,7 @@ fun detail(
         detailByVm?.let { detailModel ->
             Scaffold(
                 floatingActionButton = {
+                    if (!context.isNetworkAvailable()) return@Scaffold
                     detailModel.images?.let { images ->
                         ExtendedFloatingActionButton(
                             text = { Text(text = stringResource(R.string.gallery)) },

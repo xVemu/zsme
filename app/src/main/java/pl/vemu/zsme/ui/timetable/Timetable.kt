@@ -51,7 +51,7 @@ fun Timetable(
             contentColor = MaterialTheme.colorScheme.primary
         ) {
             names.forEachIndexed { index, name ->
-                Tab( //TODO change to material3 card
+                Tab( //TODO change to material3
                     text = { androidx.compose.material.Text(text = name) },
                     selected = pagerState.currentPage == index,
                     unselectedContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = ContentAlpha.medium),

@@ -99,7 +99,7 @@ fun Lesson(
 @Composable
 private fun LessonItem(
     @PreviewParameter(LessonModelPreviewParameterProvider::class) item: LessonModel,
-    divider: Boolean = true//TODO
+    divider: Boolean = true
 ) {
     Row(
         modifier = Modifier

@@ -208,40 +208,7 @@ fun HTMLText(
 }
 
 
-/*
-    private fun setupNetwork() {
-        val cm = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val networkRequest = NetworkRequest.Builder().build()
-        if (cm.activeNetwork == null) Toast.makeText(
-            context,
-            "Brak połaczenia z internetem",
-            Toast.LENGTH_LONG
-        ).show()
-        */
-/*cm.registerNetworkCallback(networkRequest, object : ConnectivityManager.NetworkCallback() {
-            override fun onAvailable(network: Network) {
-                lifecycleScope.launch {
-                    viewModel.fetchPosts()
-                }
-            }
-        })TODO*//*
-
-    }
-
-
-    private fun setupRecyclerView() {
-        binding.recyclerView.adapter = postAdapter.withLoadStateHeaderAndFooter(
-            header = PostLoadStateAdapter(postAdapter::retry),
-            footer = PostLoadStateAdapter(postAdapter::retry),
-        )
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.posts.collectLatest {
-                postAdapter.submitData(it)
-            }
-        }
-    }
-
-    //TODO wrong color on dark mode
+/*TODO
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.menu_search, menu)
