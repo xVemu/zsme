@@ -2,16 +2,8 @@
 <resources>
 
     <style name="MainTheme" parent="Theme.Material3.DayNight.NoActionBar">
-        <!--<item name="colorPrimary">@color/primary</item>
-        <item name="colorPrimaryVariant">@color/primaryVariant</item>
-        <item name="colorOnPrimary">@color/onPrimary</item>
-        <item name="colorSecondary">@color/secondary</item>
-        <item name="colorSecondaryVariant">@color/secondaryVariant</item>
-        <item name="colorOnSecondary">@color/onSecondary</item>-->
-
-        <!--<item name="android:navigationBarColor">@android:color/white</item>
-        <item name="android:statusBarColor">@android:color/darker_gray</item>
-        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>-->
+        <item name="colorPrimary">#FF005fb1</item>
+        <item name="android:statusBarColor">#FFfdfbff</item>
     </style>
 
 </resources>

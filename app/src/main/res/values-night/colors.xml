@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <color name="primary">#2B65B4</color>
-    <color name="primaryVariant">#6eb3ed</color>
-    <color name="secondary">#b47b2b</color>
-    <color name="secondaryVariant">#dac58b</color>
-    <color name="onPrimary">@android:color/black</color>
-    <color name="onSecondary">@android:color/black</color>
-</resources>
