@@ -85,4 +85,5 @@
     <string name="date">"Ostatnia modyfikacja: "</string>
     <string name="author">"Opublikowane przez: "</string>
     <string name="category">"Kategoria: "</string>
+    <string name="retry">ponów</string>
 </resources>

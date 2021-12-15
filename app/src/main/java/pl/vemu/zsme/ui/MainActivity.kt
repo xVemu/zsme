@@ -69,8 +69,6 @@ import java.util.concurrent.TimeUnit
 
 val Context.dataStore by preferencesDataStore(name = "settings")
 
-/*TODO change theme in xml*/
-
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
@@ -252,15 +250,6 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    private fun ChangeSystemBars() {
-        val systemUiController = rememberSystemUiController()
-        systemUiController.setNavigationBarColor(
-            MaterialTheme.colorScheme.surfaceColorWithElevation(3.dp)
-        )
-        systemUiController.setStatusBarColor(MaterialTheme.colorScheme.surface)
-    }
-
-    @Composable
     private fun BottomBar(
         currentDestination: NavDestination?,
         navController: NavHostController
@@ -294,6 +283,15 @@ class MainActivity : ComponentActivity() {
                 )
             }
         }
+    }
+
+    @Composable
+    private fun ChangeSystemBars() {
+        val systemUiController = rememberSystemUiController()
+        systemUiController.setNavigationBarColor(
+            MaterialTheme.colorScheme.surfaceColorWithElevation(3.dp)
+        )
+        systemUiController.setStatusBarColor(MaterialTheme.colorScheme.surface)
     }
 
     @OptIn(ExperimentalMaterial3Api::class)

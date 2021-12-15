@@ -7,12 +7,13 @@ import android.widget.TextView
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Card
-import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.*
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
@@ -66,42 +67,90 @@ fun Post(
                 contentColor = MaterialTheme.colorScheme.primary
             )
         },
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
+        modifier = Modifier
+            .nestedScroll(scrollBehavior.nestedScrollConnection)
+            .fillMaxSize()
     ) {
-        /*lazyMovieItems.apply { TODO
-            when {
-                loadState.refresh is LoadState.Loading -> {
-                    item { LoadingView(modifier = Modifier.fillParentMaxSize()) }
+        Box(modifier = Modifier.fillMaxSize()) {
+            var isError by remember { mutableStateOf(false) }
+            LazyColumn {
+                items(pagingItems) { post ->
+                    PostCard(navController = navController, postModel = post!!, context = context)
                 }
-                loadState.append is LoadState.Loading -> {
-                    item { LoadingItem() }
-                }
-                loadState.refresh is LoadState.Error -> {
-                    val e = lazyMovieItems.loadState.refresh as LoadState.Error
-                    item {
-                        ErrorItem(
-                            message = e.error.localizedMessage!!,
-                            modifier = Modifier.fillParentMaxSize(),
-                            onClickRetry = { retry() }
-                        )
+                pagingItems.apply {
+                    when {
+                        loadState.append is LoadState.Loading -> {
+                            item { LoadingItem() }
+                        }
+                        loadState.refresh is LoadState.Error || loadState.append is LoadState.Error -> {
+                            isError = true
+                        }
                     }
-                }
-                loadState.append is LoadState.Error -> {
-                    val e = lazyMovieItems.loadState.append as LoadState.Error
-                    item {
-                        ErrorItem(
-                            message = e.error.localizedMessage!!,
-                            onClickRetry = { retry() }
-                        )
-                    }
-                }
-            }*/
-        LazyColumn {
-            items(pagingItems) { post ->
-                post?.let {
-                    PostCard(navController, it, context)
                 }
             }
+            if (isError)
+                Snackbar(
+                    modifier = Modifier.align(Alignment.BottomCenter),
+                    backgroundColor = MaterialTheme.colorScheme.primaryContainer,
+                    actionColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    snackbarData = snackBarData {
+                        pagingItems.retry()
+                        isError = false
+                    }
+                )
+        }
+    }
+}
+
+@Composable
+private fun snackBarData(action: () -> Unit): SnackbarData {
+    val errorText = stringResource(R.string.error)
+    val retryText = stringResource(R.string.retry)
+    return object : SnackbarData {
+        override val actionLabel = retryText
+        override val duration = SnackbarDuration.Indefinite
+        override val message = errorText
+
+        override fun dismiss() {}
+
+        override fun performAction() {
+            action()
+        }
+    }
+}
+
+@Composable
+private fun LoadingItem() {
+    CircularProgressIndicator(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+            .wrapContentWidth(Alignment.CenterHorizontally),
+        color = MaterialTheme.colorScheme.primary
+    )
+}
+
+@Composable
+fun ErrorItem(
+    message: String,
+    modifier: Modifier = Modifier,
+    onClickRetry: () -> Unit
+) {
+    Row(
+        modifier = modifier.padding(16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = message,
+            maxLines = 1,
+            modifier = Modifier.weight(1f),
+            style = MaterialTheme.typography.headlineSmall,
+            color = Color.Red
+        )
+        OutlinedButton(onClick = onClickRetry) {
+            Text(text = "Try again")
         }
     }
 }
