@@ -20,7 +20,7 @@ const val PAGE_SIZE = 10
 
 @OptIn(ExperimentalPagingApi::class)
 class PostRemoteMediator constructor(
-    private val query: String,
+    private val query: String?,
     private val postDAO: PostDAO,
     private val remoteKeyDAO: RemoteKeyDAO,
     private val db: Database,
@@ -41,7 +41,7 @@ class PostRemoteMediator constructor(
                 }
             }
             val response = zsmeService.searchPosts(query, page, state.config.pageSize)
-            val isEndOfList = response.isEmpty()
+            val isEndOfList = response.isEmpty() or (response.size < state.config.pageSize)
             db.withTransaction {
                 if (loadType == LoadType.REFRESH) {
                     postDAO.clearAll()
@@ -75,29 +75,28 @@ class PostRemoteMediator constructor(
             LoadType.APPEND -> {
                 val remoteKeys = getRemoteKeyForLastItem(state)
                 val nextKey = remoteKeys?.nextKey
-                nextKey ?: MediatorResult.Success(endOfPaginationReached = false)
+                nextKey ?: MediatorResult.Success(endOfPaginationReached = true)
             }
             LoadType.PREPEND -> {
                 val remoteKeys = getRemoteKeyForFirstItem(state)
                 val prevKey = remoteKeys?.prevKey
-                prevKey ?: MediatorResult.Success(endOfPaginationReached = false)
+                prevKey ?: MediatorResult.Success(endOfPaginationReached = true)
             }
-
         }
 
     private suspend fun getRemoteKeyClosestToCurrentPosition(state: PagingState<Int, PostModel>): RemoteKeyModel? =
         state.anchorPosition?.let { position ->
-            state.closestItemToPosition(position)?.id?.let { repoId ->
-                remoteKeyDAO.remoteKeyByQueryId(repoId)
+            state.closestItemToPosition(position)?.id?.let { postModelId ->
+                remoteKeyDAO.remoteKeyByQueryId(postModelId)
             }
         }
 
 
     private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, PostModel>): RemoteKeyModel? =
-        state.lastItemOrNull()?.let { cat -> remoteKeyDAO.remoteKeyByQueryId(cat.id) }
+        state.lastItemOrNull()?.let { postModel -> remoteKeyDAO.remoteKeyByQueryId(postModel.id) }
 
 
     private suspend fun getRemoteKeyForFirstItem(state: PagingState<Int, PostModel>): RemoteKeyModel? =
-        state.firstItemOrNull()?.let { cat -> remoteKeyDAO.remoteKeyByQueryId(cat.id) }
+        state.firstItemOrNull()?.let { postModel -> remoteKeyDAO.remoteKeyByQueryId(postModel.id) }
 
 }

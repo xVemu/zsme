@@ -15,7 +15,7 @@ class PostVM @Inject constructor(
     postRepo: PostRepo,
 ) : ViewModel() {
 
-    val query = MutableStateFlow("")
+    val query: MutableStateFlow<String?> = MutableStateFlow(null)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val posts = query.flatMapLatest { postRepo.searchPosts(it) }.cachedIn(viewModelScope)

@@ -17,8 +17,8 @@ interface PostDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(postModel: PostModel)
 
-    @Query("SELECT * FROM Posts WHERE excerpt LIKE '%' || :query || '%' ORDER by date DESC")
-    fun searchPosts(query: String): PagingSource<Int, PostModel>
+    @Query("SELECT * FROM Posts WHERE (:query IS NULL OR excerpt LIKE '%' || :query || '%') ORDER by date DESC")
+    fun searchPosts(query: String?): PagingSource<Int, PostModel>
 
     @Query("SELECT * FROM Posts ORDER by date DESC")
     fun getAll(): Flow<PostModel>

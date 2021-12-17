@@ -20,11 +20,11 @@ class PostRepo @Inject constructor(
     private val postMapper: PostMapper,
 ) {
     @OptIn(ExperimentalPagingApi::class)
-    fun searchPosts(query: String) = Pager(
+    fun searchPosts(query: String?) = Pager(
         config = PagingConfig(
             pageSize = PAGE_SIZE,
             enablePlaceholders = false,
-            maxSize = PAGE_SIZE + (2 * PAGE_SIZE),
+            maxSize = 3 * PAGE_SIZE,
         ),
         remoteMediator = PostRemoteMediator(
             query,

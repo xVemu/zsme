@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.*
@@ -131,30 +130,6 @@ private fun LoadingItem() {
     )
 }
 
-@Composable
-fun ErrorItem(
-    message: String,
-    modifier: Modifier = Modifier,
-    onClickRetry: () -> Unit
-) {
-    Row(
-        modifier = modifier.padding(16.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = message,
-            maxLines = 1,
-            modifier = Modifier.weight(1f),
-            style = MaterialTheme.typography.headlineSmall,
-            color = Color.Red
-        )
-        OutlinedButton(onClick = onClickRetry) {
-            Text(text = "Try again")
-        }
-    }
-}
-
 @OptIn(ExperimentalMaterialApi::class, ExperimentalCoilApi::class)
 @Composable
 private fun PostCard(
@@ -175,7 +150,7 @@ private fun PostCard(
         Row {
             Column(modifier = Modifier.padding(8.dp)) {
                 Image(
-                    painter = rememberImagePainter(postModel.thumbnail) {
+                    painter = rememberImagePainter(postModel.thumbnail ?: R.drawable.zsme) {
                         placeholder(R.drawable.zsme)
                         crossfade(true)
                     },
