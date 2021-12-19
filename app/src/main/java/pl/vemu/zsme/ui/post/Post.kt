@@ -73,7 +73,10 @@ fun Post(
         Box(modifier = Modifier.fillMaxSize()) {
             var isError by remember { mutableStateOf(false) }
             LazyColumn {
-                items(pagingItems) { post ->
+                items(
+                    items = pagingItems,
+                    key = { postModel -> postModel.id }
+                ) { post ->
                     PostCard(navController = navController, postModel = post!!, context = context)
                 }
                 pagingItems.apply {

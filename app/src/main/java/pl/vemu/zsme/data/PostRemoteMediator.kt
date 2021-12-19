@@ -75,12 +75,12 @@ class PostRemoteMediator constructor(
             LoadType.APPEND -> {
                 val remoteKeys = getRemoteKeyForLastItem(state)
                 val nextKey = remoteKeys?.nextKey
-                nextKey ?: MediatorResult.Success(endOfPaginationReached = true)
+                nextKey ?: MediatorResult.Success(endOfPaginationReached = false)
             }
             LoadType.PREPEND -> {
                 val remoteKeys = getRemoteKeyForFirstItem(state)
                 val prevKey = remoteKeys?.prevKey
-                prevKey ?: MediatorResult.Success(endOfPaginationReached = true)
+                prevKey ?: MediatorResult.Success(endOfPaginationReached = false)
             }
         }
 
