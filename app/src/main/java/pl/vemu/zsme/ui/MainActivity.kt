@@ -104,6 +104,7 @@ class MainActivity : ComponentActivity() {
         createNotificationChannel()
         setupNotification()
         lifecycleScope.launchWhenCreated {
+            @Suppress("EmptyCatchBlock", "TooGenericExceptionCaught", "SwallowedException")
             try {
                 updateApp()
                 reviewApp()
@@ -133,119 +134,126 @@ class MainActivity : ComponentActivity() {
                 startDestination = BottomNavItem.POST.route,
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(innerPadding)
+                    .padding(innerPadding),
+                builder = navigations(navController, scrollBehavior)
+            )
+        }
+    }
+
+    @OptIn(ExperimentalAnimationApi::class)
+    @Composable
+    private fun navigations(
+        navController: NavHostController,
+        scrollBehavior: TopAppBarScrollBehavior
+    ): NavGraphBuilder.() -> Unit = {
+        navigation(BottomNavItem.POST.startDestination, BottomNavItem.POST.route) {
+            composable(
+                route = BottomNavItem.POST.startDestination,
+                deepLinks = listOf(navDeepLink { uriPattern = "https://zsme.tarnow.pl/" }),
+                exitTransition = Transitions.exitTransition,
+                popEnterTransition = Transitions.popEnterTransition
             ) {
-                navigation(BottomNavItem.POST.startDestination, BottomNavItem.POST.route) {
-                    composable(
-                        route = BottomNavItem.POST.startDestination,
-                        deepLinks = listOf(navDeepLink { uriPattern = "https://zsme.tarnow.pl/" }),
-                        exitTransition = Transitions.exitTransition,
-                        popEnterTransition = Transitions.popEnterTransition
-                    ) {
-                        postLink = null
-                        Post(navController, scrollBehavior)
+                Post(navController, scrollBehavior)
+            }
+            composable(
+                route = "detail/{postModelId}?slug={slug}",
+                arguments = listOf(
+                    navArgument("postModelId") {
+                        defaultValue = 0
+                        type = NavType.IntType /*TODO change to parcelable*/
+                    },
+                    navArgument("slug") {
+                        nullable = true
+                        type = NavType.StringType
                     }
-                    composable(
-                        route = "detail/{postModelId}?slug={slug}",
-                        arguments = listOf(
-                            navArgument("postModelId") {
-                                defaultValue = 0
-                                type = NavType.IntType /*TODO change to parcelable*/
-                            },
-                            navArgument("slug") {
-                                nullable = true
-                                type = NavType.StringType
-                            }
-                        ),
-                        deepLinks = listOf(
-                            navDeepLink { uriPattern = "https://zsme.tarnow.pl/wp/{slug}/" },
-                            navDeepLink { uriPattern = "https://zsme.tarnow.pl/wp/{slug}" },
-                            navDeepLink { uriPattern = "zsme://detail/{postModelId}" }
-                        ),
-                        enterTransition = Transitions.enterTransition,
-                        popExitTransition = Transitions.popExitTransition,
-                        exitTransition = Transitions.exitTransition,
-                        popEnterTransition = Transitions.popEnterTransition
-                    ) { backStack ->
-                        backStack.arguments?.getString("slug")?.let { slug ->
-                            postLink = detail(navController, 0, slug = slug) //TODO slug handle
-                        } ?: backStack.arguments?.getInt("postModelId")
-                            ?.let { postModelId ->
-                                postLink = detail(navController, postModelId = postModelId)
-                            }
+                ),
+                deepLinks = listOf(
+                    navDeepLink { uriPattern = "https://zsme.tarnow.pl/wp/{slug}/" },
+                    navDeepLink { uriPattern = "https://zsme.tarnow.pl/wp/{slug}" },
+                    navDeepLink { uriPattern = "zsme://detail/{postModelId}" }
+                ),
+                enterTransition = Transitions.enterTransition,
+                popExitTransition = Transitions.popExitTransition,
+                exitTransition = Transitions.exitTransition,
+                popEnterTransition = Transitions.popEnterTransition
+            ) { backStack ->
+                backStack.arguments?.getString("slug")?.let { slug ->
+                    postLink = detail(navController, 0, slug = slug) //TODO slug handle
+                } ?: backStack.arguments?.getInt("postModelId")
+                    ?.let { postModelId ->
+                        postLink = detail(navController, postModelId = postModelId)
                     }
-                    composable(
-                        route = "gallery?images={images}",
-                        arguments = listOf(
-                            navArgument("images") {
-                                nullable = true
-                                type = NavType.StringType
-                            }
-                        ),
-                        enterTransition = Transitions.enterTransition,
-                        popExitTransition = Transitions.popExitTransition
-                    ) { backStack ->
-                        backStack.arguments?.getString("images")?.let { Gallery(it) }
-                    } /*TODO argmuments string array*/
-                }
+            }
+            composable(
+                route = "gallery?images={images}",
+                arguments = listOf(
+                    navArgument("images") {
+                        nullable = true
+                        type = NavType.StringType
+                    }
+                ),
+                enterTransition = Transitions.enterTransition,
+                popExitTransition = Transitions.popExitTransition
+            ) { backStack ->
+                backStack.arguments?.getString("images")?.let { Gallery(it) }
+            } /*TODO argmuments string array*/
+        }
 
-                navigation(
-                    BottomNavItem.TIMETABLE.startDestination,
-                    BottomNavItem.TIMETABLE.route
-                ) {
-                    composable(
-                        route = BottomNavItem.TIMETABLE.startDestination,
-                        deepLinks = listOf(
-                            navDeepLink { uriPattern = "zsme://timetable" },
-                            navDeepLink { uriPattern = "https://zsme.tarnow.pl/plan/" }
-                        ),
-                        exitTransition = Transitions.fadeOut,
-                        popEnterTransition = Transitions.fadeIn
-                    ) { Timetable(navController) }
-                    composable(
-                        route = "lesson/{url}",
-                        arguments = listOf(
-                            navArgument("url") {
-                                type = NavType.StringType
-                            }
-                        ),
-                        enterTransition = { _, _ ->
-                            expandIn(expandFrom = Alignment.Center) + fadeIn()
-                        },
-                        popExitTransition = { _, _ ->
-                            shrinkOut(shrinkTowards = Alignment.Center) + fadeOut()
-                        }
-                    ) { backStack ->
-                        backStack.arguments?.getString("url")?.let { url ->
-                            Lesson(url)
-                        }
+        navigation(
+            BottomNavItem.TIMETABLE.startDestination,
+            BottomNavItem.TIMETABLE.route
+        ) {
+            composable(
+                route = BottomNavItem.TIMETABLE.startDestination,
+                deepLinks = listOf(
+                    navDeepLink { uriPattern = "zsme://timetable" },
+                    navDeepLink { uriPattern = "https://zsme.tarnow.pl/plan/" }
+                ),
+                exitTransition = Transitions.fadeOut,
+                popEnterTransition = Transitions.fadeIn
+            ) { Timetable(navController) }
+            composable(
+                route = "lesson/{url}",
+                arguments = listOf(
+                    navArgument("url") {
+                        type = NavType.StringType
                     }
+                ),
+                enterTransition = { _, _ ->
+                    expandIn(expandFrom = Alignment.Center) + fadeIn()
+                },
+                popExitTransition = { _, _ ->
+                    shrinkOut(shrinkTowards = Alignment.Center) + fadeOut()
                 }
-
-                navigation(BottomNavItem.MORE.startDestination, BottomNavItem.MORE.route) {
-                    composable(
-                        route = BottomNavItem.MORE.startDestination,
-                        deepLinks = listOf(navDeepLink { uriPattern = "zsme://more" }),
-                        exitTransition = Transitions.exitTransition,
-                        popEnterTransition = Transitions.popEnterTransition
-                    ) {
-                        More(navController)
-                    }
-                    composable(
-                        route = "contact",
-                        deepLinks = listOf(navDeepLink { //TODO backstack
-                            uriPattern = "https://zsme.tarnow.pl/wp/kontakt/"
-                        }),
-                        enterTransition = Transitions.enterTransition,
-                        popExitTransition = Transitions.popExitTransition
-                    ) { Contact() }
-                    composable(
-                        route = "settings",
-                        enterTransition = Transitions.enterTransition,
-                        popExitTransition = Transitions.popExitTransition
-                    ) { Settings() }
+            ) { backStack ->
+                backStack.arguments?.getString("url")?.let { url ->
+                    Lesson(url)
                 }
             }
+        }
+
+        navigation(BottomNavItem.MORE.startDestination, BottomNavItem.MORE.route) {
+            composable(
+                route = BottomNavItem.MORE.startDestination,
+                deepLinks = listOf(navDeepLink { uriPattern = "zsme://more" }),
+                exitTransition = Transitions.exitTransition,
+                popEnterTransition = Transitions.popEnterTransition
+            ) {
+                More(navController)
+            }
+            composable(
+                route = "contact",
+                deepLinks = listOf(navDeepLink { //TODO backstack
+                    uriPattern = "https://zsme.tarnow.pl/wp/kontakt/"
+                }),
+                enterTransition = Transitions.enterTransition,
+                popExitTransition = Transitions.popExitTransition
+            ) { Contact() }
+            composable(
+                route = "settings",
+                enterTransition = Transitions.enterTransition,
+                popExitTransition = Transitions.popExitTransition
+            ) { Settings() }
         }
     }
 
@@ -301,17 +309,9 @@ class MainActivity : ComponentActivity() {
         currentDestination: NavDestination?,
         scrollBehavior: TopAppBarScrollBehavior
     ) {
-        val backArrow = @Composable {
-            IconButton(onClick = {
-                navController.popBackStack()
-            }) {
-                Icon(
-                    imageVector = Icons.Rounded.ArrowBack,
-                    contentDescription = stringResource(R.string.back_button),
-                )
-            }
-        }
         val startDestination = currentDestination?.parent?.startDestinationRoute
+        val currentRoute = currentDestination?.route
+        if (currentRoute?.startsWith("detail") == false) postLink = null
         val text = @Composable {
             Text(
                 text = stringResource(
@@ -325,17 +325,26 @@ class MainActivity : ComponentActivity() {
         }
         if (startDestination != currentDestination?.route)
             SmallTopAppBar(
-                navigationIcon = backArrow,
+                navigationIcon = {
+                    IconButton(onClick = {
+                        navController.popBackStack()
+                    }) {
+                        Icon(
+                            imageVector = Icons.Rounded.ArrowBack,
+                            contentDescription = stringResource(R.string.back_button),
+                        )
+                    }
+                },
                 title = text,
                 actions = {
-                    if (currentDestination?.route?.startsWith("detail") == true) {
+                    if (currentRoute?.startsWith("detail") == true) {
                         ShareButton()
                     }
                 }
             )
         else CenterAlignedTopAppBar(
             title = text,
-            scrollBehavior = if (currentDestination?.route == BottomNavItem.POST.startDestination) scrollBehavior else null
+            scrollBehavior = if (currentRoute == BottomNavItem.POST.startDestination) scrollBehavior else null
         )
     }
 

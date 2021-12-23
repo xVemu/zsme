@@ -31,7 +31,7 @@ class PostRemoteMediator constructor(
     override suspend fun load(
         loadType: LoadType, state: PagingState<Int, PostModel>
     ): MediatorResult {
-        try {
+        return try {
             val page = when (val pageKeyData = getKeyPageData(loadType, state)) {
                 is MediatorResult.Success -> {
                     return pageKeyData
@@ -55,11 +55,11 @@ class PostRemoteMediator constructor(
                 remoteKeyDAO.insertAll(keys)
                 postDAO.insertAll(postMapper.mapFromEntityList(response))
             }
-            return MediatorResult.Success(endOfPaginationReached = isEndOfList)
+            MediatorResult.Success(endOfPaginationReached = isEndOfList)
         } catch (exception: IOException) {
-            return MediatorResult.Error(exception)
+            MediatorResult.Error(exception)
         } catch (exception: HttpException) {
-            return MediatorResult.Error(exception)
+            MediatorResult.Error(exception)
         }
     }
 
