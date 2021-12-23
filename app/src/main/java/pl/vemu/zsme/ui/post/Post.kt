@@ -34,10 +34,12 @@ import coil.compose.rememberImagePainter
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import kotlinx.coroutines.launch
 import pl.vemu.zsme.R
 import pl.vemu.zsme.data.model.PostModel
 import pl.vemu.zsme.paddingBottom
 import pl.vemu.zsme.paddingTop
+import java.net.UnknownHostException
 
 
 @Composable
@@ -63,7 +65,8 @@ fun Post(
             SwipeRefreshIndicator(
                 state = state,
                 refreshTriggerDistance = trigger,
-                contentColor = MaterialTheme.colorScheme.primary
+                contentColor = MaterialTheme.colorScheme.primary,
+                backgroundColor = MaterialTheme.colorScheme.surface
             )
         },
         modifier = Modifier
@@ -71,7 +74,11 @@ fun Post(
             .fillMaxSize()
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
-            var isError by remember { mutableStateOf(false) }
+            val snackbarHostState = remember { SnackbarHostState() }
+            val coroutineScope = rememberCoroutineScope()
+            val errorMsg = stringResource(R.string.error)
+            val retryMsg = stringResource(R.string.retry)
+            val noConnectionMsg = stringResource(R.string.no_connection)
             LazyColumn {
                 items(
                     items = pagingItems,
@@ -85,39 +92,33 @@ fun Post(
                             item { LoadingItem() }
                         }
                         loadState.refresh is LoadState.Error || loadState.append is LoadState.Error -> {
-                            isError = true
+                            val error =
+                                (loadState.refresh as? LoadState.Error)?.error
+                                    ?: (loadState.append as LoadState.Error).error
+                            coroutineScope.launch {
+                                val result = snackbarHostState.showSnackbar(
+                                    message = if (error is UnknownHostException) noConnectionMsg else errorMsg,
+                                    actionLabel = retryMsg.uppercase(),
+                                    duration = SnackbarDuration.Indefinite
+                                )
+                                if (result == SnackbarResult.ActionPerformed)
+                                    pagingItems.retry()
+                            }
                         }
                     }
                 }
             }
-            if (isError)
+            SnackbarHost(
+                hostState = snackbarHostState,
+                modifier = Modifier.align(Alignment.BottomCenter),
+            ) {
                 Snackbar(
-                    modifier = Modifier.align(Alignment.BottomCenter),
                     backgroundColor = MaterialTheme.colorScheme.primaryContainer,
                     actionColor = MaterialTheme.colorScheme.primary,
                     contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                    snackbarData = snackBarData {
-                        pagingItems.retry()
-                        isError = false
-                    }
+                    snackbarData = it
                 )
-        }
-    }
-}
-
-@Composable
-private fun snackBarData(action: () -> Unit): SnackbarData {
-    val errorText = stringResource(R.string.error)
-    val retryText = stringResource(R.string.retry)
-    return object : SnackbarData {
-        override val actionLabel = retryText
-        override val duration = SnackbarDuration.Indefinite
-        override val message = errorText
-
-        override fun dismiss() {}
-
-        override fun performAction() {
-            action()
+            }
         }
     }
 }

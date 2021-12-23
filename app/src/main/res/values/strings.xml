@@ -86,4 +86,5 @@
     <string name="author">"Opublikowane przez: "</string>
     <string name="category">"Kategoria: "</string>
     <string name="retry">ponów</string>
+    <string name="no_connection">Brak połączenia z internetem</string>
 </resources>

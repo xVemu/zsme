@@ -2,14 +2,14 @@
 <resources>
 
     <style name="MainTheme" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="colorPrimary">#FF005fb1</item>
-        <item name="android:statusBarColor">#FFfdfbff</item>
+        <item name="colorPrimary">#FFa4c8ff</item>
+        <item name="android:statusBarColor">#FF1b1b1d</item>
     </style>
 
     <style name="MainTheme.SplashScreen" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">#FFfdfbff</item>
+        <item name="windowSplashScreenBackground">#FF1b1b1d</item>
         <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_foreground</item>
-        <item name="windowSplashScreenIconBackgroundColor">#FFfdfbff</item>
+        <item name="windowSplashScreenIconBackgroundColor">#FF1b1b1d</item>
         <item name="postSplashScreenTheme">@style/MainTheme</item>
     </style>
 
