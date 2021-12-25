@@ -11,10 +11,10 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlin.math.ln
 
-fun Modifier.paddingStart(size: Dp = 0.dp) = this.padding(size, 0.dp, 0.dp, 0.dp)
-fun Modifier.paddingTop(size: Dp = 0.dp) = this.padding(0.dp, size, 0.dp, 0.dp)
-fun Modifier.paddingEnd(size: Dp = 0.dp) = this.padding(0.dp, 0.dp, size, 0.dp)
-fun Modifier.paddingBottom(size: Dp = 0.dp) = this.padding(0.dp, 0.dp, 0.dp, size)
+fun Modifier.paddingStart(size: Dp) = this.padding(size, 0.dp, 0.dp, 0.dp)
+fun Modifier.paddingTop(size: Dp) = this.padding(0.dp, size, 0.dp, 0.dp)
+fun Modifier.paddingEnd(size: Dp) = this.padding(0.dp, 0.dp, size, 0.dp)
+fun Modifier.paddingBottom(size: Dp) = this.padding(0.dp, 0.dp, 0.dp, size)
 
 fun ColorScheme.surfaceColorWithElevation(
     elevation: Dp,

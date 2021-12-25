@@ -2,6 +2,7 @@ package pl.vemu.zsme.ui.post.detail
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
+import android.graphics.Color
 import android.text.format.DateFormat
 import android.webkit.WebView
 import androidx.compose.foundation.layout.Column
@@ -117,6 +118,7 @@ private fun WebView(
                 }
                 isVerticalScrollBarEnabled = false
                 isHorizontalScrollBarEnabled = false
+                setBackgroundColor(Color.TRANSPARENT)
                 loadData(html, "text/html; charset=UTF-8", null)
             }
         },
