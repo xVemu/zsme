@@ -11,6 +11,7 @@ import androidx.compose.material.icons.rounded.ImportContacts
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavController
+import pl.vemu.zsme.DEFAULT_URL
 import pl.vemu.zsme.R
 
 enum class MoreItem(
@@ -30,7 +31,7 @@ enum class MoreItem(
             Intent.createChooser(
                 Intent(
                     Intent.ACTION_VIEW,
-                    Uri.parse("https://zsme.tarnow.pl")
+                    Uri.parse(DEFAULT_URL)
                 ), context.getString(R.string.open_in)
             )
         )

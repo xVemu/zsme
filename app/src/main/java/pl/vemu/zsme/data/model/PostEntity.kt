@@ -45,20 +45,19 @@ data class MediaDetails(
 )
 
 data class Sizes(
-    val thumbnail: Thumbnail,
+    val medium: Image,
+    val full: Image,
 )
 
-data class Thumbnail(
+data class Image(
     @SerializedName("source_url")
     val sourceUrl: String?,
 )
 
 data class Author(
-    val id: Int,
     val name: String,
 )
 
 data class Category(
-    val id: Int,
     val name: String,
 )

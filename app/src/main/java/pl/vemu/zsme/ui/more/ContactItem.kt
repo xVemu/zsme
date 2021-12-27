@@ -15,7 +15,7 @@ enum class ContactItem(
     @StringRes private val action: Int
 ) {
     NAME(null, R.string.school_name, R.string.school_name_text, 0),
-    ADRESS(
+    ADDRESS(
         R.drawable.ic_map,
         R.string.school_address,
         R.string.school_address_text,

@@ -28,3 +28,5 @@ fun Context.isNetworkAvailable() =
                     || hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)
         } ?: false
     }
+
+const val DEFAULT_URL = "https://zsme.tarnow.pl"

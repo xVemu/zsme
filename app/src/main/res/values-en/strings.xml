@@ -46,11 +46,7 @@
     <string name="no_app">No app to perform action.</string>
     <string name="notification_summary">Manage your notifications</string>
     <string name="image">Image</string>
-    <string name="detail">@string/post</string>
     <string name="back_button">Back arrow</string>
-    <string name="date">"Last modification: "</string>
-    <string name="author">"Published by: "</string>
-    <string name="category">"Category: "</string>
     <string name="retry">retry</string>
     <string name="no_connection">No internet connection</string>
 </resources>

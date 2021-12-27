@@ -13,7 +13,8 @@ class PostMapper @Inject constructor() : EntityMapper<PostEntity, PostModel> {
         content = entity.content.rendered,
         excerpt = entity.excerpt.rendered,
         author = entity.embedded.author[0].name,
-        thumbnail = entity.embedded.wpFeaturedmedia?.get(0)?.mediaDetails?.sizes?.thumbnail?.sourceUrl,
+        thumbnail = entity.embedded.wpFeaturedmedia?.get(0)?.mediaDetails?.sizes?.medium?.sourceUrl,
+        fullImage = entity.embedded.wpFeaturedmedia?.get(0)?.mediaDetails?.sizes?.full?.sourceUrl,
         category = entity.embedded.category[0][0].name,
     )
 
@@ -25,9 +26,18 @@ class PostMapper @Inject constructor() : EntityMapper<PostEntity, PostModel> {
         content = Content(model.content),
         excerpt = Excerpt(model.excerpt),
         embedded = Embedded(
-            author = arrayListOf(Author(0, model.author)),
-            wpFeaturedmedia = arrayListOf(WpFeaturedmedia(MediaDetails(Sizes(Thumbnail(model.thumbnail))))),
-            category = arrayListOf(arrayListOf(Category(0, model.category))),
+            author = arrayListOf(Author(model.author)),
+            wpFeaturedmedia = arrayListOf(
+                WpFeaturedmedia(
+                    MediaDetails(
+                        Sizes(
+                            medium = Image(model.thumbnail),
+                            full = Image(model.fullImage)
+                        )
+                    )
+                )
+            ),
+            category = arrayListOf(arrayListOf(Category(model.category))),
         ),
     )
 

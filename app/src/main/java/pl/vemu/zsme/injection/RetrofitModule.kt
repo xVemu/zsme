@@ -6,6 +6,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import pl.vemu.zsme.DEFAULT_URL
 import pl.vemu.zsme.data.service.ZSMEService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -24,7 +25,7 @@ class RetrofitModule {
     @Singleton
     @Provides
     fun provideRetrofit(gson: Gson): Retrofit = Retrofit.Builder()
-        .baseUrl("https://zsme.tarnow.pl/wp/wp-json/wp/v2/")
+        .baseUrl("$DEFAULT_URL/wp/wp-json/wp/v2/")
         .addConverterFactory(GsonConverterFactory.create(gson))
         .build()
 

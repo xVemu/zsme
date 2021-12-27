@@ -3,9 +3,12 @@ package pl.vemu.zsme.ui.post.detail
 import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.graphics.Color
-import android.text.format.DateFormat
 import android.webkit.WebView
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
@@ -16,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -24,14 +28,16 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.webkit.WebSettingsCompat
 import androidx.webkit.WebViewFeature
+import coil.annotation.ExperimentalCoilApi
+import coil.compose.rememberImagePainter
 import com.google.gson.Gson
 import pl.vemu.zsme.R
 import pl.vemu.zsme.isNetworkAvailable
-import pl.vemu.zsme.paddingStart
-import pl.vemu.zsme.paddingTop
 import pl.vemu.zsme.ui.post.HTMLText
+import java.text.DateFormat
 
-@OptIn(ExperimentalMaterial3Api::class)
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalCoilApi::class)
 @Composable
 fun detail(
     navController: NavController,
@@ -50,7 +56,7 @@ fun detail(
                     if (!context.isNetworkAvailable()) return@Scaffold
                     detailModel.images?.let { images ->
                         ExtendedFloatingActionButton(
-                            text = { Text(text = stringResource(R.string.gallery)) },
+                            text = { Text(stringResource(R.string.gallery)) },
                             onClick = {
                                 navController.navigate("gallery?images=" + Gson().toJson(images))
                             },
@@ -67,26 +73,33 @@ fun detail(
                 Column(
                     modifier = Modifier.verticalScroll(rememberScrollState())
                 ) {
+                    Image(
+                        painter = rememberImagePainter(
+                            postModel.fullImage
+                        ) {
+                            crossfade(true)
+                        },
+                        contentDescription = stringResource(R.string.image),
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .aspectRatio(16 / 9f)
+                    )
                     HTMLText(
                         html = postModel.title,
-                        modifier = Modifier.paddingTop(8.dp),
-                        centered = true,
+                        modifier = Modifier.padding(8.dp),
                         color = MaterialTheme.colorScheme.primary,
-                        textStyle = MaterialTheme.typography.bodyLarge
+                        textStyle = MaterialTheme.typography.titleLarge
+                    )
+                    Text(
+                        text = "${postModel.author} • ${
+                            DateFormat.getDateTimeInstance().format(postModel.date)
+                        } • ${postModel.category}",
+                        modifier = Modifier.padding(8.dp),
+                        style = MaterialTheme.typography.bodyMedium
                     )
                     SelectionContainer {
                         WebView(html = detailModel.html)
-                    }
-                    Column(
-                        modifier = Modifier.paddingStart(8.dp)
-                    ) {
-                        Text(
-                            text = stringResource(R.string.date) + DateFormat.getMediumDateFormat(
-                                context
-                            ).format(postModel.date)
-                        )
-                        Text(text = stringResource(R.string.author) + postModel.author)
-                        Text(text = stringResource(R.string.category) + postModel.category)
                     }
                 }
             }

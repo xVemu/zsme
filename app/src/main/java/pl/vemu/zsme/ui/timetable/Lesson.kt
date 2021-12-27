@@ -66,7 +66,7 @@ fun Lesson(
         ) {
             names.forEachIndexed { index, name ->
                 Tab(
-                    text = { androidx.compose.material.Text(text = name) },
+                    text = { androidx.compose.material.Text(name) },
                     selected = pagerState.currentPage == index,
                     unselectedContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = ContentAlpha.medium),
                     onClick = {

@@ -1,7 +1,7 @@
 package pl.vemu.zsme.ui.post
 
 import android.content.Context
-import android.text.format.DateFormat
+import android.text.format.DateUtils
 import android.view.View
 import android.widget.TextView
 import androidx.compose.foundation.Image
@@ -31,6 +31,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
+import coil.transform.RoundedCornersTransformation
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -40,6 +41,7 @@ import pl.vemu.zsme.data.model.PostModel
 import pl.vemu.zsme.paddingBottom
 import pl.vemu.zsme.paddingTop
 import java.net.UnknownHostException
+import java.util.*
 
 
 @Composable
@@ -157,6 +159,7 @@ private fun PostCard(
                     painter = rememberImagePainter(postModel.thumbnail ?: R.drawable.zsme) {
                         placeholder(R.drawable.zsme)
                         crossfade(true)
+                        transformations(RoundedCornersTransformation(radius = 16f))
                     },
                     contentDescription = stringResource(R.string.thumbnail),
                     modifier = Modifier
@@ -169,10 +172,14 @@ private fun PostCard(
                         .paddingTop(24.dp)
                 ) {
                     SmallText(
-                        text = DateFormat.getMediumDateFormat(context).format(postModel.date)
+                        DateUtils.getRelativeTimeSpanString(
+                            postModel.date.time,
+                            Date().time,
+                            DateUtils.DAY_IN_MILLIS
+                        ).toString()
                     )
-                    SmallText(text = postModel.author)
-                    SmallText(text = postModel.category)
+                    SmallText(postModel.author)
+                    SmallText(postModel.category)
                 }
             }
             MainText(postModel)

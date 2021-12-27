@@ -51,6 +51,7 @@ import de.schnettler.datastore.manager.PreferenceRequest
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import pl.vemu.zsme.DEFAULT_URL
 import pl.vemu.zsme.R
 import pl.vemu.zsme.surfaceColorWithElevation
 import pl.vemu.zsme.ui.more.Contact
@@ -148,7 +149,7 @@ class MainActivity : ComponentActivity() {
         navigation(BottomNavItem.POST.startDestination, BottomNavItem.POST.route) {
             composable(
                 route = BottomNavItem.POST.startDestination,
-                deepLinks = listOf(navDeepLink { uriPattern = "https://zsme.tarnow.pl/" }),
+                deepLinks = listOf(navDeepLink { uriPattern = "$DEFAULT_URL/" }),
                 exitTransition = Transitions.exitTransition,
                 popEnterTransition = Transitions.popEnterTransition
             ) {
@@ -167,8 +168,8 @@ class MainActivity : ComponentActivity() {
                     }
                 ),
                 deepLinks = listOf(
-                    navDeepLink { uriPattern = "https://zsme.tarnow.pl/wp/{slug}/" },
-                    navDeepLink { uriPattern = "https://zsme.tarnow.pl/wp/{slug}" },
+                    navDeepLink { uriPattern = "$DEFAULT_URL/wp/{slug}/" },
+                    navDeepLink { uriPattern = "$DEFAULT_URL/wp/{slug}" },
                     navDeepLink { uriPattern = "zsme://detail/{postModelId}" }
                 ),
                 enterTransition = Transitions.enterTransition,
@@ -206,7 +207,7 @@ class MainActivity : ComponentActivity() {
                 route = BottomNavItem.TIMETABLE.startDestination,
                 deepLinks = listOf(
                     navDeepLink { uriPattern = "zsme://timetable" },
-                    navDeepLink { uriPattern = "https://zsme.tarnow.pl/plan/" }
+                    navDeepLink { uriPattern = "$DEFAULT_URL/plan/" }
                 ),
                 exitTransition = Transitions.fadeOut,
                 popEnterTransition = Transitions.fadeIn
@@ -243,7 +244,7 @@ class MainActivity : ComponentActivity() {
             composable(
                 route = "contact",
                 deepLinks = listOf(navDeepLink { //TODO backstack
-                    uriPattern = "https://zsme.tarnow.pl/wp/kontakt/"
+                    uriPattern = "$DEFAULT_URL/wp/kontakt/"
                 }),
                 enterTransition = Transitions.enterTransition,
                 popExitTransition = Transitions.popExitTransition
@@ -266,7 +267,7 @@ class MainActivity : ComponentActivity() {
         ) {
             BottomNavItem.values().forEach { item ->
                 NavigationBarItem(
-                    label = { Text(text = stringResource(item.title)) },
+                    label = { Text(stringResource(item.title)) },
                     selected = currentDestination?.hierarchy?.any { it.route == item.route } == true,
                     icon = {
                         Icon(
@@ -313,7 +314,7 @@ class MainActivity : ComponentActivity() {
         if (currentRoute?.startsWith("detail") == false) postLink = null
         val text = @Composable {
             Text(
-                text = stringResource(
+                stringResource(
                     resources.getIdentifier(
                         startDestination ?: "app_name",
                         "string",

@@ -4,6 +4,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
+import pl.vemu.zsme.DEFAULT_URL
 import pl.vemu.zsme.data.model.LessonModel
 import javax.inject.Inject
 
@@ -11,7 +12,7 @@ class LessonRepo @Inject constructor() {
 
     @Suppress("BlockingMethodInNonBlockingContext")
     suspend fun getLesson(url: String): List<List<LessonModel>> = withContext(Dispatchers.IO) {
-        val document = Jsoup.connect("https://www.zsme.tarnow.pl/plan/plany/$url").get()
+        val document = Jsoup.connect("$DEFAULT_URL/plan/plany/$url").get()
         val table = document.selectFirst(".tabela")!!.child(0).children()
         table.removeAt(0)
         val lessonsList = List(5) { mutableListOf<LessonModel>() }
