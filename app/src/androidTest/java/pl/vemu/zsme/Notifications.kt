@@ -20,13 +20,11 @@ import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.stub
 import pl.vemu.zsme.data.db.PostDAO
-import pl.vemu.zsme.data.model.PostModel
 import pl.vemu.zsme.data.service.ZSMEService
+import pl.vemu.zsme.ui.post.PostPreviewProvider
 import pl.vemu.zsme.ui.post.PostWorker
 import pl.vemu.zsme.util.mappers.PostMapper
 import java.io.IOException
-import java.text.SimpleDateFormat
-import java.util.*
 import java.util.concurrent.ExecutionException
 
 @RunWith(MockitoJUnitRunner::class)
@@ -81,44 +79,10 @@ class Notifications {
             )
     }
 
-    private val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
+    private val postItemPreviewProvider = PostPreviewProvider()
 
-    private val dummyPostModel = PostModel(
-        id = 27451,
-        date = dateFormat.parse("2021-11-07T12:49:33")!!,
-        link = "https://zsme.tarnow.pl/wp/przygotowania-do-kiermaszu-bozonarodzeniowego/",
-        title = "Przygotowania do kiermaszu bożonarodzeniowego",
-        content = "\n<p>W ZSME trwają przygotowania do kiermaszu bożonarodzeniowego. W bibliotece wykonywane są stroiki świąteczne. Zwracamy się z uprzejmą prośbą o przynoszenie: sztucznych choinek i gwiazd betlejemskich, figurek aniołków, mikołajów, reniferów, gwiazdek, świeczek, itp. Powstaną z nich oryginalne dekoracje, które sprzedane zostaną na kiermaszu przy Kościele Księży Misjonarzy w Tarnowie. Dochód z przedsięwzięcia w całości przeznaczony zostanie na działania statutowe Tarnowskiego Hospicjum Domowego. Mile widziane są także gotowe stroiki!</p>\n\n\n\n<p>Koordynatorki akcji: Renata Chlupka – Kosiba i Agnieszka Gawron</p>\n",
-        excerpt = "<p>W ZSME trwają przygotowania do kiermaszu bożonarodzeniowego. W bibliotece wykonywane są stroiki świąteczne. Zwracamy się z uprzejmą prośbą o przynoszenie: sztucznych choinek i gwiazd betlejemskich, figurek aniołków, mikołajów, reniferów, gwiazdek, świeczek, itp. Powstaną z nich oryginalne dekoracje, które sprzedane zostaną na kiermaszu przy Kościele Księży Misjonarzy w Tarnowie. Dochód z przedsięwzięcia w całości przeznaczony zostanie [&hellip;]</p>\n",
-        author = "Renata Chlupka-Kosiba",
-        thumbnail = "https://zsme.tarnow.pl/wp/wp-content/uploads/2021/11/thumb-100x91.jpg",
-        category = "Wolontariat"
-    )
+    private val dummyPostModel = postItemPreviewProvider.values.last()
 
-    private val dummyPostEntities = postMapper.mapToEntityList(
-        listOf(
-            PostModel(
-                id = 27490,
-                date = dateFormat.parse("2021-12-06T16:13:55")!!,
-                link = "https://zsme.tarnow.pl/wp/turniej-szachowy-2/",
-                title = "Turniej Szachowy",
-                content = "\n<p>W dniu 15.12.2021r. (środa) o godz. 10:40 odbędzie się Turniej Szachowy o puchar Dyrektora ZSME. Zapisywać można się u nauczycieli wychowania fizycznego do 13.12.2021 r. (poniedziałek). Szczegółowych informacji na temat zawodów udziela pan Marcin Rej. </p>\n\n\n\n<p>Zapraszamy. </p>\n",
-                excerpt = "<p>W dniu 15.12.2021r. (środa) o godz. 10:40 odbędzie się Turniej Szachowy o puchar Dyrektora ZSME. Zapisywać można się u nauczycieli wychowania fizycznego do 13.12.2021 r. (poniedziałek). Szczegółowych informacji na temat zawodów udziela pan Marcin Rej. Zapraszamy. </p>\n",
-                author = "Marcin Rej",
-                thumbnail = "https://zsme.tarnow.pl/wp/wp-content/uploads/2019/05/thumb.jpg",
-                category = "Konkursy i turnieje"
-            ),
-            PostModel(
-                id = 27451,
-                date = dateFormat.parse("2021-11-07T12:49:33")!!,
-                link = "https://zsme.tarnow.pl/wp/przygotowania-do-kiermaszu-bozonarodzeniowego/",
-                title = "Przygotowania do kiermaszu bożonarodzeniowego",
-                content = "\n<p>W ZSME trwają przygotowania do kiermaszu bożonarodzeniowego. W bibliotece wykonywane są stroiki świąteczne. Zwracamy się z uprzejmą prośbą o przynoszenie: sztucznych choinek i gwiazd betlejemskich, figurek aniołków, mikołajów, reniferów, gwiazdek, świeczek, itp. Powstaną z nich oryginalne dekoracje, które sprzedane zostaną na kiermaszu przy Kościele Księży Misjonarzy w Tarnowie. Dochód z przedsięwzięcia w całości przeznaczony zostanie na działania statutowe Tarnowskiego Hospicjum Domowego. Mile widziane są także gotowe stroiki!</p>\n\n\n\n<p>Koordynatorki akcji: Renata Chlupka – Kosiba i Agnieszka Gawron</p>\n",
-                excerpt = "<p>W ZSME trwają przygotowania do kiermaszu bożonarodzeniowego. W bibliotece wykonywane są stroiki świąteczne. Zwracamy się z uprzejmą prośbą o przynoszenie: sztucznych choinek i gwiazd betlejemskich, figurek aniołków, mikołajów, reniferów, gwiazdek, świeczek, itp. Powstaną z nich oryginalne dekoracje, które sprzedane zostaną na kiermaszu przy Kościele Księży Misjonarzy w Tarnowie. Dochód z przedsięwzięcia w całości przeznaczony zostanie [&hellip;]</p>\n",
-                author = "Renata Chlupka-Kosiba",
-                thumbnail = "https://zsme.tarnow.pl/wp/wp-content/uploads/2021/11/thumb-100x91.jpg",
-                category = "Wolontariat"
-            )
-        )
-    )
+    private val dummyPostEntities =
+        postMapper.mapToEntityList(postItemPreviewProvider.values.toList())
 }

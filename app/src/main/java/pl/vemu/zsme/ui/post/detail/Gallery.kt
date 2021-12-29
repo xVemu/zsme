@@ -2,7 +2,6 @@ package pl.vemu.zsme.ui.post.detail
 
 import android.view.ViewGroup
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import coil.load
 import com.github.chrisbanes.photoview.PhotoView
@@ -24,9 +23,8 @@ fun Gallery(imagesJson: String) {
 }
 
 @Composable
-fun PhotoView(image: String, modifier: Modifier = Modifier) {
+fun PhotoView(image: String) {
     AndroidView(
-        modifier = modifier,
         factory = { context ->
             PhotoView(context).apply {
                 layoutParams = ViewGroup.LayoutParams(

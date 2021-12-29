@@ -1,5 +1,6 @@
 package pl.vemu.zsme.ui.more
 
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -85,7 +86,10 @@ enum class ContactItem(
                 .run { putExtra(Intent.EXTRA_EMAIL, arrayOf(actionString)) }
             else -> Intent(Intent.ACTION_VIEW, Uri.parse(actionString))
         }
-        if (intent.resolveActivity(context.packageManager) != null) context.startActivity(intent)
-        else Toast.makeText(context, R.string.no_app, Toast.LENGTH_LONG).show()
+        try {
+            context.startActivity(intent)
+        } catch (e: ActivityNotFoundException) {
+            Toast.makeText(context, R.string.no_app, Toast.LENGTH_LONG).show()
+        }
     }
 }

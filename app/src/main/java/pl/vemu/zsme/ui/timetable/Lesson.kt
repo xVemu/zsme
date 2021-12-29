@@ -7,7 +7,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Divider
 import androidx.compose.material.ScrollableTabRow
-import androidx.compose.material.Tab
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -23,8 +22,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
-import kotlinx.coroutines.launch
 import pl.vemu.zsme.R
 import pl.vemu.zsme.data.model.LessonModel
 import pl.vemu.zsme.paddingEnd
@@ -46,37 +45,18 @@ fun Lesson(
         val dayOfWeek = Calendar.getInstance()[Calendar.DAY_OF_WEEK]
         if ((dayOfWeek == 1) or (dayOfWeek == 7)) 0 else dayOfWeek - 2
     }
-    val names = arrayOf(
+    val names = listOf(
         stringResource(R.string.monday),
         stringResource(R.string.tuesday),
         stringResource(R.string.wednesday),
         stringResource(R.string.thursday),
         stringResource(R.string.friday)
     )
-    val coroutines = rememberCoroutineScope()
     val pagerState = rememberPagerState()
     val lessonsList by vm.list.collectAsState()
     LaunchedEffect("scrollToDay") { pagerState.scrollToPage(day) }
     Column(Modifier.fillMaxSize()) {
-        ScrollableTabRow( //TODO change to material3
-            selectedTabIndex = pagerState.currentPage,
-            backgroundColor = MaterialTheme.colorScheme.surface,
-            contentColor = MaterialTheme.colorScheme.primary,
-            edgePadding = 0.dp
-        ) {
-            names.forEachIndexed { index, name ->
-                Tab(
-                    text = { androidx.compose.material.Text(name) },
-                    selected = pagerState.currentPage == index,
-                    unselectedContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = ContentAlpha.medium),
-                    onClick = {
-                        coroutines.launch {
-                            pagerState.animateScrollToPage(index)
-                        }
-                    }
-                )
-            }
-        }
+        LessonTabRow(pagerState, names)
         HorizontalPager(
             count = names.size,
             state = pagerState,
@@ -95,7 +75,40 @@ fun Lesson(
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
+@OptIn(ExperimentalPagerApi::class)
+@Composable
+private fun LessonTabRow(
+    pagerState: PagerState,
+    names: List<String>
+) {
+    ScrollableTabRow( //TODO change to material3
+        selectedTabIndex = pagerState.currentPage,
+        backgroundColor = MaterialTheme.colorScheme.surface,
+        contentColor = MaterialTheme.colorScheme.primary,
+        edgePadding = 0.dp
+    ) {
+        Tabs(
+            pagerState = pagerState,
+            names = names
+        )
+    }
+}
+
+@OptIn(ExperimentalPagerApi::class)
+@Preview
+@Composable
+private fun LessonTabRowPreview() {
+    val names = listOf(
+        stringResource(R.string.monday),
+        stringResource(R.string.tuesday),
+        stringResource(R.string.wednesday),
+        stringResource(R.string.thursday),
+        stringResource(R.string.friday)
+    )
+    LessonTabRow(pagerState = rememberPagerState(), names = names)
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFFFFFFFF, group = "items")
 @Composable
 private fun LessonItem(
     @PreviewParameter(LessonModelPreviewParameterProvider::class) item: LessonModel,

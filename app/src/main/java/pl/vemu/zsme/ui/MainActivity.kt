@@ -33,6 +33,7 @@ import androidx.navigation.*
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import androidx.work.*
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
@@ -114,7 +115,6 @@ class MainActivity : ComponentActivity() {
     }
 
     @OptIn(ExperimentalAnimationApi::class, ExperimentalMaterial3Api::class)
-    @Preview
     @Composable
     private fun Main() {
         val navController = rememberAnimatedNavController()
@@ -168,8 +168,8 @@ class MainActivity : ComponentActivity() {
                     }
                 ),
                 deepLinks = listOf(
-                    navDeepLink { uriPattern = "$DEFAULT_URL/wp/{slug}/" },
-                    navDeepLink { uriPattern = "$DEFAULT_URL/wp/{slug}" },
+//                    navDeepLink { uriPattern = "$DEFAULT_URL/wp/{slug}/" },
+//                    navDeepLink { uriPattern = "$DEFAULT_URL/wp/{slug}" },
                     navDeepLink { uriPattern = "zsme://detail/{postModelId}" }
                 ),
                 enterTransition = Transitions.enterTransition,
@@ -243,9 +243,9 @@ class MainActivity : ComponentActivity() {
             }
             composable(
                 route = "contact",
-                deepLinks = listOf(navDeepLink { //TODO backstack
+                /*deepLinks = listOf(navDeepLink { TODO backstack
                     uriPattern = "$DEFAULT_URL/wp/kontakt/"
-                }),
+                }),*/
                 enterTransition = Transitions.enterTransition,
                 popExitTransition = Transitions.popExitTransition
             ) { Contact() }
@@ -291,6 +291,16 @@ class MainActivity : ComponentActivity() {
                 )
             }
         }
+    }
+
+    @Preview
+    @Composable
+    private fun BottomBarPreview() {
+        val navController = rememberNavController()
+        BottomBar(
+            currentDestination = navController.currentDestination,
+            navController = navController
+        )
     }
 
     @Composable
@@ -348,6 +358,7 @@ class MainActivity : ComponentActivity() {
         )
     }
 
+    @Preview
     @Composable
     private fun ShareButton() {
         val context = LocalContext.current
@@ -428,9 +439,4 @@ class MainActivity : ComponentActivity() {
             outContent?.webUri = Uri.parse(it)
         }
     }
-
-/* TODO check
-* previews
-* internet refresh
-* */
 }

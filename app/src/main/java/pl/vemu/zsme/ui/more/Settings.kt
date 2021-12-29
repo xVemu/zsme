@@ -26,7 +26,7 @@ import pl.vemu.zsme.R
 import pl.vemu.zsme.ui.dataStore
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterialApi::class)
-@Preview
+@Preview(showBackground = true, backgroundColor = 0xFFFFFF)
 @Composable
 fun Settings() {
     val context = LocalContext.current

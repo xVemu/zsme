@@ -1,6 +1,7 @@
 package pl.vemu.zsme.data.model
 
 data class DetailModel(
-    val images: List<String>? = null,
+    val postModel: PostModel,
     val html: String,
+    val images: List<String>? = null,
 )

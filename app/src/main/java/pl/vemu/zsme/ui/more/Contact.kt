@@ -15,13 +15,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import pl.vemu.zsme.R
 
+@Preview(showBackground = true, backgroundColor = 0xFFFFFF)
 @Composable
 fun Contact() {
     val context = LocalContext.current
-    return LazyColumn {
+    LazyColumn {
         items(ContactItem.values()) { item ->
             Row {
                 Column(
