@@ -30,3 +30,8 @@ fun Context.isNetworkAvailable() =
     }
 
 const val DEFAULT_URL = "https://zsme.tarnow.pl"
+
+sealed class Result<out T> {
+    class Success<out T>(val value: T) : Result<T>()
+    class Failure(val error: Exception) : Result<Nothing>()
+}

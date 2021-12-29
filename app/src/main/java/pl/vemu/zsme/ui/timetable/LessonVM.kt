@@ -7,6 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import pl.vemu.zsme.Result
 import pl.vemu.zsme.data.model.LessonModel
 import pl.vemu.zsme.data.repo.LessonRepo
 import javax.inject.Inject
@@ -15,12 +16,18 @@ import javax.inject.Inject
 class LessonVM @Inject constructor(
     private val lessonRepo: LessonRepo
 ) : ViewModel() {
-    private val _list = MutableStateFlow<List<List<LessonModel>>>(emptyList())
+    private val _list =
+        MutableStateFlow<Result<List<List<LessonModel>>>>(Result.Success(emptyList()))
     val list = _list.asStateFlow()
 
-    fun init(url: String) {
+    fun downloadLessons(url: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            _list.value = lessonRepo.getLesson(url)
+            _list.value = try {
+                Result.Success(lessonRepo.getLesson(url))
+            } catch (e: Exception) {
+                Result.Failure(e)
+            }
         }
     }
+
 }

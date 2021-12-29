@@ -5,13 +5,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -30,7 +28,9 @@ import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 import pl.vemu.zsme.R
+import pl.vemu.zsme.Result
 import pl.vemu.zsme.data.model.TimetableModel
+import java.net.UnknownHostException
 
 @OptIn(
     ExperimentalPagerApi::class,
@@ -47,21 +47,56 @@ fun Timetable(
         stringResource(R.string.classrooms)
     )
     val pagerState = rememberPagerState()
-    val timetableList by vm.list.collectAsState()
-    Column(Modifier.fillMaxSize()) {
-        TimetableTabRow(pagerState, names)
-        HorizontalPager(
-            count = names.size,
-            state = pagerState,
-        ) { page ->
-            LazyVerticalGrid(
-                cells = GridCells.Fixed(count = 3)
-            ) {
-                if (timetableList.isEmpty()) return@LazyVerticalGrid
-                items(timetableList[page]) { item ->
-                    TimetablePageItem(navController, item)
+    val timetableResult by vm.list.collectAsState()
+    val snackbarHostState = remember { SnackbarHostState() }
+    Box(modifier = Modifier.fillMaxSize()) {
+        when (timetableResult) {
+            is Result.Success -> {
+                val timetableList =
+                    (timetableResult as Result.Success).value
+                Column(Modifier.fillMaxSize()) {
+                    TimetableTabRow(pagerState, names)
+                    HorizontalPager(
+                        count = names.size,
+                        state = pagerState,
+                    ) { page ->
+                        LazyVerticalGrid(
+                            cells = GridCells.Fixed(count = 3)
+                        ) {
+                            if (timetableList.isEmpty()) return@LazyVerticalGrid
+                            items(timetableList[page]) { item ->
+                                TimetablePageItem(navController, item)
+                            }
+                        }
+                    }
                 }
             }
+            is Result.Failure -> {
+                val errorMsg = stringResource(R.string.error)
+                val retryMsg = stringResource(R.string.retry)
+                val noConnectionMsg = stringResource(R.string.no_connection)
+                val error = (timetableResult as Result.Failure).error
+                LaunchedEffect(error) {
+                    val result = snackbarHostState.showSnackbar(
+                        message = if (error is UnknownHostException) noConnectionMsg else errorMsg,
+                        actionLabel = retryMsg.uppercase(),
+                        duration = SnackbarDuration.Indefinite
+                    )
+                    if (result == SnackbarResult.ActionPerformed)
+                        vm.downloadTimetable()
+                }
+            }
+        }
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier.align(Alignment.BottomCenter),
+        ) {
+            Snackbar(
+                backgroundColor = MaterialTheme.colorScheme.primaryContainer,
+                actionColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                snackbarData = it
+            )
         }
     }
 }
@@ -76,6 +111,7 @@ private fun TimetablePageItem(
         onClick = { navController.navigate("lesson/${item.url}") },
         elevation = 2.dp,
         backgroundColor = MaterialTheme.colorScheme.surface,
+        shape = RoundedCornerShape(12.dp),
         modifier = Modifier
             .height((LocalConfiguration.current.screenWidthDp / 3).dp)
             .padding(8.dp)

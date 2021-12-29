@@ -4,12 +4,11 @@ import android.os.Build
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.ContentAlpha
-import androidx.compose.material.Divider
-import androidx.compose.material.ScrollableTabRow
+import androidx.compose.material.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -25,9 +24,11 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 import pl.vemu.zsme.R
+import pl.vemu.zsme.Result
 import pl.vemu.zsme.data.model.LessonModel
 import pl.vemu.zsme.paddingEnd
 import pl.vemu.zsme.paddingStart
+import java.net.UnknownHostException
 import java.time.LocalDate
 import java.util.*
 
@@ -37,7 +38,7 @@ fun Lesson(
     url: String,
     vm: LessonVM = hiltViewModel(),
 ) {
-    vm.init(url)
+    vm.downloadLessons(url)
     val day = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         val dayOfWeek = LocalDate.now().dayOfWeek.value
         if (dayOfWeek >= 6) 0 else dayOfWeek - 1
@@ -53,24 +54,59 @@ fun Lesson(
         stringResource(R.string.friday)
     )
     val pagerState = rememberPagerState()
-    val lessonsList by vm.list.collectAsState()
-    LaunchedEffect("scrollToDay") { pagerState.scrollToPage(day) }
-    Column(Modifier.fillMaxSize()) {
-        LessonTabRow(pagerState, names)
-        HorizontalPager(
-            count = names.size,
-            state = pagerState,
-        ) { page ->
-            LazyColumn(modifier = Modifier.fillMaxHeight()) {
-                if (lessonsList.isEmpty()) return@LazyColumn
-                val lessonsPage = lessonsList[page]
-                itemsIndexed(lessonsPage) { index, item ->
-                    LessonItem(
-                        item = item,
-                        divider = !(index >= lessonsPage.size - 1 || lessonsPage[index + 1].index == null)
-                    )
+    val lessonsResult by vm.list.collectAsState()
+    val snackbarHostState = remember { SnackbarHostState() }
+    LaunchedEffect(day) { pagerState.scrollToPage(day) }
+    Box(modifier = Modifier.fillMaxSize()) {
+        when (lessonsResult) {
+            is Result.Success -> {
+                Column(Modifier.fillMaxSize()) {
+                    val lessonsList = (lessonsResult as Result.Success).value //TODO no cast
+                    LessonTabRow(pagerState, names)
+                    HorizontalPager(
+                        count = names.size,
+                        state = pagerState,
+                    ) { page ->
+                        LazyColumn(modifier = Modifier.fillMaxHeight()) {
+                            if (lessonsList.isEmpty()) return@LazyColumn
+                            val lessonsPage = lessonsList[page]
+                            itemsIndexed(lessonsPage) { index, item ->
+                                LessonItem(
+                                    item = item,
+                                    divider = !(index >= lessonsPage.size - 1 || lessonsPage[index + 1].index == null)
+                                )
+                            }
+                        }
+                    }
                 }
             }
+            is Result.Failure -> {
+                val errorMsg = stringResource(R.string.error)
+                val retryMsg = stringResource(R.string.retry)
+                val noConnectionMsg = stringResource(R.string.no_connection)
+                val error = (lessonsResult as Result.Failure).error
+                LaunchedEffect(error) {
+                    val result = snackbarHostState.showSnackbar(
+                        message = if (error is UnknownHostException) noConnectionMsg else errorMsg,
+                        actionLabel = retryMsg.uppercase(),
+                        duration = SnackbarDuration.Indefinite
+                    )
+                    if (result == SnackbarResult.ActionPerformed)
+                        vm.downloadLessons(url)
+                }
+            }
+        }
+        SnackbarHost(
+            //TODO is recurring in other composables
+            hostState = snackbarHostState,
+            modifier = Modifier.align(Alignment.BottomCenter),
+        ) {
+            Snackbar(
+                backgroundColor = MaterialTheme.colorScheme.primaryContainer,
+                actionColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                snackbarData = it
+            )
         }
     }
 }
