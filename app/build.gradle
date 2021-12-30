@@ -110,6 +110,7 @@ dependencies {
     implementation "androidx.compose.animation:animation:$compose_version"
     implementation "androidx.paging:paging-compose:1.0.0-alpha14"
     implementation "com.google.accompanist:accompanist-pager:$accompanist"
+    implementation "com.google.accompanist:accompanist-pager-indicators:$accompanist"
     implementation "com.google.accompanist:accompanist-swiperefresh:$accompanist"
     implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanist"
     implementation "com.google.accompanist:accompanist-navigation-animation:$accompanist"

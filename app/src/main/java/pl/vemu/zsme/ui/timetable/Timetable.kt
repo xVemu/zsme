@@ -22,10 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.PagerState
-import com.google.accompanist.pager.rememberPagerState
+import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
 import pl.vemu.zsme.R
 import pl.vemu.zsme.Result
@@ -49,13 +46,13 @@ fun Timetable(
     val pagerState = rememberPagerState()
     val timetableResult by vm.list.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
-    Box(modifier = Modifier.fillMaxSize()) {
-        when (timetableResult) {
-            is Result.Success -> {
-                val timetableList =
-                    (timetableResult as Result.Success).value
-                Column(Modifier.fillMaxSize()) {
-                    TimetableTabRow(pagerState, names)
+    Box(Modifier.fillMaxSize()) {
+        Column(Modifier.fillMaxSize()) {
+            TimetableTabRow(pagerState, names)
+            when (timetableResult) {
+                is Result.Success -> {
+                    val timetableList =
+                        (timetableResult as Result.Success).value
                     HorizontalPager(
                         count = names.size,
                         state = pagerState,
@@ -70,20 +67,20 @@ fun Timetable(
                         }
                     }
                 }
-            }
-            is Result.Failure -> {
-                val errorMsg = stringResource(R.string.error)
-                val retryMsg = stringResource(R.string.retry)
-                val noConnectionMsg = stringResource(R.string.no_connection)
-                val error = (timetableResult as Result.Failure).error
-                LaunchedEffect(error) {
-                    val result = snackbarHostState.showSnackbar(
-                        message = if (error is UnknownHostException) noConnectionMsg else errorMsg,
-                        actionLabel = retryMsg.uppercase(),
-                        duration = SnackbarDuration.Indefinite
-                    )
-                    if (result == SnackbarResult.ActionPerformed)
-                        vm.downloadTimetable()
+                is Result.Failure -> {
+                    val errorMsg = stringResource(R.string.error)
+                    val retryMsg = stringResource(R.string.retry)
+                    val noConnectionMsg = stringResource(R.string.no_connection)
+                    val error = (timetableResult as Result.Failure).error
+                    LaunchedEffect(error) {
+                        val result = snackbarHostState.showSnackbar(
+                            message = if (error is UnknownHostException) noConnectionMsg else errorMsg,
+                            actionLabel = retryMsg.uppercase(),
+                            duration = SnackbarDuration.Indefinite
+                        )
+                        if (result == SnackbarResult.ActionPerformed)
+                            vm.downloadTimetable()
+                    }
                 }
             }
         }
@@ -139,7 +136,12 @@ private fun TimetableTabRow(
     TabRow(
         selectedTabIndex = pagerState.currentPage,
         backgroundColor = MaterialTheme.colorScheme.surface,
-        contentColor = MaterialTheme.colorScheme.primary
+        contentColor = MaterialTheme.colorScheme.primary,
+        indicator = { tabPositions ->
+            TabRowDefaults.Indicator(
+                Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+            )
+        }
     ) {
         Tabs(
             pagerState = pagerState,
@@ -195,20 +197,3 @@ private fun TimetableTabRowPreview() {
     )
     TimetableTabRow(pagerState = rememberPagerState(), names = names)
 }
-
-
-/*private fun setupNetwork() {TODO
-    val cm = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    val networkRequest = NetworkRequest.Builder().build()
-    if (cm.activeNetwork == null) Toast.makeText(
-        context,
-        "Brak połaczenia z internetem",
-        Toast.LENGTH_LONG
-    ).show()
-    cm.registerNetworkCallback(networkRequest, object : NetworkCallback() {
-        override fun onAvailable(network: Network) {
-            viewModel.fetchTimetable()
-        }
-    })
-}
-}*/
