@@ -29,5 +29,4 @@ class LessonVM @Inject constructor(
             }
         }
     }
-
 }

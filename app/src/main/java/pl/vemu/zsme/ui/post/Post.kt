@@ -78,7 +78,7 @@ fun Post(
             .nestedScroll(scrollBehavior.nestedScrollConnection)
             .fillMaxSize()
     ) {
-        Box(modifier = Modifier.fillMaxSize()) {
+        Box(Modifier.fillMaxSize()) {
             val snackbarHostState = remember { SnackbarHostState() }
             val coroutineScope = rememberCoroutineScope()
             val errorMsg = stringResource(R.string.error)
@@ -158,7 +158,7 @@ private fun PostCard(
         }
     ) {
         Row {
-            Column(modifier = Modifier.padding(8.dp)) {
+            Column(Modifier.padding(8.dp)) {
                 Image(
                     painter = rememberImagePainter(postModel.thumbnail ?: R.drawable.zsme) {
                         placeholder(R.drawable.zsme)
@@ -171,10 +171,9 @@ private fun PostCard(
                     contentScale = ContentScale.Crop
                 )
                 Column(
-                    modifier = Modifier
+                    Modifier
                         .width(108.dp)
-                        .paddingTop(24.dp)
-                ) {
+                        .paddingTop(24.dp)) {
                     SmallText(
                         DateUtils.getRelativeTimeSpanString(
                             postModel.date.time,
@@ -195,9 +194,7 @@ private fun PostCard(
 private fun MainText(
     postModel: PostModel
 ) {
-    Column(
-        modifier = Modifier.padding(8.dp)
-    ) {
+    Column(Modifier.padding(8.dp)) {
         HTMLText(
             html = postModel.title,
             centered = true,

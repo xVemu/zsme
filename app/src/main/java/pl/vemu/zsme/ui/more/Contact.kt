@@ -27,7 +27,7 @@ fun Contact() {
         items(ContactItem.values()) { item ->
             Row {
                 Column(
-                    modifier = Modifier
+                    Modifier
                         .weight(1F)
                         .padding(8.dp)
                 ) {

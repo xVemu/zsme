@@ -90,9 +90,7 @@ private fun DetailItem(
     detailModel: DetailModel
 ) {
     val (postModel) = detailModel
-    Column(
-        modifier = Modifier.verticalScroll(rememberScrollState())
-    ) {
+    Column(Modifier.verticalScroll(rememberScrollState())) {
         Image(
             painter = rememberImagePainter(
                 postModel.fullImage

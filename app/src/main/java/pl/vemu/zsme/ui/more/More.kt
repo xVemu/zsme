@@ -23,18 +23,15 @@ fun More(navController: NavController) {
     LazyColumn {
         items(MoreItem.values()) { item ->
             Row(
-                modifier = Modifier
+                Modifier
                     .fillMaxWidth()
-                    .clickable {
-                        item.onClick(context, navController)
-                    }
-                    .padding(16.dp)
-            ) {
+                    .clickable { item.onClick(context, navController) }
+                    .padding(16.dp)) {
                 Icon(
                     imageVector = item.icon,
                     contentDescription = stringResource(item.text),
                 )
-                Spacer(modifier = Modifier.width(32.dp))
+                Spacer(Modifier.width(32.dp))
                 Text(
                     text = stringResource(item.text),
                     modifier = Modifier.align(Alignment.CenterVertically),
