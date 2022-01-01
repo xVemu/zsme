@@ -44,7 +44,6 @@ import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.android.play.core.ktx.*
-import com.google.android.play.core.review.ReviewManagerFactory
 import com.yariksoffice.lingver.Lingver
 import dagger.hilt.android.AndroidEntryPoint
 import de.schnettler.datastore.manager.DataStoreManager
@@ -108,7 +107,6 @@ class MainActivity : ComponentActivity() {
             @Suppress("EmptyCatchBlock", "TooGenericExceptionCaught", "SwallowedException")
             try {
                 updateApp()
-                reviewApp()
             } catch (e: Exception) {
             }
         }
@@ -408,13 +406,13 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private suspend fun reviewApp() { // TODO days delay https://developer.android.com/guide/playcore/in-app-review/test
+    /*private suspend fun reviewApp() { // TODO days delay
         val manager = ReviewManagerFactory.create(applicationContext)
         val request = manager.requestReview()
         manager.launchReview(this, request)
-    }
+    }*/
 
-    private suspend fun updateApp() { // TODO https://developer.android.com/guide/playcore/in-app-updates/test
+    private suspend fun updateApp() {
         val manager = AppUpdateManagerFactory.create(applicationContext)
         val appUpdateInfo = manager.requestAppUpdateInfo()
         if (!(appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE

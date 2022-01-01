@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="pl.vemu.zsme">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -36,6 +37,11 @@
                     android:host="zsme.tarnow.pl" />
             </intent-filter>
         </activity>
+        <!--        This makes worker to work-->
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            tools:node="remove" />
     </application>
 
 </manifest>
