@@ -26,6 +26,7 @@ import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
 import pl.vemu.zsme.R
 import pl.vemu.zsme.Result
+import pl.vemu.zsme.SimpleSnackbar
 import pl.vemu.zsme.data.model.TimetableModel
 import java.net.UnknownHostException
 
@@ -68,33 +69,16 @@ fun Timetable(
                     }
                 }
                 is Result.Failure -> {
-                    val errorMsg = stringResource(R.string.error)
-                    val retryMsg = stringResource(R.string.retry)
-                    val noConnectionMsg = stringResource(R.string.no_connection)
-                    val error = (timetableResult as Result.Failure).error
-                    LaunchedEffect(error) {
-                        val result = snackbarHostState.showSnackbar(
-                            message = if (error is UnknownHostException) noConnectionMsg else errorMsg,
-                            actionLabel = retryMsg.uppercase(),
-                            duration = SnackbarDuration.Indefinite
-                        )
-                        if (result == SnackbarResult.ActionPerformed)
-                            vm.downloadTimetable()
+                    ShowSnackBarWithError(
+                        result = timetableResult,
+                        snackbarHostState = snackbarHostState
+                    ) {
+                        vm.downloadTimetable()
                     }
                 }
             }
         }
-        SnackbarHost(
-            hostState = snackbarHostState,
-            modifier = Modifier.align(Alignment.BottomCenter),
-        ) {
-            Snackbar(
-                backgroundColor = MaterialTheme.colorScheme.primaryContainer,
-                actionColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                snackbarData = it
-            )
-        }
+        SimpleSnackbar(snackbarHostState)
     }
 }
 
@@ -170,6 +154,28 @@ fun Tabs(
         )
     }
 }
+
+@Composable
+fun ShowSnackBarWithError(
+    result: Result<*>,
+    snackbarHostState: SnackbarHostState,
+    onActionPerformed: () -> Unit
+) {
+    val errorMsg = stringResource(R.string.error)
+    val retryMsg = stringResource(R.string.retry)
+    val noConnectionMsg = stringResource(R.string.no_connection)
+    val error = (result as Result.Failure).error
+    LaunchedEffect(error) {
+        val snackbarResult = snackbarHostState.showSnackbar(
+            message = if (error is UnknownHostException) noConnectionMsg else errorMsg,
+            actionLabel = retryMsg,
+            duration = SnackbarDuration.Indefinite
+        )
+        if (snackbarResult == SnackbarResult.ActionPerformed)
+            onActionPerformed()
+    }
+}
+
 
 class TimetableModelProvider : PreviewParameterProvider<TimetableModel> {
     override val values = sequenceOf(

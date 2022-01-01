@@ -80,6 +80,6 @@
     <string name="notification_summary">Zarządzaj powiadomieniami</string>
     <string name="image">Zdjęcie</string>
     <string name="back_button">Cofnij</string>
-    <string name="retry">ponów</string>
+    <string name="retry">PONÓW</string>
     <string name="no_connection">Brak połączenia z internetem</string>
 </resources>

@@ -8,7 +8,6 @@ import androidx.compose.material.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -19,16 +18,10 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.PagerState
-import com.google.accompanist.pager.rememberPagerState
+import com.google.accompanist.pager.*
+import pl.vemu.zsme.*
 import pl.vemu.zsme.R
-import pl.vemu.zsme.Result
 import pl.vemu.zsme.data.model.LessonModel
-import pl.vemu.zsme.paddingEnd
-import pl.vemu.zsme.paddingStart
-import java.net.UnknownHostException
 import java.time.LocalDate
 import java.util.*
 
@@ -38,36 +31,28 @@ fun Lesson(
     url: String,
     vm: LessonVM = hiltViewModel(),
 ) {
-    vm.downloadLessons(url)
-    val day = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        val dayOfWeek = LocalDate.now().dayOfWeek.value
-        if (dayOfWeek >= 6) 0 else dayOfWeek - 1
-    } else {
-        val dayOfWeek = Calendar.getInstance()[Calendar.DAY_OF_WEEK]
-        if ((dayOfWeek == 1) or (dayOfWeek == 7)) 0 else dayOfWeek - 2
-    }
-    val names = listOf(
-        stringResource(R.string.monday),
-        stringResource(R.string.tuesday),
-        stringResource(R.string.wednesday),
-        stringResource(R.string.thursday),
-        stringResource(R.string.friday)
-    )
-    val pagerState = rememberPagerState()
-    val lessonsResult by vm.list.collectAsState()
-    val snackbarHostState = remember { SnackbarHostState() }
-    LaunchedEffect(day) { pagerState.scrollToPage(day) }
-    Box(modifier = Modifier.fillMaxSize()) {
+    vm.init(url)
+    Box(Modifier.fillMaxSize()) {
+        val lessonsResult by vm.list.collectAsState()
+        val snackbarHostState = remember { SnackbarHostState() }
         when (lessonsResult) {
             is Result.Success -> {
                 Column(Modifier.fillMaxSize()) {
                     val lessonsList = (lessonsResult as Result.Success).value //TODO no cast
+                    val pagerState = rememberPagerState()
+                    val names = listOf(
+                        stringResource(R.string.monday),
+                        stringResource(R.string.tuesday),
+                        stringResource(R.string.wednesday),
+                        stringResource(R.string.thursday),
+                        stringResource(R.string.friday)
+                    )
                     LessonTabRow(pagerState, names)
                     HorizontalPager(
                         count = names.size,
                         state = pagerState,
                     ) { page ->
-                        LazyColumn(modifier = Modifier.fillMaxHeight()) {
+                        LazyColumn(Modifier.fillMaxHeight()) {
                             if (lessonsList.isEmpty()) return@LazyColumn
                             val lessonsPage = lessonsList[page]
                             itemsIndexed(lessonsPage) { index, item ->
@@ -78,36 +63,26 @@ fun Lesson(
                             }
                         }
                     }
+                    val day = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        val dayOfWeek = LocalDate.now().dayOfWeek.value
+                        if (dayOfWeek >= 6) 0 else dayOfWeek - 1
+                    } else {
+                        val dayOfWeek = Calendar.getInstance()[Calendar.DAY_OF_WEEK]
+                        if ((dayOfWeek == 1) or (dayOfWeek == 7)) 0 else dayOfWeek - 2
+                    }
+                    LaunchedEffect(day) { pagerState.scrollToPage(day) }
                 }
             }
             is Result.Failure -> {
-                val errorMsg = stringResource(R.string.error)
-                val retryMsg = stringResource(R.string.retry)
-                val noConnectionMsg = stringResource(R.string.no_connection)
-                val error = (lessonsResult as Result.Failure).error
-                LaunchedEffect(error) {
-                    val result = snackbarHostState.showSnackbar(
-                        message = if (error is UnknownHostException) noConnectionMsg else errorMsg,
-                        actionLabel = retryMsg.uppercase(),
-                        duration = SnackbarDuration.Indefinite
-                    )
-                    if (result == SnackbarResult.ActionPerformed)
-                        vm.downloadLessons(url)
+                ShowSnackBarWithError(
+                    result = lessonsResult,
+                    snackbarHostState = snackbarHostState
+                ) {
+                    vm.downloadLessons()
                 }
             }
         }
-        SnackbarHost(
-            //TODO is recurring in other composables
-            hostState = snackbarHostState,
-            modifier = Modifier.align(Alignment.BottomCenter),
-        ) {
-            Snackbar(
-                backgroundColor = MaterialTheme.colorScheme.primaryContainer,
-                actionColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                snackbarData = it
-            )
-        }
+        SimpleSnackbar(snackbarHostState)
     }
 }
 
@@ -117,11 +92,17 @@ private fun LessonTabRow(
     pagerState: PagerState,
     names: List<String>
 ) {
-    ScrollableTabRow( //TODO change to material3
+    ScrollableTabRow(
+        //TODO change to material3
         selectedTabIndex = pagerState.currentPage,
         backgroundColor = MaterialTheme.colorScheme.surface,
         contentColor = MaterialTheme.colorScheme.primary,
-        edgePadding = 0.dp
+        edgePadding = 0.dp,
+        indicator = { tabPositions ->
+            TabRowDefaults.Indicator(
+                Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+            )
+        }
     ) {
         Tabs(
             pagerState = pagerState,

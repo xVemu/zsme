@@ -20,7 +20,16 @@ class LessonVM @Inject constructor(
         MutableStateFlow<Result<List<List<LessonModel>>>>(Result.Success(emptyList()))
     val list = _list.asStateFlow()
 
-    fun downloadLessons(url: String) {
+    private lateinit var url: String
+
+    fun init(url: String) {
+        // prevents from looped recomposition
+        if (this::url.isInitialized) return
+        this.url = url
+        downloadLessons()
+    }
+
+    fun downloadLessons() {
         viewModelScope.launch(Dispatchers.IO) {
             _list.value = try {
                 Result.Success(lessonRepo.getLesson(url))

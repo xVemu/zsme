@@ -39,7 +39,7 @@ fun PhotoView(image: String) {
         })
 }
 
-/*private var isUiVisible = true
+/*TODO private var isUiVisible = true
 
 override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     switchUiVisibility()

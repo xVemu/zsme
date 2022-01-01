@@ -40,6 +40,7 @@ import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import kotlinx.coroutines.launch
 import pl.vemu.zsme.R
+import pl.vemu.zsme.SimpleSnackbar
 import pl.vemu.zsme.data.model.PostModel
 import pl.vemu.zsme.paddingBottom
 import pl.vemu.zsme.paddingTop
@@ -103,7 +104,7 @@ fun Post(
                             coroutineScope.launch {
                                 val result = snackbarHostState.showSnackbar(
                                     message = if (error is UnknownHostException) noConnectionMsg else errorMsg,
-                                    actionLabel = retryMsg.uppercase(),
+                                    actionLabel = retryMsg,
                                     duration = SnackbarDuration.Indefinite
                                 )
                                 if (result == SnackbarResult.ActionPerformed)
@@ -113,17 +114,7 @@ fun Post(
                     }
                 }
             }
-            SnackbarHost(
-                hostState = snackbarHostState,
-                modifier = Modifier.align(Alignment.BottomCenter),
-            ) {
-                Snackbar(
-                    backgroundColor = MaterialTheme.colorScheme.primaryContainer,
-                    actionColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                    snackbarData = it
-                )
-            }
+            SimpleSnackbar(snackbarHostState)
         }
     }
 }
@@ -173,7 +164,8 @@ private fun PostCard(
                 Column(
                     Modifier
                         .width(108.dp)
-                        .paddingTop(24.dp)) {
+                        .paddingTop(24.dp)
+                ) {
                     SmallText(
                         DateUtils.getRelativeTimeSpanString(
                             postModel.date.time,

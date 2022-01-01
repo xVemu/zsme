@@ -47,6 +47,6 @@
     <string name="notification_summary">Manage your notifications</string>
     <string name="image">Image</string>
     <string name="back_button">Back arrow</string>
-    <string name="retry">retry</string>
+    <string name="retry">RETRY</string>
     <string name="no_connection">No internet connection</string>
 </resources>

@@ -177,12 +177,12 @@ class MainActivity : ComponentActivity() {
                 exitTransition = Transitions.exitTransition,
                 popEnterTransition = Transitions.popEnterTransition
             ) { backStack ->
-                backStack.arguments?.getString("slug")?.let { slug ->
+                /*backStack.arguments?.getString("slug")?.let { slug ->
                     postLink = detail(navController, 0, slug = slug) //TODO slug handle
-                } ?: backStack.arguments?.getInt("postModelId")
-                    ?.let { postModelId ->
-                        postLink = detail(navController, postModelId = postModelId)
-                    }
+                } ?: */backStack.arguments?.getInt("postModelId")
+                ?.let { postModelId ->
+                    postLink = detail(navController, postModelId = postModelId)
+                }
             }
             composable(
                 route = "gallery?images={images}",
@@ -440,3 +440,10 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
+/*TODO
+* expanding searchview button/even other activity?
+* timetable widget
+* github actions gradle build when tag updated
+* zsme.png drawable to svg
+* */
