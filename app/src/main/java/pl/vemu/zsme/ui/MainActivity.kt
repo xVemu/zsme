@@ -151,6 +151,7 @@ class MainActivity : ComponentActivity() {
                 exitTransition = Transitions.exitTransition,
                 popEnterTransition = Transitions.popEnterTransition
             ) {
+                postLink = DEFAULT_URL
                 Post(navController, scrollBehavior)
             }
             composable(
@@ -319,7 +320,6 @@ class MainActivity : ComponentActivity() {
     ) {
         val startDestination = currentDestination?.parent?.startDestinationRoute
         val currentRoute = currentDestination?.route
-        if (currentRoute?.startsWith("detail") == false) postLink = null
         val text = @Composable {
             Text(
                 stringResource(
@@ -444,4 +444,5 @@ class MainActivity : ComponentActivity() {
 * timetable widget
 * github actions gradle build when tag updated
 * zsme.png drawable to svg
+* onProvideAssistContent
 * */

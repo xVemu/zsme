@@ -13,9 +13,10 @@ android {
         applicationId "pl.vemu.zsme"
         minSdk 23
         targetSdk 31
-        versionCode 40
+        versionCode 41
         versionName "2.0.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        resConfigs "en", "pl"
     }
     buildTypes {
         buildTypes.all {
@@ -38,15 +39,10 @@ android {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = "11"
-    }
-    buildFeatures {
-        compose true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion compose_version
-    }
+    kotlinOptions.jvmTarget = "11"
+    buildFeatures.compose true
+    composeOptions.kotlinCompilerExtensionVersion compose_version
+    bundle.language.enableSplit false
     packagingOptions {
         exclude "**/attach_hotspot_windows.dll"
         exclude "META-INF/licenses/**"
