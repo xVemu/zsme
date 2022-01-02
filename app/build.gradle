@@ -13,7 +13,7 @@ android {
         applicationId "pl.vemu.zsme"
         minSdk 23
         targetSdk 31
-        versionCode 35
+        versionCode 40
         versionName "2.0.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
