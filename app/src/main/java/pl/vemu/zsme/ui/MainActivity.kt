@@ -445,4 +445,5 @@ class MainActivity : ComponentActivity() {
 * github actions gradle build when tag updated
 * zsme.png drawable to svg
 * onProvideAssistContent
+* changing language when going to detail and popping backstack
 * */
