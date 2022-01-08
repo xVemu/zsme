@@ -8,6 +8,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.webkit.WebView
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.*
@@ -97,7 +98,10 @@ class MainActivity : ComponentActivity() {
             dataStoreManager.getPreferenceFlow(languagePreference).collectLatest { lang ->
                 Lingver.getInstance().apply {
                     if (lang == "system") setFollowSystemLocale(this@MainActivity)
-                    else setLocale(this@MainActivity, lang)
+                    else {
+                        WebView(applicationContext).destroy() // fixes resetting language to system when it's first use of webview
+                        setLocale(this@MainActivity, lang)
+                    }
                 }
             }
         }
@@ -445,5 +449,4 @@ class MainActivity : ComponentActivity() {
 * github actions gradle build when tag updated
 * zsme.png drawable to svg
 * onProvideAssistContent
-* changing language when going to detail and popping backstack
 * */
