@@ -1,5 +1,14 @@
 # ZSME
-Mobile application for [ZSME site](https://zsme.tarnow.pl)
+Mobile application based on [ZSME site](https://zsme.tarnow.pl)
 
-# Play store release
+## Download from play store or from releases
 https://play.google.com/store/apps/details?id=pl.vemu.zsme
+
+## Develop
+Import Gradle project into Android Studio, IDE should handle everything.
+
+## Technologies used:
+* Jetpack Compose
+* Hilt
+* Material Design 3
+* Retrofit
