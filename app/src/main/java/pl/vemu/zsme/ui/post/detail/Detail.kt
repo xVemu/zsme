@@ -3,11 +3,7 @@ package pl.vemu.zsme.ui.post.detail
 import android.content.res.Configuration
 import android.graphics.Color
 import android.webkit.WebView
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
@@ -30,7 +26,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.webkit.WebSettingsCompat
 import androidx.webkit.WebViewFeature
 import coil.annotation.ExperimentalCoilApi
-import coil.compose.rememberImagePainter
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.google.gson.Gson
 import pl.vemu.zsme.R
 import pl.vemu.zsme.data.model.DetailModel
@@ -58,8 +55,8 @@ fun detail(
                     DetailFloatingButton(navController, images)
                 }
             }
-        ) {
-            DetailItem(detailModel)
+        ) { padding ->
+            DetailItem(detailModel, padding)
         }
     }
     return detailByVM?.postModel?.link
@@ -87,16 +84,20 @@ private fun DetailFloatingButton(
 @OptIn(ExperimentalCoilApi::class)
 @Composable
 private fun DetailItem(
-    detailModel: DetailModel
+    detailModel: DetailModel,
+    padding: PaddingValues
 ) {
     val (postModel) = detailModel
-    Column(Modifier.verticalScroll(rememberScrollState())) {
-        Image(
-            painter = rememberImagePainter(
-                postModel.fullImage
-            ) {
-                crossfade(true)
-            },
+    Column(
+        Modifier
+            .verticalScroll(rememberScrollState())
+            .padding(padding)
+    ) {
+        AsyncImage(
+            model = ImageRequest.Builder(context = LocalContext.current)
+                .data(postModel.fullImage)
+                .crossfade(true)
+                .build(),
             contentDescription = stringResource(R.string.image),
             contentScale = ContentScale.Crop,
             modifier = Modifier
@@ -132,7 +133,7 @@ private fun WebView(html: String) {
                 if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
                     val nightModeFlags = context.resources.configuration.uiMode and
                             Configuration.UI_MODE_NIGHT_MASK
-                    val theme = when (nightModeFlags) {
+                    val theme = when (nightModeFlags) { /*TODOD dark theme*/
                         Configuration.UI_MODE_NIGHT_YES -> WebSettingsCompat.FORCE_DARK_ON
                         Configuration.UI_MODE_NIGHT_NO -> WebSettingsCompat.FORCE_DARK_OFF
                         else -> WebSettingsCompat.FORCE_DARK_ON

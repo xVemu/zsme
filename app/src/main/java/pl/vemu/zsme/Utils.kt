@@ -6,9 +6,7 @@ import android.net.NetworkCapabilities
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.*
-import androidx.compose.material3.ColorScheme
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -57,7 +55,7 @@ fun BoxScope.SimpleSnackbar(snackbarHostState: SnackbarHostState) {
 @Composable
 private fun SnackBar(snackbarData: SnackbarData) {
     Snackbar(
-        backgroundColor = MaterialTheme.colorScheme.primaryContainer,
+        containerColor = MaterialTheme.colorScheme.primaryContainer,
         actionColor = MaterialTheme.colorScheme.primary,
         contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
         snackbarData = snackbarData
@@ -71,9 +69,13 @@ private fun SimpleSnackBarPreview() {
         val errorMsg = stringResource(R.string.error)
         val retryMsg = stringResource(R.string.retry)
         val snackbarData = object : SnackbarData {
-            override val actionLabel = retryMsg
-            override val duration = SnackbarDuration.Indefinite
-            override val message = errorMsg
+            override val visuals = object : SnackbarVisuals {
+                override val actionLabel: String = retryMsg
+                override val duration: SnackbarDuration = SnackbarDuration.Indefinite
+                override val message: String = errorMsg
+                override val withDismissAction: Boolean = false
+            }
+
             override fun dismiss() {}
             override fun performAction() {}
         }

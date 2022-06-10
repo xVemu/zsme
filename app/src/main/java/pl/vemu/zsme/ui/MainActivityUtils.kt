@@ -26,10 +26,10 @@ object Transitions {
         makeTransition(fadeOut())
 
     private fun <T> makeTransition(transition: T):
-            AnimatedContentScope<String>.(initial: NavBackStackEntry, target: NavBackStackEntry) -> T? =
-        { initial, target ->
-            if (initial.destination.parent?.startDestinationRoute ==
-                target.destination.parent?.startDestinationRoute
+            AnimatedContentScope<NavBackStackEntry>.() -> T? =
+        {
+            if (initialState.destination.parent?.startDestinationRoute ==
+                targetState.destination.parent?.startDestinationRoute
             ) transition
             else null
         }

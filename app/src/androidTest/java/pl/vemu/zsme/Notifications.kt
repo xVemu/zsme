@@ -17,7 +17,6 @@ import org.mockito.Mockito.anyInt
 import org.mockito.Mockito.anyString
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.mock
 import org.mockito.kotlin.stub
 import pl.vemu.zsme.data.db.PostDAO
 import pl.vemu.zsme.data.service.ZSMEService
@@ -31,9 +30,8 @@ import java.util.concurrent.ExecutionException
 class Notifications {
     private lateinit var context: Context
 
-    private val postDao = mock<PostDAO> {
-        on { getAll() } doReturn flowOf(dummyPostModel)
-    }
+    @Mock
+    private lateinit var postDao: PostDAO
 
     @Mock
     private lateinit var zsmeService: ZSMEService
@@ -47,7 +45,10 @@ class Notifications {
 
     @Throws(ExecutionException::class, InterruptedException::class, IOException::class)
     @Test
-    fun singleNotification() = runBlocking { // notification stays only when debug, not run
+    fun singleNotification() = runBlocking {
+        postDao.stub {
+            on { getAll() } doReturn flowOf(dummyPostModel)
+        }
         zsmeService.stub {
             onBlocking {
                 searchPosts(

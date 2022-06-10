@@ -4,11 +4,11 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.LocalContentColor
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.BrightnessMedium
 import androidx.compose.material.icons.rounded.Language
 import androidx.compose.material.icons.rounded.Notifications
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -31,6 +31,7 @@ import pl.vemu.zsme.ui.dataStore
 fun Settings() {
     val context = LocalContext.current
     val dataStoreManager = DataStoreManager(context.dataStore)
+    /*TODO dark theme*/
     CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurface) {
         PreferenceScreen(
             items = listOf(

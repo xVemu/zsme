@@ -1,20 +1,18 @@
 package pl.vemu.zsme.ui.timetable
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyVerticalGrid
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material.ContentAlpha
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -22,7 +20,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.google.accompanist.pager.*
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.PagerState
+import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 import pl.vemu.zsme.R
 import pl.vemu.zsme.Result
@@ -59,7 +60,7 @@ fun Timetable(
                         state = pagerState,
                     ) { page ->
                         LazyVerticalGrid(
-                            cells = GridCells.Fixed(count = 3)
+                            columns = GridCells.Fixed(count = 3)
                         ) {
                             if (timetableList.isEmpty()) return@LazyVerticalGrid
                             items(timetableList[page]) { item ->
@@ -82,29 +83,27 @@ fun Timetable(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TimetablePageItem(
     navController: NavController,
     item: TimetableModel
 ) {
-    Card( // TODO change to material 3 card
+    OutlinedCard(
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
         onClick = { navController.navigate("lesson/${item.url}") },
-        elevation = 2.dp,
-        backgroundColor = MaterialTheme.colorScheme.surface,
-        shape = RoundedCornerShape(12.dp),
         modifier = Modifier
             .height((LocalConfiguration.current.screenWidthDp / 3).dp)
             .padding(8.dp)
     ) {
         Column(
+            modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
                 text = item.name,
                 style = MaterialTheme.typography.bodyLarge,
-                textAlign = TextAlign.Center,
                 modifier = Modifier.padding(8.dp)
             )
         }
@@ -119,13 +118,11 @@ private fun TimetableTabRow(
 ) {
     TabRow(
         selectedTabIndex = pagerState.currentPage,
-        backgroundColor = MaterialTheme.colorScheme.surface,
-        contentColor = MaterialTheme.colorScheme.primary,
-        indicator = { tabPositions ->
+        /*indicator = { tabPositions ->
             TabRowDefaults.Indicator(
                 Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
             )
-        }
+        }*/
     ) {
         Tabs(
             pagerState = pagerState,
@@ -142,8 +139,8 @@ fun Tabs(
 ) {
     val coroutineScope = rememberCoroutineScope()
     names.forEachIndexed { index, name ->
-        Tab( //TODO change to material3
-            text = { androidx.compose.material.Text(name) },
+        Tab(
+            text = { Text(name) },
             selected = pagerState.currentPage == index,
             unselectedContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = ContentAlpha.medium),
             onClick = {

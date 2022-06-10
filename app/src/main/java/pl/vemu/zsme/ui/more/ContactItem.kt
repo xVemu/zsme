@@ -82,8 +82,7 @@ enum class ContactItem(
         val actionString = context.getString(action)
         val intent = when (icon) {
             R.drawable.ic_phone -> Intent(Intent.ACTION_DIAL, Uri.parse("tel:$actionString"))
-            R.drawable.ic_mail -> Intent(Intent.ACTION_SENDTO)
-                .run { putExtra(Intent.EXTRA_EMAIL, arrayOf(actionString)) }
+            R.drawable.ic_mail -> Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:$actionString"))
             else -> Intent(Intent.ACTION_VIEW, Uri.parse(actionString))
         }
         try {

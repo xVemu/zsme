@@ -74,6 +74,7 @@ class PostWorker @AssistedInject constructor(
                                 )
                             )
                         )
+                        .setWhen(item.date.time)
                         .setContentIntent(pendingIntent)
                         .setAutoCancel(true)
                         .setVisibility(VISIBILITY_PUBLIC)

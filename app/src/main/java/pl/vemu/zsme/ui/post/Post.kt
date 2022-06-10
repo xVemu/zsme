@@ -3,14 +3,9 @@ package pl.vemu.zsme.ui.post
 import android.text.format.DateUtils
 import android.view.View
 import android.widget.TextView
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarScrollBehavior
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,6 +13,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -33,7 +30,8 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import coil.annotation.ExperimentalCoilApi
-import coil.compose.rememberImagePainter
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import coil.transform.RoundedCornersTransformation
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
@@ -127,35 +125,33 @@ private fun LoadingItem() {
             .fillMaxWidth()
             .padding(16.dp)
             .wrapContentWidth(Alignment.CenterHorizontally),
-        color = MaterialTheme.colorScheme.primary
+        color = MaterialTheme.colorScheme.primary /*TODO*/
     )
 }
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalCoilApi::class)
+@OptIn(ExperimentalCoilApi::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun PostCard(
     navController: NavController,
     postModel: PostModel
 ) {
-    Card( // TODO change to material 3 card
+    ElevatedCard(
         modifier = Modifier
             .heightIn(150.dp)
             .padding(8.dp),
-        elevation = 2.dp,
-        shape = RoundedCornerShape(12.dp),
-        backgroundColor = MaterialTheme.colorScheme.surface,
         onClick = {
             navController.navigate("detail/${postModel.id}")
         }
     ) {
         Row {
             Column(Modifier.padding(8.dp)) {
-                Image(
-                    painter = rememberImagePainter(postModel.thumbnail ?: R.drawable.zsme) {
-                        placeholder(R.drawable.zsme)
-                        crossfade(true)
-                        transformations(RoundedCornersTransformation(radius = 12f))
-                    },
+                AsyncImage(
+                    model = ImageRequest.Builder(context = LocalContext.current)
+                        .data(postModel.thumbnail ?: R.drawable.zsme)
+                        .crossfade(true)
+                        .transformations(RoundedCornersTransformation(radius = 12f))
+                        .build(),
+                    placeholder = painterResource(R.drawable.zsme),
                     contentDescription = stringResource(R.string.thumbnail),
                     modifier = Modifier
                         .size(108.dp),
@@ -275,8 +271,8 @@ class PostPreviewProvider : PreviewParameterProvider<PostModel> {
             date = dateFormat.parse("2021-12-06T16:13:55")!!,
             link = "https://zsme.tarnow.pl/wp/turniej-szachowy-2/",
             title = "Turniej Szachowy",
-            content = "\n<p>W dniu 15.12.2021r. (środa) o godz. 10:40 odbędzie się Turniej Szachowy o puchar Dyrektora ZSME. Zapisywać można się u nauczycieli wychowania fizycznego do 13.12.2021 r. (poniedziałek). Szczegółowych informacji na temat zawodów udziela pan Marcin Rej. </p>\n\n\n\n<p>Zapraszamy. </p>\n",
-            excerpt = "<p>W dniu 15.12.2021r. (środa) o godz. 10:40 odbędzie się Turniej Szachowy o puchar Dyrektora ZSME. Zapisywać można się u nauczycieli wychowania fizycznego do 13.12.2021 r. (poniedziałek). Szczegółowych informacji na temat zawodów udziela pan Marcin Rej. Zapraszamy. </p>\n",
+            content = "\n<p>W dniu 15.12.2021r. (środa) o godz. 10:40 odbędzie się Turniej Szachowy o puchar Dyrektora ZSME. Zapisywać można się u nauczycieli wychowania fizycznego do 13.12.2021 r. (poniedziałek). Szczegółowych informacji na temat zawodów udziela pan Marcin Rej. </p>\n\n\n\n<p>Zapraszamy. </p>\n",
+            excerpt = "<p>W dniu 15.12.2021r. (środa) o godz. 10:40 odbędzie się Turniej Szachowy o puchar Dyrektora ZSME. Zapisywać można się u nauczycieli wychowania fizycznego do 13.12.2021 r. (poniedziałek). Szczegółowych informacji na temat zawodów udziela pan Marcin Rej. Zapraszamy. </p>\n",
             author = "Marcin Rej",
             thumbnail = "https://zsme.tarnow.pl/wp/wp-content/uploads/2019/05/thumb-300x300.jpg",
             fullImage = "https://zsme.tarnow.pl/wp/wp-content/uploads/2019/05/thumb.jpg",

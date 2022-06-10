@@ -4,9 +4,8 @@ import android.os.Build
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.*
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material.ContentAlpha
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -18,7 +17,10 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.accompanist.pager.*
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.PagerState
+import com.google.accompanist.pager.rememberPagerState
 import pl.vemu.zsme.*
 import pl.vemu.zsme.R
 import pl.vemu.zsme.data.model.LessonModel
@@ -93,16 +95,13 @@ private fun LessonTabRow(
     names: List<String>
 ) {
     ScrollableTabRow(
-        //TODO change to material3
         selectedTabIndex = pagerState.currentPage,
-        backgroundColor = MaterialTheme.colorScheme.surface,
-        contentColor = MaterialTheme.colorScheme.primary,
         edgePadding = 0.dp,
-        indicator = { tabPositions ->
+        /*indicator = { tabPositions -> TODO when they migrate to Material 3
             TabRowDefaults.Indicator(
                 Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
             )
-        }
+        }*/
     ) {
         Tabs(
             pagerState = pagerState,

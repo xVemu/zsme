@@ -19,7 +19,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -49,7 +52,6 @@ import com.yariksoffice.lingver.Lingver
 import dagger.hilt.android.AndroidEntryPoint
 import de.schnettler.datastore.manager.DataStoreManager
 import de.schnettler.datastore.manager.PreferenceRequest
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import pl.vemu.zsme.DEFAULT_URL
@@ -99,7 +101,7 @@ class MainActivity : ComponentActivity() {
                 Lingver.getInstance().apply {
                     if (lang == "system") setFollowSystemLocale(this@MainActivity)
                     else {
-                        WebView(applicationContext).destroy() // fixes resetting language to system when it's first use of webview
+                        WebView(applicationContext).destroy() // fixes resetting language to system when it's first use of webview.
                         setLocale(this@MainActivity, lang)
                     }
                 }
@@ -222,10 +224,10 @@ class MainActivity : ComponentActivity() {
                         type = NavType.StringType
                     }
                 ),
-                enterTransition = { _, _ ->
+                enterTransition = {
                     expandIn(expandFrom = Alignment.Center) + fadeIn()
                 },
-                popExitTransition = { _, _ ->
+                popExitTransition = {
                     shrinkOut(shrinkTowards = Alignment.Center) + fadeOut()
                 }
             ) { backStack ->
@@ -265,9 +267,7 @@ class MainActivity : ComponentActivity() {
         currentDestination: NavDestination?,
         navController: NavHostController
     ) {
-        NavigationBar(
-            contentColor = MaterialTheme.colorScheme.primary
-        ) {
+        NavigationBar {
             BottomNavItem.values().forEach { item ->
                 NavigationBarItem(
                     label = { Text(stringResource(item.title)) },
@@ -444,8 +444,12 @@ class MainActivity : ComponentActivity() {
 }
 
 /*TODO
+* Scrollowanie przesuwa się w pewnym momencie
+* runcatching instead of try catch in kotlin
 * expanding searchview button/even other activity?
 * timetable widget
+* https://zsme.tarnow.pl/wp/skup-podrecznikow/
+* Dark theme shortcut icons
 * github actions gradle build when tag updated
 * zsme.png drawable to svg
 * onProvideAssistContent
