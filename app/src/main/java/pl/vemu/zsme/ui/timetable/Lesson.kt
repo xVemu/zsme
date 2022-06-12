@@ -40,7 +40,7 @@ fun Lesson(
         when (lessonsResult) {
             is Result.Success -> {
                 Column(Modifier.fillMaxSize()) {
-                    val lessonsList = (lessonsResult as Result.Success).value //TODO no cast
+                    val lessonsList = (lessonsResult as Result.Success).value
                     val pagerState = rememberPagerState()
                     val names = listOf(
                         stringResource(R.string.monday),

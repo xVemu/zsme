@@ -18,7 +18,7 @@ fun Gallery(imagesJson: String) {
     val imageType = object : TypeToken<List<String>>() {}.type
     val images: List<String> = Gson().fromJson(imagesJson, imageType)
     HorizontalPager(state = rememberPagerState(0), count = images.size) { page ->
-        PhotoView(image = images[page])                 // setOnClickListener { fragment.switchUiVisibility() }
+        PhotoView(image = images[page])
     }
 }
 
@@ -38,46 +38,3 @@ fun PhotoView(image: String) {
             it.load(image)
         })
 }
-
-/*TODO private var isUiVisible = true
-
-override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    switchUiVisibility()
-}
-
-override fun onDestroyView() {
-    isUiVisible = false
-    switchUiVisibility()
-}
-
-@Suppress("DEPRECATION")
-fun switchUiVisibility() {
-    val decorView = requireActivity().window.decorView
-    //        val bottomNav: BottomNavigationView = requireActivity().findViewById(R.id.bottom_nav)
-    val actionBar = (requireActivity() as AppCompatActivity).supportActionBar
-    if (isUiVisible) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            decorView.windowInsetsController?.hide(WindowInsets.Type.navigationBars() or WindowInsets.Type.statusBars())
-            decorView.windowInsetsController?.systemBarsBehavior =
-                WindowInsetsController.BEHAVIOR_SHOW_BARS_BY_SWIPE
-        } else {
-            decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_IMMERSIVE
-                    or View.SYSTEM_UI_FLAG_FULLSCREEN
-                    or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
-        }
-        actionBar?.hide()
-        //            bottomNav.visibility = View.GONE
-        isUiVisible = false
-    } else {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            decorView.windowInsetsController?.show(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
-        } else {
-            decorView.systemUiVisibility = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
-            else 0
-        }
-        actionBar?.show()
-        //            bottomNav.visibility = View.VISIBLE
-        isUiVisible = true
-    }
-}*/

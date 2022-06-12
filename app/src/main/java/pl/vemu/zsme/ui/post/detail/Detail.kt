@@ -1,6 +1,5 @@
 package pl.vemu.zsme.ui.post.detail
 
-import android.content.res.Configuration
 import android.graphics.Color
 import android.webkit.WebView
 import androidx.compose.foundation.layout.*
@@ -14,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -25,7 +25,6 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import androidx.webkit.WebSettingsCompat
 import androidx.webkit.WebViewFeature
-import coil.annotation.ExperimentalCoilApi
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.google.gson.Gson
@@ -81,7 +80,6 @@ private fun DetailFloatingButton(
     )
 }
 
-@OptIn(ExperimentalCoilApi::class)
 @Composable
 private fun DetailItem(
     detailModel: DetailModel,
@@ -125,20 +123,17 @@ private fun DetailItem(
 
 @Composable
 private fun WebView(html: String) {
+    val isDarkTheme = MaterialTheme.colorScheme.surface.luminance() < .5
     AndroidView(
         factory = { context ->
             WebView(context).apply {
                 //noinspection SetJavaScriptEnabled
                 settings.javaScriptEnabled = true
                 if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
-                    val nightModeFlags = context.resources.configuration.uiMode and
-                            Configuration.UI_MODE_NIGHT_MASK
-                    val theme = when (nightModeFlags) { /*TODOD dark theme*/
-                        Configuration.UI_MODE_NIGHT_YES -> WebSettingsCompat.FORCE_DARK_ON
-                        Configuration.UI_MODE_NIGHT_NO -> WebSettingsCompat.FORCE_DARK_OFF
-                        else -> WebSettingsCompat.FORCE_DARK_ON
-                    }
-                    WebSettingsCompat.setForceDark(settings, theme)
+                    WebSettingsCompat.setForceDark(
+                        settings,
+                        if (isDarkTheme) WebSettingsCompat.FORCE_DARK_ON else WebSettingsCompat.FORCE_DARK_OFF
+                    )
                 }
                 isVerticalScrollBarEnabled = false
                 isHorizontalScrollBarEnabled = false

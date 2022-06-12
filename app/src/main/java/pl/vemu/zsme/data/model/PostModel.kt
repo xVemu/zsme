@@ -11,7 +11,7 @@ import java.util.*
 data class PostModel(
     @PrimaryKey
     val id: Int,
-    val date: Date, /*TODO change to LocalDateTime / Instant, Time Zone problem?*/
+    val date: Date,
     val link: String,
     val title: String,
     val content: String,

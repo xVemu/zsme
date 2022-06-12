@@ -29,7 +29,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
-import coil.annotation.ExperimentalCoilApi
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import coil.transform.RoundedCornersTransformation
@@ -125,11 +124,11 @@ private fun LoadingItem() {
             .fillMaxWidth()
             .padding(16.dp)
             .wrapContentWidth(Alignment.CenterHorizontally),
-        color = MaterialTheme.colorScheme.primary /*TODO*/
+        color = MaterialTheme.colorScheme.primary
     )
 }
 
-@OptIn(ExperimentalCoilApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun PostCard(
     navController: NavController,

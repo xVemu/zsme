@@ -22,7 +22,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -124,7 +123,8 @@ class MainActivity : ComponentActivity() {
         val navController = rememberAnimatedNavController()
         val backStack by navController.currentBackStackEntryAsState()
         val currentDestination = backStack?.destination
-        val scrollBehavior = remember { TopAppBarDefaults.enterAlwaysScrollBehavior() }
+        val scrollState = rememberTopAppBarScrollState()
+        val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(scrollState)
         ChangeSystemBars()
         Scaffold(
             topBar = {
@@ -315,7 +315,6 @@ class MainActivity : ComponentActivity() {
         systemUiController.setStatusBarColor(MaterialTheme.colorScheme.surface)
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     private fun TopBar(
         navController: NavController,
@@ -445,10 +444,8 @@ class MainActivity : ComponentActivity() {
 
 /*TODO
 * Scrollowanie przesuwa się w pewnym momencie
-* runcatching instead of try catch in kotlin
 * expanding searchview button/even other activity?
 * timetable widget
-* https://zsme.tarnow.pl/wp/skup-podrecznikow/
 * Dark theme shortcut icons
 * github actions gradle build when tag updated
 * zsme.png drawable to svg

@@ -1,7 +1,6 @@
 package pl.vemu.zsme.ui.timetable
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -31,10 +30,7 @@ import pl.vemu.zsme.SimpleSnackbar
 import pl.vemu.zsme.data.model.TimetableModel
 import java.net.UnknownHostException
 
-@OptIn(
-    ExperimentalPagerApi::class,
-    ExperimentalFoundationApi::class
-)
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun Timetable(
     navController: NavController,
