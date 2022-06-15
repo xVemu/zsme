@@ -4,9 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,27 +14,35 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import pl.vemu.zsme.R
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun More(navController: NavController) {
     val context = LocalContext.current
-    LazyColumn {
-        items(MoreItem.values()) { item ->
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .clickable { item.onClick(context, navController) }
-                    .padding(16.dp)) {
-                Icon(
-                    imageVector = item.icon,
-                    contentDescription = stringResource(item.text),
-                )
-                Spacer(Modifier.width(32.dp))
-                Text(
-                    text = stringResource(item.text),
-                    modifier = Modifier.align(Alignment.CenterVertically),
-                    style = MaterialTheme.typography.bodyLarge
-                )
+    Scaffold(topBar = {
+        CenterAlignedTopAppBar(title = { Text(stringResource(R.string.more)) })
+    }) { padding ->
+        LazyColumn(
+            modifier = Modifier.padding(padding)
+        ) {
+            items(MoreItem.values()) { item ->
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .clickable { item.onClick(context, navController) }
+                        .padding(16.dp)) {
+                    Icon(
+                        imageVector = item.icon,
+                        contentDescription = stringResource(item.text),
+                    )
+                    Spacer(Modifier.width(32.dp))
+                    Text(
+                        text = stringResource(item.text),
+                        modifier = Modifier.align(Alignment.CenterVertically),
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
             }
         }
     }

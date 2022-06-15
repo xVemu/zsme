@@ -5,9 +5,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material.ContentAlpha
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -23,59 +25,66 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
-import kotlinx.coroutines.launch
 import pl.vemu.zsme.R
 import pl.vemu.zsme.Result
-import pl.vemu.zsme.SimpleSnackbar
 import pl.vemu.zsme.data.model.TimetableModel
-import java.net.UnknownHostException
+import pl.vemu.zsme.ui.components.ShowSnackBarWithError
+import pl.vemu.zsme.ui.components.SimpleSnackbar
+import pl.vemu.zsme.ui.components.Tabs
 
-@OptIn(ExperimentalPagerApi::class)
+//@Destination()
+@OptIn(ExperimentalPagerApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun Timetable(
     navController: NavController,
     vm: TimetableVM = hiltViewModel(),
 ) {
-    val names = listOf(
-        stringResource(R.string.classes),
-        stringResource(R.string.teachers),
-        stringResource(R.string.classrooms)
-    )
-    val pagerState = rememberPagerState()
-    val timetableResult by vm.list.collectAsState()
-    val snackbarHostState = remember { SnackbarHostState() }
-    Box(Modifier.fillMaxSize()) {
-        Column(Modifier.fillMaxSize()) {
-            TimetableTabRow(pagerState, names)
-            when (timetableResult) {
-                is Result.Success -> {
-                    val timetableList =
-                        (timetableResult as Result.Success).value
-                    HorizontalPager(
-                        count = names.size,
-                        state = pagerState,
-                    ) { page ->
-                        LazyVerticalGrid(
-                            columns = GridCells.Fixed(count = 3)
-                        ) {
-                            if (timetableList.isEmpty()) return@LazyVerticalGrid
-                            items(timetableList[page]) { item ->
-                                TimetablePageItem(navController, item)
+    Scaffold(topBar = { CenterAlignedTopAppBar(title = { Text(stringResource(R.string.timetable)) }) }) { padding ->
+        val names = listOf(
+            stringResource(R.string.classes),
+            stringResource(R.string.teachers),
+            stringResource(R.string.classrooms)
+        )
+        val pagerState = rememberPagerState()
+        val timetableResult by vm.list.collectAsState()
+        val snackbarHostState = remember { SnackbarHostState() }
+        Box(
+            Modifier
+                .fillMaxSize()
+                .padding(padding)
+        ) {
+            Column(Modifier.fillMaxSize()) {
+                TimetableTabRow(pagerState, names)
+                when (timetableResult) {
+                    is Result.Success -> {
+                        val timetableList =
+                            (timetableResult as Result.Success).value
+                        HorizontalPager(
+                            count = names.size,
+                            state = pagerState,
+                        ) { page ->
+                            LazyVerticalGrid(
+                                columns = GridCells.Fixed(count = 3)
+                            ) {
+                                if (timetableList.isEmpty()) return@LazyVerticalGrid
+                                items(timetableList[page]) { item ->
+                                    TimetablePageItem(navController, item)
+                                }
                             }
                         }
                     }
-                }
-                is Result.Failure -> {
-                    ShowSnackBarWithError(
-                        result = timetableResult,
-                        snackbarHostState = snackbarHostState
-                    ) {
-                        vm.downloadTimetable()
+                    is Result.Failure -> {
+                        ShowSnackBarWithError(
+                            result = timetableResult,
+                            snackbarHostState = snackbarHostState
+                        ) {
+                            vm.downloadTimetable()
+                        }
                     }
                 }
             }
+            SimpleSnackbar(snackbarHostState)
         }
-        SimpleSnackbar(snackbarHostState)
     }
 }
 
@@ -126,49 +135,6 @@ private fun TimetableTabRow(
         )
     }
 }
-
-@OptIn(ExperimentalPagerApi::class)
-@Composable
-fun Tabs(
-    pagerState: PagerState,
-    names: List<String>
-) {
-    val coroutineScope = rememberCoroutineScope()
-    names.forEachIndexed { index, name ->
-        Tab(
-            text = { Text(name) },
-            selected = pagerState.currentPage == index,
-            unselectedContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = ContentAlpha.medium),
-            onClick = {
-                coroutineScope.launch {
-                    pagerState.animateScrollToPage(index)
-                }
-            }
-        )
-    }
-}
-
-@Composable
-fun ShowSnackBarWithError(
-    result: Result<*>,
-    snackbarHostState: SnackbarHostState,
-    onActionPerformed: () -> Unit
-) {
-    val errorMsg = stringResource(R.string.error)
-    val retryMsg = stringResource(R.string.retry)
-    val noConnectionMsg = stringResource(R.string.no_connection)
-    val error = (result as Result.Failure).error
-    LaunchedEffect(error) {
-        val snackbarResult = snackbarHostState.showSnackbar(
-            message = if (error is UnknownHostException) noConnectionMsg else errorMsg,
-            actionLabel = retryMsg,
-            duration = SnackbarDuration.Indefinite
-        )
-        if (snackbarResult == SnackbarResult.ActionPerformed)
-            onActionPerformed()
-    }
-}
-
 
 class TimetableModelProvider : PreviewParameterProvider<TimetableModel> {
     override val values = sequenceOf(

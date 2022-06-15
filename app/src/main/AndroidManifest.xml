@@ -33,15 +33,14 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:scheme="https"
-                    android:host="zsme.tarnow.pl" />
+                    android:host="zsme.tarnow.pl"
+                    android:scheme="https" />
             </intent-filter>
         </activity>
-        <!--        This makes worker to work-->
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"
-            tools:node="remove" />
+            tools:node="remove" /> <!--        This makes worker to work-->
     </application>
 
 </manifest>

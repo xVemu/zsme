@@ -17,74 +17,97 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
-import pl.vemu.zsme.*
 import pl.vemu.zsme.R
+import pl.vemu.zsme.Result
 import pl.vemu.zsme.data.model.LessonModel
+import pl.vemu.zsme.paddingEnd
+import pl.vemu.zsme.paddingStart
+import pl.vemu.zsme.ui.components.ShowSnackBarWithError
+import pl.vemu.zsme.ui.components.SimpleSnackbar
+import pl.vemu.zsme.ui.components.Tabs
+import pl.vemu.zsme.ui.components.simpleSmallAppBar
 import java.time.LocalDate
 import java.util.*
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalPagerApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun Lesson(
     url: String,
+    navController: NavController,
     vm: LessonVM = hiltViewModel(),
 ) {
     vm.init(url)
-    Box(Modifier.fillMaxSize()) {
-        val lessonsResult by vm.list.collectAsState()
-        val snackbarHostState = remember { SnackbarHostState() }
-        when (lessonsResult) {
-            is Result.Success -> {
-                Column(Modifier.fillMaxSize()) {
-                    val lessonsList = (lessonsResult as Result.Success).value
-                    val pagerState = rememberPagerState()
-                    val names = listOf(
-                        stringResource(R.string.monday),
-                        stringResource(R.string.tuesday),
-                        stringResource(R.string.wednesday),
-                        stringResource(R.string.thursday),
-                        stringResource(R.string.friday)
-                    )
-                    LessonTabRow(pagerState, names)
-                    HorizontalPager(
-                        count = names.size,
-                        state = pagerState,
-                    ) { page ->
-                        LazyColumn(Modifier.fillMaxHeight()) {
-                            if (lessonsList.isEmpty()) return@LazyColumn
-                            val lessonsPage = lessonsList[page]
-                            itemsIndexed(lessonsPage) { index, item ->
-                                LessonItem(
-                                    item = item,
-                                    divider = !(index >= lessonsPage.size - 1 || lessonsPage[index + 1].index == null)
-                                )
+    Scaffold(
+        topBar = simpleSmallAppBar(
+            title = R.string.timetable,
+            navController = navController
+        ), /*TODO title dynamic*/
+//        modifier = Modifier.fillMaxSize()
+    ) { padding ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+        ) {
+            val lessonsResult by vm.list.collectAsState()
+            val snackbarHostState = remember { SnackbarHostState() }
+            when (lessonsResult) {
+                is Result.Success -> {
+                    Column(
+                        Modifier
+                            .fillMaxSize()
+                    ) {
+                        val lessonsList = (lessonsResult as Result.Success).value
+                        val pagerState = rememberPagerState()
+                        val names = listOf(
+                            stringResource(R.string.monday),
+                            stringResource(R.string.tuesday),
+                            stringResource(R.string.wednesday),
+                            stringResource(R.string.thursday),
+                            stringResource(R.string.friday)
+                        )
+                        LessonTabRow(pagerState, names)
+                        HorizontalPager(
+                            count = names.size,
+                            state = pagerState,
+                        ) { page ->
+                            LazyColumn(Modifier.fillMaxHeight()) {
+                                if (lessonsList.isEmpty()) return@LazyColumn
+                                val lessonsPage = lessonsList[page]
+                                itemsIndexed(lessonsPage) { index, item ->
+                                    LessonItem(
+                                        item = item,
+                                        divider = !(index >= lessonsPage.size - 1 || lessonsPage[index + 1].index == null)
+                                    )
+                                }
                             }
                         }
+                        val day = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            val dayOfWeek = LocalDate.now().dayOfWeek.value
+                            if (dayOfWeek >= 6) 0 else dayOfWeek - 1
+                        } else {
+                            val dayOfWeek = Calendar.getInstance()[Calendar.DAY_OF_WEEK]
+                            if ((dayOfWeek == 1) or (dayOfWeek == 7)) 0 else dayOfWeek - 2
+                        }
+                        LaunchedEffect(day) { pagerState.scrollToPage(day) }
                     }
-                    val day = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        val dayOfWeek = LocalDate.now().dayOfWeek.value
-                        if (dayOfWeek >= 6) 0 else dayOfWeek - 1
-                    } else {
-                        val dayOfWeek = Calendar.getInstance()[Calendar.DAY_OF_WEEK]
-                        if ((dayOfWeek == 1) or (dayOfWeek == 7)) 0 else dayOfWeek - 2
+                }
+                is Result.Failure -> {
+                    ShowSnackBarWithError(
+                        result = lessonsResult,
+                        snackbarHostState = snackbarHostState
+                    ) {
+                        vm.downloadLessons()
                     }
-                    LaunchedEffect(day) { pagerState.scrollToPage(day) }
                 }
             }
-            is Result.Failure -> {
-                ShowSnackBarWithError(
-                    result = lessonsResult,
-                    snackbarHostState = snackbarHostState
-                ) {
-                    vm.downloadLessons()
-                }
-            }
+            SimpleSnackbar(snackbarHostState)
         }
-        SimpleSnackbar(snackbarHostState)
     }
 }
 

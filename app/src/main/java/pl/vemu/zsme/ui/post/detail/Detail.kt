@@ -1,5 +1,6 @@
 package pl.vemu.zsme.ui.post.detail
 
+import android.content.Intent
 import android.graphics.Color
 import android.webkit.WebView
 import androidx.compose.foundation.layout.*
@@ -7,7 +8,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.PhotoLibrary
+import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -31,34 +34,70 @@ import com.google.gson.Gson
 import pl.vemu.zsme.R
 import pl.vemu.zsme.data.model.DetailModel
 import pl.vemu.zsme.isNetworkAvailable
-import pl.vemu.zsme.ui.post.HTMLText
+import pl.vemu.zsme.ui.components.HTMLText
 import java.text.DateFormat
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun detail(
+fun Detail(
     navController: NavController,
     postModelId: Int,
     slug: String? = null,
     vm: DetailVM = hiltViewModel()
-): String? { // returns postModelLink to use it in share button
+) {
     vm.init(postModelId)
-    val context = LocalContext.current
+    val ctx = LocalContext.current
     val detailByVM by vm.detail.collectAsState()
     detailByVM?.let { detailModel ->
         Scaffold(
             floatingActionButton = {
-                if (!context.isNetworkAvailable()) return@Scaffold
+                if (!ctx.isNetworkAvailable()) return@Scaffold
                 detailModel.images?.let { images ->
                     DetailFloatingButton(navController, images)
                 }
+            },
+            topBar = {
+                AppBar(detailModel.postModel.link, navController)
             }
         ) { padding ->
             DetailItem(detailModel, padding)
         }
     }
-    return detailByVM?.postModel?.link
+}
+
+@Composable
+private fun AppBar(link: String, navController: NavController) {
+    SmallTopAppBar(
+        title = { Text(stringResource(R.string.post)) },
+        navigationIcon = {
+            IconButton(onClick = {
+                navController.popBackStack()
+            }) {
+                Icon(
+                    imageVector = Icons.Rounded.ArrowBack,
+                    contentDescription = stringResource(R.string.back_button),
+                )
+            }
+        },
+        actions = {
+            val ctx = LocalContext.current
+            IconButton(onClick = {
+                val intent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_TEXT, link)
+                    type = "text/plain"
+                }
+                val shareIntent = Intent.createChooser(intent, null)
+                ctx.startActivity(shareIntent)
+            }) {
+                Icon(
+                    imageVector = Icons.Rounded.Share,
+                    contentDescription = stringResource(R.string.share)
+                )
+            }
+        }
+    )
 }
 
 @Composable

@@ -2,10 +2,7 @@ package pl.vemu.zsme.ui
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.assist.AssistContent
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.webkit.WebView
@@ -15,16 +12,12 @@ import androidx.compose.animation.*
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowBack
-import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -61,14 +54,19 @@ import pl.vemu.zsme.ui.more.More
 import pl.vemu.zsme.ui.more.Settings
 import pl.vemu.zsme.ui.post.Post
 import pl.vemu.zsme.ui.post.PostWorker
+import pl.vemu.zsme.ui.post.detail.Detail
 import pl.vemu.zsme.ui.post.detail.Gallery
-import pl.vemu.zsme.ui.post.detail.detail
 import pl.vemu.zsme.ui.theme.MainTheme
 import pl.vemu.zsme.ui.timetable.Lesson
 import pl.vemu.zsme.ui.timetable.Timetable
 import java.util.concurrent.TimeUnit
 
 val Context.dataStore by preferencesDataStore(name = "settings")
+/*val LocalNavController: ProvidableCompositionLocal<NavController> = compositionLocalOf {
+    NavController(
+        currentCompositionLocalContext.
+    ) TODO
+}*/
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -81,8 +79,6 @@ class MainActivity : ComponentActivity() {
         key = stringPreferencesKey("language"),
         defaultValue = "system"
     )
-
-    private var postLink: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -123,13 +119,8 @@ class MainActivity : ComponentActivity() {
         val navController = rememberAnimatedNavController()
         val backStack by navController.currentBackStackEntryAsState()
         val currentDestination = backStack?.destination
-        val scrollState = rememberTopAppBarScrollState()
-        val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(scrollState)
         ChangeSystemBars()
         Scaffold(
-            topBar = {
-                TopBar(navController, currentDestination, scrollBehavior)
-            },
             bottomBar = {
                 BottomBar(currentDestination, navController)
             }) { innerPadding ->
@@ -139,7 +130,7 @@ class MainActivity : ComponentActivity() {
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding),
-                builder = navigations(navController, scrollBehavior)
+                builder = navigations(navController)
             )
         }
     }
@@ -147,8 +138,7 @@ class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalAnimationApi::class)
     @Composable
     private fun navigations(
-        navController: NavHostController,
-        scrollBehavior: TopAppBarScrollBehavior
+        navController: NavHostController
     ): NavGraphBuilder.() -> Unit = {
         navigation(BottomNavItem.POST.startDestination, BottomNavItem.POST.route) {
             composable(
@@ -157,8 +147,7 @@ class MainActivity : ComponentActivity() {
                 exitTransition = Transitions.exitTransition,
                 popEnterTransition = Transitions.popEnterTransition
             ) {
-                postLink = DEFAULT_URL
-                Post(navController, scrollBehavior)
+                Post(navController)
             }
             composable(
                 route = "detail/{postModelId}?slug={slug}",
@@ -186,7 +175,7 @@ class MainActivity : ComponentActivity() {
                     postLink = detail(navController, 0, slug = slug) //TODO slug handle
                 } ?: */backStack.arguments?.getInt("postModelId")
                 ?.let { postModelId ->
-                    postLink = detail(navController, postModelId = postModelId)
+                    Detail(navController, postModelId = postModelId)
                 }
             }
             composable(
@@ -200,7 +189,7 @@ class MainActivity : ComponentActivity() {
                 enterTransition = Transitions.enterTransition,
                 popExitTransition = Transitions.popExitTransition
             ) { backStack ->
-                backStack.arguments?.getString("images")?.let { Gallery(it) }
+                backStack.arguments?.getString("images")?.let { Gallery(it, navController) }
             } /*TODO argmuments string array*/
         }
 
@@ -232,7 +221,7 @@ class MainActivity : ComponentActivity() {
                 }
             ) { backStack ->
                 backStack.arguments?.getString("url")?.let { url ->
-                    Lesson(url)
+                    Lesson(url, navController)
                 }
             }
         }
@@ -253,12 +242,12 @@ class MainActivity : ComponentActivity() {
                 }),*/
                 enterTransition = Transitions.enterTransition,
                 popExitTransition = Transitions.popExitTransition
-            ) { Contact() }
+            ) { Contact(navController) }
             composable(
                 route = "settings",
                 enterTransition = Transitions.enterTransition,
                 popExitTransition = Transitions.popExitTransition
-            ) { Settings() }
+            ) { Settings(navController) }
         }
     }
 
@@ -315,70 +304,6 @@ class MainActivity : ComponentActivity() {
         systemUiController.setStatusBarColor(MaterialTheme.colorScheme.surface)
     }
 
-    @Composable
-    private fun TopBar(
-        navController: NavController,
-        currentDestination: NavDestination?,
-        scrollBehavior: TopAppBarScrollBehavior
-    ) {
-        val startDestination = currentDestination?.parent?.startDestinationRoute
-        val currentRoute = currentDestination?.route
-        val text = @Composable {
-            Text(
-                stringResource(
-                    resources.getIdentifier(
-                        startDestination ?: "app_name",
-                        "string",
-                        packageName
-                    )
-                )
-            )
-        }
-        if (startDestination != currentDestination?.route)
-            SmallTopAppBar(
-                navigationIcon = {
-                    IconButton(onClick = {
-                        navController.popBackStack()
-                    }) {
-                        Icon(
-                            imageVector = Icons.Rounded.ArrowBack,
-                            contentDescription = stringResource(R.string.back_button),
-                        )
-                    }
-                },
-                title = text,
-                actions = {
-                    if (currentRoute?.startsWith("detail") == true) {
-                        ShareButton()
-                    }
-                }
-            )
-        else CenterAlignedTopAppBar(
-            title = text,
-            scrollBehavior = if (currentRoute == BottomNavItem.POST.startDestination) scrollBehavior else null
-        )
-    }
-
-    @Preview
-    @Composable
-    private fun ShareButton() {
-        val context = LocalContext.current
-        IconButton(onClick = {
-            val intent = Intent().apply {
-                action = Intent.ACTION_SEND
-                putExtra(Intent.EXTRA_TEXT, postLink)
-                type = "text/plain"
-            }
-            val shareIntent = Intent.createChooser(intent, null)
-            context.startActivity(shareIntent)
-        }) {
-            Icon(
-                imageVector = Icons.Rounded.Share,
-                contentDescription = stringResource(R.string.share)
-            )
-        }
-    }
-
     private fun setupNotification() {
         val constraints =
             Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
@@ -433,20 +358,11 @@ class MainActivity : ComponentActivity() {
             if (appUpdateResult is AppUpdateResult.Downloaded) appUpdateResult.completeUpdate()
         }
     }
-
-    override fun onProvideAssistContent(outContent: AssistContent?) {
-        super.onProvideAssistContent(outContent)
-        postLink?.let {
-            outContent?.webUri = Uri.parse(it)
-        }
-    }
 }
 
 /*TODO
 * Scrollowanie przesuwa się w pewnym momencie
-* expanding searchview button/even other activity?
 * timetable widget
-* Dark theme shortcut icons
 * github actions gradle build when tag updated
 * zsme.png drawable to svg
 * onProvideAssistContent

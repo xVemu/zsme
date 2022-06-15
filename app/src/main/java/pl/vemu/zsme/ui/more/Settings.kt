@@ -3,43 +3,68 @@ package pl.vemu.zsme.ui.more
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.LocalContentColor
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.BrightnessMedium
 import androidx.compose.material.icons.rounded.Language
 import androidx.compose.material.icons.rounded.Notifications
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import de.schnettler.datastore.compose.model.Preference.PreferenceItem
 import de.schnettler.datastore.compose.model.PreferenceIcon
 import de.schnettler.datastore.compose.ui.PreferenceScreen
 import de.schnettler.datastore.manager.DataStoreManager
 import de.schnettler.datastore.manager.PreferenceRequest
 import pl.vemu.zsme.R
+import pl.vemu.zsme.ui.components.simpleSmallAppBar
 import pl.vemu.zsme.ui.dataStore
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterialApi::class)
-@Preview(showBackground = true, backgroundColor = 0xFFFFFF)
+@OptIn(
+    ExperimentalComposeUiApi::class, ExperimentalMaterialApi::class,
+    ExperimentalMaterial3Api::class
+)
 @Composable
-fun Settings() {
+fun Settings(navController: NavController) {
     val context = LocalContext.current
     val dataStoreManager = DataStoreManager(context.dataStore)
-    CompositionLocalProvider(androidx.compose.material.LocalContentColor provides MaterialTheme.colorScheme.onSurface) {
-        PreferenceScreen(
-            items = listOf(
-                theme(),
-                language(),
-                notification(context)
-            ),
-            dataStoreManager = dataStoreManager
+    Scaffold(
+        topBar = simpleSmallAppBar(
+            title = R.string.settings,
+            navController = navController
         )
+    ) { paddding ->
+        CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurface) {
+            PreferenceScreen(
+                modifier = Modifier.padding(paddding),
+                items = listOf(
+                    theme(),
+                    language(),
+                    notification(context)
+                ),
+                dataStoreManager = dataStoreManager
+            )
+        }
     }
+}
+
+
+@Preview(showBackground = true, backgroundColor = 0xFFFFFF)
+@Composable
+fun SettingsPreview() {
+    Settings(rememberNavController())
 }
 
 @Composable

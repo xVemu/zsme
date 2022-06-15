@@ -3,7 +3,7 @@
     <shortcut
         android:shortcutId="timetable"
         android:enabled="true"
-        android:icon="@drawable/ic_timetable"
+        android:icon="@mipmap/ic_timetable_round"
         android:shortcutShortLabel="@string/timetable"
         android:shortcutLongLabel="@string/timetable">
         <intent
@@ -15,7 +15,7 @@
     <shortcut
         android:shortcutId="more"
         android:enabled="true"
-        android:icon="@drawable/ic_more"
+        android:icon="@mipmap/ic_more_round"
         android:shortcutShortLabel="@string/more"
         android:shortcutLongLabel="@string/more">
         <intent

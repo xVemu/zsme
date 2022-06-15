@@ -1,28 +1,26 @@
 package pl.vemu.zsme.ui.post
 
 import android.text.format.DateUtils
-import android.view.View
-import android.widget.TextView
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
-import androidx.core.text.HtmlCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -37,19 +35,21 @@ import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import kotlinx.coroutines.launch
 import pl.vemu.zsme.R
-import pl.vemu.zsme.SimpleSnackbar
 import pl.vemu.zsme.data.model.PostModel
 import pl.vemu.zsme.paddingBottom
 import pl.vemu.zsme.paddingTop
+import pl.vemu.zsme.ui.components.HTMLText
+import pl.vemu.zsme.ui.components.SimpleSnackbar
+import pl.vemu.zsme.ui.components.SmallText
 import java.net.UnknownHostException
 import java.text.SimpleDateFormat
 import java.util.*
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Post(
     navController: NavController,
-    scrollBehavior: TopAppBarScrollBehavior,
     vm: PostVM = hiltViewModel()
 ) {
     val pagingItems = vm.posts.collectAsLazyPagingItems()
@@ -61,59 +61,120 @@ fun Post(
             else -> false
         }
     }
-    SwipeRefresh(
-        state = rememberSwipeRefreshState(isRefreshing = isLoading),
-        onRefresh = { pagingItems.refresh() },
-        indicator = { state, trigger ->
-            SwipeRefreshIndicator(
-                state = state,
-                refreshTriggerDistance = trigger,
-                contentColor = MaterialTheme.colorScheme.primary,
-                backgroundColor = MaterialTheme.colorScheme.surface
-            )
-        },
-        modifier = Modifier
-            .nestedScroll(scrollBehavior.nestedScrollConnection)
-            .fillMaxSize()
-    ) {
-        Box(Modifier.fillMaxSize()) {
-            val snackbarHostState = remember { SnackbarHostState() }
-            val coroutineScope = rememberCoroutineScope()
-            val errorMsg = stringResource(R.string.error)
-            val retryMsg = stringResource(R.string.retry)
-            val noConnectionMsg = stringResource(R.string.no_connection)
-            LazyColumn {
-                items(
-                    items = pagingItems,
-                    key = { postModel -> postModel.id }
-                ) { post ->
-                    PostCard(navController = navController, postModel = post!!)
-                }
-                pagingItems.apply {
-                    when {
-                        loadState.append is LoadState.Loading -> {
-                            item { LoadingItem() }
-                        }
-                        loadState.refresh is LoadState.Error || loadState.append is LoadState.Error -> {
-                            val error =
-                                (loadState.refresh as? LoadState.Error)?.error
-                                    ?: (loadState.append as LoadState.Error).error
-                            coroutineScope.launch {
-                                val result = snackbarHostState.showSnackbar(
-                                    message = if (error is UnknownHostException) noConnectionMsg else errorMsg,
-                                    actionLabel = retryMsg,
-                                    duration = SnackbarDuration.Indefinite
-                                )
-                                if (result == SnackbarResult.ActionPerformed)
-                                    pagingItems.retry()
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarScrollState())
+    Scaffold(topBar = {
+        TopAppBar(scrollBehavior) {
+            vm.query.value = it
+        }
+    }) { padding ->
+        SwipeRefresh(
+            state = rememberSwipeRefreshState(isRefreshing = isLoading),
+            onRefresh = { pagingItems.refresh() },
+            indicator = { state, trigger ->
+                SwipeRefreshIndicator(
+                    state = state,
+                    refreshTriggerDistance = trigger,
+                    contentColor = MaterialTheme.colorScheme.primary,
+                    backgroundColor = MaterialTheme.colorScheme.surface
+                )
+            },
+            modifier = Modifier
+                .padding(padding)
+                .nestedScroll(scrollBehavior.nestedScrollConnection)
+                .fillMaxSize()
+        ) {
+            Box(Modifier.fillMaxSize()) {
+                val snackbarHostState = remember { SnackbarHostState() }
+                val coroutineScope = rememberCoroutineScope()
+                val errorMsg = stringResource(R.string.error)
+                val retryMsg = stringResource(R.string.retry)
+                val noConnectionMsg = stringResource(R.string.no_connection)
+                LazyColumn {
+                    items(
+                        items = pagingItems,
+                        key = { postModel -> postModel.id }
+                    ) { post ->
+                        PostCard(navController = navController, postModel = post!!)
+                    }
+                    pagingItems.apply {
+                        when {
+                            loadState.append is LoadState.Loading -> {
+                                item { LoadingItem() }
+                            }
+                            loadState.refresh is LoadState.Error || loadState.append is LoadState.Error -> {
+                                val error =
+                                    (loadState.refresh as? LoadState.Error)?.error
+                                        ?: (loadState.append as LoadState.Error).error
+                                coroutineScope.launch {
+                                    val result = snackbarHostState.showSnackbar(
+                                        message = if (error is UnknownHostException) noConnectionMsg else errorMsg,
+                                        actionLabel = retryMsg,
+                                        duration = SnackbarDuration.Indefinite
+                                    )
+                                    if (result == SnackbarResult.ActionPerformed)
+                                        pagingItems.retry()
+                                }
                             }
                         }
                     }
                 }
+                SimpleSnackbar(snackbarHostState)
             }
-            SimpleSnackbar(snackbarHostState)
         }
     }
+}
+
+@Composable
+private fun TopAppBar(
+    scrollBehavior: TopAppBarScrollBehavior,
+    onQueryChange: (query: String?) -> Unit
+) {
+    CenterAlignedTopAppBar(
+        title = { Text(text = stringResource(R.string.post)) },
+        scrollBehavior = scrollBehavior,
+        actions = {
+            var isSearching by remember { mutableStateOf(false) }
+            if (!isSearching)
+                IconButton(onClick = {
+                    isSearching = true
+                }) {
+                    Icon(
+                        imageVector = Icons.Rounded.Search,
+                        contentDescription = stringResource(R.string.search)
+                    )
+                }
+            else {
+                IconButton(onClick = {
+                    isSearching = false
+                    onQueryChange(null)
+                }) {
+                    Icon(imageVector = Icons.Rounded.ArrowBack, contentDescription = "Close")
+                }
+                var query by remember { mutableStateOf("") }
+                val focusRequester = FocusRequester()
+                TextField(
+                    value = query,
+                    onValueChange = {
+                        query = it
+                        onQueryChange(it)
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .focusRequester(focusRequester),
+                    singleLine = true,
+                    placeholder = { Text(stringResource(R.string.search)) },
+                    colors = TextFieldDefaults.textFieldColors(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                    )
+                )
+                LaunchedEffect("RequestFocus") {
+                    focusRequester.requestFocus()
+                }
+            }
+        }
+    )
 }
 
 @Preview
@@ -150,7 +211,7 @@ private fun PostCard(
                         .crossfade(true)
                         .transformations(RoundedCornersTransformation(radius = 12f))
                         .build(),
-                    placeholder = painterResource(R.drawable.zsme),
+//                    placeholder = painterResource(R.drawable.zsme), TODO
                     contentDescription = stringResource(R.string.thumbnail),
                     modifier = Modifier
                         .size(108.dp),
@@ -193,41 +254,6 @@ private fun MainText(
             modifier = Modifier.paddingBottom(8.dp)
         )
     }
-}
-
-@Composable
-fun SmallText(text: String) {
-    Text(
-        text = text,
-        style = MaterialTheme.typography.bodyMedium
-    )
-}
-
-@Composable
-fun HTMLText(
-    html: String,
-    modifier: Modifier = Modifier,
-    centered: Boolean = false,
-    color: Color = MaterialTheme.colorScheme.onSurface,
-    textStyle: TextStyle = MaterialTheme.typography.bodyMedium
-) {
-    AndroidView(
-        modifier = modifier.fillMaxWidth(),
-        factory = { context ->
-            TextView(context).apply {
-                text = HtmlCompat.fromHtml(html, HtmlCompat.FROM_HTML_MODE_COMPACT).trimEnd()
-                if (centered) textAlignment =
-                    View.TEXT_ALIGNMENT_CENTER
-                setTextColor(color.toArgb())
-                textSize = textStyle.fontSize.value
-                setLineSpacing(textStyle.lineHeight.value - textStyle.fontSize.value, 1F)
-                letterSpacing = textStyle.letterSpacing.value * 0.0624F
-            }
-        },
-        update = {
-            it.text = HtmlCompat.fromHtml(html, HtmlCompat.FROM_HTML_MODE_COMPACT).trimEnd()
-        }
-    )
 }
 
 @Preview
@@ -291,27 +317,3 @@ class PostPreviewProvider : PreviewParameterProvider<PostModel> {
         )
     )
 }
-
-/*TODO
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.menu_search, menu)
-        val searchView = menu.findItem(R.id.app_bar_search).actionView as SearchView
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean = query?.let {
-                viewModel.query.value = it
-                searchView.clearFocus()
-                binding.recyclerView.scrollToPosition(0)
-                true
-            } ?: false
-
-            override fun onQueryTextChange(newText: String?): Boolean = true
-        })
-        searchView.setOnCloseListener {
-            viewModel.query.value = ""
-            searchView.onActionViewCollapsed()
-            binding.recyclerView.scrollToPosition(0)
-            true
-        }
-    }
-}*/

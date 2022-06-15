@@ -2,7 +2,7 @@
 <shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
     <shortcut
         android:enabled="true"
-        android:icon="@drawable/ic_timetable">
+        android:icon="@mipmap/ic_timetable">
         <intent
             android:action="pl.vemu.zsme.shortcut.TIMETABLE"
             android:targetPackage="pl.vemu.zsme"
@@ -11,7 +11,7 @@
     </shortcut>
     <shortcut
         android:enabled="true"
-        android:icon="@drawable/ic_more">
+        android:icon="@mipmap/ic_more">
         <intent
             android:action="pl.vemu.zsme.shortcut.MORE"
             android:targetPackage="pl.vemu.zsme"
