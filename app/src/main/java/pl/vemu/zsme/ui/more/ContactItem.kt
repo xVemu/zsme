@@ -7,6 +7,7 @@ import android.net.Uri
 import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.core.net.toUri
 import pl.vemu.zsme.R
 
 enum class ContactItem(
@@ -81,8 +82,8 @@ enum class ContactItem(
     fun onClick(context: Context) {
         val actionString = context.getString(action)
         val intent = when (icon) {
-            R.drawable.ic_phone -> Intent(Intent.ACTION_DIAL, Uri.parse("tel:$actionString"))
-            R.drawable.ic_mail -> Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:$actionString"))
+            R.drawable.ic_phone -> Intent(Intent.ACTION_DIAL, "tel:$actionString".toUri())
+            R.drawable.ic_mail -> Intent(Intent.ACTION_SENDTO, "mailto:$actionString".toUri())
             else -> Intent(Intent.ACTION_VIEW, Uri.parse(actionString))
         }
         try {

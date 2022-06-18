@@ -23,12 +23,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.ramcosta.composedestinations.annotation.Destination
 import de.schnettler.datastore.compose.model.Preference.PreferenceItem
 import de.schnettler.datastore.compose.model.PreferenceIcon
 import de.schnettler.datastore.compose.ui.PreferenceScreen
 import de.schnettler.datastore.manager.DataStoreManager
 import de.schnettler.datastore.manager.PreferenceRequest
 import pl.vemu.zsme.R
+import pl.vemu.zsme.ui.components.SlideTransition
 import pl.vemu.zsme.ui.components.simpleSmallAppBar
 import pl.vemu.zsme.ui.dataStore
 
@@ -36,6 +38,8 @@ import pl.vemu.zsme.ui.dataStore
     ExperimentalComposeUiApi::class, ExperimentalMaterialApi::class,
     ExperimentalMaterial3Api::class
 )
+@MoreNavGraph
+@Destination(route = "more/settings", style = SlideTransition::class)
 @Composable
 fun Settings(navController: NavController) {
     val context = LocalContext.current

@@ -4,10 +4,10 @@ import android.app.PendingIntent
 import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.VISIBILITY_PUBLIC
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.net.toUri
 import androidx.core.text.HtmlCompat
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
@@ -20,6 +20,7 @@ import pl.vemu.zsme.R
 import pl.vemu.zsme.data.db.PostDAO
 import pl.vemu.zsme.data.service.ZSMEService
 import pl.vemu.zsme.ui.MainActivity
+import pl.vemu.zsme.ui.destinations.DetailDestination
 import pl.vemu.zsme.util.mappers.PostMapper
 
 @HiltWorker
@@ -41,7 +42,7 @@ class PostWorker @AssistedInject constructor(
             for (item in postModelsFromService) {
                 if (item.id == firstInDb) break
                 val intent = Intent(context, MainActivity::class.java).apply {
-                    data = Uri.parse("zsme://detail/${item.id}")
+                    data = "zsme://detail/${DetailDestination(item).route}".toUri()
                     flags = (Intent.FLAG_ACTIVITY_NEW_TASK
                             or Intent.FLAG_ACTIVITY_CLEAR_TASK
                             or Intent.FLAG_ACTIVITY_SINGLE_TOP)

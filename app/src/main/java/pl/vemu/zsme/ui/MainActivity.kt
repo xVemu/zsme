@@ -8,7 +8,7 @@ import android.os.Bundle
 import android.webkit.WebView
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.animation.*
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -16,7 +16,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,48 +24,33 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.*
-import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.work.*
-import com.google.accompanist.navigation.animation.AnimatedNavHost
-import com.google.accompanist.navigation.animation.composable
-import com.google.accompanist.navigation.animation.navigation
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.android.play.core.ktx.*
+import com.ramcosta.composedestinations.DestinationsNavHost
+import com.ramcosta.composedestinations.animations.rememberAnimatedNavHostEngine
+import com.ramcosta.composedestinations.navigation.navigate
 import com.yariksoffice.lingver.Lingver
 import dagger.hilt.android.AndroidEntryPoint
 import de.schnettler.datastore.manager.DataStoreManager
 import de.schnettler.datastore.manager.PreferenceRequest
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import pl.vemu.zsme.DEFAULT_URL
 import pl.vemu.zsme.R
 import pl.vemu.zsme.surfaceColorWithElevation
-import pl.vemu.zsme.ui.more.Contact
-import pl.vemu.zsme.ui.more.More
-import pl.vemu.zsme.ui.more.Settings
-import pl.vemu.zsme.ui.post.Post
 import pl.vemu.zsme.ui.post.PostWorker
-import pl.vemu.zsme.ui.post.detail.Detail
-import pl.vemu.zsme.ui.post.detail.Gallery
 import pl.vemu.zsme.ui.theme.MainTheme
-import pl.vemu.zsme.ui.timetable.Lesson
-import pl.vemu.zsme.ui.timetable.Timetable
 import java.util.concurrent.TimeUnit
 
 val Context.dataStore by preferencesDataStore(name = "settings")
-/*val LocalNavController: ProvidableCompositionLocal<NavController> = compositionLocalOf {
-    NavController(
-        currentCompositionLocalContext.
-    ) TODO
-}*/
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -113,158 +97,43 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    @OptIn(ExperimentalAnimationApi::class, ExperimentalMaterial3Api::class)
+    @OptIn(
+        ExperimentalAnimationApi::class, ExperimentalMaterial3Api::class,
+        ExperimentalMaterialNavigationApi::class
+    )
     @Composable
     private fun Main() {
         val navController = rememberAnimatedNavController()
-        val backStack by navController.currentBackStackEntryAsState()
-        val currentDestination = backStack?.destination
         ChangeSystemBars()
         Scaffold(
             bottomBar = {
-                BottomBar(currentDestination, navController)
+                BottomBar(navController)
             }) { innerPadding ->
-            AnimatedNavHost(
+            DestinationsNavHost(
+                navGraph = NavGraphs.root,
                 navController = navController,
-                startDestination = BottomNavItem.POST.route,
+                engine = rememberAnimatedNavHostEngine(),
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding),
-                builder = navigations(navController)
             )
-        }
-    }
-
-    @OptIn(ExperimentalAnimationApi::class)
-    @Composable
-    private fun navigations(
-        navController: NavHostController
-    ): NavGraphBuilder.() -> Unit = {
-        navigation(BottomNavItem.POST.startDestination, BottomNavItem.POST.route) {
-            composable(
-                route = BottomNavItem.POST.startDestination,
-                deepLinks = listOf(navDeepLink { uriPattern = "$DEFAULT_URL/" }),
-                exitTransition = Transitions.exitTransition,
-                popEnterTransition = Transitions.popEnterTransition
-            ) {
-                Post(navController)
-            }
-            composable(
-                route = "detail/{postModelId}?slug={slug}",
-                arguments = listOf(
-                    navArgument("postModelId") {
-                        defaultValue = 0
-                        type = NavType.IntType /*TODO change to parcelable*/
-                    },
-                    navArgument("slug") {
-                        nullable = true
-                        type = NavType.StringType
-                    }
-                ),
-                deepLinks = listOf(
-//                    navDeepLink { uriPattern = "$DEFAULT_URL/wp/{slug}/" },
-//                    navDeepLink { uriPattern = "$DEFAULT_URL/wp/{slug}" },
-                    navDeepLink { uriPattern = "zsme://detail/{postModelId}" }
-                ),
-                enterTransition = Transitions.enterTransition,
-                popExitTransition = Transitions.popExitTransition,
-                exitTransition = Transitions.exitTransition,
-                popEnterTransition = Transitions.popEnterTransition
-            ) { backStack ->
-                /*backStack.arguments?.getString("slug")?.let { slug ->
-                    postLink = detail(navController, 0, slug = slug) //TODO slug handle
-                } ?: */backStack.arguments?.getInt("postModelId")
-                ?.let { postModelId ->
-                    Detail(navController, postModelId = postModelId)
-                }
-            }
-            composable(
-                route = "gallery?images={images}",
-                arguments = listOf(
-                    navArgument("images") {
-                        nullable = true
-                        type = NavType.StringType
-                    }
-                ),
-                enterTransition = Transitions.enterTransition,
-                popExitTransition = Transitions.popExitTransition
-            ) { backStack ->
-                backStack.arguments?.getString("images")?.let { Gallery(it, navController) }
-            } /*TODO argmuments string array*/
-        }
-
-        navigation(
-            BottomNavItem.TIMETABLE.startDestination,
-            BottomNavItem.TIMETABLE.route
-        ) {
-            composable(
-                route = BottomNavItem.TIMETABLE.startDestination,
-                deepLinks = listOf(
-                    navDeepLink { uriPattern = "zsme://timetable" },
-                    navDeepLink { uriPattern = "$DEFAULT_URL/plan/" }
-                ),
-                exitTransition = Transitions.fadeOut,
-                popEnterTransition = Transitions.fadeIn
-            ) { Timetable(navController) }
-            composable(
-                route = "lesson/{url}",
-                arguments = listOf(
-                    navArgument("url") {
-                        type = NavType.StringType
-                    }
-                ),
-                enterTransition = {
-                    expandIn(expandFrom = Alignment.Center) + fadeIn()
-                },
-                popExitTransition = {
-                    shrinkOut(shrinkTowards = Alignment.Center) + fadeOut()
-                }
-            ) { backStack ->
-                backStack.arguments?.getString("url")?.let { url ->
-                    Lesson(url, navController)
-                }
-            }
-        }
-
-        navigation(BottomNavItem.MORE.startDestination, BottomNavItem.MORE.route) {
-            composable(
-                route = BottomNavItem.MORE.startDestination,
-                deepLinks = listOf(navDeepLink { uriPattern = "zsme://more" }),
-                exitTransition = Transitions.exitTransition,
-                popEnterTransition = Transitions.popEnterTransition
-            ) {
-                More(navController)
-            }
-            composable(
-                route = "contact",
-                /*deepLinks = listOf(navDeepLink { TODO backstack
-                    uriPattern = "$DEFAULT_URL/wp/kontakt/"
-                }),*/
-                enterTransition = Transitions.enterTransition,
-                popExitTransition = Transitions.popExitTransition
-            ) { Contact(navController) }
-            composable(
-                route = "settings",
-                enterTransition = Transitions.enterTransition,
-                popExitTransition = Transitions.popExitTransition
-            ) { Settings(navController) }
         }
     }
 
     @Composable
     private fun BottomBar(
-        currentDestination: NavDestination?,
-        navController: NavHostController
+        navController: NavController
     ) {
+        val currentDestination by navController.currentScreenAsState()
         NavigationBar {
             BottomNavItem.values().forEach { item ->
                 NavigationBarItem(
-                    label = { Text(stringResource(item.title)) },
-                    selected = currentDestination?.hierarchy?.any { it.route == item.route } == true,
+                    label = { Text(stringResource(item.label)) },
+                    selected = currentDestination == item.destination,
                     icon = {
                         Icon(
                             imageVector = item.icon,
-                            contentDescription = stringResource(item.title)
+                            contentDescription = stringResource(item.label)
                         )
                     },
                     colors = NavigationBarItemDefaults.colors(
@@ -272,7 +141,7 @@ class MainActivity : ComponentActivity() {
                         indicatorColor = MaterialTheme.colorScheme.primaryContainer
                     ),
                     onClick = {
-                        navController.navigate(item.route) {
+                        navController.navigate(item.destination) {
                             popUpTo(navController.graph.findStartDestination().id) {
                                 saveState = true
                             }
@@ -290,7 +159,6 @@ class MainActivity : ComponentActivity() {
     private fun BottomBarPreview() {
         val navController = rememberNavController()
         BottomBar(
-            currentDestination = navController.currentDestination,
             navController = navController
         )
     }

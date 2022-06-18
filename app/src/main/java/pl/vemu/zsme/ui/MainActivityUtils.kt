@@ -1,47 +1,56 @@
 package pl.vemu.zsme.ui
 
 import androidx.annotation.StringRes
-import androidx.compose.animation.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.DynamicFeed
 import androidx.compose.material.icons.rounded.EventNote
 import androidx.compose.material.icons.rounded.Subject
+import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavController
+import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hierarchy
+import com.ramcosta.composedestinations.spec.NavGraphSpec
 import pl.vemu.zsme.R
 
-@OptIn(ExperimentalAnimationApi::class)
-object Transitions {
-    val enterTransition =
-        makeTransition(slideInHorizontally(initialOffsetX = { it / 2 }) + fadeIn())
-    val exitTransition =
-        makeTransition(slideOutHorizontally() + fadeOut())
-    val popEnterTransition =
-        makeTransition(slideInHorizontally() + fadeIn())
-    val popExitTransition =
-        makeTransition(slideOutHorizontally(targetOffsetX = { it / 2 }) + fadeOut())
-    val fadeIn =
-        makeTransition(fadeIn())
-    val fadeOut =
-        makeTransition(fadeOut())
+@Composable
+fun NavController.currentScreenAsState(): State<NavGraphSpec> {
+    val selectedItem: MutableState<NavGraphSpec> = remember { mutableStateOf(NavGraphs.post) }
 
-    private fun <T> makeTransition(transition: T):
-            AnimatedContentScope<NavBackStackEntry>.() -> T? =
-        {
-            if (initialState.destination.parent?.startDestinationRoute ==
-                targetState.destination.parent?.startDestinationRoute
-            ) transition
-            else null
+    DisposableEffect(this) {
+        val listener = NavController.OnDestinationChangedListener { _, destination, _ ->
+
+            selectedItem.value = destination.navGraph()
         }
+        addOnDestinationChangedListener(listener)
+
+        onDispose {
+            removeOnDestinationChangedListener(listener)
+        }
+    }
+
+    return selectedItem
 }
 
+private fun NavDestination.navGraph(): NavGraphSpec {
+    hierarchy.forEach { destination ->
+        NavGraphs.root.nestedNavGraphs.forEach { navGraph ->
+            if (destination.route == navGraph.route) {
+                return navGraph
+            }
+        }
+    }
+
+    throw RuntimeException("Unknown nav graph for destination $route")
+}
+
+
 enum class BottomNavItem(
-    val route: String,
-    val startDestination: String,
+    val destination: NavGraphSpec,
     val icon: ImageVector,
-    @StringRes val title: Int
+    @StringRes val label: Int
 ) {
-    POST("postNav", "post", Icons.Rounded.DynamicFeed, R.string.post),
-    TIMETABLE("timetableNav", "timetable", Icons.Rounded.EventNote, R.string.timetable),
-    MORE("moreNav", "more", Icons.Rounded.Subject, R.string.more);
+    POST(NavGraphs.post, Icons.Rounded.DynamicFeed, R.string.post),
+    TIMETABLE(NavGraphs.timetable, Icons.Rounded.EventNote, R.string.timetable),
+    MORE(NavGraphs.more, Icons.Rounded.Subject, R.string.more);
 }

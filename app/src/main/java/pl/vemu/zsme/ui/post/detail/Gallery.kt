@@ -13,17 +13,18 @@ import com.github.chrisbanes.photoview.PhotoView
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import com.ramcosta.composedestinations.annotation.Destination
 import pl.vemu.zsme.R
+import pl.vemu.zsme.ui.components.SlideTransition
 import pl.vemu.zsme.ui.components.simpleSmallAppBar
+import pl.vemu.zsme.ui.post.PostNavGraph
 
 
 @OptIn(ExperimentalPagerApi::class, ExperimentalMaterial3Api::class)
+@PostNavGraph
+@Destination(route = "post/gallery", style = SlideTransition::class)
 @Composable
-fun Gallery(imagesJson: String, navController: NavController) {
-    val imageType = object : TypeToken<List<String>>() {}.type
-    val images: List<String> = Gson().fromJson(imagesJson, imageType)
+fun Gallery(images: Array<String>, navController: NavController) {
     Scaffold(
         topBar = simpleSmallAppBar(
             title = R.string.gallery,

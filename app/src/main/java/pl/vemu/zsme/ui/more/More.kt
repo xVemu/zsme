@@ -14,9 +14,26 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.ramcosta.composedestinations.annotation.DeepLink
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.NavGraph
+import com.ramcosta.composedestinations.annotation.RootNavGraph
 import pl.vemu.zsme.R
+import pl.vemu.zsme.ui.components.SlideTransition
+
+@RootNavGraph
+@NavGraph
+annotation class MoreNavGraph(
+    val start: Boolean = false
+)
 
 @OptIn(ExperimentalMaterial3Api::class)
+@MoreNavGraph(start = true)
+@Destination(
+    route = "more/main",
+    deepLinks = [DeepLink(uriPattern = "zsme://more")],
+    style = SlideTransition::class
+)
 @Composable
 fun More(navController: NavController) {
     val context = LocalContext.current

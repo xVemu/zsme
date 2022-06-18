@@ -3,7 +3,10 @@ package pl.vemu.zsme.ui.post.detail
 import android.content.Intent
 import android.graphics.Color
 import android.webkit.WebView
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
@@ -23,6 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.text.HtmlCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -31,40 +35,69 @@ import androidx.webkit.WebViewFeature
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.google.gson.Gson
+import com.ramcosta.composedestinations.annotation.DeepLink
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.FULL_ROUTE_PLACEHOLDER
+import com.ramcosta.composedestinations.navargs.DestinationsNavTypeSerializer
+import com.ramcosta.composedestinations.navargs.NavTypeSerializer
+import com.ramcosta.composedestinations.navigation.navigate
 import pl.vemu.zsme.R
 import pl.vemu.zsme.data.model.DetailModel
+import pl.vemu.zsme.data.model.PostModel
 import pl.vemu.zsme.isNetworkAvailable
 import pl.vemu.zsme.ui.components.HTMLText
+import pl.vemu.zsme.ui.components.SlideTransition
+import pl.vemu.zsme.ui.destinations.GalleryDestination
+import pl.vemu.zsme.ui.post.PostNavGraph
 import java.text.DateFormat
 
 
 @OptIn(ExperimentalMaterial3Api::class)
+@PostNavGraph
+@Destination(
+    route = "post/detail",
+    deepLinks = [DeepLink(uriPattern = "zsme://detail/$FULL_ROUTE_PLACEHOLDER")],
+    style = SlideTransition::class
+)
 @Composable
 fun Detail(
+    postModel: PostModel,
     navController: NavController,
-    postModelId: Int,
-    slug: String? = null,
+//    slug: String? = null, TODO
     vm: DetailVM = hiltViewModel()
 ) {
-    vm.init(postModelId)
+    vm.init(postModel)
     val ctx = LocalContext.current
-    val detailByVM by vm.detail.collectAsState()
-    detailByVM?.let { detailModel ->
-        Scaffold(
-            floatingActionButton = {
-                if (!ctx.isNetworkAvailable()) return@Scaffold
-                detailModel.images?.let { images ->
-                    DetailFloatingButton(navController, images)
-                }
-            },
-            topBar = {
-                AppBar(detailModel.postModel.link, navController)
+    val detailModel by vm.detail.collectAsState()
+    Scaffold(
+        floatingActionButton = {
+            if (!ctx.isNetworkAvailable()) return@Scaffold
+            detailModel.images?.let { images ->
+                DetailFloatingButton(navController, images)
             }
-        ) { padding ->
-            DetailItem(detailModel, padding)
+        },
+        topBar = {
+            AppBar(postModel.link, navController)
         }
+    ) { padding ->
+        DetailItem(postModel, detailModel, modifier = Modifier.padding(padding))
     }
 }
+
+@NavTypeSerializer
+class PostNavTypeSerializer : DestinationsNavTypeSerializer<PostModel> {
+    override fun fromRouteString(routeStr: String): PostModel {
+        return Gson().fromJson(routeStr, PostModel::class.java)
+    }
+
+    override fun toRouteString(value: PostModel): String = Gson().toJson(value)
+
+}
+
+/*deepLinks = listOf(
+    navDeepLink { uriPattern = "$DEFAULT_URL/wp/{slug}/" },
+    navDeepLink { uriPattern = "$DEFAULT_URL/wp/{slug}" }
+)*/
 
 @Composable
 private fun AppBar(link: String, navController: NavController) {
@@ -108,7 +141,7 @@ private fun DetailFloatingButton(
     ExtendedFloatingActionButton(
         text = { Text(stringResource(R.string.gallery)) },
         onClick = {
-            navController.navigate("gallery?images=" + Gson().toJson(images))
+            navController.navigate(GalleryDestination(images.toTypedArray()))
         },
         icon = {
             Icon(
@@ -121,14 +154,12 @@ private fun DetailFloatingButton(
 
 @Composable
 private fun DetailItem(
+    postModel: PostModel,
     detailModel: DetailModel,
-    padding: PaddingValues
+    modifier: Modifier = Modifier
 ) {
-    val (postModel) = detailModel
     Column(
-        Modifier
-            .verticalScroll(rememberScrollState())
-            .padding(padding)
+        modifier = modifier.verticalScroll(rememberScrollState())
     ) {
         AsyncImage(
             model = ImageRequest.Builder(context = LocalContext.current)
@@ -155,7 +186,12 @@ private fun DetailItem(
             style = MaterialTheme.typography.bodyMedium
         )
         SelectionContainer {
-            WebView(html = detailModel.html)
+            WebView(
+                html = HtmlCompat.fromHtml(
+                    detailModel.html,
+                    HtmlCompat.FROM_HTML_MODE_COMPACT
+                ).toString() //fixes unicode chars
+            )
         }
     }
 }

@@ -25,14 +25,33 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
+import com.ramcosta.composedestinations.annotation.DeepLink
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.NavGraph
+import com.ramcosta.composedestinations.annotation.RootNavGraph
+import com.ramcosta.composedestinations.navigation.navigate
+import pl.vemu.zsme.DEFAULT_URL
 import pl.vemu.zsme.R
 import pl.vemu.zsme.Result
 import pl.vemu.zsme.data.model.TimetableModel
+import pl.vemu.zsme.ui.components.ExpandTransition
 import pl.vemu.zsme.ui.components.ShowSnackBarWithError
 import pl.vemu.zsme.ui.components.SimpleSnackbar
 import pl.vemu.zsme.ui.components.Tabs
+import pl.vemu.zsme.ui.destinations.LessonDestination
 
-//@Destination()
+@RootNavGraph
+@NavGraph
+annotation class TimetableNavGraph(
+    val start: Boolean = false
+)
+
+@TimetableNavGraph(start = true)
+@Destination(
+    route = "timetable/main",
+    deepLinks = [DeepLink(uriPattern = "zsme://timetable"), DeepLink(uriPattern = "$DEFAULT_URL/plan/")],
+    style = ExpandTransition::class
+)
 @OptIn(ExperimentalPagerApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun Timetable(
@@ -74,9 +93,8 @@ fun Timetable(
                         }
                     }
                     is Result.Failure -> {
-                        ShowSnackBarWithError(
-                            result = timetableResult,
-                            snackbarHostState = snackbarHostState
+                        snackbarHostState.ShowSnackBarWithError(
+                            result = timetableResult
                         ) {
                             vm.downloadTimetable()
                         }
@@ -96,7 +114,7 @@ private fun TimetablePageItem(
 ) {
     OutlinedCard(
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
-        onClick = { navController.navigate("lesson/${item.url}") },
+        onClick = { navController.navigate(LessonDestination(item.url)) },
         modifier = Modifier
             .height((LocalConfiguration.current.screenWidthDp / 3).dp)
             .padding(8.dp)

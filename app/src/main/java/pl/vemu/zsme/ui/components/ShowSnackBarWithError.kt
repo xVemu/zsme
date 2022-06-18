@@ -11,9 +11,8 @@ import pl.vemu.zsme.Result
 import java.net.UnknownHostException
 
 @Composable
-fun ShowSnackBarWithError(
+fun SnackbarHostState.ShowSnackBarWithError(
     result: Result<*>,
-    snackbarHostState: SnackbarHostState,
     onActionPerformed: () -> Unit
 ) {
     val errorMsg = stringResource(R.string.error)
@@ -21,7 +20,7 @@ fun ShowSnackBarWithError(
     val noConnectionMsg = stringResource(R.string.no_connection)
     val error = (result as Result.Failure).error
     LaunchedEffect(error) {
-        val snackbarResult = snackbarHostState.showSnackbar(
+        val snackbarResult = showSnackbar(
             message = if (error is UnknownHostException) noConnectionMsg else errorMsg,
             actionLabel = retryMsg,
             duration = SnackbarDuration.Indefinite

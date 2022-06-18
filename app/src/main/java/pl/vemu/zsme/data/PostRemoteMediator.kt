@@ -69,34 +69,34 @@ class PostRemoteMediator constructor(
     ) =
         when (loadType) {
             LoadType.REFRESH -> {
-                val remoteKeys = getRemoteKeyClosestToCurrentPosition(state)
+                val remoteKeys = state.getRemoteKeyClosestToCurrentPosition()
                 remoteKeys?.nextKey?.minus(1) ?: DEFAULT_PAGE
             }
             LoadType.APPEND -> {
-                val remoteKeys = getRemoteKeyForLastItem(state)
+                val remoteKeys = state.getRemoteKeyForLastItem()
                 val nextKey = remoteKeys?.nextKey
                 nextKey ?: MediatorResult.Success(endOfPaginationReached = false)
             }
             LoadType.PREPEND -> {
-                val remoteKeys = getRemoteKeyForFirstItem(state)
+                val remoteKeys = state.getRemoteKeyForFirstItem()
                 val prevKey = remoteKeys?.prevKey
                 prevKey ?: MediatorResult.Success(endOfPaginationReached = false)
             }
         }
 
-    private suspend fun getRemoteKeyClosestToCurrentPosition(state: PagingState<Int, PostModel>): RemoteKeyModel? =
-        state.anchorPosition?.let { position ->
-            state.closestItemToPosition(position)?.id?.let { postModelId ->
+    private suspend fun PagingState<Int, PostModel>.getRemoteKeyClosestToCurrentPosition(): RemoteKeyModel? =
+        anchorPosition?.let { position ->
+            closestItemToPosition(position)?.id?.let { postModelId ->
                 remoteKeyDAO.remoteKeyByQueryId(postModelId)
             }
         }
 
 
-    private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, PostModel>): RemoteKeyModel? =
-        state.lastItemOrNull()?.let { postModel -> remoteKeyDAO.remoteKeyByQueryId(postModel.id) }
+    private suspend fun PagingState<Int, PostModel>.getRemoteKeyForLastItem(): RemoteKeyModel? =
+        lastItemOrNull()?.let { postModel -> remoteKeyDAO.remoteKeyByQueryId(postModel.id) }
 
 
-    private suspend fun getRemoteKeyForFirstItem(state: PagingState<Int, PostModel>): RemoteKeyModel? =
-        state.firstItemOrNull()?.let { postModel -> remoteKeyDAO.remoteKeyByQueryId(postModel.id) }
+    private suspend fun PagingState<Int, PostModel>.getRemoteKeyForFirstItem(): RemoteKeyModel? =
+        firstItemOrNull()?.let { postModel -> remoteKeyDAO.remoteKeyByQueryId(postModel.id) }
 
 }

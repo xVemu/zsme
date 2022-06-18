@@ -27,9 +27,9 @@ class LessonRepo @Inject constructor() {
                 var lesson2: LessonModel? = null
                 if (item.select("[style=font-size:85%]").isNotEmpty()) {
                     val lessonSpans = item.select("[style=font-size:85%]")
-                    lesson1 = buildLesson(lessonSpans[0])
-                    lesson2 = lessonSpans.getOrNull(1)?.let { span -> buildLesson(span) }
-                } else lesson1 = buildLesson(item)
+                    lesson1 = lessonSpans[0].buildLesson()
+                    lesson2 = lessonSpans.getOrNull(1)?.buildLesson()
+                } else lesson1 = item.buildLesson()
                 lesson1.apply {
                     index = lessonIndex
                     timeStart = lessonTimeStart
@@ -46,11 +46,11 @@ class LessonRepo @Inject constructor() {
         return@withContext lessonsList
     }
 
-    private fun buildLesson(lesson: Element) =
+    private fun Element.buildLesson() =
         LessonModel(
-            name = (lesson.selectFirst(".p") ?: lesson).text(),
-            teacher = (lesson.selectFirst(".n") ?: lesson.selectFirst(".o"))?.text(),
-            room = (lesson.selectFirst(".s") ?: lesson.selectFirst(".o"))?.text()
+            name = (selectFirst(".p") ?: this).text(),
+            teacher = (selectFirst(".n") ?: selectFirst(".o"))?.text(),
+            room = (selectFirst(".s") ?: selectFirst(".o"))?.text()
         )
 
 }

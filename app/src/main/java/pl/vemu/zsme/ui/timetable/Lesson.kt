@@ -22,19 +22,19 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
+import com.ramcosta.composedestinations.annotation.Destination
 import pl.vemu.zsme.R
 import pl.vemu.zsme.Result
 import pl.vemu.zsme.data.model.LessonModel
 import pl.vemu.zsme.paddingEnd
 import pl.vemu.zsme.paddingStart
-import pl.vemu.zsme.ui.components.ShowSnackBarWithError
-import pl.vemu.zsme.ui.components.SimpleSnackbar
-import pl.vemu.zsme.ui.components.Tabs
-import pl.vemu.zsme.ui.components.simpleSmallAppBar
+import pl.vemu.zsme.ui.components.*
 import java.time.LocalDate
 import java.util.*
 
 @OptIn(ExperimentalPagerApi::class, ExperimentalMaterial3Api::class)
+@TimetableNavGraph
+@Destination(route = "timetable/lesson", style = ExpandTransition::class)
 @Composable
 fun Lesson(
     url: String,
@@ -47,7 +47,6 @@ fun Lesson(
             title = R.string.timetable,
             navController = navController
         ), /*TODO title dynamic*/
-//        modifier = Modifier.fillMaxSize()
     ) { padding ->
         Box(
             modifier = Modifier
@@ -98,9 +97,8 @@ fun Lesson(
                     }
                 }
                 is Result.Failure -> {
-                    ShowSnackBarWithError(
-                        result = lessonsResult,
-                        snackbarHostState = snackbarHostState
+                    snackbarHostState.ShowSnackBarWithError(
+                        result = lessonsResult
                     ) {
                         vm.downloadLessons()
                     }

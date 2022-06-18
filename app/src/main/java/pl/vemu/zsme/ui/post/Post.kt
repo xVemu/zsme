@@ -33,20 +33,40 @@ import coil.transform.RoundedCornersTransformation
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import com.ramcosta.composedestinations.annotation.DeepLink
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.NavGraph
+import com.ramcosta.composedestinations.annotation.RootNavGraph
+import com.ramcosta.composedestinations.navigation.navigate
 import kotlinx.coroutines.launch
+import pl.vemu.zsme.DEFAULT_URL
 import pl.vemu.zsme.R
 import pl.vemu.zsme.data.model.PostModel
 import pl.vemu.zsme.paddingBottom
 import pl.vemu.zsme.paddingTop
 import pl.vemu.zsme.ui.components.HTMLText
 import pl.vemu.zsme.ui.components.SimpleSnackbar
+import pl.vemu.zsme.ui.components.SlideTransition
 import pl.vemu.zsme.ui.components.SmallText
+import pl.vemu.zsme.ui.destinations.DetailDestination
 import java.net.UnknownHostException
 import java.text.SimpleDateFormat
 import java.util.*
 
+@RootNavGraph(start = true)
+@NavGraph
+annotation class PostNavGraph(
+    val start: Boolean = false
+)
+
 
 @OptIn(ExperimentalMaterial3Api::class)
+@PostNavGraph(start = true)
+@Destination(
+    route = "post/main",
+    deepLinks = [DeepLink(uriPattern = DEFAULT_URL)],
+    style = SlideTransition::class
+)
 @Composable
 fun Post(
     navController: NavController,
@@ -200,7 +220,7 @@ private fun PostCard(
             .heightIn(150.dp)
             .padding(8.dp),
         onClick = {
-            navController.navigate("detail/${postModel.id}")
+            navController.navigate(DetailDestination(postModel))
         }
     ) {
         Row {

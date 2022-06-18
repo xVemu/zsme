@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import pl.vemu.zsme.data.model.DetailModel
+import pl.vemu.zsme.data.model.PostModel
 import pl.vemu.zsme.data.repo.DetailRepo
 import javax.inject.Inject
 
@@ -15,13 +16,13 @@ import javax.inject.Inject
 class DetailVM @Inject constructor(
     private val detailRepo: DetailRepo
 ) : ViewModel() {
-    private val _detail = MutableStateFlow<DetailModel?>(null)
+    private val _detail = MutableStateFlow(DetailModel("", null))
 
     val detail = _detail.asStateFlow()
 
-    fun init(postModelId: Int) {
+    fun init(postModel: PostModel) {
         viewModelScope.launch(Dispatchers.IO) {
-            _detail.value = detailRepo.getDetail(postModelId)
+            _detail.value = detailRepo.getDetail(postModel)
         }
     }
 }

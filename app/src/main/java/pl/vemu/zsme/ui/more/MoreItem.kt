@@ -2,7 +2,6 @@ package pl.vemu.zsme.ui.more
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ContactMail
@@ -10,9 +9,13 @@ import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.ImportContacts
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.core.net.toUri
 import androidx.navigation.NavController
+import com.ramcosta.composedestinations.navigation.navigate
 import pl.vemu.zsme.DEFAULT_URL
 import pl.vemu.zsme.R
+import pl.vemu.zsme.ui.destinations.ContactDestination
+import pl.vemu.zsme.ui.destinations.SettingsDestination
 
 enum class MoreItem(
     val icon: ImageVector,
@@ -23,7 +26,7 @@ enum class MoreItem(
         Icons.Rounded.Settings,
         R.string.settings,
         { _, navController ->
-            navController.navigate("settings")
+            navController.navigate(SettingsDestination)
         }
     ),
     HOME_PAGE(Icons.Rounded.Home, R.string.home_page, { context, _ ->
@@ -31,7 +34,7 @@ enum class MoreItem(
             Intent.createChooser(
                 Intent(
                     Intent.ACTION_VIEW,
-                    Uri.parse(DEFAULT_URL)
+                    DEFAULT_URL.toUri()
                 ), context.getString(R.string.open_in)
             )
         )
@@ -42,7 +45,7 @@ enum class MoreItem(
             context.startActivity(
                 Intent(
                     Intent.ACTION_VIEW,
-                    Uri.parse("https://uonetplus.umt.tarnow.pl/tarnow")
+                    "https://uonetplus.umt.tarnow.pl/tarnow".toUri()
                 )
             )
         }
@@ -51,7 +54,7 @@ enum class MoreItem(
         Icons.Rounded.ContactMail,
         R.string.contact,
         { _, navController ->
-            navController.navigate("contact")
+            navController.navigate(ContactDestination)
         }
     );
 }

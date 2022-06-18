@@ -16,9 +16,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.ramcosta.composedestinations.annotation.DeepLink
+import com.ramcosta.composedestinations.annotation.Destination
+import pl.vemu.zsme.DEFAULT_URL
 import pl.vemu.zsme.R
+import pl.vemu.zsme.ui.components.SlideTransition
 import pl.vemu.zsme.ui.components.simpleSmallAppBar
 
+@MoreNavGraph
+@Destination(
+    route = "more/contact",
+    deepLinks = [DeepLink(uriPattern = "$DEFAULT_URL/wp/kontakt/")],
+    style = SlideTransition::class
+)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Contact(navController: NavController) {

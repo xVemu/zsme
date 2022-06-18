@@ -15,13 +15,13 @@ class TimetableRepo @Inject constructor() {
         withContext(Dispatchers.IO) {
             val document = Jsoup.connect("$DEFAULT_URL/plan/lista.html").get()
             return@withContext listOf(
-                makeArrayOfLinks(document.selectFirst("#oddzialy")!!),
-                makeArrayOfLinks(document.selectFirst("#nauczyciele")!!),
-                makeArrayOfLinks(document.selectFirst("#sale")!!),
+                document.selectFirst("#oddzialy")!!.makeArrayOfLinks(),
+                document.selectFirst("#nauczyciele")!!.makeArrayOfLinks(),
+                document.selectFirst("#sale")!!.makeArrayOfLinks(),
             )
         }
 
-    private fun makeArrayOfLinks(element: Element) = element.children().map {
+    private fun Element.makeArrayOfLinks() = children().map {
         TimetableModel(it.text(), it.child(0).attr("href").removePrefix("plany/"))
     }
 }
