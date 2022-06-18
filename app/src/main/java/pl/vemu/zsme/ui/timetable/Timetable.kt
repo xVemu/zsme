@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -114,7 +115,7 @@ private fun TimetablePageItem(
 ) {
     OutlinedCard(
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
-        onClick = { navController.navigate(LessonDestination(item.url)) },
+        onClick = { navController.navigate(LessonDestination(item.name, item.url)) },
         modifier = Modifier
             .height((LocalConfiguration.current.screenWidthDp / 3).dp)
             .padding(8.dp)
@@ -126,6 +127,7 @@ private fun TimetablePageItem(
         ) {
             Text(
                 text = item.name,
+                textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.padding(8.dp)
             )

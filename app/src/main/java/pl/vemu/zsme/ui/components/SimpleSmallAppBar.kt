@@ -13,10 +13,14 @@ import androidx.navigation.NavController
 import pl.vemu.zsme.R
 
 @Composable
-fun simpleSmallAppBar(@StringRes title: Int, navController: NavController): @Composable () -> Unit {
-    return {
+fun simpleSmallAppBar(@StringRes title: Int, navController: NavController): @Composable () -> Unit =
+    simpleSmallAppBar(stringResource(title), navController)
+
+@Composable
+fun simpleSmallAppBar(title: String, navController: NavController): @Composable () -> Unit =
+    {
         SmallTopAppBar(
-            title = { Text(stringResource(title)) },
+            title = { Text(title) },
             navigationIcon = {
                 IconButton(onClick = {
                     navController.popBackStack()
@@ -29,4 +33,3 @@ fun simpleSmallAppBar(@StringRes title: Int, navController: NavController): @Com
             }
         )
     }
-}

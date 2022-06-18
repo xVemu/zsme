@@ -37,6 +37,7 @@ import java.util.*
 @Destination(route = "timetable/lesson", style = ExpandTransition::class)
 @Composable
 fun Lesson(
+    name: String,
     url: String,
     navController: NavController,
     vm: LessonVM = hiltViewModel(),
@@ -44,9 +45,9 @@ fun Lesson(
     vm.init(url)
     Scaffold(
         topBar = simpleSmallAppBar(
-            title = R.string.timetable,
+            title = name,
             navController = navController
-        ), /*TODO title dynamic*/
+        ),
     ) { padding ->
         Box(
             modifier = Modifier

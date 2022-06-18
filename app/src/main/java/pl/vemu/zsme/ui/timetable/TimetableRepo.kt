@@ -23,5 +23,5 @@ class TimetableRepo @Inject constructor() {
 
     private fun Element.makeArrayOfLinks() = children().map {
         TimetableModel(it.text(), it.child(0).attr("href").removePrefix("plany/"))
-    }
+    }.sortedBy { it.name }
 }
