@@ -231,7 +231,6 @@ class MainActivity : ComponentActivity() {
 /*TODO
 * Scrollowanie przesuwa się w pewnym momencie
 * timetable widget
-* github actions gradle build when tag updated
 * zsme.png drawable to svg
 * onProvideAssistContent
 * */

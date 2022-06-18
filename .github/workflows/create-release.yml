@@ -1,0 +1,42 @@
+name: Create release
+
+on:
+  push:
+    tags:
+      - 2.**
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          cache: gradle
+      - name: Decode Keystore
+        id: decode
+        uses: timheuer/base64-to-file@v1.1
+        with:
+          fileName: 'key.jks'
+          encodedString: ${{ secrets.STORE_FILE }}
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+      - name: Build with Gradle
+        env:
+          STORE_FILE: ${{ steps.decode.outputs.filePath }}
+          STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: ./gradlew assemble
+      - name: Upload APKs
+        uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          prerelease: false
+          title: v${{ github.ref_name }}
+          draft: true
+          files: |
+            app/build/outputs/apk/debug/app-debug.apk
+            app/build/outputs/apk/release/app-release.apk

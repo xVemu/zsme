@@ -9,13 +9,21 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        release {
+            storeFile file("$System.env.STORE_FILE")
+            storePassword "$System.env.STORE_PASSWORD"
+            keyAlias 'key0'
+            keyPassword "$System.env.KEY_PASSWORD"
+        }
+    }
     compileSdk 32
     defaultConfig {
         applicationId "pl.vemu.zsme"
         minSdk 23
         targetSdk 32
-        versionCode 42
-        versionName "2.0.1"
+        versionCode 43
+        versionName "2.1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         resConfigs "en", "pl"
     }
@@ -34,6 +42,7 @@ android {
             debuggable false
             minifyEnabled true
             shrinkResources true
+            signingConfig signingConfigs.release
         }
     }
     compileOptions {
