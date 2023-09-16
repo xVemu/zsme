@@ -1,30 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:allowBackup="false"
-        android:name=".ui.MainApplication"
-        android:label="@string/app_name"
-        android:icon="@mipmap/ic_launcher"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
-        android:usesCleartextTraffic="true"
-        android:theme="@style/MainTheme.SplashScreen">
+            android:allowBackup="true"
+            android:name=".ui.MainApplication"
+            android:label="@string/app_name"
+            android:icon="@mipmap/ic_launcher"
+            android:roundIcon="@mipmap/ic_launcher_round"
+            android:usesCleartextTraffic="true"
+            android:theme="@style/MainTheme.SplashScreen">
         <activity
-            android:name=".ui.MainActivity"
-            android:exported="true">
+                android:name=".ui.MainActivity"
+                android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <meta-data
-                android:name="android.app.shortcuts"
-                android:resource="@xml/shortcuts" />
+                    android:name="android.app.shortcuts"
+                    android:resource="@xml/shortcuts" />
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -32,14 +30,9 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="zsme.tarnow.pl"
-                    android:scheme="https" />
+                        android:host="zsme.tarnow.pl"
+                        android:scheme="https" />
             </intent-filter>
         </activity>
-        <provider
-            android:name="androidx.startup.InitializationProvider"
-            android:authorities="${applicationId}.androidx-startup"
-            tools:node="remove" /> <!--        This makes worker to work TODO-->
     </application>
-
 </manifest>
