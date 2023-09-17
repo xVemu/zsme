@@ -1,17 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="MainTheme" parent="Theme.AppCompat.DayNight.NoActionBar"> <!--TODO-->
-        <item name="colorPrimary">#FF005fb1</item>
-        <item name="android:statusBarColor">#FFfdfbff</item>
-    </style>
 
     <style name="MainTheme.SplashScreen" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">#FFfdfbff</item>
         <item name="windowSplashScreenIconBackgroundColor">#FFfdfbff</item>
         <item name="postSplashScreenTheme">@style/MainTheme</item>
-        <!-- TODO       <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_round</item>-->
 
         <item name="android:windowLightStatusBar">true</item>
-        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
     </style>
 </resources>

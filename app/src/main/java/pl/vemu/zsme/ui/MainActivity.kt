@@ -8,44 +8,50 @@ import android.os.Bundle
 import android.webkit.WebView
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.rememberNavController
-import androidx.work.*
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
-import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import androidx.work.Constraints
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
-import com.google.android.play.core.ktx.*
+import com.google.android.play.core.ktx.AppUpdateResult
+import com.google.android.play.core.ktx.clientVersionStalenessDays
+import com.google.android.play.core.ktx.isFlexibleUpdateAllowed
+import com.google.android.play.core.ktx.requestAppUpdateInfo
+import com.google.android.play.core.ktx.requestUpdateFlow
 import com.ramcosta.composedestinations.DestinationsNavHost
-import com.ramcosta.composedestinations.animations.rememberAnimatedNavHostEngine
 import com.ramcosta.composedestinations.navigation.navigate
+import com.ramcosta.composedestinations.rememberNavHostEngine
 import com.yariksoffice.lingver.Lingver
 import dagger.hilt.android.AndroidEntryPoint
-import de.schnettler.datastore.manager.DataStoreManager
-import de.schnettler.datastore.manager.PreferenceRequest
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import pl.vemu.zsme.R
-import pl.vemu.zsme.surfaceColorWithElevation
+import pl.vemu.zsme.ui.destinations.Destination
 import pl.vemu.zsme.ui.post.PostWorker
 import pl.vemu.zsme.ui.theme.MainTheme
 import java.util.concurrent.TimeUnit
@@ -55,28 +61,27 @@ val Context.dataStore by preferencesDataStore(name = "settings")
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val themePreference = PreferenceRequest(
-        key = stringPreferencesKey("theme"),
-        defaultValue = "system"
-    )
-    private val languagePreference = PreferenceRequest(
-        key = stringPreferencesKey("language"),
-        defaultValue = "system"
-    )
+    private val themePreference = stringPreferencesKey("theme")
+    private val languagePreference = stringPreferencesKey("language")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        installSplashScreen()
-        val dataStoreManager = DataStoreManager(this.dataStore)
         setContent {
-            val theme by dataStoreManager.getPreferenceFlow(themePreference)
-                .collectAsState(initial = "system")
+            val theme by remember {
+                dataStore.data.map {
+                    it[themePreference] ?: "system"
+                }
+            }.collectAsState(
+                initial = "system"
+            )
             MainTheme(if (theme == "system") isSystemInDarkTheme() else theme.toBoolean()) {
                 Main()
             }
         }
+
         lifecycleScope.launch {
-            dataStoreManager.getPreferenceFlow(languagePreference).collectLatest { lang ->
+            /*TODO should be called only 1 time*/
+            dataStore.data.map { it[languagePreference] ?: "system" }.collectLatest { lang ->
                 Lingver.getInstance().apply {
                     if (lang == "system") setFollowSystemLocale(this@MainActivity)
                     else {
@@ -85,34 +90,27 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
+
+            try {
+                updateApp()
+            } catch (_: Exception) {
+            }
         }
         createNotificationChannel()
         setupNotification()
-        lifecycleScope.launchWhenCreated {
-            @Suppress("EmptyCatchBlock", "TooGenericExceptionCaught", "SwallowedException")
-            try {
-                updateApp()
-            } catch (e: Exception) {
-            }
-        }
     }
 
-    @OptIn(
-        ExperimentalAnimationApi::class, ExperimentalMaterial3Api::class,
-        ExperimentalMaterialNavigationApi::class
-    )
     @Composable
     private fun Main() {
-        val navController = rememberAnimatedNavController()
+        val navController = rememberNavController() /*TODO animations*/
         ChangeSystemBars()
-        Scaffold(
-            bottomBar = {
-                BottomBar(navController)
-            }) { innerPadding ->
+        Scaffold(bottomBar = {
+            BottomBar(navController)
+        }) { innerPadding ->
             DestinationsNavHost(
                 navGraph = NavGraphs.root,
                 navController = navController,
-                engine = rememberAnimatedNavHostEngine(),
+                engine = rememberNavHostEngine(),
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding),
@@ -124,22 +122,19 @@ class MainActivity : ComponentActivity() {
     private fun BottomBar(
         navController: NavController
     ) {
-        val currentDestination by navController.currentScreenAsState()
+        val currentDestination: Destination = navController.appCurrentDestinationAsState().value
+            ?: NavGraphs.root.startAppDestination
         NavigationBar {
             BottomNavItem.values().forEach { item ->
-                NavigationBarItem(
-                    label = { Text(stringResource(item.label)) },
-                    selected = currentDestination == item.destination,
+                val selected = currentDestination == item.destination
+                NavigationBarItem(label = { Text(stringResource(item.label)) },
+                    selected = selected,
                     icon = {
                         Icon(
-                            imageVector = item.icon,
-                            contentDescription = stringResource(item.label)
+                            imageVector = if (selected) item.iconFilled else item.icon,
+                            contentDescription = stringResource(item.label),
                         )
                     },
-                    colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                        indicatorColor = MaterialTheme.colorScheme.primaryContainer
-                    ),
                     onClick = {
                         navController.navigate(item.destination) {
                             popUpTo(navController.graph.findStartDestination().id) {
@@ -148,8 +143,7 @@ class MainActivity : ComponentActivity() {
                             launchSingleTop = true
                             restoreState = true
                         }
-                    }
-                )
+                    })
             }
         }
     }
@@ -165,28 +159,22 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     private fun ChangeSystemBars() {
-        val systemUiController = rememberSystemUiController()
+        /*val systemUiController = rememberSystemUiController()
         systemUiController.setNavigationBarColor(
             MaterialTheme.colorScheme.surfaceColorWithElevation(3.dp)
         )
-        systemUiController.setStatusBarColor(MaterialTheme.colorScheme.surface)
+        systemUiController.setStatusBarColor(MaterialTheme.colorScheme.surface)*/
     }
 
     private fun setupNotification() {
         val constraints =
             Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
         val worker = PeriodicWorkRequestBuilder<PostWorker>(
-            3L,
-            TimeUnit.HOURS,
-            15L,
-            TimeUnit.MINUTES
+            3L, TimeUnit.HOURS, 15L, TimeUnit.MINUTES
         ).setConstraints(constraints).build()
-        WorkManager.getInstance(applicationContext)
-            .enqueueUniquePeriodicWork(
-                "SyncPostWorker",
-                ExistingPeriodicWorkPolicy.KEEP,
-                worker
-            )
+        WorkManager.getInstance(applicationContext).enqueueUniquePeriodicWork(
+            "SyncPostWorker", ExistingPeriodicWorkPolicy.KEEP, worker
+        )
     }
 
     private fun createNotificationChannel() {
@@ -211,16 +199,14 @@ class MainActivity : ComponentActivity() {
     private suspend fun updateApp() {
         val manager = AppUpdateManagerFactory.create(applicationContext)
         val appUpdateInfo = manager.requestAppUpdateInfo()
-        if (!(appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
-                    && appUpdateInfo.isFlexibleUpdateAllowed
-                    && (appUpdateInfo.clientVersionStalenessDays ?: -1) >= 7
+        if (!(
+                    appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+                            && appUpdateInfo.isFlexibleUpdateAllowed
+                            && (appUpdateInfo.clientVersionStalenessDays ?: -1) >= 7
                     )
         ) return
         manager.startUpdateFlowForResult(
-            appUpdateInfo,
-            AppUpdateType.FLEXIBLE,
-            this,
-            0
+            appUpdateInfo, AppUpdateType.FLEXIBLE, this, 0
         )
         manager.requestUpdateFlow().collect { appUpdateResult ->
             if (appUpdateResult is AppUpdateResult.Downloaded) appUpdateResult.completeUpdate()
