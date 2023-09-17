@@ -2,8 +2,6 @@ package pl.vemu.zsme.ui.more
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -38,12 +36,12 @@ annotation class MoreNavGraph(
 fun More(navController: NavController) {
     val context = LocalContext.current
     Scaffold(topBar = {
-        CenterAlignedTopAppBar(title = { Text(stringResource(R.string.more)) })
+        LargeTopAppBar(title = { Text(stringResource(R.string.more)) })
     }) { padding ->
-        LazyColumn(
+        Column(
             modifier = Modifier.padding(padding)
         ) {
-            items(MoreItem.values()) { item ->
+            MoreItem.entries.forEach { item ->
                 Row(
                     Modifier
                         .fillMaxWidth()

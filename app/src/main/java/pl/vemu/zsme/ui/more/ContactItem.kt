@@ -16,6 +16,7 @@ enum class ContactItem(
     @StringRes val text: Int,
     @StringRes private val action: Int
 ) {
+    /*TODO dynamic, icon from MaterialIcons*/
     NAME(null, R.string.school_name, R.string.school_name_text, 0),
     ADDRESS(
         R.drawable.ic_map,
@@ -36,7 +37,7 @@ enum class ContactItem(
         R.string.school_phone_fax_text,
         R.string.school_phone_fax_text
     ),
-    SECRETARIAT(
+    SECRETARY(
         R.drawable.ic_mail,
         R.string.secretariat_email,
         R.string.secretariat_email_text,

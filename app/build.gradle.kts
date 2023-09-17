@@ -1,5 +1,5 @@
-import java.util.Properties
 import java.io.FileInputStream
+import java.util.Properties
 
 plugins {
     id("com.android.application")
@@ -33,10 +33,13 @@ android {
             keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 
 
-            storeFile = file(System.getenv("STORE_FILE") ?: keystoreProperties["storeFile"] as String)
-            storePassword = System.getenv("STORE_PASSWORD") ?: keystoreProperties["storePassword"] as String
+            storeFile =
+                file(System.getenv("STORE_FILE") ?: keystoreProperties["storeFile"] as String)
+            storePassword =
+                System.getenv("STORE_PASSWORD") ?: keystoreProperties["storePassword"] as String
             keyAlias = System.getenv("KEY_ALIAS") ?: keystoreProperties["keyAlias"] as String
-            keyPassword = System.getenv("KEY_PASSWORD") ?: keystoreProperties["keyPassword"] as String
+            keyPassword =
+                System.getenv("KEY_PASSWORD") ?: keystoreProperties["keyPassword"] as String
         }
     }
 
@@ -51,7 +54,10 @@ android {
             isDebuggable = false
             isMinifyEnabled = true
             isShrinkResources = true
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
             signingConfig = signingConfigs.getByName("release")
         }
     }
@@ -119,7 +125,6 @@ dependencies {
     implementation("androidx.core:core-splashscreen:1.0.1")
     implementation("com.google.android.play:core-ktx:1.8.1")
     implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     // Compose
     val compose = "1.5.1"
@@ -144,6 +149,10 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.7.2")
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
     ksp("io.github.raamcosta.compose-destinations:ksp:1.9.53")
+
+    // Settings
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+    implementation("com.github.alorma:compose-settings-ui-m3:0.27.0")
 
     // 3-rd party
     implementation("io.coil-kt:coil-compose:2.4.0")

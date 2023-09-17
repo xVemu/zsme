@@ -40,7 +40,7 @@ enum class MoreItem(
         )
     }
     ),
-    E_DZIENNIK(
+    JOURNAL(
         Icons.Rounded.ImportContacts, R.string.e_dziennik, { context, _ ->
             context.startActivity(
                 Intent(

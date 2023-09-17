@@ -17,13 +17,9 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -51,6 +47,8 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import pl.vemu.zsme.R
+import pl.vemu.zsme.remembers.Prefs
+import pl.vemu.zsme.remembers.rememberStringPreference
 import pl.vemu.zsme.ui.destinations.Destination
 import pl.vemu.zsme.ui.post.PostWorker
 import pl.vemu.zsme.ui.theme.MainTheme
@@ -61,19 +59,10 @@ val Context.dataStore by preferencesDataStore(name = "settings")
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val themePreference = stringPreferencesKey("theme")
-    private val languagePreference = stringPreferencesKey("language")
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val theme by remember {
-                dataStore.data.map {
-                    it[themePreference] ?: "system"
-                }
-            }.collectAsState(
-                initial = "system"
-            )
+            val theme by rememberStringPreference(Prefs.THEME)
             MainTheme(if (theme == "system") isSystemInDarkTheme() else theme.toBoolean()) {
                 Main()
             }
@@ -81,15 +70,16 @@ class MainActivity : ComponentActivity() {
 
         lifecycleScope.launch {
             /*TODO should be called only 1 time*/
-            dataStore.data.map { it[languagePreference] ?: "system" }.collectLatest { lang ->
-                Lingver.getInstance().apply {
-                    if (lang == "system") setFollowSystemLocale(this@MainActivity)
-                    else {
-                        WebView(applicationContext).destroy() // fixes resetting language to system when it's first use of webview.
-                        setLocale(this@MainActivity, lang)
+            dataStore.data.map { it[Prefs.LANGUAGE.key] ?: Prefs.LANGUAGE.defaultValue }
+                .collectLatest { lang ->
+                    Lingver.getInstance().apply {
+                        if (lang == "system") setFollowSystemLocale(this@MainActivity)
+                        else {
+                            WebView(applicationContext).destroy() // fixes resetting language to system when it's first use of webview.
+                            setLocale(this@MainActivity, lang)
+                        }
                     }
                 }
-            }
 
             try {
                 updateApp()
