@@ -81,7 +81,11 @@ android {
 
     packaging {
         resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            // https://github.com/skrapeit/skrape.it/issues/184#issuecomment-1204545852
+            excludes += listOf(
+                "/META-INF/{AL2.0,LGPL2.1,DEPENDENCIES}",
+                "mozilla/public-suffix-list.txt",
+            )
         }
     }
     bundle.language.enableSplit = false // TODO
