@@ -129,6 +129,8 @@ dependencies {
     // Compose
     val compose = "1.5.1"
     implementation("androidx.compose.material3:material3:1.1.1")
+    // TODO delete when PullToRefresh comes to Material3
+    implementation("androidx.compose.material:material:1.5.1")
     implementation("androidx.compose.material:material-icons-extended:$compose")
     implementation("androidx.activity:activity-compose:1.7.2")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
@@ -156,7 +158,7 @@ dependencies {
 
     // 3-rd party
     implementation("io.coil-kt:coil-compose:2.4.0")
-    implementation("com.github.chrisbanes:PhotoView:2.3.0")
+    implementation("io.github.fornewid:photo-compose:1.0.1")
     implementation("com.github.YarikSOffice:lingver:1.3.0")
     debugImplementation("com.squareup.leakcanary:leakcanary-android:2.12")
 }

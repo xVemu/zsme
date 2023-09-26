@@ -99,9 +99,10 @@ class PostNavTypeSerializer : DestinationsNavTypeSerializer<PostModel> {
     navDeepLink { uriPattern = "$DEFAULT_URL/wp/{slug}" }
 )*/
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun AppBar(link: String, navController: NavController) {
-    SmallTopAppBar(
+    TopAppBar(
         title = { Text(stringResource(R.string.post)) },
         navigationIcon = {
             IconButton(onClick = {

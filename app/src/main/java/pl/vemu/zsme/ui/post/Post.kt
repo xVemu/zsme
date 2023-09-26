@@ -3,9 +3,13 @@ package pl.vemu.zsme.ui.post
 import android.text.format.DateUtils
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -26,13 +30,9 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.items
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import coil.transform.RoundedCornersTransformation
-import com.google.accompanist.swiperefresh.SwipeRefresh
-import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
-import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.ramcosta.composedestinations.annotation.DeepLink
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.NavGraph
@@ -60,7 +60,7 @@ annotation class PostNavGraph(
 )
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @PostNavGraph(start = true)
 @Destination(
     route = "post/main",
@@ -81,69 +81,71 @@ fun Post(
             else -> false
         }
     }
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarScrollState())
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     Scaffold(topBar = {
         TopAppBar(scrollBehavior) {
             vm.query.value = it
         }
     }) { padding ->
-        SwipeRefresh(
-            state = rememberSwipeRefreshState(isRefreshing = isLoading),
-            onRefresh = { pagingItems.refresh() },
-            indicator = { state, trigger ->
-                SwipeRefreshIndicator(
-                    state = state,
-                    refreshTriggerDistance = trigger,
-                    contentColor = MaterialTheme.colorScheme.primary,
-                    backgroundColor = MaterialTheme.colorScheme.surface
-                )
-            },
-            modifier = Modifier
+
+        val pullRefreshState = rememberPullRefreshState(isLoading, { pagingItems.refresh() })
+
+        Box(
+            Modifier
+                .fillMaxSize()
                 .padding(padding)
                 .nestedScroll(scrollBehavior.nestedScrollConnection)
-                .fillMaxSize()
+                .pullRefresh(pullRefreshState)
         ) {
-            Box(Modifier.fillMaxSize()) {
-                val snackbarHostState = remember { SnackbarHostState() }
-                val coroutineScope = rememberCoroutineScope()
-                val errorMsg = stringResource(R.string.error)
-                val retryMsg = stringResource(R.string.retry)
-                val noConnectionMsg = stringResource(R.string.no_connection)
-                LazyColumn {
-                    items(
-                        items = pagingItems,
-                        key = { postModel -> postModel.id }
-                    ) { post ->
-                        PostCard(navController = navController, postModel = post!!)
-                    }
-                    pagingItems.apply {
-                        when {
-                            loadState.append is LoadState.Loading -> {
-                                item { LoadingItem() }
-                            }
-                            loadState.refresh is LoadState.Error || loadState.append is LoadState.Error -> {
-                                val error =
-                                    (loadState.refresh as? LoadState.Error)?.error
-                                        ?: (loadState.append as LoadState.Error).error
-                                coroutineScope.launch {
-                                    val result = snackbarHostState.showSnackbar(
-                                        message = if (error is UnknownHostException) noConnectionMsg else errorMsg,
-                                        actionLabel = retryMsg,
-                                        duration = SnackbarDuration.Indefinite
-                                    )
-                                    if (result == SnackbarResult.ActionPerformed)
-                                        pagingItems.retry()
-                                }
+            val snackbarHostState = remember { SnackbarHostState() }
+            val coroutineScope = rememberCoroutineScope()
+            val errorMsg = stringResource(R.string.error)
+            val retryMsg = stringResource(R.string.retry)
+            val noConnectionMsg = stringResource(R.string.no_connection)
+            LazyColumn(
+                Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .nestedScroll(scrollBehavior.nestedScrollConnection)
+                    .pullRefresh(pullRefreshState)
+            ) {
+                items(
+                    count = pagingItems.itemCount,
+                    key = { index -> pagingItems[index]?.id ?: index }
+                ) { index ->
+                    PostCard(navController = navController, postModel = pagingItems[index]!!)
+                }
+
+                pagingItems.apply {
+                    when {
+                        loadState.append is LoadState.Loading -> {
+                            item { LoadingItem() }
+                        }
+
+                        loadState.refresh is LoadState.Error || loadState.append is LoadState.Error -> {
+                            val error =
+                                (loadState.refresh as? LoadState.Error)?.error
+                                    ?: (loadState.append as LoadState.Error).error
+                            coroutineScope.launch {
+                                val result = snackbarHostState.showSnackbar(
+                                    message = if (error is UnknownHostException) noConnectionMsg else errorMsg,
+                                    actionLabel = retryMsg,
+                                    duration = SnackbarDuration.Indefinite
+                                )
+                                if (result == SnackbarResult.ActionPerformed)
+                                    pagingItems.retry()
                             }
                         }
                     }
                 }
-                SimpleSnackbar(snackbarHostState)
             }
+            SimpleSnackbar(snackbarHostState)
+            PullRefreshIndicator(isLoading, pullRefreshState, Modifier.align(Alignment.TopCenter))
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TopAppBar(
     scrollBehavior: TopAppBarScrollBehavior,
@@ -183,8 +185,7 @@ private fun TopAppBar(
                         .focusRequester(focusRequester),
                     singleLine = true,
                     placeholder = { Text(stringResource(R.string.search)) },
-                    colors = TextFieldDefaults.textFieldColors(
-                        containerColor = MaterialTheme.colorScheme.surface,
+                    colors = TextFieldDefaults.colors(
                         focusedIndicatorColor = Color.Transparent,
                         unfocusedIndicatorColor = Color.Transparent,
                     )
