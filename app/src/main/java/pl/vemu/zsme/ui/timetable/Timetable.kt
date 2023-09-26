@@ -1,10 +1,14 @@
 package pl.vemu.zsme.ui.timetable
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -22,10 +26,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.PagerState
-import com.google.accompanist.pager.rememberPagerState
 import com.ramcosta.composedestinations.annotation.DeepLink
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.NavGraph
@@ -53,7 +53,7 @@ annotation class TimetableNavGraph(
     deepLinks = [DeepLink(uriPattern = "zsme://timetable"), DeepLink(uriPattern = "$DEFAULT_URL/plan/")],
     style = ExpandTransition::class
 )
-@OptIn(ExperimentalPagerApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun Timetable(
     navController: NavController,
@@ -65,7 +65,7 @@ fun Timetable(
             stringResource(R.string.teachers),
             stringResource(R.string.classrooms)
         )
-        val pagerState = rememberPagerState()
+        val pagerState = rememberPagerState(pageCount = { names.size })
         val timetableResult by vm.list.collectAsState()
         val snackbarHostState = remember { SnackbarHostState() }
         Box(
@@ -80,8 +80,7 @@ fun Timetable(
                         val timetableList =
                             (timetableResult as Result.Success).value
                         HorizontalPager(
-                            count = names.size,
-                            state = pagerState,
+                            state = pagerState
                         ) { page ->
                             LazyVerticalGrid(
                                 columns = GridCells.Fixed(count = 3)
@@ -93,6 +92,7 @@ fun Timetable(
                             }
                         }
                     }
+
                     is Result.Failure -> {
                         snackbarHostState.ShowSnackBarWithError(
                             result = timetableResult
@@ -135,7 +135,7 @@ private fun TimetablePageItem(
     }
 }
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun TimetableTabRow(
     pagerState: PagerState,
@@ -171,7 +171,7 @@ private fun TimetablePageItemPreview(@PreviewParameter(TimetableModelProvider::c
     TimetablePageItem(navController = rememberNavController(), item = item)
 }
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Preview
 @Composable
 private fun TimetableTabRowPreview() {
@@ -180,5 +180,5 @@ private fun TimetableTabRowPreview() {
         stringResource(R.string.teachers),
         stringResource(R.string.classrooms)
     )
-    TimetableTabRow(pagerState = rememberPagerState(), names = names)
+    TimetableTabRow(pagerState = rememberPagerState(pageCount = { names.size }), names = names)
 }

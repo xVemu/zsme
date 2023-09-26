@@ -10,7 +10,6 @@ import javax.inject.Inject
 
 class TimetableRepo @Inject constructor() {
 
-    @Suppress("BlockingMethodInNonBlockingContext")
     suspend fun getTimetable(): List<List<TimetableModel>> =
         withContext(Dispatchers.IO) {
             val document = Jsoup.connect("$DEFAULT_URL/plan/lista.html").get()

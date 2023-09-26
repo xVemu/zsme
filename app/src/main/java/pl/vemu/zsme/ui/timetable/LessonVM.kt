@@ -23,8 +23,6 @@ class LessonVM @Inject constructor(
     private lateinit var url: String
 
     fun init(url: String) {
-        // prevents from looped recomposition
-        if (this::url.isInitialized) return
         this.url = url
         downloadLessons()
     }

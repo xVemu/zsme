@@ -1,10 +1,13 @@
 package pl.vemu.zsme.ui.timetable
 
 import android.os.Build
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.ContentAlpha
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -18,10 +21,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.PagerState
-import com.google.accompanist.pager.rememberPagerState
 import com.ramcosta.composedestinations.annotation.Destination
 import pl.vemu.zsme.R
 import pl.vemu.zsme.Result
@@ -32,7 +31,7 @@ import pl.vemu.zsme.ui.components.*
 import java.time.LocalDate
 import java.util.*
 
-@OptIn(ExperimentalPagerApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalFoundationApi::class)
 @TimetableNavGraph
 @Destination(route = "timetable/lesson", style = ExpandTransition::class)
 @Composable
@@ -42,12 +41,16 @@ fun Lesson(
     navController: NavController,
     vm: LessonVM = hiltViewModel(),
 ) {
-    vm.init(url)
+    LaunchedEffect(url) {
+        vm.init(url)
+    }
+
     Scaffold(
-        topBar = simpleSmallAppBar(
-            title = name,
-            navController = navController
-        ),
+        topBar = {
+            SimpleSmallAppBar(
+                title = name, navController = navController
+            )
+        },
     ) { padding ->
         Box(
             modifier = Modifier
@@ -59,11 +62,9 @@ fun Lesson(
             when (lessonsResult) {
                 is Result.Success -> {
                     Column(
-                        Modifier
-                            .fillMaxSize()
+                        Modifier.fillMaxSize()
                     ) {
                         val lessonsList = (lessonsResult as Result.Success).value
-                        val pagerState = rememberPagerState()
                         val names = listOf(
                             stringResource(R.string.monday),
                             stringResource(R.string.tuesday),
@@ -71,10 +72,10 @@ fun Lesson(
                             stringResource(R.string.thursday),
                             stringResource(R.string.friday)
                         )
+                        val pagerState = rememberPagerState(pageCount = { names.size })
                         LessonTabRow(pagerState, names)
                         HorizontalPager(
-                            count = names.size,
-                            state = pagerState,
+                            state = pagerState
                         ) { page ->
                             LazyColumn(Modifier.fillMaxHeight()) {
                                 if (lessonsList.isEmpty()) return@LazyColumn
@@ -87,16 +88,19 @@ fun Lesson(
                                 }
                             }
                         }
-                        val day = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            val dayOfWeek = LocalDate.now().dayOfWeek.value
-                            if (dayOfWeek >= 6) 0 else dayOfWeek - 1
-                        } else {
-                            val dayOfWeek = Calendar.getInstance()[Calendar.DAY_OF_WEEK]
-                            if ((dayOfWeek == 1) or (dayOfWeek == 7)) 0 else dayOfWeek - 2
+                        LaunchedEffect(Unit) {
+                            val day = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                val dayOfWeek = LocalDate.now().dayOfWeek.value
+                                if (dayOfWeek >= 6) 0 else dayOfWeek - 1
+                            } else {
+                                val dayOfWeek = Calendar.getInstance()[Calendar.DAY_OF_WEEK]
+                                if ((dayOfWeek == 1) or (dayOfWeek == 7)) 0 else dayOfWeek - 2
+                            }
+                            pagerState.scrollToPage(day)
                         }
-                        LaunchedEffect(day) { pagerState.scrollToPage(day) }
                     }
                 }
+
                 is Result.Failure -> {
                     snackbarHostState.ShowSnackBarWithError(
                         result = lessonsResult
@@ -110,11 +114,10 @@ fun Lesson(
     }
 }
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun LessonTabRow(
-    pagerState: PagerState,
-    names: List<String>
+    pagerState: PagerState, names: List<String>
 ) {
     ScrollableTabRow(
         selectedTabIndex = pagerState.currentPage,
@@ -126,13 +129,12 @@ private fun LessonTabRow(
         }*/
     ) {
         Tabs(
-            pagerState = pagerState,
-            names = names
+            pagerState = pagerState, names = names
         )
     }
 }
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Preview
 @Composable
 private fun LessonTabRowPreview() {
@@ -143,7 +145,7 @@ private fun LessonTabRowPreview() {
         stringResource(R.string.thursday),
         stringResource(R.string.friday)
     )
-    LessonTabRow(pagerState = rememberPagerState(), names = names)
+    LessonTabRow(pagerState = rememberPagerState(pageCount = { names.size }), names = names)
 }
 
 @Preview(showBackground = true, backgroundColor = 0xFFFFFFFF, group = "items")
@@ -174,14 +176,14 @@ private fun LessonItem(
                 Text(
                     text = it,
                     fontSize = 13.sp,
-                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = ContentAlpha.medium)
+                    color = MaterialTheme.colorScheme.onBackground/*.copy(alpha = ContentAlpha.medium)*/
                 )
             }
             item.timeFinish?.let {
                 Text(
                     text = it,
                     fontSize = 13.sp,
-                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = ContentAlpha.medium)
+                    color = MaterialTheme.colorScheme.onBackground/*.copy(alpha = ContentAlpha.medium)*/
                 )
             }
         }
@@ -196,15 +198,14 @@ private fun LessonItem(
                 fontSize = 15.sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                modifier = Modifier
-                    .paddingEnd(40.dp)
+                modifier = Modifier.paddingEnd(40.dp)
             )
             Row {
                 item.room?.let {
                     Text(
                         text = it,
                         fontSize = 13.sp,
-                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = ContentAlpha.medium),
+                        color = MaterialTheme.colorScheme.onBackground,/*.copy(alpha = ContentAlpha.medium),*/
                         modifier = Modifier.paddingEnd(10.dp)
                     )
                 }
@@ -212,7 +213,7 @@ private fun LessonItem(
                     Text(
                         text = it,
                         fontSize = 13.sp,
-                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = ContentAlpha.medium)
+                        color = MaterialTheme.colorScheme.onBackground/*.copy(alpha = ContentAlpha.medium)*/
                     )
                 }
             }
@@ -231,8 +232,7 @@ class LessonModelPreviewParameterProvider : PreviewParameterProvider<LessonModel
             timeStart = "11:11",
             timeFinish = "12:00",
             index = 5
-        ),
-        LessonModel(
+        ), LessonModel(
             name = "Lorem",
             room = "22",
             teacher = null,
