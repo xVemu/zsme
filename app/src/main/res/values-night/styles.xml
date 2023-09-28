@@ -3,7 +3,7 @@
 
     <style name="MainTheme" parent="android:Theme.Material.NoActionBar">
         <!--        <item name="colorPrimary">#FFa4c8ff</item>-->
-        <item name="android:statusBarColor">#FF1b1b1d</item>
+<!--        <item name="android:statusBarColor">#FF1b1b1d</item>-->
     </style>
 
     <style name="MainTheme.SplashScreen" parent="Theme.SplashScreen">

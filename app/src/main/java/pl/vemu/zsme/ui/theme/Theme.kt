@@ -1,11 +1,16 @@
 package pl.vemu.zsme.ui.theme
 
 import android.os.Build
-import androidx.compose.material3.*
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.dynamicDarkColorScheme
+import androidx.compose.material3.dynamicLightColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
-private val LightThemeColors = lightColorScheme(
+private val lightColors = lightColorScheme(
     primary = md_theme_light_primary,
     onPrimary = md_theme_light_onPrimary,
     primaryContainer = md_theme_light_primaryContainer,
@@ -31,8 +36,13 @@ private val LightThemeColors = lightColorScheme(
     outline = md_theme_light_outline,
     inverseOnSurface = md_theme_light_inverseOnSurface,
     inverseSurface = md_theme_light_inverseSurface,
+    inversePrimary = md_theme_light_inversePrimary,
+    surfaceTint = md_theme_light_surfaceTint,
+    outlineVariant = md_theme_light_outlineVariant,
+    scrim = md_theme_light_scrim,
 )
-private val DarkThemeColors = darkColorScheme(
+
+private val darkColors = darkColorScheme(
     primary = md_theme_dark_primary,
     onPrimary = md_theme_dark_onPrimary,
     primaryContainer = md_theme_dark_primaryContainer,
@@ -58,20 +68,27 @@ private val DarkThemeColors = darkColorScheme(
     outline = md_theme_dark_outline,
     inverseOnSurface = md_theme_dark_inverseOnSurface,
     inverseSurface = md_theme_dark_inverseSurface,
+    inversePrimary = md_theme_dark_inversePrimary,
+    surfaceTint = md_theme_dark_surfaceTint,
+    outlineVariant = md_theme_dark_outlineVariant,
+    scrim = md_theme_dark_scrim,
 )
 
 @Composable
-fun MainTheme(darkTheme: Boolean, content: @Composable () -> Unit) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-        MaterialTheme(
-            colorScheme = if (darkTheme) dynamicDarkColorScheme(LocalContext.current)
-            else dynamicLightColorScheme(LocalContext.current),
-            content = content,
-            typography = AppTypography
-        )
-    else MaterialTheme(
-        colorScheme = if (darkTheme) DarkThemeColors else LightThemeColors,
-        content = content,
-        typography = AppTypography
+fun MainTheme(
+    useDarkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit
+) {
+    val dynamicColor = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+    val colors = when {
+        dynamicColor && useDarkTheme -> dynamicDarkColorScheme(LocalContext.current)
+        dynamicColor && !useDarkTheme -> dynamicLightColorScheme(LocalContext.current)
+        useDarkTheme -> darkColors
+        else -> lightColors
+    }
+
+    MaterialTheme(
+        colorScheme = colors,
+        content = content
     )
 }

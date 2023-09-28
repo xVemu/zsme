@@ -12,15 +12,20 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.datastore.preferences.preferencesDataStore
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -49,7 +54,6 @@ import kotlinx.coroutines.launch
 import pl.vemu.zsme.R
 import pl.vemu.zsme.remembers.Prefs
 import pl.vemu.zsme.remembers.rememberStringPreference
-import pl.vemu.zsme.ui.destinations.Destination
 import pl.vemu.zsme.ui.post.PostWorker
 import pl.vemu.zsme.ui.theme.MainTheme
 import java.util.concurrent.TimeUnit
@@ -69,17 +73,19 @@ class MainActivity : ComponentActivity() {
         }
 
         lifecycleScope.launch {
-            /*TODO should be called only 1 time*/
-            dataStore.data.map { it[Prefs.LANGUAGE.key] ?: Prefs.LANGUAGE.defaultValue }
-                .collectLatest { lang ->
-                    Lingver.getInstance().apply {
-                        if (lang == "system") setFollowSystemLocale(this@MainActivity)
-                        else {
-                            WebView(applicationContext).destroy() // fixes resetting language to system when it's first use of webview.
+            launch {
+                dataStore.data.flowWithLifecycle(lifecycle, Lifecycle.State.CREATED)
+                    .map { it[Prefs.LANGUAGE.key] ?: Prefs.LANGUAGE.defaultValue }
+                    .collectLatest { lang ->
+                        Lingver.getInstance().apply {
+                            if (lang == "system") return@collectLatest setFollowSystemLocale(this@MainActivity)
+
+                            // fixes resetting language to system when it's first use of webview.
+                            WebView(applicationContext).destroy()
                             setLocale(this@MainActivity, lang)
                         }
                     }
-                }
+            }
 
             try {
                 updateApp()
@@ -93,7 +99,6 @@ class MainActivity : ComponentActivity() {
     @Composable
     private fun Main() {
         val navController = rememberNavController() /*TODO animations*/
-        ChangeSystemBars()
         Scaffold(bottomBar = {
             BottomBar(navController)
         }) { innerPadding ->
@@ -112,11 +117,12 @@ class MainActivity : ComponentActivity() {
     private fun BottomBar(
         navController: NavController
     ) {
-        val currentDestination: Destination = navController.appCurrentDestinationAsState().value
-            ?: NavGraphs.root.startAppDestination
+        val currentDestination by navController.currentScreenAsState()
+
         NavigationBar {
             BottomNavItem.values().forEach { item ->
                 val selected = currentDestination == item.destination
+
                 NavigationBarItem(label = { Text(stringResource(item.label)) },
                     selected = selected,
                     icon = {
@@ -125,6 +131,10 @@ class MainActivity : ComponentActivity() {
                             contentDescription = stringResource(item.label),
                         )
                     },
+                    colors = NavigationBarItemDefaults.colors(
+                        indicatorColor = MaterialTheme.colorScheme.primaryContainer,
+                        selectedIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    ),
                     onClick = {
                         navController.navigate(item.destination) {
                             popUpTo(navController.graph.findStartDestination().id) {
@@ -149,7 +159,7 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     private fun ChangeSystemBars() {
-        /*val systemUiController = rememberSystemUiController()
+        /*val systemUiController = rememberSystemUiController() TODO
         systemUiController.setNavigationBarColor(
             MaterialTheme.colorScheme.surfaceColorWithElevation(3.dp)
         )
@@ -179,12 +189,6 @@ class MainActivity : ComponentActivity() {
             notificationManager.createNotificationChannel(channel)
         }
     }
-
-    /*private suspend fun reviewApp() { // TODO days delay
-        val manager = ReviewManagerFactory.create(applicationContext)
-        val request = manager.requestReview()
-        manager.launchReview(this, request)
-    }*/
 
     private suspend fun updateApp() {
         val manager = AppUpdateManagerFactory.create(applicationContext)

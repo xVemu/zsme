@@ -16,7 +16,7 @@ import com.ramcosta.composedestinations.spec.DestinationStyle
 
 object SlideTransition : DestinationStyle.Animated {
 
-    override fun AnimatedContentTransitionScope<NavBackStackEntry>.enterTransition(): EnterTransition? =
+    override fun AnimatedContentTransitionScope /*TODO*/<NavBackStackEntry>.enterTransition(): EnterTransition? =
         makeTransition(slideInHorizontally(initialOffsetX = { it / 2 }) + fadeIn())
 
     override fun AnimatedContentTransitionScope<NavBackStackEntry>.exitTransition(): ExitTransition? =
