@@ -51,6 +51,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import pl.vemu.zsme.BuildConfig
 import pl.vemu.zsme.R
 import pl.vemu.zsme.remembers.Prefs
 import pl.vemu.zsme.remembers.rememberStringPreference
@@ -65,6 +66,8 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Without this Android 34+ displays wrong theme, when launched with Android Studio.
+        if (BuildConfig.DEBUG) setTheme(R.style.MainTheme)
         setContent {
             val theme by rememberStringPreference(Prefs.THEME)
             MainTheme(if (theme == "system") isSystemInDarkTheme() else theme.toBoolean()) {
@@ -123,7 +126,8 @@ class MainActivity : ComponentActivity() {
             BottomNavItem.values().forEach { item ->
                 val selected = currentDestination == item.destination
 
-                NavigationBarItem(label = { Text(stringResource(item.label)) },
+                NavigationBarItem(
+                    label = { Text(stringResource(item.label)) },
                     selected = selected,
                     icon = {
                         Icon(

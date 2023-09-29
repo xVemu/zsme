@@ -2,6 +2,7 @@ package pl.vemu.zsme.ui.post.detail
 
 import android.content.Intent
 import android.graphics.Color
+import android.os.Build
 import android.webkit.WebView
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
@@ -19,7 +20,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -49,6 +49,7 @@ import pl.vemu.zsme.ui.components.HTMLText
 import pl.vemu.zsme.ui.components.SlideTransition
 import pl.vemu.zsme.ui.destinations.GalleryDestination
 import pl.vemu.zsme.ui.post.PostNavGraph
+import pl.vemu.zsme.ui.theme.isDark
 import java.text.DateFormat
 
 
@@ -199,12 +200,15 @@ private fun DetailItem(
 
 @Composable
 private fun WebView(html: String) {
-    val isDarkTheme = MaterialTheme.colorScheme.surface.luminance() < .5
+    val isDarkTheme = MaterialTheme.isDark()
     AndroidView(
         factory = { context ->
             WebView(context).apply {
                 //noinspection SetJavaScriptEnabled
                 settings.javaScriptEnabled = true
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    settings.isAlgorithmicDarkeningAllowed = true
+                }
                 if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
                     WebSettingsCompat.setForceDark(
                         settings,

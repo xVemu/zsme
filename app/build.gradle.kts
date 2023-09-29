@@ -17,7 +17,7 @@ android {
     defaultConfig {
         applicationId = "pl.vemu.zsme"
         minSdk = 23
-        targetSdk = 32
+        targetSdk = 33
         versionCode = 43
         versionName = "2.1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -73,6 +73,7 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
     composeOptions {
@@ -132,7 +133,7 @@ dependencies {
 
     // Compose
     val compose = "1.5.1"
-    implementation("androidx.compose.material3:material3:1.1.1")
+    implementation("androidx.compose.material3:material3:1.1.2")
     // TODO delete when PullToRefresh comes to Material3
     implementation("androidx.compose.material:material:1.5.1")
     implementation("androidx.compose.material:material-icons-extended:$compose")
@@ -152,7 +153,7 @@ dependencies {
 
     // Navigation
     implementation("io.github.raamcosta.compose-destinations:animations-core:1.9.53")
-    implementation("androidx.navigation:navigation-compose:2.7.2")
+    implementation("androidx.navigation:navigation-compose:2.7.3")
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
     ksp("io.github.raamcosta.compose-destinations:ksp:1.9.53")
 
