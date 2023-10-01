@@ -10,7 +10,6 @@ import javax.inject.Inject
 
 class LessonRepo @Inject constructor() {
 
-    @Suppress("BlockingMethodInNonBlockingContext")
     suspend fun getLesson(url: String): List<List<LessonModel>> = withContext(Dispatchers.IO) {
         val document = Jsoup.connect("$DEFAULT_URL/plan/plany/$url").get()
         val table = document.selectFirst(".tabela")!!.child(0).children()

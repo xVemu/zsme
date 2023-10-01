@@ -1,5 +1,6 @@
 package pl.vemu.zsme.ui.post
 
+import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.content.Context
@@ -32,6 +33,7 @@ class PostWorker @AssistedInject constructor(
     private val postMapper: PostMapper
 ) : CoroutineWorker(context, workerParams) {
 
+    @SuppressLint("MissingPermission")
     override suspend fun doWork(): Result =
         coroutineScope {
             val postModels = postDAO.getAll()

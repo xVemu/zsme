@@ -1,5 +1,6 @@
 package pl.vemu.zsme.ui
 
+import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
@@ -96,7 +97,8 @@ class MainActivity : ComponentActivity() {
             }
         }
         createNotificationChannel()
-        setupNotification()
+        setupWorker()
+        requestNotificationPermission()
     }
 
     @Composable
@@ -170,28 +172,34 @@ class MainActivity : ComponentActivity() {
         systemUiController.setStatusBarColor(MaterialTheme.colorScheme.surface)*/
     }
 
-    private fun setupNotification() {
+    private fun requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return
+
+        requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), 0)
+    }
+
+    private fun setupWorker() {
         val constraints =
             Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
         val worker = PeriodicWorkRequestBuilder<PostWorker>(
             3L, TimeUnit.HOURS, 15L, TimeUnit.MINUTES
         ).setConstraints(constraints).build()
-        WorkManager.getInstance(applicationContext).enqueueUniquePeriodicWork(
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
             "SyncPostWorker", ExistingPeriodicWorkPolicy.KEEP, worker
         )
     }
 
     private fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                getString(R.string.app_name),
-                getString(R.string.channel_name),
-                NotificationManager.IMPORTANCE_LOW
-            )
-            val notificationManager =
-                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
-        }
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
+
+        val channel = NotificationChannel(
+            getString(R.string.app_name),
+            getString(R.string.channel_name),
+            NotificationManager.IMPORTANCE_LOW
+        )
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
     }
 
     private suspend fun updateApp() {

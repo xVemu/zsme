@@ -53,7 +53,6 @@ import pl.vemu.zsme.ui.theme.isDark
 import java.text.DateFormat
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @PostNavGraph
 @Destination(
     route = "post/detail",
