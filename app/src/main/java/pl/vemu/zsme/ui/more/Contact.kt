@@ -1,20 +1,25 @@
 package pl.vemu.zsme.ui.more
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.ramcosta.composedestinations.annotation.DeepLink
@@ -24,6 +29,7 @@ import pl.vemu.zsme.R
 import pl.vemu.zsme.ui.components.SimpleMediumAppBar
 import pl.vemu.zsme.ui.components.SlideTransition
 
+@OptIn(ExperimentalMaterial3Api::class)
 @MoreNavGraph
 @Destination(
     route = "more/contact",
@@ -33,42 +39,40 @@ import pl.vemu.zsme.ui.components.SlideTransition
 @Composable
 fun Contact(navController: NavController) {
     val context = LocalContext.current
+    val behavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+
     Scaffold(
+        modifier = Modifier.nestedScroll(behavior.nestedScrollConnection),
         topBar = {
             SimpleMediumAppBar(
-                title = R.string.contact,
-                navController = navController
+                title = R.string.contact, navController = navController, scrollBehavior = behavior,
             )
-        }
+        },
     ) { padding ->
-        Column(modifier = Modifier.padding(padding)) {
+        Column(
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .fillMaxSize()
+                .padding(padding)
+        ) {
             ContactItem.entries.forEach { item ->
-                Column(
-                    Modifier
-                        .padding(8.dp)
-                ) {
-                    Text(
-                        text = stringResource(item.headerText),
-                        style = MaterialTheme.typography.labelLarge
-                    )
-                    SelectionContainer {
-                        Text(
-                            text = stringResource(item.text),
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                    }
-                }
-                item.icon?.let {
-                    IconButton(
-                        onClick = { item.onClick(context) },
-                    ) {
-                        Icon(
-                            painter = painterResource(it),
-                            contentDescription = stringResource(R.string.destination_button),
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                    }
-                }
+                ListItem(
+                    headlineContent = { Text(stringResource(item.text)) },
+                    overlineContent = { Text(stringResource(item.headerText)) },
+                    trailingContent = item.icon?.let {
+                        {
+                            IconButton(
+                                onClick = { item.onClick(context) },
+                            ) {
+                                Icon(
+                                    painter = painterResource(it),
+                                    contentDescription = stringResource(R.string.destination_button),
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                            }
+                        }
+                    },
+                )
             }
         }
     }

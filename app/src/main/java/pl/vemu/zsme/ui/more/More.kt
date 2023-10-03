@@ -4,12 +4,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.ramcosta.composedestinations.annotation.DeepLink
@@ -42,22 +40,17 @@ fun More(navController: NavController) {
             modifier = Modifier.padding(padding)
         ) {
             MoreItem.entries.forEach { item ->
-                Row(
-                    Modifier
-                        .fillMaxWidth()
-                        .clickable { item.onClick(context, navController) }
-                        .padding(16.dp)) {
-                    Icon(
-                        imageVector = item.icon,
-                        contentDescription = stringResource(item.text),
-                    )
-                    Spacer(Modifier.width(32.dp))
-                    Text(
-                        text = stringResource(item.text),
-                        modifier = Modifier.align(Alignment.CenterVertically),
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                }
+                ListItem(
+                    modifier = Modifier.clickable { item.onClick(context, navController) },
+                    headlineContent = {
+                        Text(stringResource(item.text))
+                    },
+                    leadingContent = {
+                        Icon(
+                            imageVector = item.icon,
+                            contentDescription = stringResource(item.text),
+                        )
+                    })
             }
         }
     }

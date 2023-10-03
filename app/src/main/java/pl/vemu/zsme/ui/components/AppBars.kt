@@ -9,6 +9,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
@@ -19,9 +20,13 @@ fun SimpleSmallAppBar(@StringRes title: Int, navController: NavController) {
     SimpleSmallAppBar(stringResource(title), navController)
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SimpleMediumAppBar(@StringRes title: Int, navController: NavController) {
-    SimpleMediumAppBar(stringResource(title), navController)
+fun SimpleMediumAppBar(
+    @StringRes title: Int, navController: NavController,
+    scrollBehavior: TopAppBarScrollBehavior? = null,
+) {
+    SimpleMediumAppBar(stringResource(title), navController, scrollBehavior)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -43,8 +48,13 @@ fun SimpleSmallAppBar(title: String, navController: NavController) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SimpleMediumAppBar(title: String, navController: NavController) {
+fun SimpleMediumAppBar(
+    title: String,
+    navController: NavController,
+    scrollBehavior: TopAppBarScrollBehavior? = null,
+) {
     MediumTopAppBar(
+        scrollBehavior = scrollBehavior,
         title = { Text(title) },
         navigationIcon = {
             IconButton(onClick = {

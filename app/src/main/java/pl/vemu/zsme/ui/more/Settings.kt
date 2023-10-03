@@ -8,6 +8,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.BrightnessMedium
 import androidx.compose.material.icons.rounded.Language
 import androidx.compose.material.icons.rounded.Notifications
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -27,6 +28,7 @@ import pl.vemu.zsme.remembers.rememberStringPreference
 import pl.vemu.zsme.ui.components.SimpleMediumAppBar
 import pl.vemu.zsme.ui.components.SlideTransition
 
+@OptIn(ExperimentalMaterial3Api::class)
 @MoreNavGraph
 @Destination(route = "more/settings", style = SlideTransition::class)
 @Composable
