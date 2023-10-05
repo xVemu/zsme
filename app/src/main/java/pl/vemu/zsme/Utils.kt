@@ -3,12 +3,14 @@ package pl.vemu.zsme
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ColorScheme
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import kotlin.math.ln
 
 fun Modifier.paddingStart(size: Dp) = this.padding(size, 0.dp, 0.dp, 0.dp)
@@ -34,4 +36,8 @@ const val DEFAULT_URL = "https://zsme.tarnow.pl"
 sealed class Result<out T> {
     class Success<out T>(val value: T) : Result<T>()
     class Failure(val error: Exception) : Result<Nothing>()
+}
+
+fun Context.launchCustomTabs(url: String) {
+    CustomTabsIntent.Builder().build().launchUrl(this, url.toUri())
 }

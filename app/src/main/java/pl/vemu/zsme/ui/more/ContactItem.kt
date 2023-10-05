@@ -3,18 +3,19 @@ package pl.vemu.zsme.ui.more
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.core.net.toUri
 import pl.vemu.zsme.R
+import pl.vemu.zsme.launchCustomTabs
+
 
 enum class ContactItem(
     @DrawableRes val icon: Int?,
     @StringRes val headerText: Int,
     @StringRes val text: Int,
-    @StringRes private val action: Int
+    @StringRes private val action: Int,
 ) {
     /*TODO dynamic, icon from MaterialIcons*/
     NAME(null, R.string.school_name, R.string.school_name_text, 0),
@@ -82,13 +83,24 @@ enum class ContactItem(
 
     fun onClick(context: Context) {
         val actionString = context.getString(action)
-        val intent = when (icon) {
-            R.drawable.ic_phone -> Intent(Intent.ACTION_DIAL, "tel:$actionString".toUri())
-            R.drawable.ic_mail -> Intent(Intent.ACTION_SENDTO, "mailto:$actionString".toUri())
-            else -> Intent(Intent.ACTION_VIEW, Uri.parse(actionString))
-        }
         try {
-            context.startActivity(intent)
+            when (icon) {
+                R.drawable.ic_phone -> context.startActivity(
+                    Intent(
+                        Intent.ACTION_DIAL,
+                        "tel:$actionString".toUri()
+                    )
+                )
+
+                R.drawable.ic_mail -> context.startActivity(
+                    Intent(
+                        Intent.ACTION_SENDTO,
+                        "mailto:$actionString".toUri()
+                    )
+                )
+
+                else -> context.launchCustomTabs(actionString)
+            }
         } catch (e: ActivityNotFoundException) {
             Toast.makeText(context, R.string.no_app, Toast.LENGTH_LONG).show()
         }

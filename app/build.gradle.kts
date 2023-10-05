@@ -150,6 +150,8 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("it.skrape:skrapeit:1.2.2")
+    // Chrome custom tabs
+    implementation("androidx.browser:browser:1.6.0")
 
     // Navigation
     implementation("io.github.raamcosta.compose-destinations:animations-core:1.9.53")
