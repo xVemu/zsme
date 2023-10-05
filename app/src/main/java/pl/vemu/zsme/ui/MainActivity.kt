@@ -46,6 +46,7 @@ import com.google.android.play.core.ktx.requestAppUpdateInfo
 import com.google.android.play.core.ktx.requestUpdateFlow
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.navigation.navigate
+import com.ramcosta.composedestinations.navigation.popBackStack
 import com.ramcosta.composedestinations.rememberNavHostEngine
 import com.yariksoffice.lingver.Lingver
 import dagger.hilt.android.AndroidEntryPoint
@@ -120,7 +121,7 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     private fun BottomBar(
-        navController: NavController
+        navController: NavController,
     ) {
         val currentDestination by navController.currentScreenAsState()
 
@@ -141,7 +142,15 @@ class MainActivity : ComponentActivity() {
                         indicatorColor = MaterialTheme.colorScheme.primaryContainer,
                         selectedIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
                     ),
-                    onClick = {
+                    onClick = onClick@{
+                        if (selected) {
+                            navController.popBackStack(
+                                item.destination.startRoute,
+                                false,
+                            )
+                            return@onClick
+                        }
+
                         navController.navigate(item.destination) {
                             popUpTo(navController.graph.findStartDestination().id) {
                                 saveState = true
