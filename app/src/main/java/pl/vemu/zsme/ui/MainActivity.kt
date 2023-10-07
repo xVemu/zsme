@@ -44,6 +44,9 @@ import com.google.android.play.core.ktx.clientVersionStalenessDays
 import com.google.android.play.core.ktx.isFlexibleUpdateAllowed
 import com.google.android.play.core.ktx.requestAppUpdateInfo
 import com.google.android.play.core.ktx.requestUpdateFlow
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.remoteconfig.ktx.remoteConfig
+import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.navigation.navigate
 import com.ramcosta.composedestinations.navigation.popBackStack
@@ -91,6 +94,7 @@ class MainActivity : ComponentActivity() {
                         }
                     }
             }
+            launch { setupRemoteConfig() }
 
             try {
                 updateApp()
@@ -179,6 +183,18 @@ class MainActivity : ComponentActivity() {
             MaterialTheme.colorScheme.surfaceColorWithElevation(3.dp)
         )
         systemUiController.setStatusBarColor(MaterialTheme.colorScheme.surface)*/
+    }
+
+    @Suppress("RedundantSuspendModifier")
+    private suspend fun setupRemoteConfig() {
+        val remoteConfig = Firebase.remoteConfig
+        val configSettings = remoteConfigSettings {
+            minimumFetchIntervalInSeconds = 0
+        }
+        if (BuildConfig.DEBUG)
+            remoteConfig.setConfigSettingsAsync(configSettings)
+        remoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
+        remoteConfig.fetchAndActivate()
     }
 
     private fun requestNotificationPermission() {

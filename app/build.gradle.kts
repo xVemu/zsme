@@ -8,6 +8,7 @@ plugins {
     id("dagger.hilt.android.plugin")
     id("io.gitlab.arturbosch.detekt") version "1.23.1"
     id("com.google.devtools.ksp")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -162,6 +163,9 @@ dependencies {
     // Settings
     implementation("androidx.datastore:datastore-preferences:1.0.0")
     implementation("com.github.alorma:compose-settings-ui-m3:0.27.0")
+
+    // Firebase
+    implementation("com.google.firebase:firebase-config-ktx:21.4.1")
 
     // 3-rd party
     implementation("io.coil-kt:coil-compose:2.4.0")

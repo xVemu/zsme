@@ -1,4 +1,4 @@
-package pl.vemu.zsme.ui.timetable
+package pl.vemu.zsme.data.repo
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
