@@ -1,11 +1,12 @@
 package pl.vemu.zsme.ui.timetable
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
@@ -13,38 +14,34 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.ramcosta.composedestinations.annotation.DeepLink
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.NavGraph
 import com.ramcosta.composedestinations.annotation.RootNavGraph
-import com.ramcosta.composedestinations.navigation.navigate
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import pl.vemu.zsme.DEFAULT_URL
 import pl.vemu.zsme.R
 import pl.vemu.zsme.Result
 import pl.vemu.zsme.data.model.TimetableModel
+import pl.vemu.zsme.ui.components.Avatar
+import pl.vemu.zsme.ui.components.CustomError
 import pl.vemu.zsme.ui.components.ExpandTransition
-import pl.vemu.zsme.ui.components.ShowSnackBarWithError
-import pl.vemu.zsme.ui.components.SimpleSnackbar
+import pl.vemu.zsme.ui.components.PrimaryPagerTabIndicator
 import pl.vemu.zsme.ui.components.Tabs
 import pl.vemu.zsme.ui.destinations.LessonDestination
+import java.util.Locale
 
 @RootNavGraph
 @NavGraph
 annotation class TimetableNavGraph(
-    val start: Boolean = false
+    val start: Boolean = false,
 )
 
 @TimetableNavGraph(start = true)
@@ -56,84 +53,132 @@ annotation class TimetableNavGraph(
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun Timetable(
-    navController: NavController,
+    navController: DestinationsNavigator,
     vm: TimetableVM = hiltViewModel(),
 ) {
-    Scaffold(topBar = { CenterAlignedTopAppBar(title = { Text(stringResource(R.string.timetable)) }) }) { padding ->
-        val names = listOf(
-            stringResource(R.string.classes),
-            stringResource(R.string.teachers),
-            stringResource(R.string.classrooms)
-        )
-        val pagerState = rememberPagerState(pageCount = { names.size })
-        val timetableResult by vm.list.collectAsState()
-        val snackbarHostState = remember { SnackbarHostState() }
-        Box(
+    Scaffold(topBar = {
+        LargeTopAppBar(title = { Text(stringResource(R.string.timetable)) })
+    }) { padding ->
+        Column(
             Modifier
                 .fillMaxSize()
-                .padding(padding)
+                .padding(padding),
         ) {
-            Column(Modifier.fillMaxSize()) {
-                TimetableTabRow(pagerState, names)
-                when (timetableResult) {
-                    is Result.Success -> {
-                        val timetableList =
-                            (timetableResult as Result.Success).value
-                        HorizontalPager(
-                            state = pagerState
-                        ) { page ->
-                            LazyVerticalGrid(
-                                columns = GridCells.Fixed(count = 3)
-                            ) {
-                                if (timetableList.isEmpty()) return@LazyVerticalGrid
-                                items(timetableList[page]) { item ->
-                                    TimetablePageItem(navController, item)
-                                }
-                            }
-                        }
-                    }
+            val names = listOf(
+                stringResource(R.string.classes),
+                stringResource(R.string.teachers),
+                stringResource(R.string.classrooms),
+            )
+            val pagerState = rememberPagerState { names.size }
+            val result by vm.list.collectAsState()
 
-                    is Result.Failure -> {
-                        snackbarHostState.ShowSnackBarWithError(
-                            result = timetableResult
-                        ) {
-                            vm.downloadTimetable()
+            TimetableTabRow(pagerState, names)
+            when (val data = result) {
+                is Result.Loading -> {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator()
+                    }
+                }
+
+                is Result.Failure -> {
+                    CustomError { vm.downloadTimetable() }
+                }
+
+                is Result.Success -> {
+                    HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) { page ->
+                        val value = data.value[page]
+                        LazyColumn {
+                            when (page) {
+                                0 -> classes(value, navController)
+                                1 -> teachers(value, navController)
+                                2 -> rooms(value, navController)
+                            }
                         }
                     }
                 }
             }
-            SimpleSnackbar(snackbarHostState)
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun TimetablePageItem(
-    navController: NavController,
-    item: TimetableModel
+@OptIn(ExperimentalFoundationApi::class)
+private fun LazyListScope.teachers(
+    teachers: List<TimetableModel>,
+    navigator: DestinationsNavigator,
 ) {
-    OutlinedCard(
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
-        onClick = { navController.navigate(LessonDestination(item.name, item.url)) },
-        modifier = Modifier
-            .height((LocalConfiguration.current.screenWidthDp / 3).dp)
-            .padding(8.dp)
-    ) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = item.name,
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.padding(8.dp)
-            )
+    val collactor = java.text.Collator.getInstance(Locale("pl", "PL"))
+    val grouped = teachers.groupBy { it.name.take(1) }.toSortedMap(collactor)
+
+    grouped.forEach { (group, list) ->
+        stickyHeader {
+            Header("$group.")
+        }
+        items(list) {
+            val label = it.name.substring(it.name.length - 3, it.name.length - 1)
+            val name = it.name.substring(2, it.name.length - 5)
+            ListItem(modifier = Modifier.clickable {
+                navigator.navigate(LessonDestination(it.name, it.url))
+            }, headlineContent = { Text(name) }, leadingContent = { Avatar(label) })
         }
     }
 }
+
+@OptIn(ExperimentalFoundationApi::class)
+private fun LazyListScope.rooms(rooms: List<TimetableModel>, navigator: DestinationsNavigator) {
+    val grouped = rooms.groupBy { it.name.first() }
+
+    grouped.forEach { (group, list) ->
+        stickyHeader {
+            Header(group.toString())
+        }
+        items(list) {
+            val (label, name) = it.name.split(" ", limit = 2)
+            ListItem(modifier = Modifier.clickable {
+                navigator.navigate(LessonDestination(it.name, it.url))
+            }, headlineContent = { Text(name) }, leadingContent = { Avatar(label) })
+        }
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+private fun LazyListScope.classes(rooms: List<TimetableModel>, navigator: DestinationsNavigator) {
+    val grouped = rooms.groupBy { it.name.first() }
+
+    grouped.forEach { (group, list) ->
+        item {
+            Header(group.toString())
+        }
+        item {
+            FlowRow(
+                Modifier.padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                list.forEach {
+                    OutlinedButton(onClick = {
+                        navigator.navigate(LessonDestination(it.name, it.url))
+                    }) {
+                        Text(it.name.drop(1))
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun Header(title: String) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .background(MaterialTheme.colorScheme.surface)
+            .padding(start = 16.dp, top = 16.dp, end = 24.dp, bottom = 8.dp)
+    ) {
+        Text(title, style = MaterialTheme.typography.titleLarge)
+        Spacer(Modifier.width(16.dp))
+        Divider()
+    }
+}
+
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -141,34 +186,45 @@ private fun TimetableTabRow(
     pagerState: PagerState,
     names: List<String>,
 ) {
-    TabRow(
+    TabRow(selectedTabIndex = pagerState.currentPage, indicator = { tabPositions ->
+        PrimaryPagerTabIndicator(pagerState, tabPositions)
+    }) {
+        Tabs(pagerState = pagerState, names = names)
+    }/*PrimaryTabRow( TODO when material 3 1.2.0 released
         selectedTabIndex = pagerState.currentPage,
-        /*indicator = { tabPositions ->
-            TabRowDefaults.Indicator(
-                Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
-            )
-        }*/
+        indicator = { tabPositions -> PrimaryPagerTabIndicator(pagerState, tabPositions) },
     ) {
         Tabs(
-            pagerState = pagerState,
-            names = names
+            pagerState = pagerState, names = names
         )
+    }*/
+}
+
+@Preview(group = "items")
+@Composable
+private fun TeacherPagePreview() {
+    val item = TimetableModel("K.Kras(KK)", "")
+    LazyColumn {
+        teachers(listOf(item), EmptyDestinationsNavigator)
     }
 }
 
-class TimetableModelProvider : PreviewParameterProvider<TimetableModel> {
-    override val values = sequenceOf(
-        TimetableModel("3TIG", ""),
-        TimetableModel("K.Kras(KK)", ""),
-        TimetableModel("p1 pracownia komputerowa", "")
-    )
-
+@Preview(group = "items")
+@Composable
+private fun ClassPagePreview() {
+    val item = TimetableModel("3TIG", "")
+    LazyColumn {
+        classes(listOf(item, item.copy(name = "1TA")), EmptyDestinationsNavigator)
+    }
 }
 
-@Preview(widthDp = 120, group = "items")
+@Preview(group = "items")
 @Composable
-private fun TimetablePageItemPreview(@PreviewParameter(TimetableModelProvider::class) item: TimetableModel) {
-    TimetablePageItem(navController = rememberNavController(), item = item)
+private fun RoomPagePreview() {
+    val item = TimetableModel("P1 pracownia komputerowa", "")
+    LazyColumn {
+        rooms(listOf(item), EmptyDestinationsNavigator)
+    }
 }
 
 @OptIn(ExperimentalFoundationApi::class)

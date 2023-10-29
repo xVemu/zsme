@@ -1,10 +1,15 @@
 package pl.vemu.zsme.data.repo
 
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.remoteconfig.ktx.get
+import com.google.firebase.remoteconfig.ktx.remoteConfig
+import it.skrape.core.htmlDocument
+import it.skrape.fetcher.AsyncFetcher
+import it.skrape.fetcher.BasicAuth
+import it.skrape.fetcher.response
+import it.skrape.fetcher.skrape
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.jsoup.Jsoup
-import org.jsoup.nodes.Element
-import pl.vemu.zsme.DEFAULT_URL
 import pl.vemu.zsme.data.model.TimetableModel
 import javax.inject.Inject
 
@@ -12,15 +17,24 @@ class TimetableRepo @Inject constructor() {
 
     suspend fun getTimetable(): List<List<TimetableModel>> =
         withContext(Dispatchers.IO) {
-            val document = Jsoup.connect("$DEFAULT_URL/plan/lista.html").get()
-            return@withContext listOf(
-                document.selectFirst("#oddzialy")!!.makeArrayOfLinks(),
-                document.selectFirst("#nauczyciele")!!.makeArrayOfLinks(),
-                document.selectFirst("#sale")!!.makeArrayOfLinks(),
-            )
+            skrape(AsyncFetcher) {
+                request {
+                    val login: String = Firebase.remoteConfig["scheduleLogin"].asString()
+                    val password: String = Firebase.remoteConfig["schedulePassword"].asString()
+                    url = Firebase.remoteConfig["scheduleUrl"].asString() + "/lista.html"
+                    authentication = BasicAuth(login, password)
+                }
+                response {
+                    htmlDocument {
+                        listOf("#oddzialy", "#nauczyciele", "#sale").map { selector ->
+                            findFirst(selector) {
+                                children.map {
+                                    TimetableModel(it.text, it.attribute("href"))
+                                }.sortedBy { it.name }
+                            }
+                        }
+                    }
+                }
+            }
         }
-
-    private fun Element.makeArrayOfLinks() = children().map {
-        TimetableModel(it.text(), it.child(0).attr("href").removePrefix("plany/"))
-    }.sortedBy { it.name }
 }

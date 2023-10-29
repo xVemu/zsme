@@ -85,7 +85,7 @@ android {
         resources {
             // https://github.com/skrapeit/skrape.it/issues/184#issuecomment-1204545852
             excludes += listOf(
-                "/META-INF/{AL2.0,LGPL2.1,DEPENDENCIES}",
+                "META-INF/DEPENDENCIES",
                 "mozilla/public-suffix-list.txt",
             )
         }
@@ -134,7 +134,7 @@ dependencies {
 
     // Compose
     val compose = "1.5.1"
-    implementation("androidx.compose.material3:material3:1.1.2")
+    implementation("androidx.compose.material3:material3:1.2.0-alpha02")
     // TODO delete when PullToRefresh comes to Material3
     implementation("androidx.compose.material:material:1.5.1")
     implementation("androidx.compose.material:material-icons-extended:$compose")

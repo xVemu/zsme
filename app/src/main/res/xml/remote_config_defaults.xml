@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <defaults>
     <entry>
+        <key>scheduleUrl</key>
+        <value>https://zsme.tarnow.pl</value>
+    </entry>
+    <entry>
         <key>scheduleLogin</key>
         <value>zsme</value>
     </entry>

@@ -17,7 +17,7 @@ class TimetableVM @Inject constructor(
     private val timetableRepo: TimetableRepo,
 ) : ViewModel() {
     private val _list: MutableStateFlow<Result<List<List<TimetableModel>>>> =
-        MutableStateFlow(Result.Success(emptyList()))
+        MutableStateFlow(Result.Loading)
     val list = _list.asStateFlow()
 
     init {
@@ -26,6 +26,7 @@ class TimetableVM @Inject constructor(
 
     fun downloadTimetable() {
         viewModelScope.launch(Dispatchers.IO) {
+            _list.value = Result.Loading
             _list.value = try {
                 Result.Success(timetableRepo.getTimetable())
             } catch (e: Exception) {
