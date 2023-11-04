@@ -22,14 +22,19 @@
     <string name="notification">Notifications</string>
     <string name="gallery">Photos</string>
     <string name="error">An error has occurred</string>
-    <string name="teachers">Teachers</string>
-    <string name="classrooms">Classroom</string>
-    <string name="classes">Classes</string>
-    <string name="monday">Monday</string>
-    <string name="tuesday">Tuesday</string>
-    <string name="wednesday">Wednesday</string>
-    <string name="thursday">Thursday</string>
-    <string name="friday">Friday</string>
+    <string-array name="timetable_tabs">
+        <item>Classes</item>
+        <item>Teachers</item>
+        <item>Classroom</item>
+    </string-array>
+    <string-array name="weekdays">
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+    </string-array>
+    <string name="no_lessons">There are no lessons on this day.</string>
     <string name="light">Light</string>
     <string name="dark">Dark</string>
     <string name="system_default">System default</string>
@@ -47,6 +52,7 @@
     <string name="notification_summary">Manage your notifications</string>
     <string name="image">Image</string>
     <string name="back_button">Back arrow</string>
-    <string name="retry">RETRY</string>
+    <string name="retry">Retry</string>
     <string name="no_connection">No internet connection</string>
+    <string name="destination_button">Open in app</string>
 </resources>

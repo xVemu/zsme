@@ -1,55 +1,84 @@
 package pl.vemu.zsme.data.repo
 
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.remoteconfig.ktx.get
+import com.google.firebase.remoteconfig.ktx.remoteConfig
+import it.skrape.core.htmlDocument
+import it.skrape.fetcher.AsyncFetcher
+import it.skrape.fetcher.BasicAuth
+import it.skrape.fetcher.response
+import it.skrape.fetcher.skrape
+import it.skrape.selects.DocElement
+import it.skrape.selects.ElementNotFoundException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.jsoup.Jsoup
-import org.jsoup.nodes.Element
-import pl.vemu.zsme.DEFAULT_URL
 import pl.vemu.zsme.data.model.LessonModel
 import javax.inject.Inject
 
 class LessonRepo @Inject constructor() {
 
-    suspend fun getLesson(url: String): List<List<LessonModel>> = withContext(Dispatchers.IO) {
-        val document = Jsoup.connect("$DEFAULT_URL/plan/plany/$url").get()
-        val table = document.selectFirst(".tabela")!!.child(0).children()
-        table.removeAt(0)
-        val lessonsList = List(5) { mutableListOf<LessonModel>() }
-        table.forEach {
-            val lessons = it.select(".l")
-            val lessonIndex = it.selectFirst(".nr")!!.text().toInt()
-            val (lessonTimeStart, lessonTimeFinish) = it.selectFirst(".g")!!.text()
-                .replace("\\s".toRegex(), "").split("-")
-            lessons.forEachIndexed { i, item ->
-                if (item.text().isEmpty()) return@forEachIndexed
-                val lesson1: LessonModel
-                var lesson2: LessonModel? = null
-                if (item.select("[style=font-size:85%]").isNotEmpty()) {
-                    val lessonSpans = item.select("[style=font-size:85%]")
-                    lesson1 = lessonSpans[0].buildLesson()
-                    lesson2 = lessonSpans.getOrNull(1)?.buildLesson()
-                } else lesson1 = item.buildLesson()
-                lesson1.apply {
-                    index = lessonIndex
-                    timeStart = lessonTimeStart
-                    timeFinish = lessonTimeFinish
-                    lessonsList[i].add(this)
-                }
-                lesson2?.apply {
-                    timeStart = lessonTimeStart
-                    timeFinish = lessonTimeFinish
-                    lessonsList[i].add(this)
+    suspend fun getLesson(link: String): List<List<LessonModel>> = withContext(Dispatchers.IO) {
+        skrape(AsyncFetcher) {
+            request {
+                val login: String = Firebase.remoteConfig["scheduleLogin"].asString()
+                val password: String = Firebase.remoteConfig["schedulePassword"].asString()
+                url = Firebase.remoteConfig["scheduleUrl"].asString() + "/$link"
+                authentication = BasicAuth(login, password)
+            }
+            response {
+                htmlDocument {
+                    findFirst(".tabela > tbody") {
+                        val lessons = List(5) { mutableListOf<LessonModel>() }
+
+                        children.drop(1).forEach { row ->
+                            val index = row.children.first().text.toInt()
+                            val (timeStart, timeFinish) = row.children[1].text.replace(
+                                "\\s".toRegex(),
+                                ""
+                            ).split("-")
+
+                            row.children.drop(2).forEachIndexed { i, lesson ->
+                                if (lesson.text.isEmpty()) return@forEachIndexed
+
+                                try {
+                                    val multiple = lesson.findAll("[style=font-size:85%]")
+                                    multiple.forEachIndexed { singleIndex, singleLesson ->
+                                        lessons[i].add(
+                                            singleLesson.buildLesson(
+                                                index.takeIf { singleIndex == 0 },
+                                                timeStart,
+                                                timeFinish
+                                            )
+                                        )
+                                    }
+                                } catch (e: ElementNotFoundException) {
+                                    lessons[i].add(lesson.buildLesson(index, timeStart, timeFinish))
+                                    return@forEachIndexed
+                                }
+                            }
+                        }
+
+                        return@findFirst lessons
+                    }
                 }
             }
         }
-        return@withContext lessonsList
     }
 
-    private fun Element.buildLesson() =
+    private fun DocElement.buildLesson(index: Int?, timeStart: String, timeFinish: String) =
         LessonModel(
-            name = (selectFirst(".p") ?: this).text(),
-            teacher = (selectFirst(".n") ?: selectFirst(".o"))?.text(),
-            room = (selectFirst(".s") ?: selectFirst(".o"))?.text()
+            name = (findFirstOrNull(".p") ?: this).text,
+            teacher = (findFirstOrNull(".n") ?: findFirstOrNull(".o"))?.text,
+            room = (findFirstOrNull(".s") ?: findFirstOrNull(".o"))?.text,
+            index = index,
+            timeStart = timeStart,
+            timeFinish = timeFinish,
         )
+
+    private fun DocElement.findFirstOrNull(selector: String): DocElement? = try {
+        findFirst(selector)
+    } catch (e: ElementNotFoundException) {
+        null
+    }
 
 }

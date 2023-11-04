@@ -2,7 +2,7 @@ package pl.vemu.zsme.ui.components
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -38,7 +38,7 @@ fun SimpleSmallAppBar(title: String, navController: NavController) {
                 navController.popBackStack()
             }) {
                 Icon(
-                    imageVector = Icons.Rounded.ArrowBack,
+                    imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
                     contentDescription = stringResource(R.string.back_button),
                 )
             }
@@ -49,6 +49,7 @@ fun SimpleSmallAppBar(title: String, navController: NavController) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SimpleMediumAppBar(
+    /*TODO automatically back button*/
     title: String,
     navController: NavController,
     scrollBehavior: TopAppBarScrollBehavior? = null,
@@ -61,7 +62,7 @@ fun SimpleMediumAppBar(
                 navController.popBackStack()
             }) {
                 Icon(
-                    imageVector = Icons.Rounded.ArrowBack,
+                    imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
                     contentDescription = stringResource(R.string.back_button),
                 )
             }

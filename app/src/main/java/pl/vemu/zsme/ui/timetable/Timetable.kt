@@ -10,12 +10,18 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.MeetingRoom
+import androidx.compose.material.icons.rounded.Person
+import androidx.compose.material.icons.rounded.School
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -26,6 +32,7 @@ import com.ramcosta.composedestinations.annotation.NavGraph
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
+import kotlinx.coroutines.launch
 import pl.vemu.zsme.DEFAULT_URL
 import pl.vemu.zsme.R
 import pl.vemu.zsme.Result
@@ -34,7 +41,6 @@ import pl.vemu.zsme.ui.components.Avatar
 import pl.vemu.zsme.ui.components.CustomError
 import pl.vemu.zsme.ui.components.ExpandTransition
 import pl.vemu.zsme.ui.components.PrimaryPagerTabIndicator
-import pl.vemu.zsme.ui.components.Tabs
 import pl.vemu.zsme.ui.destinations.LessonDestination
 import java.util.Locale
 
@@ -64,15 +70,10 @@ fun Timetable(
                 .fillMaxSize()
                 .padding(padding),
         ) {
-            val names = listOf(
-                stringResource(R.string.classes),
-                stringResource(R.string.teachers),
-                stringResource(R.string.classrooms),
-            )
-            val pagerState = rememberPagerState { names.size }
+            val pagerState = rememberPagerState { 3 }
             val result by vm.list.collectAsState()
 
-            TimetableTabRow(pagerState, names)
+            TimetableTabRow(pagerState)
             when (val data = result) {
                 is Result.Loading -> {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -163,6 +164,9 @@ private fun LazyListScope.classes(rooms: List<TimetableModel>, navigator: Destin
             }
         }
     }
+    item {
+        Spacer(Modifier.height(16.dp))
+    }
 }
 
 @Composable
@@ -175,7 +179,7 @@ private fun Header(title: String) {
     ) {
         Text(title, style = MaterialTheme.typography.titleLarge)
         Spacer(Modifier.width(16.dp))
-        Divider()
+        HorizontalDivider()
     }
 }
 
@@ -184,20 +188,33 @@ private fun Header(title: String) {
 @Composable
 private fun TimetableTabRow(
     pagerState: PagerState,
-    names: List<String>,
 ) {
-    TabRow(selectedTabIndex = pagerState.currentPage, indicator = { tabPositions ->
-        PrimaryPagerTabIndicator(pagerState, tabPositions)
-    }) {
-        Tabs(pagerState = pagerState, names = names)
-    }/*PrimaryTabRow( TODO when material 3 1.2.0 released
+    val coroutineScope = rememberCoroutineScope()
+
+    val icons = listOf(Icons.Rounded.School, Icons.Rounded.Person, Icons.Rounded.MeetingRoom)
+
+    PrimaryTabRow(
         selectedTabIndex = pagerState.currentPage,
-        indicator = { tabPositions -> PrimaryPagerTabIndicator(pagerState, tabPositions) },
+        indicator = { tabPositions ->
+            PrimaryPagerTabIndicator(
+                pagerState = pagerState,
+                tabPositions = tabPositions,
+            )
+        },
     ) {
-        Tabs(
-            pagerState = pagerState, names = names
-        )
-    }*/
+        stringArrayResource(R.array.timetable_tabs).zip(icons)
+            .forEachIndexed { index, (name, icon) ->
+                Tab(
+                    selected = pagerState.currentPage == index,
+                    onClick = {
+                        coroutineScope.launch { pagerState.animateScrollToPage(index) }
+                    },
+                    icon = { Icon(icon, name) },
+                    text = { Text(name) },
+                    unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+    }
 }
 
 @Preview(group = "items")
@@ -231,10 +248,5 @@ private fun RoomPagePreview() {
 @Preview
 @Composable
 private fun TimetableTabRowPreview() {
-    val names = listOf(
-        stringResource(R.string.classes),
-        stringResource(R.string.teachers),
-        stringResource(R.string.classrooms)
-    )
-    TimetableTabRow(pagerState = rememberPagerState(pageCount = { names.size }), names = names)
+    TimetableTabRow(rememberPagerState(pageCount = { 3 }))
 }

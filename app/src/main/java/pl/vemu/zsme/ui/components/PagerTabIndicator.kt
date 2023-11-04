@@ -35,7 +35,7 @@ fun PrimaryPagerTabIndicator(
 }
 
 @OptIn(ExperimentalFoundationApi::class)
-private fun Modifier.pagerTabIndicatorOffset(
+internal fun Modifier.pagerTabIndicatorOffset(
     pagerState: PagerState,
     tabPositions: List<TabPosition>,
     pageIndexMapping: (Int) -> Int = { it },

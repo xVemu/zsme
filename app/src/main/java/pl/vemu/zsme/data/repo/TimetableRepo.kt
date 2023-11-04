@@ -29,7 +29,7 @@ class TimetableRepo @Inject constructor() {
                         listOf("#oddzialy", "#nauczyciele", "#sale").map { selector ->
                             findFirst(selector) {
                                 children.map {
-                                    TimetableModel(it.text, it.attribute("href"))
+                                    TimetableModel(it.text, it.eachHref.first())
                                 }.sortedBy { it.name }
                             }
                         }

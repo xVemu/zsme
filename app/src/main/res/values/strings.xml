@@ -15,7 +15,6 @@
     <string name="e_dziennik">E-dziennik</string>
     <string name="contact">Kontakt</string>
 
-
     <string name="school_name">Nazwa szkoły</string>
     <string name="school_name_text">Zespół Szkół Mechaniczno-Elektrycznych w Tarnowie</string>
 
@@ -57,15 +56,20 @@
     <string name="notification">Powiadomienia</string>
     <string name="gallery">Zdjęcia</string>
     <string name="error">Wystąpił błąd</string>
-    <string name="destination_button" translatable="false">Open in app</string>
-    <string name="teachers">Nauczyciele</string>
-    <string name="classrooms">Sale</string>
-    <string name="classes">Oddziały</string>
-    <string name="monday">Poniedziałek</string>
-    <string name="tuesday">Wtorek</string>
-    <string name="wednesday">Środa</string>
-    <string name="thursday">Czwartek</string>
-    <string name="friday">Piątek</string>
+    <string name="destination_button">Otwórz w aplikacji</string>
+    <string-array name="timetable_tabs">
+        <item>Oddziały</item>
+        <item>Nauczyciele</item>
+        <item>Sale</item>
+    </string-array>
+    <string-array name="weekdays">
+        <item>Poniedziałek</item>
+        <item>Wtorek</item>
+        <item>Środa</item>
+        <item>Czwartek</item>
+        <item>Piątek</item>
+    </string-array>
+    <string name="no_lessons">Brak lekcji w tym dniu.</string>
     <string name="light">Jasny</string>
     <string name="dark">Ciemny</string>
     <string name="system_default">Domyślny systemowy</string>
@@ -80,6 +84,6 @@
     <string name="notification_summary">Zarządzaj powiadomieniami</string>
     <string name="image">Zdjęcie</string>
     <string name="back_button">Cofnij</string>
-    <string name="retry">PONÓW</string>
+    <string name="retry">Ponów</string>
     <string name="no_connection">Brak połączenia z internetem</string>
 </resources>
