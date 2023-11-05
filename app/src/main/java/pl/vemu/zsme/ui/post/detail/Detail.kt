@@ -12,7 +12,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.PhotoLibrary
 import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material3.*
@@ -28,8 +27,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.text.HtmlCompat
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import androidx.webkit.WebSettingsCompat
 import androidx.webkit.WebViewFeature
 import coil.compose.AsyncImage
@@ -40,7 +37,8 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.FULL_ROUTE_PLACEHOLDER
 import com.ramcosta.composedestinations.navargs.DestinationsNavTypeSerializer
 import com.ramcosta.composedestinations.navargs.NavTypeSerializer
-import com.ramcosta.composedestinations.navigation.navigate
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import pl.vemu.zsme.R
 import pl.vemu.zsme.data.model.DetailModel
 import pl.vemu.zsme.data.model.PostModel
@@ -62,9 +60,9 @@ import java.text.DateFormat
 @Composable
 fun Detail(
     postModel: PostModel,
-    navController: NavController,
+    navController: DestinationsNavigator,
 //    slug: String? = null, TODO
-    vm: DetailVM = hiltViewModel()
+    vm: DetailVM = hiltViewModel(),
 ) {
     vm.init(postModel)
     val ctx = LocalContext.current
@@ -101,7 +99,7 @@ class PostNavTypeSerializer : DestinationsNavTypeSerializer<PostModel> {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun AppBar(link: String, navController: NavController) {
+private fun AppBar(link: String, navController: DestinationsNavigator) {
     TopAppBar(
         title = { Text(stringResource(R.string.post)) },
         navigationIcon = {
@@ -109,7 +107,7 @@ private fun AppBar(link: String, navController: NavController) {
                 navController.popBackStack()
             }) {
                 Icon(
-                    imageVector = Icons.Rounded.ArrowBack,
+                    imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
                     contentDescription = stringResource(R.string.back_button),
                 )
             }
@@ -136,8 +134,8 @@ private fun AppBar(link: String, navController: NavController) {
 
 @Composable
 private fun DetailFloatingButton(
-    navController: NavController,
-    images: List<String>
+    navController: DestinationsNavigator,
+    images: List<String>,
 ) {
     ExtendedFloatingActionButton(
         text = { Text(stringResource(R.string.gallery)) },
@@ -228,5 +226,5 @@ private fun WebView(html: String) {
 @Preview
 @Composable
 private fun DetailFloatingButtonPreview() {
-    DetailFloatingButton(navController = rememberNavController(), images = emptyList())
+    DetailFloatingButton(navController = EmptyDestinationsNavigator, images = emptyList())
 }

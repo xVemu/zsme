@@ -8,19 +8,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.ramcosta.composedestinations.annotation.DeepLink
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.NavGraph
 import com.ramcosta.composedestinations.annotation.RootNavGraph
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import pl.vemu.zsme.R
+import pl.vemu.zsme.ui.components.SimpleLargeAppBar
 import pl.vemu.zsme.ui.components.SlideTransition
 
 @RootNavGraph
 @NavGraph
 annotation class MoreNavGraph(
-    val start: Boolean = false
+    val start: Boolean = false,
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -31,17 +32,14 @@ annotation class MoreNavGraph(
     style = SlideTransition::class
 )
 @Composable
-fun More(navController: NavController) {
+fun More(navController: DestinationsNavigator) {
     val context = LocalContext.current
-    Scaffold(topBar = {
-        LargeTopAppBar(title = { Text(stringResource(R.string.more)) })
-    }) { padding ->
+    Scaffold(topBar = { SimpleLargeAppBar(R.string.more) }) { padding ->
         Column(
             modifier = Modifier.padding(padding)
         ) {
             MoreItem.entries.forEach { item ->
-                ListItem(
-                    modifier = Modifier.clickable { item.onClick(context, navController) },
+                ListItem(modifier = Modifier.clickable { item.onClick(context, navController) },
                     headlineContent = {
                         Text(stringResource(item.text))
                     },
@@ -59,5 +57,5 @@ fun More(navController: NavController) {
 @Preview(showBackground = true, backgroundColor = 0xFFFFFF)
 @Composable
 private fun MorePreview() {
-    More(navController = rememberNavController())
+    More(EmptyDestinationsNavigator)
 }

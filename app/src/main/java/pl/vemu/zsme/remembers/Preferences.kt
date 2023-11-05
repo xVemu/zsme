@@ -65,7 +65,6 @@ class PreferenceState<T>(
     var value: T
         get() = _value
         set(value) {
-//            _value = value TODO needed?
             coroutineScope.launch {
                 dataStore.edit {
                     it[key] = value

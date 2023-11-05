@@ -5,14 +5,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import pl.vemu.zsme.R
 import pl.vemu.zsme.ui.components.SimpleSmallAppBar
 import pl.vemu.zsme.ui.components.SlideTransition
@@ -21,11 +22,14 @@ import soup.compose.photo.ExperimentalPhotoApi
 import soup.compose.photo.PhotoBox
 
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalPhotoApi::class)
+@OptIn(
+    ExperimentalFoundationApi::class, ExperimentalPhotoApi::class,
+    ExperimentalMaterial3Api::class
+)
 @PostNavGraph
 @Destination(route = "post/gallery", style = SlideTransition::class)
 @Composable
-fun Gallery(images: Array<String>, navController: NavController) {
+fun Gallery(images: Array<String>, navController: DestinationsNavigator) {
     Scaffold(
         topBar = {
             SimpleSmallAppBar(

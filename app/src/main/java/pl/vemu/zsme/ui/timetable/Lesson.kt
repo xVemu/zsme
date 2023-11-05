@@ -23,8 +23,8 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch
 import pl.vemu.zsme.R
 import pl.vemu.zsme.Result
@@ -40,7 +40,7 @@ import java.util.*
 fun Lesson(
     name: String,
     url: String,
-    navController: NavController,
+    navController: DestinationsNavigator,
     vm: LessonVM = hiltViewModel(),
 ) {
     LaunchedEffect(url) {

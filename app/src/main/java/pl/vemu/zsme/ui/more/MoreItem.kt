@@ -8,8 +8,7 @@ import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.ImportContacts
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.navigation.NavController
-import com.ramcosta.composedestinations.navigation.navigate
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import pl.vemu.zsme.DEFAULT_URL
 import pl.vemu.zsme.R
 import pl.vemu.zsme.launchCustomTabs
@@ -19,7 +18,7 @@ import pl.vemu.zsme.ui.destinations.SettingsDestination
 enum class MoreItem(
     val icon: ImageVector,
     @StringRes val text: Int,
-    val onClick: (context: Context, navController: NavController) -> Unit
+    val onClick: (context: Context, navController: DestinationsNavigator) -> Unit,
 ) {
     SETTINGS(
         Icons.Rounded.Settings,

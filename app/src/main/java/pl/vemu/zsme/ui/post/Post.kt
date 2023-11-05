@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
@@ -26,8 +26,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
@@ -37,7 +35,8 @@ import com.ramcosta.composedestinations.annotation.DeepLink
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.NavGraph
 import com.ramcosta.composedestinations.annotation.RootNavGraph
-import com.ramcosta.composedestinations.navigation.navigate
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import kotlinx.coroutines.launch
 import pl.vemu.zsme.DEFAULT_URL
 import pl.vemu.zsme.R
@@ -69,8 +68,8 @@ annotation class PostNavGraph(
 )
 @Composable
 fun Post(
-    navController: NavController,
-    vm: PostVM = hiltViewModel()
+    navController: DestinationsNavigator,
+    vm: PostVM = hiltViewModel(),
 ) {
     val pagingItems = vm.posts.collectAsLazyPagingItems()
     var isLoading by remember { mutableStateOf(false) }
@@ -170,7 +169,10 @@ private fun TopAppBar(
                     isSearching = false
                     onQueryChange(null)
                 }) {
-                    Icon(imageVector = Icons.Rounded.ArrowBack, contentDescription = "Close")
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+                        contentDescription = "Close"
+                    )
                 }
                 var query by remember { mutableStateOf("") }
                 val focusRequester = FocusRequester()
@@ -213,8 +215,8 @@ private fun LoadingItem() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun PostCard(
-    navController: NavController,
-    postModel: PostModel
+    navController: DestinationsNavigator,
+    postModel: PostModel,
 ) {
     ElevatedCard(
         modifier = Modifier
@@ -280,7 +282,7 @@ private fun MainText(
 @Preview
 @Composable
 private fun PostCardPreview(@PreviewParameter(PostPreviewProvider::class) postModel: PostModel) {
-    PostCard(navController = rememberNavController(), postModel = postModel)
+    PostCard(navController = EmptyDestinationsNavigator, postModel = postModel)
 }
 
 class PostPreviewProvider : PreviewParameterProvider<PostModel> {

@@ -1,7 +1,7 @@
 package pl.vemu.zsme.data.db
 
 import androidx.room.TypeConverter
-import java.util.*
+import java.util.Date
 
 class Converters {
     @TypeConverter

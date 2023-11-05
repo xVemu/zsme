@@ -22,7 +22,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringArrayResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -39,8 +38,8 @@ import pl.vemu.zsme.Result
 import pl.vemu.zsme.data.model.TimetableModel
 import pl.vemu.zsme.ui.components.Avatar
 import pl.vemu.zsme.ui.components.CustomError
-import pl.vemu.zsme.ui.components.ExpandTransition
 import pl.vemu.zsme.ui.components.PrimaryPagerTabIndicator
+import pl.vemu.zsme.ui.components.SimpleLargeAppBar
 import pl.vemu.zsme.ui.destinations.LessonDestination
 import java.util.Locale
 
@@ -53,8 +52,7 @@ annotation class TimetableNavGraph(
 @TimetableNavGraph(start = true)
 @Destination(
     route = "timetable/main",
-    deepLinks = [DeepLink(uriPattern = "zsme://timetable"), DeepLink(uriPattern = "$DEFAULT_URL/plan/")],
-    style = ExpandTransition::class
+    deepLinks = [DeepLink("zsme://timetable"), DeepLink("$DEFAULT_URL/plan/")],
 )
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
@@ -63,7 +61,7 @@ fun Timetable(
     vm: TimetableVM = hiltViewModel(),
 ) {
     Scaffold(topBar = {
-        LargeTopAppBar(title = { Text(stringResource(R.string.timetable)) })
+        SimpleLargeAppBar(R.string.timetable)
     }) { padding ->
         Column(
             Modifier

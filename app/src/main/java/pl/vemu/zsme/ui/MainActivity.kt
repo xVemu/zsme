@@ -50,7 +50,6 @@ import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.navigation.navigate
 import com.ramcosta.composedestinations.navigation.popBackStack
-import com.ramcosta.composedestinations.rememberNavHostEngine
 import com.yariksoffice.lingver.Lingver
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -115,7 +114,6 @@ class MainActivity : ComponentActivity() {
             DestinationsNavHost(
                 navGraph = NavGraphs.root,
                 navController = navController,
-                engine = rememberNavHostEngine(),
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding),
@@ -250,4 +248,7 @@ class MainActivity : ComponentActivity() {
 * timetable widget
 * zsme.png drawable to svg
 * onProvideAssistContent
+* deeplinks
+* formatter
+* animations
 * */

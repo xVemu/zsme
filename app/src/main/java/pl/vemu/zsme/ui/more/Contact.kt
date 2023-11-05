@@ -20,10 +20,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.ramcosta.composedestinations.annotation.DeepLink
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import pl.vemu.zsme.DEFAULT_URL
 import pl.vemu.zsme.R
 import pl.vemu.zsme.ui.components.SimpleMediumAppBar
@@ -37,7 +37,7 @@ import pl.vemu.zsme.ui.components.SlideTransition
     style = SlideTransition::class
 )
 @Composable
-fun Contact(navController: NavController) {
+fun Contact(navController: DestinationsNavigator) {
     val context = LocalContext.current
     val behavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
@@ -81,5 +81,5 @@ fun Contact(navController: NavController) {
 @Preview(showBackground = true, backgroundColor = 0xFFFFFF)
 @Composable
 fun ContactPreview() {
-    Contact(rememberNavController())
+    Contact(EmptyDestinationsNavigator)
 }

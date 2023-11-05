@@ -10,6 +10,7 @@ import pl.vemu.zsme.R
 import pl.vemu.zsme.Result
 import java.net.UnknownHostException
 
+/*TODO*/
 @Composable
 fun SnackbarHostState.ShowSnackBarWithError(
     result: Result<*>,
