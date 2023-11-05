@@ -251,4 +251,5 @@ class MainActivity : ComponentActivity() {
 * deeplinks
 * formatter
 * animations
+* text overload with resid
 * */

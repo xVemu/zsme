@@ -3,6 +3,7 @@ package pl.vemu.zsme.ui.more
 import android.content.Intent
 import android.os.Build
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.BrightnessMedium
@@ -17,11 +18,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
+import androidx.compose.ui.unit.dp
+import com.alorma.compose.settings.storage.base.rememberIntSettingState
 import com.alorma.compose.settings.ui.SettingsList
 import com.alorma.compose.settings.ui.SettingsMenuLink
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import pl.vemu.zsme.R
 import pl.vemu.zsme.remembers.Prefs
 import pl.vemu.zsme.remembers.rememberStringPreference
@@ -32,7 +35,7 @@ import pl.vemu.zsme.ui.components.SlideTransition
 @MoreNavGraph
 @Destination(route = "more/settings", style = SlideTransition::class)
 @Composable
-fun Settings(navController: NavController) {
+fun Settings(navController: DestinationsNavigator) {
     Scaffold(
         topBar = {
             SimpleMediumAppBar(
@@ -52,7 +55,7 @@ fun Settings(navController: NavController) {
 @Preview(showBackground = true, backgroundColor = 0xFFFFFF)
 @Composable
 fun SettingsPreview() {
-    Settings(rememberNavController())
+    Settings(EmptyDestinationsNavigator)
 }
 
 @Composable
@@ -65,6 +68,7 @@ private fun Theme() {
     )
 
     SettingsList(
+        modifier = Modifier.height(88.dp),
         title = { Text(stringResource(R.string.theme)) },
         icon = {
             Icon(
@@ -72,8 +76,8 @@ private fun Theme() {
                 contentDescription = stringResource(R.string.theme)
             )
         },
-        subtitle = { Text(items[theme]!!) },
         items = items.values.toList(),
+        state = rememberIntSettingState(defaultValue = items.keys.indexOf(theme))
     ) { index, _ ->
         theme = items.keys.elementAt(index)
     }
@@ -89,6 +93,7 @@ private fun Language() {
     )
 
     SettingsList(
+        modifier = Modifier.height(88.dp),
         title = { Text(stringResource(R.string.language)) },
         icon = {
             Icon(
@@ -98,6 +103,7 @@ private fun Language() {
         },
         subtitle = { Text(items[lang]!!) },
         items = items.values.toList(),
+        state = rememberIntSettingState(defaultValue = items.keys.indexOf(lang))
     ) { index, _ ->
         lang = items.keys.elementAt(index)
     }
@@ -108,6 +114,7 @@ private fun Notification() {
     val context = LocalContext.current
 
     SettingsMenuLink(
+        modifier = Modifier.height(88.dp),
         title = { Text(stringResource(R.string.notification)) },
         subtitle = {
             Text(
