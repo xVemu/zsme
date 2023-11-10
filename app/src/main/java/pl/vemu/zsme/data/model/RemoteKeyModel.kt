@@ -7,6 +7,5 @@ import androidx.room.PrimaryKey
 data class RemoteKeyModel(
     @PrimaryKey
     val id: Int,
-    val prevKey: Int?,
     val nextKey: Int?,
 )

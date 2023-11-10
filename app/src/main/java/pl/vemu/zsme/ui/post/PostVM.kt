@@ -6,6 +6,7 @@ import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import pl.vemu.zsme.data.repo.PostRepo
 import javax.inject.Inject
@@ -15,8 +16,13 @@ class PostVM @Inject constructor(
     postRepo: PostRepo,
 ) : ViewModel() {
 
-    val query: MutableStateFlow<String?> = MutableStateFlow(null)
+    private val _query: MutableStateFlow<String?> = MutableStateFlow(null)
+    val query = _query.asStateFlow()
+
+    fun setQuery(query: String?) {
+        this._query.value = query
+    }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val posts = query.flatMapLatest { postRepo.searchPosts(it) }.cachedIn(viewModelScope)
+    val posts = _query.flatMapLatest { postRepo.searchPosts(it) }.cachedIn(viewModelScope)
 }

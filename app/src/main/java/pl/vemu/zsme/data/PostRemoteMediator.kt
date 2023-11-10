@@ -32,25 +32,31 @@ class PostRemoteMediator constructor(
         loadType: LoadType, state: PagingState<Int, PostModel>
     ): MediatorResult {
         return try {
-            val page = when (val pageKeyData = getKeyPageData(loadType, state)) {
-                is MediatorResult.Success -> {
-                    return pageKeyData
+            val page = when (loadType) {
+                LoadType.REFRESH -> DEFAULT_PAGE
+                LoadType.APPEND -> {
+                    val remoteKey = state.getRemoteKeyForLastItem()
+                    val nextKey = remoteKey?.nextKey
+                    nextKey
+                        ?: return MediatorResult.Success(endOfPaginationReached = remoteKey != null)
                 }
-                else -> {
-                    pageKeyData as Int
+
+                LoadType.PREPEND -> {
+                    return MediatorResult.Success(endOfPaginationReached = true)
                 }
             }
+
             val response = zsmeService.searchPosts(query, page, state.config.pageSize)
-            val isEndOfList = response.isEmpty() or (response.size < state.config.pageSize)
+            val isEndOfList = response.isEmpty() || response.size < state.config.pageSize
+
             db.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    postDAO.clearAll()
+                    postDAO.deleteByQuery(query)
                     remoteKeyDAO.clearAll()
                 }
-                val prevKey = if (page == DEFAULT_PAGE) null else page - 1
                 val nextKey = if (isEndOfList) null else page + 1
                 val keys = response.map {
-                    RemoteKeyModel(it.id, prevKey, nextKey)
+                    RemoteKeyModel(it.id, nextKey)
                 }
                 remoteKeyDAO.insertAll(keys)
                 postDAO.insertAll(postMapper.mapFromEntityList(response))
@@ -63,40 +69,8 @@ class PostRemoteMediator constructor(
         }
     }
 
-    private suspend fun getKeyPageData(
-        loadType: LoadType,
-        state: PagingState<Int, PostModel>
-    ) =
-        when (loadType) {
-            LoadType.REFRESH -> {
-                val remoteKeys = state.getRemoteKeyClosestToCurrentPosition()
-                remoteKeys?.nextKey?.minus(1) ?: DEFAULT_PAGE
-            }
-            LoadType.APPEND -> {
-                val remoteKeys = state.getRemoteKeyForLastItem()
-                val nextKey = remoteKeys?.nextKey
-                nextKey ?: MediatorResult.Success(endOfPaginationReached = false)
-            }
-            LoadType.PREPEND -> {
-                val remoteKeys = state.getRemoteKeyForFirstItem()
-                val prevKey = remoteKeys?.prevKey
-                prevKey ?: MediatorResult.Success(endOfPaginationReached = false)
-            }
-        }
-
-    private suspend fun PagingState<Int, PostModel>.getRemoteKeyClosestToCurrentPosition(): RemoteKeyModel? =
-        anchorPosition?.let { position ->
-            closestItemToPosition(position)?.id?.let { postModelId ->
-                remoteKeyDAO.remoteKeyByQueryId(postModelId)
-            }
-        }
-
 
     private suspend fun PagingState<Int, PostModel>.getRemoteKeyForLastItem(): RemoteKeyModel? =
         lastItemOrNull()?.let { postModel -> remoteKeyDAO.remoteKeyByQueryId(postModel.id) }
-
-
-    private suspend fun PagingState<Int, PostModel>.getRemoteKeyForFirstItem(): RemoteKeyModel? =
-        firstItemOrNull()?.let { postModel -> remoteKeyDAO.remoteKeyByQueryId(postModel.id) }
 
 }

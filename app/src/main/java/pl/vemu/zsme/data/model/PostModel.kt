@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
 import java.util.Date
 
-@Entity(tableName = "Posts")
+@Entity(tableName = "posts")
 @Parcelize
 data class PostModel(
     @PrimaryKey

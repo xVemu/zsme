@@ -1,23 +1,26 @@
 package pl.vemu.zsme.ui.post
 
 import android.text.format.DateUtils
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -28,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import coil.transform.RoundedCornersTransformation
@@ -37,34 +41,30 @@ import com.ramcosta.composedestinations.annotation.NavGraph
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
-import kotlinx.coroutines.launch
 import pl.vemu.zsme.DEFAULT_URL
 import pl.vemu.zsme.R
 import pl.vemu.zsme.data.model.PostModel
 import pl.vemu.zsme.paddingBottom
 import pl.vemu.zsme.paddingTop
+import pl.vemu.zsme.ui.components.CustomError
 import pl.vemu.zsme.ui.components.HTMLText
-import pl.vemu.zsme.ui.components.SimpleSnackbar
-import pl.vemu.zsme.ui.components.SlideTransition
 import pl.vemu.zsme.ui.components.SmallText
 import pl.vemu.zsme.ui.destinations.DetailDestination
-import java.net.UnknownHostException
 import java.text.SimpleDateFormat
 import java.util.*
 
 @RootNavGraph(start = true)
 @NavGraph
 annotation class PostNavGraph(
-    val start: Boolean = false
+    val start: Boolean = false,
 )
 
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class)
 @PostNavGraph(start = true)
 @Destination(
     route = "post/main",
     deepLinks = [DeepLink(uriPattern = DEFAULT_URL)],
-    style = SlideTransition::class
 )
 @Composable
 fun Post(
@@ -72,74 +72,145 @@ fun Post(
     vm: PostVM = hiltViewModel(),
 ) {
     val pagingItems = vm.posts.collectAsLazyPagingItems()
-    var isLoading by remember { mutableStateOf(false) }
-    pagingItems.apply {
-        isLoading = when {
-            loadState.refresh is LoadState.Loading -> true
-            loadState.append is LoadState.Loading -> false
-            else -> false
-        }
-    }
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     Scaffold(topBar = {
-        TopAppBar(scrollBehavior) {
-            vm.query.value = it
-        }
+        FloatingSearchBar()
     }) { padding ->
+        val refreshing by remember {
+            derivedStateOf {
+                pagingItems.loadState.refresh is LoadState.Loading
+            }
+        }
 
-        val pullRefreshState = rememberPullRefreshState(isLoading, { pagingItems.refresh() })
+        val initial by remember {
+            derivedStateOf {
+                pagingItems.itemCount <= 0
+            }
+        }
 
-        Box(
-            Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .nestedScroll(scrollBehavior.nestedScrollConnection)
-                .pullRefresh(pullRefreshState)
-        ) {
-            val snackbarHostState = remember { SnackbarHostState() }
-            val coroutineScope = rememberCoroutineScope()
-            val errorMsg = stringResource(R.string.error)
-            val retryMsg = stringResource(R.string.retry)
-            val noConnectionMsg = stringResource(R.string.no_connection)
-            LazyColumn(
-                Modifier
-                    .fillMaxSize()
-                    .padding(padding)
-                    .nestedScroll(scrollBehavior.nestedScrollConnection)
-                    .pullRefresh(pullRefreshState)
-            ) {
-                items(
-                    count = pagingItems.itemCount,
-                    key = { index -> pagingItems[index]?.id ?: index }
-                ) { index ->
-                    PostCard(navController = navController, postModel = pagingItems[index]!!)
-                }
+        val pullRefreshState = rememberPullRefreshState(
+            refreshing = refreshing,
+            onRefresh = { pagingItems.refresh() },
+        )
 
-                pagingItems.apply {
-                    when {
-                        loadState.append is LoadState.Loading -> {
-                            item { LoadingItem() }
+        if (initial)
+            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                if (refreshing)
+                    CircularProgressIndicator()
+                else if (pagingItems.loadState.refresh is LoadState.Error)
+                    CustomError {
+                        pagingItems.retry()
+                    }
+            }
+        else
+            Box(Modifier.pullRefresh(pullRefreshState)) {
+
+                LazyColumn(Modifier.fillMaxSize(), contentPadding = padding) {
+                    items(pagingItems.itemCount, key = pagingItems.itemKey { it.id }) { idx ->
+                        pagingItems[idx]?.let { post ->
+                            PostCard(navController, post)
                         }
+                    }
+                    item {
+                        Box(
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            when (pagingItems.loadState.append) {
+                                is LoadState.Loading -> CircularProgressIndicator()
 
-                        loadState.refresh is LoadState.Error || loadState.append is LoadState.Error -> {
-                            val error =
-                                (loadState.refresh as? LoadState.Error)?.error
-                                    ?: (loadState.append as LoadState.Error).error
-                            coroutineScope.launch {
-                                val result = snackbarHostState.showSnackbar(
-                                    message = if (error is UnknownHostException) noConnectionMsg else errorMsg,
-                                    actionLabel = retryMsg,
-                                    duration = SnackbarDuration.Indefinite
-                                )
-                                if (result == SnackbarResult.ActionPerformed)
-                                    pagingItems.retry()
+                                is LoadState.Error -> Row(
+                                    modifier = Modifier
+                                        .clickable { pagingItems.retry() }
+                                        .paddingBottom(8.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.Center
+                                ) {
+                                    Icon(Icons.Rounded.Refresh, contentDescription = "Refresh")
+                                    Spacer(Modifier.width(4.dp))
+                                    Text("Wystąpił błąd. Spróbuj ponownie klikając")
+                                }
+
+                                else -> {}
                             }
                         }
                     }
                 }
+
+                if (pagingItems.loadState.refresh is LoadState.Error)
+                    Snackbar(
+                        modifier = Modifier
+                            .padding(padding)
+                            .align(Alignment.BottomCenter),
+                        snackbarData = object : SnackbarData {
+                            override val visuals = object : SnackbarVisuals {
+                                override val actionLabel = stringResource(R.string.retry)
+                                override val duration = SnackbarDuration.Indefinite
+                                override val message = stringResource(R.string.error)
+                                override val withDismissAction = false
+                            }
+
+                            override fun dismiss() = Unit
+
+                            override fun performAction() {
+                                pagingItems.retry()
+                            }
+
+                        }
+                    )
+
+                PullRefreshIndicator(
+                    refreshing = refreshing,
+                    state = pullRefreshState,
+                    backgroundColor = MaterialTheme.colorScheme.background,
+                    contentColor = contentColorFor(MaterialTheme.colorScheme.background),
+                    modifier = Modifier
+                        .padding(padding)
+                        .align(Alignment.TopCenter),
+                )
             }
-            SimpleSnackbar(snackbarHostState)
-            PullRefreshIndicator(isLoading, pullRefreshState, Modifier.align(Alignment.TopCenter))
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun FloatingSearchBar(vm: PostVM = hiltViewModel()) {
+    var text by rememberSaveable { mutableStateOf("") }
+    var active by rememberSaveable { mutableStateOf(false) }
+
+    val query by vm.query.collectAsState()
+
+    Box(Modifier.fillMaxWidth()) {
+        DockedSearchBar(
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .padding(top = 8.dp),
+            query = query ?: "",
+            onQueryChange = { vm.setQuery(it) },
+            onSearch = { active = false },
+            active = active,
+            onActiveChange = {
+                active = it
+            },
+            placeholder = { Text("Znajdź post") },
+            leadingIcon = { Icon(Icons.Rounded.Search, contentDescription = "Znajdź post") },
+        ) {
+            repeat(4) { idx ->
+                val resultText = "Suggestion $idx"
+                ListItem(
+                    headlineContent = { Text(resultText) },
+                    supportingContent = { Text("Additional info") },
+                    leadingContent = { Icon(Icons.Filled.Star, contentDescription = null) },
+                    modifier = Modifier
+                        .clickable {
+                            text = resultText
+                            active = false
+                        }
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 4.dp)
+                )
+            }
         }
     }
 }
@@ -148,7 +219,7 @@ fun Post(
 @Composable
 private fun TopAppBar(
     scrollBehavior: TopAppBarScrollBehavior,
-    onQueryChange: (query: String?) -> Unit
+    onQueryChange: (query: String?) -> Unit,
 ) {
     CenterAlignedTopAppBar(
         title = { Text(text = stringResource(R.string.post)) },
@@ -197,18 +268,6 @@ private fun TopAppBar(
                 }
             }
         }
-    )
-}
-
-@Preview
-@Composable
-private fun LoadingItem() {
-    CircularProgressIndicator(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-            .wrapContentWidth(Alignment.CenterHorizontally),
-        color = MaterialTheme.colorScheme.primary
     )
 }
 
@@ -263,7 +322,7 @@ private fun PostCard(
 
 @Composable
 private fun MainText(
-    postModel: PostModel
+    postModel: PostModel,
 ) {
     Column(Modifier.padding(8.dp)) {
         HTMLText(

@@ -1,15 +1,14 @@
 package pl.vemu.zsme.data.db
 
 import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Upsert
 import pl.vemu.zsme.data.model.RemoteKeyModel
 
 @Dao
 interface RemoteKeyDAO {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Upsert
     suspend fun insertAll(remoteKeys: List<RemoteKeyModel>)
 
     @Query("SELECT * FROM remote_keys WHERE id = :id")

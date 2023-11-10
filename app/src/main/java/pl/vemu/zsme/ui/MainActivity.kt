@@ -244,7 +244,6 @@ class MainActivity : ComponentActivity() {
 }
 
 /*TODO
-* Scrollowanie przesuwa się w pewnym momencie
 * timetable widget
 * zsme.png drawable to svg
 * onProvideAssistContent
@@ -252,4 +251,5 @@ class MainActivity : ComponentActivity() {
 * formatter
 * animations
 * text overload with resid
+* replace not null with let
 * */
