@@ -1,12 +1,10 @@
 package pl.vemu.zsme.ui.post
 
-import android.text.format.DateUtils
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material.icons.rounded.Search
@@ -18,15 +16,17 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
@@ -35,6 +35,7 @@ import androidx.paging.compose.itemKey
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import coil.transform.RoundedCornersTransformation
+import com.ireward.htmlcompose.HtmlText
 import com.ramcosta.composedestinations.annotation.DeepLink
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.NavGraph
@@ -46,10 +47,12 @@ import pl.vemu.zsme.R
 import pl.vemu.zsme.data.model.PostModel
 import pl.vemu.zsme.paddingBottom
 import pl.vemu.zsme.paddingTop
+import pl.vemu.zsme.plus
+import pl.vemu.zsme.remembers.rememberFloatingTopBar
 import pl.vemu.zsme.ui.components.CustomError
-import pl.vemu.zsme.ui.components.HTMLText
-import pl.vemu.zsme.ui.components.SmallText
 import pl.vemu.zsme.ui.destinations.DetailDestination
+import pl.vemu.zsme.ui.theme.Elevation
+import pl.vemu.zsme.util.Formatter
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -72,9 +75,11 @@ fun Post(
     vm: PostVM = hiltViewModel(),
 ) {
     val pagingItems = vm.posts.collectAsLazyPagingItems()
+    val nestedScrolling = rememberFloatingTopBar(toolbarHeight = 64.dp)
+
     Scaffold(topBar = {
-        FloatingSearchBar()
-    }) { padding ->
+        FloatingSearchBar(nestedScrolling.offset)
+    }, modifier = Modifier.nestedScroll(nestedScrolling.nestedScrollConnection)) { padding ->
         val refreshing by remember {
             derivedStateOf {
                 pagingItems.loadState.refresh is LoadState.Loading
@@ -92,102 +97,100 @@ fun Post(
             onRefresh = { pagingItems.refresh() },
         )
 
-        if (initial)
-            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                if (refreshing)
-                    CircularProgressIndicator()
-                else if (pagingItems.loadState.refresh is LoadState.Error)
-                    CustomError {
-                        pagingItems.retry()
-                    }
+        if (initial) Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            if (refreshing) CircularProgressIndicator()
+            else if (pagingItems.loadState.refresh is LoadState.Error) CustomError {
+                pagingItems.retry()
             }
-        else
-            Box(Modifier.pullRefresh(pullRefreshState)) {
+        }
+        else Box(Modifier.pullRefresh(pullRefreshState)) {
 
-                LazyColumn(Modifier.fillMaxSize(), contentPadding = padding) {
-                    items(pagingItems.itemCount, key = pagingItems.itemKey { it.id }) { idx ->
-                        pagingItems[idx]?.let { post ->
-                            PostCard(navController, post)
-                        }
+            LazyColumn(Modifier.fillMaxSize(), contentPadding = padding.plus(top = 8.dp)) {
+                items(pagingItems.itemCount, key = pagingItems.itemKey { it.id }) { idx ->
+                    pagingItems[idx]?.let { post ->
+                        PostCard(navController, post)
                     }
-                    item {
-                        Box(
-                            Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            when (pagingItems.loadState.append) {
-                                is LoadState.Loading -> CircularProgressIndicator()
+                }
+                item {
+                    Box(
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        when (pagingItems.loadState.append) {
+                            is LoadState.Loading -> CircularProgressIndicator()
 
-                                is LoadState.Error -> Row(
-                                    modifier = Modifier
-                                        .clickable { pagingItems.retry() }
-                                        .paddingBottom(8.dp),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.Center
-                                ) {
-                                    Icon(Icons.Rounded.Refresh, contentDescription = "Refresh")
-                                    Spacer(Modifier.width(4.dp))
-                                    Text("Wystąpił błąd. Spróbuj ponownie klikając")
-                                }
-
-                                else -> {}
+                            is LoadState.Error -> Row(modifier = Modifier
+                                .clickable { pagingItems.retry() }
+                                .paddingBottom(8.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center) {
+                                Icon(Icons.Rounded.Refresh, contentDescription = "Refresh")
+                                Spacer(Modifier.width(4.dp))
+                                Text("Wystąpił błąd. Spróbuj ponownie klikając")
                             }
+
+                            else -> {}
                         }
                     }
                 }
-
-                if (pagingItems.loadState.refresh is LoadState.Error)
-                    Snackbar(
-                        modifier = Modifier
-                            .padding(padding)
-                            .align(Alignment.BottomCenter),
-                        snackbarData = object : SnackbarData {
-                            override val visuals = object : SnackbarVisuals {
-                                override val actionLabel = stringResource(R.string.retry)
-                                override val duration = SnackbarDuration.Indefinite
-                                override val message = stringResource(R.string.error)
-                                override val withDismissAction = false
-                            }
-
-                            override fun dismiss() = Unit
-
-                            override fun performAction() {
-                                pagingItems.retry()
-                            }
-
-                        }
-                    )
-
-                PullRefreshIndicator(
-                    refreshing = refreshing,
-                    state = pullRefreshState,
-                    backgroundColor = MaterialTheme.colorScheme.background,
-                    contentColor = contentColorFor(MaterialTheme.colorScheme.background),
-                    modifier = Modifier
-                        .padding(padding)
-                        .align(Alignment.TopCenter),
-                )
             }
+
+            if (pagingItems.loadState.refresh is LoadState.Error) Snackbar(modifier = Modifier
+                .padding(
+                    padding
+                )
+                .align(Alignment.BottomCenter),
+                snackbarData = object : SnackbarData {
+                    override val visuals = object : SnackbarVisuals {
+                        override val actionLabel = stringResource(R.string.retry)
+                        override val duration = SnackbarDuration.Indefinite
+                        override val message = stringResource(R.string.error)
+                        override val withDismissAction = false
+                    }
+
+                    override fun dismiss() = Unit
+
+                    override fun performAction() {
+                        pagingItems.retry()
+                    }
+
+                })
+
+            PullRefreshIndicator(
+                refreshing = refreshing,
+                state = pullRefreshState,
+                backgroundColor = MaterialTheme.colorScheme.background,
+                contentColor = contentColorFor(MaterialTheme.colorScheme.background),
+                modifier = Modifier
+                    .padding(padding)
+                    .align(Alignment.TopCenter),
+            )
+        }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun FloatingSearchBar(vm: PostVM = hiltViewModel()) {
+private fun FloatingSearchBar(offset: Density.() -> IntOffset, vm: PostVM = hiltViewModel()) {
     var text by rememberSaveable { mutableStateOf("") }
     var active by rememberSaveable { mutableStateOf(false) }
 
     val query by vm.query.collectAsState()
 
-    Box(Modifier.fillMaxWidth()) {
+    Box(
+        Modifier
+            .fillMaxWidth()
+            .offset(offset)
+    ) {
         DockedSearchBar(
             modifier = Modifier
                 .align(Alignment.TopCenter)
                 .padding(top = 8.dp),
             query = query ?: "",
             onQueryChange = { vm.setQuery(it) },
+            shadowElevation = Elevation.Level3,
             onSearch = { active = false },
             active = active,
             onActiveChange = {
@@ -198,8 +201,7 @@ private fun FloatingSearchBar(vm: PostVM = hiltViewModel()) {
         ) {
             repeat(4) { idx ->
                 val resultText = "Suggestion $idx"
-                ListItem(
-                    headlineContent = { Text(resultText) },
+                ListItem(headlineContent = { Text(resultText) },
                     supportingContent = { Text("Additional info") },
                     leadingContent = { Icon(Icons.Filled.Star, contentDescription = null) },
                     modifier = Modifier
@@ -208,67 +210,10 @@ private fun FloatingSearchBar(vm: PostVM = hiltViewModel()) {
                             active = false
                         }
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 4.dp)
-                )
+                        .padding(horizontal = 16.dp, vertical = 4.dp))
             }
         }
     }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun TopAppBar(
-    scrollBehavior: TopAppBarScrollBehavior,
-    onQueryChange: (query: String?) -> Unit,
-) {
-    CenterAlignedTopAppBar(
-        title = { Text(text = stringResource(R.string.post)) },
-        scrollBehavior = scrollBehavior,
-        actions = {
-            var isSearching by remember { mutableStateOf(false) }
-            if (!isSearching)
-                IconButton(onClick = {
-                    isSearching = true
-                }) {
-                    Icon(
-                        imageVector = Icons.Rounded.Search,
-                        contentDescription = stringResource(R.string.search)
-                    )
-                }
-            else {
-                IconButton(onClick = {
-                    isSearching = false
-                    onQueryChange(null)
-                }) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-                        contentDescription = "Close"
-                    )
-                }
-                var query by remember { mutableStateOf("") }
-                val focusRequester = FocusRequester()
-                TextField(
-                    value = query,
-                    onValueChange = {
-                        query = it
-                        onQueryChange(it)
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .focusRequester(focusRequester),
-                    singleLine = true,
-                    placeholder = { Text(stringResource(R.string.search)) },
-                    colors = TextFieldDefaults.colors(
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                    )
-                )
-                LaunchedEffect("RequestFocus") {
-                    focusRequester.requestFocus()
-                }
-            }
-        }
-    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -277,64 +222,49 @@ private fun PostCard(
     navController: DestinationsNavigator,
     postModel: PostModel,
 ) {
-    ElevatedCard(
-        modifier = Modifier
-            .heightIn(150.dp)
-            .padding(8.dp),
-        onClick = {
-            navController.navigate(DetailDestination(postModel))
-        }
-    ) {
+    Card(modifier = Modifier
+        .heightIn(150.dp)
+        .padding(8.dp), onClick = {
+        navController.navigate(DetailDestination(postModel))
+    }) {
         Row {
             Column(Modifier.padding(8.dp)) {
                 AsyncImage(
-                    model = ImageRequest.Builder(context = LocalContext.current)
-                        .data(postModel.thumbnail ?: R.drawable.zsme)
-                        .crossfade(true)
-                        .transformations(RoundedCornersTransformation(radius = 12f))
-                        .build(),
-//                    placeholder = painterResource(R.drawable.zsme), TODO
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(postModel.thumbnail ?: R.drawable.zsme).crossfade(true)
+                        .transformations(RoundedCornersTransformation(12f)).build(),
+                    placeholder = painterResource(R.drawable.zsme),
                     contentDescription = stringResource(R.string.thumbnail),
-                    modifier = Modifier
-                        .size(108.dp),
-                    contentScale = ContentScale.Crop
+                    modifier = Modifier.size(108.dp),
+                    contentScale = ContentScale.Crop,
                 )
                 Column(
                     Modifier
                         .width(108.dp)
-                        .paddingTop(24.dp)
+                        .paddingTop(8.dp)
                 ) {
-                    SmallText(
-                        DateUtils.getRelativeTimeSpanString(
-                            postModel.date.time,
-                            Date().time,
-                            DateUtils.DAY_IN_MILLIS
-                        ).toString()
-                    )
-                    SmallText(postModel.author)
-                    SmallText(postModel.category)
+                    ProvideTextStyle(MaterialTheme.typography.bodyMedium) {
+                        Text(Formatter.relativeDate(postModel.date))
+                        Text(postModel.author)
+                        Text(postModel.category)
+                    }
                 }
             }
-            MainText(postModel)
-        }
-    }
-}
+            Column(Modifier.padding(8.dp)) {
+                HtmlText(
+                    text = postModel.title,
+                    style = MaterialTheme.typography.labelLarge.copy(
+                        color = MaterialTheme.colorScheme.primary,
+                        textAlign = TextAlign.Center
+                    ),
+                    modifier = Modifier.fillMaxWidth(),
+                )
+                HtmlText(
+                    text = postModel.excerpt, modifier = Modifier.paddingBottom(8.dp)
+                )
+            }
 
-@Composable
-private fun MainText(
-    postModel: PostModel,
-) {
-    Column(Modifier.padding(8.dp)) {
-        HTMLText(
-            html = postModel.title,
-            centered = true,
-            color = MaterialTheme.colorScheme.primary,
-            textStyle = MaterialTheme.typography.labelLarge
-        )
-        HTMLText(
-            html = postModel.excerpt,
-            modifier = Modifier.paddingBottom(8.dp)
-        )
+        }
     }
 }
 
@@ -360,8 +290,7 @@ class PostPreviewProvider : PreviewParameterProvider<PostModel> {
             thumbnail = "https://zsme.tarnow.pl/wp/wp-content/uploads/2021/06/cscs-300x300.jpg",
             fullImage = "https://zsme.tarnow.pl/wp/wp-content/uploads/2021/06/cscs.jpg",
             category = "Konkursy i turnieje"
-        ),
-        PostModel(
+        ), PostModel(
             id = 27493,
             date = dateFormat.parse("2021-12-12T10:18:04")!!,
             link = "https://zsme.tarnow.pl/wp/mosty-zamiast-murow/",
@@ -372,8 +301,7 @@ class PostPreviewProvider : PreviewParameterProvider<PostModel> {
             thumbnail = "https://zsme.tarnow.pl/wp/wp-content/uploads/2021/12/la-300x290.jpg",
             fullImage = "https://zsme.tarnow.pl/wp/wp-content/uploads/2021/12/la.jpg",
             category = "Wydarzenia kulturalne"
-        ),
-        PostModel(
+        ), PostModel(
             id = 27490,
             date = dateFormat.parse("2021-12-06T16:13:55")!!,
             link = "https://zsme.tarnow.pl/wp/turniej-szachowy-2/",
@@ -384,8 +312,7 @@ class PostPreviewProvider : PreviewParameterProvider<PostModel> {
             thumbnail = "https://zsme.tarnow.pl/wp/wp-content/uploads/2019/05/thumb-300x300.jpg",
             fullImage = "https://zsme.tarnow.pl/wp/wp-content/uploads/2019/05/thumb.jpg",
             category = "Konkursy i turnieje"
-        ),
-        PostModel(
+        ), PostModel(
             id = 27451,
             date = dateFormat.parse("2021-11-07T12:49:33")!!,
             link = "https://zsme.tarnow.pl/wp/przygotowania-do-kiermaszu-bozonarodzeniowego/",

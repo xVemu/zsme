@@ -172,4 +172,5 @@ dependencies {
     implementation("io.github.fornewid:photo-compose:1.0.1")
     implementation("com.github.YarikSOffice:lingver:1.3.0")
     debugImplementation("com.squareup.leakcanary:leakcanary-android:2.12")
+    implementation("com.github.viluahealthcare:compose-html:1.0.3")
 }

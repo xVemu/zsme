@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -33,6 +34,7 @@ import androidx.webkit.WebViewFeature
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.google.gson.Gson
+import com.ireward.htmlcompose.HtmlText
 import com.ramcosta.composedestinations.annotation.DeepLink
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.FULL_ROUTE_PLACEHOLDER
@@ -44,7 +46,6 @@ import pl.vemu.zsme.R
 import pl.vemu.zsme.data.model.DetailModel
 import pl.vemu.zsme.data.model.PostModel
 import pl.vemu.zsme.isNetworkAvailable
-import pl.vemu.zsme.ui.components.HTMLText
 import pl.vemu.zsme.ui.components.SlideTransition
 import pl.vemu.zsme.ui.destinations.GalleryDestination
 import pl.vemu.zsme.ui.post.PostNavGraph
@@ -172,11 +173,13 @@ private fun DetailItem(
                 .fillMaxWidth()
                 .aspectRatio(16 / 9f)
         )
-        HTMLText(
-            html = postModel.title,
+        HtmlText(
+            text = postModel.title,
             modifier = Modifier.padding(8.dp),
-            color = MaterialTheme.colorScheme.primary,
-            textStyle = MaterialTheme.typography.titleLarge
+            style = MaterialTheme.typography.labelLarge.copy(
+                color = MaterialTheme.colorScheme.primary,
+                textAlign = TextAlign.Center
+            ),
         )
         Text(
             text = "${postModel.author} • ${

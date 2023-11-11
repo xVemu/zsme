@@ -27,6 +27,7 @@ class LessonRepo @Inject constructor() {
             }
             response {
                 htmlDocument {
+                    relaxed = true
                     findFirst(".tabela > tbody") {
                         val lessons = List(5) { mutableListOf<LessonModel>() }
 
@@ -40,20 +41,20 @@ class LessonRepo @Inject constructor() {
                             row.children.drop(2).forEachIndexed { i, lesson ->
                                 if (lesson.text.isEmpty()) return@forEachIndexed
 
-                                try {
-                                    val multiple = lesson.findAll("[style=font-size:85%]")
-                                    multiple.forEachIndexed { singleIndex, singleLesson ->
-                                        lessons[i].add(
-                                            singleLesson.buildLesson(
-                                                index.takeIf { singleIndex == 0 },
-                                                timeStart,
-                                                timeFinish
-                                            )
-                                        )
-                                    }
+                                val list = try {
+                                    lesson.findAll("[style=font-size:85%]")
                                 } catch (e: ElementNotFoundException) {
-                                    lessons[i].add(lesson.buildLesson(index, timeStart, timeFinish))
-                                    return@forEachIndexed
+                                    listOf(lesson)
+                                }
+
+                                list.forEachIndexed { singleIndex, singleLesson ->
+                                    lessons[i].add(
+                                        singleLesson.buildLesson(
+                                            index.takeIf { singleIndex == 0 },
+                                            timeStart,
+                                            timeFinish
+                                        )
+                                    )
                                 }
                             }
                         }

@@ -4,11 +4,15 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ColorScheme
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import kotlin.math.ln
@@ -44,3 +48,11 @@ fun Context.launchCustomTabs(url: String) {
 }
 
 fun String.capitalize() = lowercase().replaceFirstChar { it.uppercase() }
+
+fun PaddingValues.plus(top: Dp = 0.dp, left: Dp = 0.dp, right: Dp = 0.dp, bottom: Dp = 0.dp) =
+    PaddingValues(
+        top = calculateTopPadding() + top,
+        start = calculateStartPadding(LayoutDirection.Ltr) + left,
+        end = calculateEndPadding(LayoutDirection.Ltr) + right,
+        bottom = calculateBottomPadding() + bottom,
+    )
