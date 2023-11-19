@@ -35,7 +35,6 @@ import androidx.paging.compose.itemKey
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import coil.transform.RoundedCornersTransformation
-import com.ireward.htmlcompose.HtmlText
 import com.ramcosta.composedestinations.annotation.DeepLink
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.NavGraph
@@ -50,6 +49,7 @@ import pl.vemu.zsme.paddingTop
 import pl.vemu.zsme.plus
 import pl.vemu.zsme.remembers.rememberFloatingTopBar
 import pl.vemu.zsme.ui.components.CustomError
+import pl.vemu.zsme.ui.components.Html
 import pl.vemu.zsme.ui.destinations.DetailDestination
 import pl.vemu.zsme.ui.theme.Elevation
 import pl.vemu.zsme.util.Formatter
@@ -179,7 +179,7 @@ private fun FloatingSearchBar(offset: Density.() -> IntOffset, vm: PostVM = hilt
 
     val query by vm.query.collectAsState()
 
-    Box(
+    Box( /*TODO add shadow only when floating, translations for whole posts, save last 5 to DB, place inside scaffold, position pullrefresh, dark theme*/
         Modifier
             .fillMaxWidth()
             .offset(offset)
@@ -232,6 +232,7 @@ private fun PostCard(
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
                         .data(postModel.thumbnail ?: R.drawable.zsme).crossfade(true)
+                        .diskCacheKey(postModel.id.toString())
                         .transformations(RoundedCornersTransformation(12f)).build(),
                     placeholder = painterResource(R.drawable.zsme),
                     contentDescription = stringResource(R.string.thumbnail),
@@ -251,16 +252,18 @@ private fun PostCard(
                 }
             }
             Column(Modifier.padding(8.dp)) {
-                HtmlText(
-                    text = postModel.title,
+                Html(
+                    html = postModel.title,
                     style = MaterialTheme.typography.labelLarge.copy(
                         color = MaterialTheme.colorScheme.primary,
                         textAlign = TextAlign.Center
                     ),
                     modifier = Modifier.fillMaxWidth(),
                 )
-                HtmlText(
-                    text = postModel.excerpt, modifier = Modifier.paddingBottom(8.dp)
+                Html(
+                    html = postModel.excerpt,
+                    modifier = Modifier.paddingBottom(8.dp),
+                    style = MaterialTheme.typography.bodyMedium
                 )
             }
 

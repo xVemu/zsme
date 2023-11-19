@@ -248,8 +248,9 @@ class MainActivity : ComponentActivity() {
 * zsme.png drawable to svg
 * onProvideAssistContent
 * deeplinks
-* formatter
+* formatter kotlin
 * animations
 * text overload with resid
 * replace not null with let
+* webview table full width
 * */

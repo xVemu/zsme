@@ -1,5 +1,6 @@
 package pl.vemu.zsme.data.service
 
+import pl.vemu.zsme.data.model.DetailImage
 import pl.vemu.zsme.data.model.PostEntity
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -13,4 +14,9 @@ interface ZSMEService {
         @Query("categories") categories: List<Int>? = null,
         @Query("author") author: List<Int>? = null,
     ): List<PostEntity>
+
+    @GET("media")
+    suspend fun getPhotos(
+        @Query("parent") id: Int,
+    ): List<DetailImage>
 }

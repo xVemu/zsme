@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName
 import java.util.*
 
 @Keep
+/*TODO needed?*/
 data class PostEntity(
     val id: Int,
     val date: Date,

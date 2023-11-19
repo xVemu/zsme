@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import pl.vemu.zsme.Result
+import pl.vemu.zsme.ResultList
 import pl.vemu.zsme.data.model.LessonModel
 import pl.vemu.zsme.data.repo.LessonRepo
 import javax.inject.Inject
@@ -17,7 +18,7 @@ class LessonVM @Inject constructor(
     private val lessonRepo: LessonRepo
 ) : ViewModel() {
     private val _list =
-        MutableStateFlow<Result<List<List<LessonModel>>>>(Result.Loading)
+        MutableStateFlow<ResultList<List<LessonModel>>>(Result.Loading)
     val list = _list.asStateFlow()
 
     private lateinit var url: String

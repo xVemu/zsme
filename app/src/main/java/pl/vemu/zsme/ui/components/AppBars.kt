@@ -3,6 +3,7 @@
 package pl.vemu.zsme.ui.components
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -26,8 +27,9 @@ fun SimpleSmallAppBar(
     @StringRes title: Int,
     navController: DestinationsNavigator? = null,
     scrollBehavior: TopAppBarScrollBehavior? = null,
+    actions: @Composable RowScope.() -> Unit = {},
 ) {
-    SimpleSmallAppBar(stringResource(title), navController, scrollBehavior)
+    SimpleSmallAppBar(stringResource(title), navController, scrollBehavior, actions)
 }
 
 /**
@@ -38,8 +40,9 @@ fun SimpleMediumAppBar(
     @StringRes title: Int,
     navController: DestinationsNavigator? = null,
     scrollBehavior: TopAppBarScrollBehavior? = null,
+    actions: @Composable RowScope.() -> Unit = {},
 ) {
-    SimpleMediumAppBar(stringResource(title), navController, scrollBehavior)
+    SimpleMediumAppBar(stringResource(title), navController, scrollBehavior, actions)
 }
 
 /**
@@ -62,11 +65,13 @@ fun SimpleSmallAppBar(
     title: String,
     navController: DestinationsNavigator? = null,
     scrollBehavior: TopAppBarScrollBehavior? = null,
+    actions: @Composable RowScope.() -> Unit = {},
 ) {
     TopAppBar(
         title = { Text(title) },
         navigationIcon = { AutoBackButton(navController) },
         scrollBehavior = scrollBehavior,
+        actions = actions
     )
 }
 
@@ -78,11 +83,13 @@ fun SimpleMediumAppBar(
     title: String,
     navController: DestinationsNavigator? = null,
     scrollBehavior: TopAppBarScrollBehavior? = null,
+    actions: @Composable RowScope.() -> Unit = {},
 ) {
     MediumTopAppBar(
         title = { Text(title) },
         navigationIcon = { AutoBackButton(navController) },
         scrollBehavior = scrollBehavior,
+        actions = actions
     )
 }
 

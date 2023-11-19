@@ -1,6 +1,9 @@
 package pl.vemu.zsme.data.model
 
-data class DetailModel(
-    val html: String,
-    val images: List<String>? = null,
-)
+import com.google.gson.annotations.SerializedName
+
+typealias HtmlString = String
+typealias ImageUrl = String
+
+@JvmInline
+value class DetailImage(@SerializedName("source_url") val url: String)

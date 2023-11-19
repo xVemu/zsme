@@ -94,5 +94,6 @@ fun MainTheme(
     )
 }
 
-@Composable
-fun MaterialTheme.isDark(): Boolean = colorScheme.surface.luminance() < .5
+val MaterialTheme.isDark
+    @Composable
+    get() = colorScheme.surface.luminance() < .5

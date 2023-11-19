@@ -37,7 +37,18 @@
             </intent-filter>
         </activity>
 
-        <!--Allows to use HiltWorker-->
+        <!--Photos in share in rich content.-->
+        <provider
+                android:name="androidx.core.content.FileProvider"
+                android:authorities="pl.vemu.zsme.fileprovider"
+                android:grantUriPermissions="true"
+                android:exported="false">
+            <meta-data
+                    android:name="android.support.FILE_PROVIDER_PATHS"
+                    android:resource="@xml/filepaths" />
+        </provider>
+
+        <!--Allows to use HiltWorker.-->
         <meta-data
                 android:name="androidx.work.WorkManagerInitializer"
                 android:value="androidx.startup"

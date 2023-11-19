@@ -37,11 +37,13 @@ fun Context.isNetworkAvailable() =
 
 const val DEFAULT_URL = "https://zsme.tarnow.pl"
 
-sealed class Result<out T> {
-    class Success<out T>(val value: T) : Result<T>()
-    class Failure(val error: Exception) : Result<Nothing>()
-    data object Loading : Result<Nothing>()
+sealed interface Result<out T> {
+    class Success<out T>(val value: T) : Result<T>
+    class Failure(val error: Exception) : Result<Nothing>
+    data object Loading : Result<Nothing>
 }
+
+typealias ResultList<T> = Result<List<T>>
 
 fun Context.launchCustomTabs(url: String) {
     CustomTabsIntent.Builder().build().launchUrl(this, url.toUri())
