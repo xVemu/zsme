@@ -9,6 +9,11 @@ import android.os.Bundle
 import android.webkit.WebView
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -21,6 +26,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -64,6 +71,7 @@ import pl.vemu.zsme.ui.theme.MainTheme
 import java.util.concurrent.TimeUnit
 
 val Context.dataStore by preferencesDataStore(name = "settings")
+var fullScreen by mutableStateOf(false)
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -127,40 +135,46 @@ class MainActivity : ComponentActivity() {
     ) {
         val currentDestination by navController.currentScreenAsState()
 
-        NavigationBar {
-            BottomNavItem.values().forEach { item ->
-                val selected = currentDestination == item.destination
+        AnimatedVisibility(
+            !fullScreen,
+            enter = fadeIn() + slideInVertically(initialOffsetY = { it / 2 }),
+            exit = fadeOut() + slideOutVertically(targetOffsetY = { it / 2 })
+        ) {
+            NavigationBar {
+                BottomNavItem.values().forEach { item ->
+                    val selected = currentDestination == item.destination
 
-                NavigationBarItem(
-                    label = { Text(stringResource(item.label)) },
-                    selected = selected,
-                    icon = {
-                        Icon(
-                            imageVector = if (selected) item.iconFilled else item.icon,
-                            contentDescription = stringResource(item.label),
-                        )
-                    },
-                    colors = NavigationBarItemDefaults.colors(
-                        indicatorColor = MaterialTheme.colorScheme.primaryContainer,
-                        selectedIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                    ),
-                    onClick = onClick@{
-                        if (selected) {
-                            navController.popBackStack(
-                                item.destination.startRoute,
-                                false,
+                    NavigationBarItem(
+                        label = { Text(stringResource(item.label)) },
+                        selected = selected,
+                        icon = {
+                            Icon(
+                                imageVector = if (selected) item.iconFilled else item.icon,
+                                contentDescription = stringResource(item.label),
                             )
-                            return@onClick
-                        }
-
-                        navController.navigate(item.destination) {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true
+                        },
+                        colors = NavigationBarItemDefaults.colors(
+                            indicatorColor = MaterialTheme.colorScheme.primaryContainer,
+                            selectedIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                        ),
+                        onClick = onClick@{
+                            if (selected) {
+                                navController.popBackStack(
+                                    item.destination.startRoute,
+                                    false,
+                                )
+                                return@onClick
                             }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
-                    })
+
+                            navController.navigate(item.destination) {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        })
+                }
             }
         }
     }

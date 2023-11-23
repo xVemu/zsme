@@ -10,14 +10,12 @@ import it.skrape.fetcher.response
 import it.skrape.fetcher.skrape
 import it.skrape.selects.DocElement
 import it.skrape.selects.ElementNotFoundException
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import pl.vemu.zsme.data.model.LessonModel
 import javax.inject.Inject
 
 class LessonRepo @Inject constructor() {
 
-    suspend fun getLesson(link: String): List<List<LessonModel>> = withContext(Dispatchers.IO) {
+    suspend fun getLesson(link: String): List<List<LessonModel>> =
         skrape(AsyncFetcher) {
             request {
                 val login: String = Firebase.remoteConfig["scheduleLogin"].asString()
@@ -64,7 +62,6 @@ class LessonRepo @Inject constructor() {
                 }
             }
         }
-    }
 
     private fun DocElement.buildLesson(index: Int?, timeStart: String, timeFinish: String) =
         LessonModel(

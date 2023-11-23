@@ -19,7 +19,5 @@ class DetailRepo @Inject constructor(private val zsmeService: ZSMEService) {
             document.html()
         }
 
-    suspend fun getImages(id: Int): List<ImageUrl> = withContext(Dispatchers.IO) {
-        zsmeService.getPhotos(id).map { it.url }
-    }
+    suspend fun getImages(id: Int): List<ImageUrl> = zsmeService.getPhotos(id).map { it.url }
 }
