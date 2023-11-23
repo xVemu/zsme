@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.webkit.WebView
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -80,6 +81,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         // Without this Android 34+ displays wrong theme, when launched with Android Studio.
         if (BuildConfig.DEBUG) setTheme(R.style.MainTheme)
+
+        enableEdgeToEdge()
+
         setContent {
             val theme by rememberStringPreference(Prefs.THEME)
             MainTheme(if (theme == "system") isSystemInDarkTheme() else theme.toBoolean()) {
@@ -186,15 +190,6 @@ class MainActivity : ComponentActivity() {
         BottomBar(
             navController = navController
         )
-    }
-
-    @Composable
-    private fun ChangeSystemBars() {
-        /*val systemUiController = rememberSystemUiController() TODO
-        systemUiController.setNavigationBarColor(
-            MaterialTheme.colorScheme.surfaceColorWithElevation(3.dp)
-        )
-        systemUiController.setStatusBarColor(MaterialTheme.colorScheme.surface)*/
     }
 
     @Suppress("RedundantSuspendModifier")

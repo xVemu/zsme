@@ -138,7 +138,7 @@ dependencies {
     // TODO delete when PullToRefresh comes to Material3
     implementation("androidx.compose.material:material:1.5.1")
     implementation("androidx.compose.material:material-icons-extended:$compose")
-    implementation("androidx.activity:activity-compose:1.7.2")
+    implementation("androidx.activity:activity-compose:1.8.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
     // Test
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:$compose")
