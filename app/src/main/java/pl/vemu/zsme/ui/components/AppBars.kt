@@ -4,9 +4,6 @@ package pl.vemu.zsme.ui.components
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.exclude
-import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -16,7 +13,6 @@ import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
@@ -76,7 +72,6 @@ fun SimpleSmallAppBar(
         navigationIcon = { AutoBackButton(navController) },
         scrollBehavior = scrollBehavior,
         actions = actions,
-        windowInsets = windowInsetsWithoutStatusBar,
     )
 }
 
@@ -95,7 +90,6 @@ fun SimpleMediumAppBar(
         navigationIcon = { AutoBackButton(navController) },
         scrollBehavior = scrollBehavior,
         actions = actions,
-        windowInsets = windowInsetsWithoutStatusBar,
     )
 }
 
@@ -112,7 +106,6 @@ fun SimpleLargeAppBar(
         title = { Text(title) },
         navigationIcon = { AutoBackButton(navController) },
         scrollBehavior = scrollBehavior,
-        windowInsets = windowInsetsWithoutStatusBar,
     )
 }
 
@@ -127,7 +120,3 @@ private fun AutoBackButton(navController: DestinationsNavigator? = null) {
         )
     }
 }
-
-private val windowInsetsWithoutStatusBar
-    @Composable
-    get() = TopAppBarDefaults.windowInsets.exclude(WindowInsets.statusBars)

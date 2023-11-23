@@ -33,11 +33,11 @@ annotation class MoreNavGraph(
 )
 @Composable
 fun More(navController: DestinationsNavigator) {
-    val context = LocalContext.current
     Scaffold(topBar = { SimpleLargeAppBar(R.string.more) }) { padding ->
         Column(
             modifier = Modifier.padding(padding)
         ) {
+            val context = LocalContext.current
             MoreItem.entries.forEach { item ->
                 ListItem(modifier = Modifier.clickable { item.onClick(context, navController) },
                     headlineContent = {

@@ -88,14 +88,13 @@ fun Gallery(images: Array<String>, navController: DestinationsNavigator) {
             fullScreen = !fullScreen
         },
     ) { padding ->
-        Box {
+        Box(Modifier.padding(padding)) {
             val pagerState = rememberPagerState { images.size }
             val coroutineScope = rememberCoroutineScope()
+
             HorizontalPager(
                 state = pagerState,
-                modifier = Modifier
-                    .padding(padding)
-                    .fillMaxSize(),
+                modifier = Modifier.fillMaxSize(),
             ) { page ->
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current).data(images[page])

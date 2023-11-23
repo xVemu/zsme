@@ -86,8 +86,8 @@ fun Detail(
         DetailItem(
             postModel, content,
             modifier = Modifier
-                .verticalScroll(rememberScrollState())
                 .padding(padding)
+                .verticalScroll(rememberScrollState())
                 .then(
                     if (images is Result.Success && (images as Result.Success).value.isNotEmpty()) Modifier.padding(
                         bottom = 72.dp // FAB height

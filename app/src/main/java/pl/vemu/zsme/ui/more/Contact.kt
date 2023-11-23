@@ -51,9 +51,9 @@ fun Contact(navController: DestinationsNavigator) {
     ) { padding ->
         Column(
             modifier = Modifier
-                .verticalScroll(rememberScrollState())
                 .fillMaxSize()
                 .padding(padding)
+                .verticalScroll(rememberScrollState())
         ) {
             ContactItem.entries.forEach { item ->
                 ListItem(
