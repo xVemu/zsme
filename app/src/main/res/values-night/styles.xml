@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="MainTheme.SplashScreen" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">#FF1b1b1d</item>
-        <item name="windowSplashScreenIconBackgroundColor">#FF1b1b1d</item>
+        <item name="windowSplashScreenBackground">@color/surfaceNighted</item>
         <item name="postSplashScreenTheme">@style/MainTheme</item>
 
         <item name="android:windowLightStatusBar">false</item>

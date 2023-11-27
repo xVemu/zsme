@@ -3,8 +3,7 @@
     <style name="MainTheme" parent="android:Theme.Material.NoActionBar" />
 
     <style name="MainTheme.SplashScreen" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">#FFfdfbff</item>
-        <item name="windowSplashScreenIconBackgroundColor">#FFfdfbff</item>
+        <item name="windowSplashScreenBackground">@color/surfaceNighted</item>
         <item name="postSplashScreenTheme">@style/MainTheme</item>
         <!-- TODO       <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_round</item>-->
 

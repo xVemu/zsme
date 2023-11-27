@@ -17,7 +17,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.ramcosta.composedestinations.annotation.DeepLink
@@ -63,7 +62,7 @@ fun Contact(navController: DestinationsNavigator) {
                                 onClick = { item.onClick(context) },
                             ) {
                                 Icon(
-                                    painter = painterResource(it),
+                                    imageVector = it,
                                     contentDescription = stringResource(R.string.destination_button),
                                     tint = MaterialTheme.colorScheme.primary
                                 )
