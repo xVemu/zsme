@@ -29,11 +29,11 @@ import pl.vemu.zsme.R
 import pl.vemu.zsme.remembers.Prefs
 import pl.vemu.zsme.remembers.rememberStringPreference
 import pl.vemu.zsme.ui.components.SimpleMediumAppBar
-import pl.vemu.zsme.ui.components.SlideTransition
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @MoreNavGraph
-@Destination(route = "more/settings", style = SlideTransition::class)
+@Destination(route = "more/settings")
 @Composable
 fun Settings(navController: DestinationsNavigator) {
     Scaffold(

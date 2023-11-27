@@ -111,8 +111,10 @@ fun SimpleLargeAppBar(
 
 @Composable
 private fun AutoBackButton(navController: DestinationsNavigator? = null) {
-    if (navController != null) IconButton(onClick = {
-        navController.popBackStack()
+    if (navController == null) return
+
+    IconButton(onClick = {
+        navController.navigateUp()
     }) {
         Icon(
             imageVector = Icons.AutoMirrored.Rounded.ArrowBack,

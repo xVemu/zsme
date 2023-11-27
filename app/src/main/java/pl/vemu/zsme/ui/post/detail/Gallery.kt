@@ -45,7 +45,7 @@ import pl.vemu.zsme.R
 import pl.vemu.zsme.modifiers.noRippleCombinedClickable
 import pl.vemu.zsme.paddingBottom
 import pl.vemu.zsme.ui.components.SimpleSmallAppBar
-import pl.vemu.zsme.ui.components.SlideTransition
+
 import pl.vemu.zsme.ui.fullScreen
 import pl.vemu.zsme.ui.post.PostNavGraph
 import pl.vemu.zsme.util.changeUiVisibility
@@ -56,7 +56,7 @@ import pl.vemu.zsme.util.rememberInsetsController
     ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class
 )
 @PostNavGraph
-@Destination(route = "post/gallery", style = SlideTransition::class)
+@Destination(route = "post/gallery")
 @Composable
 fun Gallery(images: Array<String>, navController: DestinationsNavigator) {
 

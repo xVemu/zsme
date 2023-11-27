@@ -16,7 +16,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import pl.vemu.zsme.R
 import pl.vemu.zsme.ui.components.SimpleLargeAppBar
-import pl.vemu.zsme.ui.components.SlideTransition
+
 
 @RootNavGraph
 @NavGraph
@@ -29,7 +29,6 @@ annotation class MoreNavGraph(
 @Destination(
     route = "more/main",
     deepLinks = [DeepLink(uriPattern = "zsme://more")],
-    style = SlideTransition::class
 )
 @Composable
 fun More(navController: DestinationsNavigator) {

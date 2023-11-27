@@ -1,5 +1,6 @@
 package pl.vemu.zsme.ui.timetable
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -72,25 +73,33 @@ fun Timetable(
             val result by vm.list.collectAsState()
 
             TimetableTabRow(pagerState)
-            when (val data = result) {
-                is Result.Loading -> {
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        CircularProgressIndicator()
+            Crossfade(result, label = "Timetable") { data ->
+                when (data) {
+                    is Result.Loading -> {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
+                        }
                     }
-                }
 
-                is Result.Failure -> {
-                    CustomError { vm.downloadTimetable() }
-                }
+                    is Result.Failure -> {
+                        CustomError { vm.downloadTimetable() }
+                    }
 
-                is Result.Success -> {
-                    HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) { page ->
-                        val value = data.value[page]
-                        LazyColumn {
-                            when (page) {
-                                0 -> classes(value, navController)
-                                1 -> teachers(value, navController)
-                                2 -> rooms(value, navController)
+                    is Result.Success -> {
+                        HorizontalPager(
+                            state = pagerState,
+                            modifier = Modifier.fillMaxSize()
+                        ) { page ->
+                            val value = data.value[page]
+                            LazyColumn {
+                                when (page) {
+                                    0 -> classes(value, navController)
+                                    1 -> teachers(value, navController)
+                                    2 -> rooms(value, navController)
+                                }
                             }
                         }
                     }

@@ -155,10 +155,11 @@ dependencies {
     implementation("androidx.browser:browser:1.6.0")
 
     // Navigation
-    implementation("io.github.raamcosta.compose-destinations:animations-core:1.9.53")
+    implementation("io.github.raamcosta.compose-destinations:core:1.9.53")
     implementation("androidx.navigation:navigation-compose:2.7.3")
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
     ksp("io.github.raamcosta.compose-destinations:ksp:1.9.53")
+    implementation("io.github.fornewid:material-motion-compose-core:1.0.7")
 
     // Settings
     implementation("androidx.datastore:datastore-preferences:1.0.0")

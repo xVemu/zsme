@@ -1,6 +1,7 @@
 package pl.vemu.zsme.ui.timetable
 
 import android.os.Build
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -35,7 +36,7 @@ import java.util.*
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @TimetableNavGraph
-@Destination(route = "timetable/lesson", style = ExpandTransition::class)
+@Destination(route = "timetable/lesson")
 @Composable
 fun Lesson(
     name: String,
@@ -43,6 +44,7 @@ fun Lesson(
     navController: DestinationsNavigator,
     vm: LessonVM = hiltViewModel(),
 ) {
+    /*TODO recreates when navigating*/
     LaunchedEffect(url) {
         vm.init(url)
     }
@@ -59,54 +61,59 @@ fun Lesson(
                 .fillMaxSize()
                 .padding(padding)
         ) {
-            val lessonsResult by vm.list.collectAsState()
+            val result by vm.list.collectAsState()
             val pagerState = rememberPagerState(initialPage = getWeekDay()) { 5 }
 
             LessonTabRow(pagerState)
 
-            when (val data = lessonsResult) {
-                is Result.Loading -> {
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        CircularProgressIndicator()
-                    }
-                }
-
-                is Result.Failure -> {
-                    CustomError { vm.downloadLessons() }
-                }
-
-                is Result.Success -> {
-                    HorizontalPager(
-                        state = pagerState, modifier = Modifier.fillMaxSize()
-                    ) { page ->
-                        val lessons = data.value[page]
-
-                        if (lessons.isEmpty()) return@HorizontalPager Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(horizontal = 16.dp),
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally,
+            Crossfade(result, label = "Lessons") { lessonsResult ->
+                when (lessonsResult) {
+                    is Result.Loading -> {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
                         ) {
-                            Icon(
-                                Icons.Rounded.SatelliteAlt,
-                                contentDescription = stringResource(R.string.no_lessons),
-                                modifier = Modifier.size(128.dp)
-                            )
-                            Spacer(Modifier.height(12.dp))
-                            Text(
-                                text = stringResource(R.string.no_lessons),
-                                style = MaterialTheme.typography.headlineSmall,
-                                textAlign = TextAlign.Center,
-                            )
+                            CircularProgressIndicator()
                         }
+                    }
 
-                        LazyColumn(Modifier.fillMaxSize()) {
-                            itemsIndexed(lessons) { index, item ->
-                                LessonItem(
-                                    item = item,
-                                    divider = index < lessons.lastIndex && lessons[index + 1].index != null
+                    is Result.Failure -> {
+                        CustomError { vm.downloadLessons() }
+                    }
+
+                    is Result.Success -> {
+                        HorizontalPager(
+                            state = pagerState, modifier = Modifier.fillMaxSize()
+                        ) { page ->
+                            val lessons = lessonsResult.value[page]
+
+                            if (lessons.isEmpty()) return@HorizontalPager Column(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(horizontal = 16.dp),
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                            ) {
+                                Icon(
+                                    Icons.Rounded.SatelliteAlt,
+                                    contentDescription = stringResource(R.string.no_lessons),
+                                    modifier = Modifier.size(128.dp)
                                 )
+                                Spacer(Modifier.height(12.dp))
+                                Text(
+                                    text = stringResource(R.string.no_lessons),
+                                    style = MaterialTheme.typography.headlineSmall,
+                                    textAlign = TextAlign.Center,
+                                )
+                            }
+
+                            LazyColumn(Modifier.fillMaxSize()) {
+                                itemsIndexed(lessons) { index, item ->
+                                    LessonItem(
+                                        item = item,
+                                        divider = index < lessons.lastIndex && lessons[index + 1].index != null
+                                    )
+                                }
                             }
                         }
                     }

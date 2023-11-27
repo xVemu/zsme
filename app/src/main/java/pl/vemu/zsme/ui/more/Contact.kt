@@ -27,14 +27,12 @@ import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import pl.vemu.zsme.DEFAULT_URL
 import pl.vemu.zsme.R
 import pl.vemu.zsme.ui.components.SimpleMediumAppBar
-import pl.vemu.zsme.ui.components.SlideTransition
 
 @OptIn(ExperimentalMaterial3Api::class)
 @MoreNavGraph
 @Destination(
     route = "more/contact",
     deepLinks = [DeepLink(uriPattern = "$DEFAULT_URL/wp/kontakt/")],
-    style = SlideTransition::class
 )
 @Composable
 fun Contact(navController: DestinationsNavigator) {

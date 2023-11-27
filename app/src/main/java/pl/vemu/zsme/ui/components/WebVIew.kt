@@ -1,5 +1,6 @@
 package pl.vemu.zsme.ui.components
 
+import android.view.View
 import android.webkit.WebView
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
@@ -45,9 +46,14 @@ fun WebView(html: String, style: TextStyle = LocalTextStyle.current) {
                 javaScriptEnabled = true
                 defaultFontSize = style.fontSize.value.toInt()
             }
+
+            // Prevents from crashing when clicked back button in app bar.
+            setLayerType(View.LAYER_TYPE_SOFTWARE, null)
             loadData(styledHtml, "text/html; charset=UTF-8", null)
         }
     }, update = {
         it.loadData(styledHtml, "text/html; charset=UTF-8", null)
+    }, onRelease = {
+        it.destroy()
     })
 }

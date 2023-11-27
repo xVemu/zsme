@@ -29,6 +29,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -59,6 +60,7 @@ import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.navigation.navigate
 import com.ramcosta.composedestinations.navigation.popBackStack
+import com.ramcosta.composedestinations.rememberNavHostEngine
 import com.yariksoffice.lingver.Lingver
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -68,8 +70,10 @@ import pl.vemu.zsme.BuildConfig
 import pl.vemu.zsme.R
 import pl.vemu.zsme.remembers.Prefs
 import pl.vemu.zsme.remembers.rememberStringPreference
+import pl.vemu.zsme.ui.components.transitions
 import pl.vemu.zsme.ui.post.PostWorker
 import pl.vemu.zsme.ui.theme.MainTheme
+import soup.compose.material.motion.animation.rememberSlideDistance
 import java.util.concurrent.TimeUnit
 
 val Context.dataStore by preferencesDataStore(name = "settings")
@@ -120,13 +124,21 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     private fun Main() {
-        val navController = rememberNavController() /*TODO animations*/
+        val navController = rememberNavController()
+
+        val slideDistance = rememberSlideDistance()
+        val transitions = remember(slideDistance) {
+            transitions(slideDistance)
+        }
+        val navEngine = rememberNavHostEngine(rootDefaultAnimations = transitions)
+
         Scaffold(bottomBar = {
             BottomBar(navController)
         }) { innerPadding ->
             DestinationsNavHost(
                 navGraph = NavGraphs.root,
                 navController = navController,
+                engine = navEngine,
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
@@ -200,8 +212,7 @@ class MainActivity : ComponentActivity() {
         val configSettings = remoteConfigSettings {
             minimumFetchIntervalInSeconds = 0
         }
-        if (BuildConfig.DEBUG)
-            remoteConfig.setConfigSettingsAsync(configSettings)
+        if (BuildConfig.DEBUG) remoteConfig.setConfigSettingsAsync(configSettings)
         remoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
         remoteConfig.fetchAndActivate()
     }
@@ -239,11 +250,8 @@ class MainActivity : ComponentActivity() {
     private suspend fun updateApp() {
         val manager = AppUpdateManagerFactory.create(applicationContext)
         val appUpdateInfo = manager.requestAppUpdateInfo()
-        if (!(
-                    appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
-                            && appUpdateInfo.isFlexibleUpdateAllowed
-                            && (appUpdateInfo.clientVersionStalenessDays ?: -1) >= 7
-                    )
+        if (!(appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE && appUpdateInfo.isFlexibleUpdateAllowed && (appUpdateInfo.clientVersionStalenessDays
+                ?: -1) >= 7)
         ) return
         manager.startUpdateFlowForResult(
             appUpdateInfo, AppUpdateType.FLEXIBLE, this, 0

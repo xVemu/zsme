@@ -1,5 +1,6 @@
 package pl.vemu.zsme.ui.post
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -50,6 +51,7 @@ import pl.vemu.zsme.plus
 import pl.vemu.zsme.remembers.rememberFloatingTopBar
 import pl.vemu.zsme.ui.components.CustomError
 import pl.vemu.zsme.ui.components.Html
+
 import pl.vemu.zsme.ui.destinations.DetailDestination
 import pl.vemu.zsme.ui.theme.Elevation
 import pl.vemu.zsme.util.Formatter
@@ -97,76 +99,78 @@ fun Post(
             onRefresh = { pagingItems.refresh() },
         )
 
-        if (initial) Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            if (refreshing) CircularProgressIndicator()
-            else if (pagingItems.loadState.refresh is LoadState.Error) CustomError {
-                pagingItems.retry()
-            }
-        }
-        else Box(Modifier.pullRefresh(pullRefreshState)) {
-
-            LazyColumn(Modifier.fillMaxSize(), contentPadding = padding.plus(top = 8.dp)) {
-                items(pagingItems.itemCount, key = pagingItems.itemKey { it.id }) { idx ->
-                    pagingItems[idx]?.let { post ->
-                        PostCard(navController, post)
-                    }
+        Crossfade(initial, label = "Post") { initialState ->
+            if (initialState) Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                if (refreshing) CircularProgressIndicator()
+                else if (pagingItems.loadState.refresh is LoadState.Error) CustomError {
+                    pagingItems.retry()
                 }
-                item {
-                    Box(
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        when (pagingItems.loadState.append) {
-                            is LoadState.Loading -> CircularProgressIndicator()
+            }
+            else Box(Modifier.pullRefresh(pullRefreshState)) {
 
-                            is LoadState.Error -> Row(modifier = Modifier
-                                .clickable { pagingItems.retry() }
-                                .paddingBottom(8.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.Center) {
-                                Icon(Icons.Rounded.Refresh, contentDescription = "Refresh")
-                                Spacer(Modifier.width(4.dp))
-                                Text("Wystąpił błąd. Spróbuj ponownie klikając")
+                LazyColumn(Modifier.fillMaxSize(), contentPadding = padding.plus(top = 8.dp)) {
+                    items(pagingItems.itemCount, key = pagingItems.itemKey { it.id }) { idx ->
+                        pagingItems[idx]?.let { post ->
+                            PostCard(navController, post)
+                        }
+                    }
+                    item {
+                        Box(
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            when (pagingItems.loadState.append) {
+                                is LoadState.Loading -> CircularProgressIndicator()
+
+                                is LoadState.Error -> Row(modifier = Modifier
+                                    .clickable { pagingItems.retry() }
+                                    .paddingBottom(8.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.Center) {
+                                    Icon(Icons.Rounded.Refresh, contentDescription = "Refresh")
+                                    Spacer(Modifier.width(4.dp))
+                                    Text("Wystąpił błąd. Spróbuj ponownie klikając")
+                                }
+
+                                else -> {}
                             }
-
-                            else -> {}
                         }
                     }
                 }
-            }
 
-            if (pagingItems.loadState.refresh is LoadState.Error) Snackbar(modifier = Modifier
-                .padding(
-                    padding
+                if (pagingItems.loadState.refresh is LoadState.Error) Snackbar(modifier = Modifier
+                    .padding(
+                        padding
+                    )
+                    .align(Alignment.BottomCenter),
+                    snackbarData = object : SnackbarData {
+                        override val visuals = object : SnackbarVisuals {
+                            override val actionLabel = stringResource(R.string.retry)
+                            override val duration = SnackbarDuration.Indefinite
+                            override val message = stringResource(R.string.error)
+                            override val withDismissAction = false
+                        }
+
+                        override fun dismiss() = Unit
+
+                        override fun performAction() {
+                            pagingItems.retry()
+                        }
+
+                    })
+
+                PullRefreshIndicator(
+                    refreshing = refreshing,
+                    state = pullRefreshState,
+                    backgroundColor = MaterialTheme.colorScheme.background,
+                    contentColor = contentColorFor(MaterialTheme.colorScheme.background),
+                    modifier = Modifier
+                        .padding(padding)
+                        .align(Alignment.TopCenter),
                 )
-                .align(Alignment.BottomCenter),
-                snackbarData = object : SnackbarData {
-                    override val visuals = object : SnackbarVisuals {
-                        override val actionLabel = stringResource(R.string.retry)
-                        override val duration = SnackbarDuration.Indefinite
-                        override val message = stringResource(R.string.error)
-                        override val withDismissAction = false
-                    }
-
-                    override fun dismiss() = Unit
-
-                    override fun performAction() {
-                        pagingItems.retry()
-                    }
-
-                })
-
-            PullRefreshIndicator(
-                refreshing = refreshing,
-                state = pullRefreshState,
-                backgroundColor = MaterialTheme.colorScheme.background,
-                contentColor = contentColorFor(MaterialTheme.colorScheme.background),
-                modifier = Modifier
-                    .padding(padding)
-                    .align(Alignment.TopCenter),
-            )
+            }
         }
     }
 }
