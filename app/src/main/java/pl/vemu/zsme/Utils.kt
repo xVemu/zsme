@@ -28,8 +28,6 @@ fun Context.isNetworkAvailable() =
         } ?: false
     }
 
-const val DEFAULT_URL = "https://zsme.tarnow.pl"
-
 sealed interface Result<out T> {
     class Success<out T>(val value: T) : Result<T>
     class Failure(val error: Exception) : Result<Nothing>

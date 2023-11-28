@@ -1,12 +1,14 @@
 package pl.vemu.zsme.injection
 
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.remoteconfig.ktx.get
+import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import pl.vemu.zsme.DEFAULT_URL
 import pl.vemu.zsme.data.service.ZSMEService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -25,7 +27,7 @@ class RetrofitModule {
     @Singleton
     @Provides
     fun provideRetrofit(gson: Gson): Retrofit = Retrofit.Builder()
-        .baseUrl("$DEFAULT_URL/wp/wp-json/wp/v2/")
+        .baseUrl(Firebase.remoteConfig["apiUrl"].asString())
         .addConverterFactory(GsonConverterFactory.create(gson))
         .build()
 

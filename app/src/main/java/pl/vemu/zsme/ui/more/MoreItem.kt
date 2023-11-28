@@ -8,8 +8,10 @@ import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.ImportContacts
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.remoteconfig.ktx.get
+import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import pl.vemu.zsme.DEFAULT_URL
 import pl.vemu.zsme.R
 import pl.vemu.zsme.launchCustomTabs
 import pl.vemu.zsme.ui.destinations.ContactDestination
@@ -28,12 +30,12 @@ enum class MoreItem(
         }
     ),
     HOME_PAGE(Icons.Rounded.Home, R.string.home_page, { context, _ ->
-        context.launchCustomTabs(DEFAULT_URL)
+        context.launchCustomTabs(Firebase.remoteConfig["baseUrl"].asString())
     }
     ),
     JOURNAL(
         Icons.Rounded.ImportContacts, R.string.e_dziennik, { context, _ ->
-            context.launchCustomTabs("https://uonetplus.umt.tarnow.pl/tarnow")
+            context.launchCustomTabs(Firebase.remoteConfig["journalUrl"].asString())
         }
     ),
     CONTACT(
