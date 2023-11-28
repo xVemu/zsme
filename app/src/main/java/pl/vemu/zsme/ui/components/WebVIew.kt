@@ -1,7 +1,9 @@
 package pl.vemu.zsme.ui.components
 
 import android.view.View
+import android.webkit.WebResourceRequest
 import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.runtime.Composable
@@ -12,6 +14,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.graphics.blue
 import androidx.core.graphics.green
 import androidx.core.graphics.red
+import pl.vemu.zsme.launchCustomTabs
 
 @Composable
 fun WebView(html: String, style: TextStyle = LocalTextStyle.current) {
@@ -45,6 +48,15 @@ fun WebView(html: String, style: TextStyle = LocalTextStyle.current) {
                 //noinspection SetJavaScriptEnabled
                 javaScriptEnabled = true
                 defaultFontSize = style.fontSize.value.toInt()
+            }
+            webViewClient = object : WebViewClient() {
+                override fun shouldOverrideUrlLoading(
+                    view: WebView?,
+                    request: WebResourceRequest?,
+                ): Boolean {
+                    context.launchCustomTabs(request?.url?.toString() ?: return false)
+                    return true
+                }
             }
 
             // Prevents from crashing when clicked back button in app bar.
