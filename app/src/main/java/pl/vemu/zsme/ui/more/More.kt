@@ -28,7 +28,7 @@ annotation class MoreNavGraph(
 @MoreNavGraph(start = true)
 @Destination(
     route = "more/main",
-    deepLinks = [DeepLink(uriPattern = "zsme://more")],
+    deepLinks = [DeepLink("pl.vemu.zsme.shortcut.MORE")],
 )
 @Composable
 fun More(navController: DestinationsNavigator) {

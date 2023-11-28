@@ -56,7 +56,7 @@ import pl.vemu.zsme.util.rememberInsetsController
     ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class
 )
 @PostNavGraph
-@Destination(route = "post/gallery")
+@Destination("post/gallery")
 @Composable
 fun Gallery(images: Array<String>, navController: DestinationsNavigator) {
 

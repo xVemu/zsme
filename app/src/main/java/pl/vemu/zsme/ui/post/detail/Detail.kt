@@ -53,15 +53,11 @@ import pl.vemu.zsme.util.Formatter
 
 
 @PostNavGraph
-@Destination(
-    route = "post/detail",
-//    deepLinks = [DeepLink(uriPattern = "zsme://detail/$FULL_ROUTE_PLACEHOLDER")],
-)
+@Destination("post/detail")
 @Composable
 fun Detail(
     postModel: PostModel,
     navController: DestinationsNavigator,
-//    slug: String? = null, TODO
     vm: DetailVM = hiltViewModel(),
 ) {
     LaunchedEffect(Unit) {
@@ -96,11 +92,6 @@ fun Detail(
         )
     }
 }
-
-/*deepLinks = listOf( TODO
-    navDeepLink { uriPattern = "$DEFAULT_URL/wp/{slug}/" },
-    navDeepLink { uriPattern = "$DEFAULT_URL/wp/{slug}" }
-)*/
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

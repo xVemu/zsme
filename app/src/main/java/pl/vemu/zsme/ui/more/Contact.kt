@@ -19,20 +19,15 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.ramcosta.composedestinations.annotation.DeepLink
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
-import pl.vemu.zsme.DEFAULT_URL
 import pl.vemu.zsme.R
 import pl.vemu.zsme.ui.components.SimpleMediumAppBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @MoreNavGraph
-@Destination(
-    route = "more/contact",
-    deepLinks = [DeepLink(uriPattern = "$DEFAULT_URL/wp/kontakt/")],
-)
+@Destination("more/contact")
 @Composable
 fun Contact(navController: DestinationsNavigator) {
     val context = LocalContext.current

@@ -36,13 +36,11 @@ import androidx.paging.compose.itemKey
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import coil.transform.RoundedCornersTransformation
-import com.ramcosta.composedestinations.annotation.DeepLink
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.NavGraph
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
-import pl.vemu.zsme.DEFAULT_URL
 import pl.vemu.zsme.R
 import pl.vemu.zsme.data.model.PostModel
 import pl.vemu.zsme.paddingBottom
@@ -51,7 +49,6 @@ import pl.vemu.zsme.plus
 import pl.vemu.zsme.remembers.rememberFloatingTopBar
 import pl.vemu.zsme.ui.components.CustomError
 import pl.vemu.zsme.ui.components.Html
-
 import pl.vemu.zsme.ui.destinations.DetailDestination
 import pl.vemu.zsme.ui.theme.Elevation
 import pl.vemu.zsme.util.Formatter
@@ -64,13 +61,9 @@ annotation class PostNavGraph(
     val start: Boolean = false,
 )
 
-
 @OptIn(ExperimentalMaterialApi::class)
 @PostNavGraph(start = true)
-@Destination(
-    route = "post/main",
-    deepLinks = [DeepLink(uriPattern = DEFAULT_URL)],
-)
+@Destination("post/main")
 @Composable
 fun Post(
     navController: DestinationsNavigator,

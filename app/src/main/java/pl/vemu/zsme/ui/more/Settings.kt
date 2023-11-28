@@ -33,7 +33,7 @@ import pl.vemu.zsme.ui.components.SimpleMediumAppBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @MoreNavGraph
-@Destination(route = "more/settings")
+@Destination("more/settings")
 @Composable
 fun Settings(navController: DestinationsNavigator) {
     Scaffold(

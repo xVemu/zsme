@@ -33,7 +33,6 @@ import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import kotlinx.coroutines.launch
-import pl.vemu.zsme.DEFAULT_URL
 import pl.vemu.zsme.R
 import pl.vemu.zsme.Result
 import pl.vemu.zsme.data.model.TimetableModel
@@ -53,7 +52,7 @@ annotation class TimetableNavGraph(
 @TimetableNavGraph(start = true)
 @Destination(
     route = "timetable/main",
-    deepLinks = [DeepLink("zsme://timetable"), DeepLink("$DEFAULT_URL/plan/")],
+    deepLinks = [DeepLink("pl.vemu.zsme.shortcut.TIMETABLE")],
 )
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable

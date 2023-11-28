@@ -36,7 +36,7 @@ import java.util.*
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @TimetableNavGraph
-@Destination(route = "timetable/lesson")
+@Destination("timetable/lesson")
 @Composable
 fun Lesson(
     name: String,
