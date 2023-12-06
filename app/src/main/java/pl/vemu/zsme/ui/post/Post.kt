@@ -2,7 +2,21 @@ package pl.vemu.zsme.ui.post
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
@@ -12,9 +26,29 @@ import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DockedSearchBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ProvideTextStyle
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarData
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarVisuals
+import androidx.compose.material3.Text
+import androidx.compose.material3.contentColorFor
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -53,7 +87,7 @@ import pl.vemu.zsme.ui.destinations.DetailDestination
 import pl.vemu.zsme.ui.theme.Elevation
 import pl.vemu.zsme.util.Formatter
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 
 @RootNavGraph(start = true)
 @NavGraph
@@ -72,9 +106,13 @@ fun Post(
     val pagingItems = vm.posts.collectAsLazyPagingItems()
     val nestedScrolling = rememberFloatingTopBar(toolbarHeight = 64.dp)
 
-    Scaffold(topBar = {
-        FloatingSearchBar(nestedScrolling.offset)
-    }, modifier = Modifier.nestedScroll(nestedScrolling.nestedScrollConnection)) { padding ->
+    Scaffold(
+        topBar = {
+            FloatingSearchBar(nestedScrolling.offset)
+        },
+        modifier = Modifier.nestedScroll(nestedScrolling.nestedScrollConnection),
+        contentWindowInsets = WindowInsets.statusBars
+    ) { padding ->
         val refreshing by remember {
             derivedStateOf {
                 pagingItems.loadState.refresh is LoadState.Loading
@@ -176,9 +214,10 @@ private fun FloatingSearchBar(offset: Density.() -> IntOffset, vm: PostVM = hilt
 
     val query by vm.query.collectAsState()
 
-    Box( /*TODO add shadow only when floating, translations for whole posts, save last 5 to DB, place inside scaffold, position pullrefresh, dark theme*/
+    Box( /*TODO add shadow only when floating, translations, save last 5 to DB, place inside scaffold, position pullrefresh, dark theme*/
         Modifier
             .fillMaxWidth()
+            .statusBarsPadding()
             .offset(offset)
     ) {
         DockedSearchBar(

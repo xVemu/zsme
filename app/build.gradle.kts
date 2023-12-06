@@ -134,7 +134,7 @@ dependencies {
 
     // Compose
     val compose = "1.5.1"
-    implementation("androidx.compose.material3:material3:1.2.0-alpha10")
+    implementation("androidx.compose.material3:material3:1.2.0-alpha12")
     // TODO delete when PullToRefresh comes to Material3
     implementation("androidx.compose.material:material:1.5.1")
     implementation("androidx.compose.material:material-icons-extended:$compose")

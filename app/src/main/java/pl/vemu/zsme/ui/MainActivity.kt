@@ -4,10 +4,12 @@ import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.webkit.WebView
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.AnimatedVisibility
@@ -16,9 +18,13 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -87,7 +93,16 @@ class MainActivity : ComponentActivity() {
         // Without this Android 34+ displays wrong theme, when launched with Android Studio.
         if (BuildConfig.DEBUG) setTheme(R.style.MainTheme)
 
-        enableEdgeToEdge()
+        enableEdgeToEdge(
+            navigationBarStyle = SystemBarStyle.auto(
+                Color.TRANSPARENT,
+                Color.TRANSPARENT
+            )
+        )
+        // Allows to change navbar color.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            window.isNavigationBarContrastEnforced = false
+        }
 
         setContent {
             val theme by rememberStringPreference(Prefs.THEME)
@@ -132,9 +147,13 @@ class MainActivity : ComponentActivity() {
         }
         val navEngine = rememberNavHostEngine(rootDefaultAnimations = transitions)
 
-        Scaffold(bottomBar = {
-            BottomBar(navController)
-        }) { innerPadding ->
+        Scaffold(
+            bottomBar = {
+                BottomBar(navController)
+            },
+            // Allows to match status bar color with app bar color.
+            contentWindowInsets = WindowInsets.systemBars.exclude(WindowInsets.statusBars),
+        ) { innerPadding ->
             DestinationsNavHost(
                 navGraph = NavGraphs.root,
                 navController = navController,
@@ -159,7 +178,7 @@ class MainActivity : ComponentActivity() {
             exit = fadeOut() + slideOutVertically(targetOffsetY = { it / 2 })
         ) {
             NavigationBar {
-                BottomNavItem.values().forEach { item ->
+                BottomNavItem.entries.forEach { item ->
                     val selected = currentDestination == item.destination
 
                     NavigationBarItem(

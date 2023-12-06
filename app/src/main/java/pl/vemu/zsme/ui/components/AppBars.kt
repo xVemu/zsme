@@ -13,6 +13,8 @@ import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
@@ -53,8 +55,9 @@ fun SimpleLargeAppBar(
     @StringRes title: Int,
     navController: DestinationsNavigator? = null,
     scrollBehavior: TopAppBarScrollBehavior? = null,
+    colors: TopAppBarColors = TopAppBarDefaults.largeTopAppBarColors(),
 ) {
-    SimpleLargeAppBar(stringResource(title), navController, scrollBehavior)
+    SimpleLargeAppBar(stringResource(title), navController, scrollBehavior, colors)
 }
 
 /**
@@ -84,12 +87,14 @@ fun SimpleMediumAppBar(
     navController: DestinationsNavigator? = null,
     scrollBehavior: TopAppBarScrollBehavior? = null,
     actions: @Composable RowScope.() -> Unit = {},
+    colors: TopAppBarColors = TopAppBarDefaults.largeTopAppBarColors(),
 ) {
     MediumTopAppBar(
         title = { Text(title) },
         navigationIcon = { AutoBackButton(navController) },
         scrollBehavior = scrollBehavior,
         actions = actions,
+        colors = colors,
     )
 }
 
@@ -101,11 +106,13 @@ fun SimpleLargeAppBar(
     title: String,
     navController: DestinationsNavigator? = null,
     scrollBehavior: TopAppBarScrollBehavior? = null,
+    colors: TopAppBarColors = TopAppBarDefaults.largeTopAppBarColors(),
 ) {
     LargeTopAppBar(
         title = { Text(title) },
         navigationIcon = { AutoBackButton(navController) },
         scrollBehavior = scrollBehavior,
+        colors = colors,
     )
 }
 

@@ -13,13 +13,22 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.PhotoLibrary
 import androidx.compose.material.icons.rounded.Share
-import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -52,6 +61,7 @@ import pl.vemu.zsme.ui.post.PostNavGraph
 import pl.vemu.zsme.util.Formatter
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @PostNavGraph
 @Destination("post/detail")
 @Composable
@@ -65,6 +75,8 @@ fun Detail(
     }
 
     val images by vm.images.collectAsState()
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+
     Scaffold(floatingActionButton = {
         if (!LocalContext.current.isNetworkAvailable()) return@Scaffold
 
@@ -76,13 +88,14 @@ fun Detail(
 
         DetailFloatingButton(navController, imgs)
     }, topBar = {
-        AppBar(postModel, navController)
+        AppBar(postModel, navController, scrollBehavior)
     }) { padding ->
         val content by vm.detail.collectAsState()
         DetailItem(
             postModel, content,
             modifier = Modifier
                 .padding(padding)
+                .nestedScroll(scrollBehavior.nestedScrollConnection)
                 .verticalScroll(rememberScrollState())
                 .then(
                     if (images is Result.Success && (images as Result.Success).value.isNotEmpty()) Modifier.padding(
@@ -95,18 +108,26 @@ fun Detail(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun AppBar(postModel: PostModel, navController: DestinationsNavigator) {
-    SimpleSmallAppBar(title = R.string.post, navController = navController, actions = {
-        val context = LocalContext.current
-        val coroutineScope = rememberCoroutineScope()
+private fun AppBar(
+    postModel: PostModel,
+    navController: DestinationsNavigator,
+    scrollBehavior: TopAppBarScrollBehavior,
+) {
+    SimpleSmallAppBar(
+        title = R.string.post,
+        navController = navController,
+        scrollBehavior = scrollBehavior,
+        actions = {
+            val context = LocalContext.current
+            val coroutineScope = rememberCoroutineScope()
 
-        IconButton(onClick = {
-            coroutineScope.launch {
-                share(context, postModel)
-            }
-        }) {
-            Icon(
-                imageVector = Icons.Rounded.Share,
+            IconButton(onClick = {
+                coroutineScope.launch {
+                    share(context, postModel)
+                }
+            }) {
+                Icon(
+                    imageVector = Icons.Rounded.Share,
                 contentDescription = stringResource(R.string.share)
             )
         }
