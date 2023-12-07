@@ -73,6 +73,7 @@ fun Detail(
     LaunchedEffect(Unit) {
         vm.init(postModel.id, postModel.content)
     }
+//    HasDefaultViewModelProviderFactory TODO
 
     val images by vm.images.collectAsStateWithLifecycle()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()

@@ -18,14 +18,10 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material.icons.rounded.Search
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
-import androidx.compose.material.pullrefresh.pullRefresh
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DockedSearchBar
@@ -40,8 +36,10 @@ import androidx.compose.material3.SnackbarData
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarVisuals
 import androidx.compose.material3.Text
-import androidx.compose.material3.contentColorFor
+import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -95,7 +93,7 @@ annotation class PostNavGraph(
     val start: Boolean = false,
 )
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @PostNavGraph(start = true)
 @Destination("post/main")
 @Composable
@@ -125,10 +123,17 @@ fun Post(
             }
         }
 
-        val pullRefreshState = rememberPullRefreshState(
-            refreshing = refreshing,
-            onRefresh = { pagingItems.refresh() },
-        )
+        val pullRefreshState = rememberPullToRefreshState()
+
+        if (pullRefreshState.isRefreshing)
+            LaunchedEffect(Unit) {
+                pagingItems.refresh()
+            }
+
+        if (!refreshing)
+            LaunchedEffect(Unit) {
+                pullRefreshState.endRefresh()
+            }
 
         Crossfade(initial, label = "Post") { initialState ->
             if (initialState) Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -137,7 +142,7 @@ fun Post(
                     pagingItems.retry()
                 }
             }
-            else Box(Modifier.pullRefresh(pullRefreshState)) {
+            else Box(Modifier.nestedScroll(pullRefreshState.nestedScrollConnection)) {
 
                 LazyColumn(Modifier.fillMaxSize(), contentPadding = padding.plus(top = 8.dp)) {
                     items(pagingItems.itemCount, key = pagingItems.itemKey { it.id }) { idx ->
@@ -192,11 +197,8 @@ fun Post(
 
                     })
 
-                PullRefreshIndicator(
-                    refreshing = refreshing,
+                PullToRefreshContainer(
                     state = pullRefreshState,
-                    backgroundColor = MaterialTheme.colorScheme.background,
-                    contentColor = contentColorFor(MaterialTheme.colorScheme.background),
                     modifier = Modifier
                         .padding(padding)
                         .align(Alignment.TopCenter),
