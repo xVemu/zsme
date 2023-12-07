@@ -2,12 +2,12 @@ package pl.vemu.zsme.ui
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.EventNote
+import androidx.compose.material.icons.automirrored.filled.Subject
+import androidx.compose.material.icons.automirrored.rounded.EventNote
+import androidx.compose.material.icons.automirrored.rounded.Subject
 import androidx.compose.material.icons.filled.DynamicFeed
-import androidx.compose.material.icons.filled.EventNote
-import androidx.compose.material.icons.filled.Subject
 import androidx.compose.material.icons.rounded.DynamicFeed
-import androidx.compose.material.icons.rounded.EventNote
-import androidx.compose.material.icons.rounded.Subject
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.MutableState
@@ -61,9 +61,14 @@ enum class BottomNavItem(
     POST(NavGraphs.post, Icons.Rounded.DynamicFeed, Icons.Filled.DynamicFeed, R.string.post),
     TIMETABLE(
         NavGraphs.timetable,
-        Icons.Rounded.EventNote,
-        Icons.Filled.EventNote,
+        Icons.AutoMirrored.Rounded.EventNote,
+        Icons.AutoMirrored.Filled.EventNote,
         R.string.timetable
     ),
-    MORE(NavGraphs.more, Icons.Rounded.Subject, Icons.Filled.Subject, R.string.more);
+    MORE(
+        NavGraphs.more,
+        Icons.AutoMirrored.Rounded.Subject,
+        Icons.AutoMirrored.Filled.Subject,
+        R.string.more
+    );
 }

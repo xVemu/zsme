@@ -1,12 +1,13 @@
 package pl.vemu.zsme.ui.components
 
-import android.view.View
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.TextStyle
@@ -39,7 +40,8 @@ fun WebView(html: String, style: TextStyle = LocalTextStyle.current) {
         </style>
     """ + html
 
-    AndroidView(factory = { context ->
+    // Prevents from crashing when clicked back button in app bar.
+    AndroidView(modifier = Modifier.alpha(.99F), factory = { context ->
         WebView(context).apply {
             isVerticalScrollBarEnabled = false
             isHorizontalScrollBarEnabled = false
@@ -48,6 +50,9 @@ fun WebView(html: String, style: TextStyle = LocalTextStyle.current) {
                 //noinspection SetJavaScriptEnabled
                 javaScriptEnabled = true
                 defaultFontSize = style.fontSize.value.toInt()
+//                isAlgorithmicDarkeningAllowed = true implementation("androidx.webkit:webkit:1.9.0") TODO
+//                isForceDarkAllowed = true
+//                forceDark = true
             }
             webViewClient = object : WebViewClient() {
                 override fun shouldOverrideUrlLoading(
@@ -59,8 +64,6 @@ fun WebView(html: String, style: TextStyle = LocalTextStyle.current) {
                 }
             }
 
-            // Prevents from crashing when clicked back button in app bar.
-            setLayerType(View.LAYER_TYPE_SOFTWARE, null)
             loadData(styledHtml, "text/html; charset=UTF-8", null)
         }
     }, update = {

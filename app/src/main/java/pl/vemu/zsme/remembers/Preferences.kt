@@ -19,7 +19,7 @@ import kotlinx.coroutines.runBlocking
 import pl.vemu.zsme.ui.dataStore
 import kotlin.reflect.KProperty
 
-enum class Prefs constructor(val key: Preferences.Key<String>, val defaultValue: String) {
+enum class Prefs(val key: Preferences.Key<String>, val defaultValue: String) {
     THEME(stringPreferencesKey("theme"), "system"),
     LANGUAGE(stringPreferencesKey("language"), "system"),
 }

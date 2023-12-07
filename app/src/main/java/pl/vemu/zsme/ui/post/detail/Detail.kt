@@ -24,7 +24,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -36,6 +35,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.AsyncImage
 import coil.imageLoader
@@ -74,7 +74,7 @@ fun Detail(
         vm.init(postModel.id, postModel.content)
     }
 
-    val images by vm.images.collectAsState()
+    val images by vm.images.collectAsStateWithLifecycle()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
     Scaffold(floatingActionButton = {
@@ -90,7 +90,7 @@ fun Detail(
     }, topBar = {
         AppBar(postModel, navController, scrollBehavior)
     }) { padding ->
-        val content by vm.detail.collectAsState()
+        val content by vm.detail.collectAsStateWithLifecycle()
         DetailItem(
             postModel, content,
             modifier = Modifier

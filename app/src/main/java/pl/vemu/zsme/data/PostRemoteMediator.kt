@@ -19,7 +19,7 @@ const val DEFAULT_PAGE = 1
 const val PAGE_SIZE = 10
 
 @OptIn(ExperimentalPagingApi::class)
-class PostRemoteMediator constructor(
+class PostRemoteMediator(
     private val query: String?,
     private val postDAO: PostDAO,
     private val remoteKeyDAO: RemoteKeyDAO,
@@ -29,7 +29,7 @@ class PostRemoteMediator constructor(
 ) : RemoteMediator<Int, PostModel>() {
 
     override suspend fun load(
-        loadType: LoadType, state: PagingState<Int, PostModel>
+        loadType: LoadType, state: PagingState<Int, PostModel>,
     ): MediatorResult {
         return try {
             val page = when (loadType) {

@@ -127,7 +127,6 @@ dependencies {
     implementation("androidx.paging:paging-compose:$paging")
 
     // Other
-    implementation("androidx.webkit:webkit:1.8.0")
     implementation("androidx.core:core-splashscreen:1.0.1")
     implementation("com.google.android.play:core-ktx:1.8.1")
     implementation("androidx.core:core-ktx:1.12.0")
@@ -139,6 +138,7 @@ dependencies {
     implementation("androidx.compose.material:material:1.5.1")
     implementation("androidx.compose.material:material-icons-extended:$compose")
     implementation("androidx.activity:activity-compose:1.8.1")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
     // Test
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:$compose")
