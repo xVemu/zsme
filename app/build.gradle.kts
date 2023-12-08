@@ -6,7 +6,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("kotlin-parcelize")
     id("dagger.hilt.android.plugin")
-    id("io.gitlab.arturbosch.detekt") version "1.23.1"
+    id("io.gitlab.arturbosch.detekt") version "1.23.4"
     id("com.google.devtools.ksp")
     id("com.google.gms.google-services")
 }
@@ -18,7 +18,7 @@ android {
     defaultConfig {
         applicationId = "pl.vemu.zsme"
         minSdk = 23
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 43
         versionName = "2.1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -78,7 +78,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.6"
     }
 
     packaging {
