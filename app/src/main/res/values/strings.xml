@@ -86,4 +86,7 @@
     <string name="back_button">Cofnij</string>
     <string name="retry">Ponów</string>
     <string name="no_connection">Brak połączenia z internetem</string>
+    <string name="refresh">Odśwież</string>
+    <string name="error_retry">Wystąpił błąd. Spróbuj ponownie klikając</string>
+    <string name="search_post">Znajdź post</string>
 </resources>

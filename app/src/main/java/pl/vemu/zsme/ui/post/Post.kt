@@ -181,9 +181,12 @@ fun Post(
                                     .paddingBottom(8.dp),
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.Center) {
-                                    Icon(Icons.Rounded.Refresh, contentDescription = "Refresh")
+                                    Icon(
+                                        Icons.Rounded.Refresh,
+                                        contentDescription = stringResource(R.string.refresh)
+                                    )
                                     Spacer(Modifier.width(4.dp))
-                                    Text("Wystąpił błąd. Spróbuj ponownie klikając")
+                                    Text(stringResource(R.string.error_retry))
                                 }
 
                                 else -> {}
@@ -278,10 +281,10 @@ private fun FloatingSearchBar(
                         Icon(
                             Icons.Rounded.Search,
                             modifier = Modifier.offset(4.dp),
-                            contentDescription = "Znajdź post"
+                            contentDescription = stringResource(R.string.search_post)
                         )
                     },
-                    placeholder = { Text("Znajdź post") },
+                    placeholder = { Text(stringResource(R.string.search_post)) },
                     shape = SearchBarDefaults.inputFieldShape,
                     colors = SearchBarDefaults.inputFieldColors(),
                     contentPadding = TextFieldDefaults.contentPaddingWithoutLabel(),

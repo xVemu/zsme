@@ -55,4 +55,7 @@
     <string name="retry">Retry</string>
     <string name="no_connection">No internet connection</string>
     <string name="destination_button">Open in app</string>
+    <string name="refresh">Refresh</string>
+    <string name="error_retry">Error! Tap to try again</string>
+    <string name="search_post">Find post</string>
 </resources>

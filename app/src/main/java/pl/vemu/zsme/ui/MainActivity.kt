@@ -285,8 +285,6 @@ class MainActivity : ComponentActivity() {
 * timetable widget
 * onProvideAssistContent
 * formatter kotlin
-* text overload with resid
-* replace not null with let
 * webview table full width
 * translations
 * dark theme

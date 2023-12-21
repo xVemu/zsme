@@ -114,6 +114,8 @@ private fun AppBar(
     navController: DestinationsNavigator,
     scrollBehavior: TopAppBarScrollBehavior,
 ) {
+    val shareText = stringResource(R.string.share)
+
     SimpleSmallAppBar(
         title = R.string.post,
         navController = navController,
@@ -124,7 +126,7 @@ private fun AppBar(
 
             IconButton(onClick = {
                 coroutineScope.launch {
-                    share(context, postModel)
+                    share(context, postModel, shareText)
                 }
             }) {
                 Icon(
@@ -136,17 +138,18 @@ private fun AppBar(
 }
 
 @OptIn(ExperimentalCoilApi::class)
-private suspend fun share(context: Context, postModel: PostModel) = withContext(Dispatchers.IO) {
-    val intent = Intent().apply {
-        action = Intent.ACTION_SEND
-        putExtra(Intent.EXTRA_TEXT, postModel.link)
-        putExtra(Intent.EXTRA_TITLE, postModel.title)
-        type = "text/plain"
-        flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-    }
+private suspend fun share(context: Context, postModel: PostModel, shareText: String) =
+    withContext(Dispatchers.IO) {
+        val intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, postModel.link)
+            putExtra(Intent.EXTRA_TITLE, postModel.title)
+            type = "text/plain"
+            flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+        }
 
-    val uri =
-        context.imageLoader.diskCache?.openSnapshot(postModel.id.toString())?.use { snapshot ->
+        val uri =
+            context.imageLoader.diskCache?.openSnapshot(postModel.id.toString())?.use { snapshot ->
             FileProvider.getUriForFile(
                 context, "pl.vemu.zsme.fileprovider", snapshot.data.toFile()
             )
@@ -156,7 +159,7 @@ private suspend fun share(context: Context, postModel: PostModel) = withContext(
         null, arrayOf("image/png"), ClipData.Item(uri)
     )// ClipData.newUri(context.contentResolver, null, uri) TODO
 
-    val shareIntent = Intent.createChooser(intent, "Share post")
+        val shareIntent = Intent.createChooser(intent, shareText)
     withContext(Dispatchers.Main) {
         context.startActivity(shareIntent)
     }
