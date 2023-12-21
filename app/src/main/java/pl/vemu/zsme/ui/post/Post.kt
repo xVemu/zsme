@@ -1,58 +1,67 @@
 package pl.vemu.zsme.ui.post
 
 import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DockedSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ListItem
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarData
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarVisuals
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
+import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -72,9 +81,9 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.NavGraph
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import pl.vemu.zsme.R
 import pl.vemu.zsme.data.model.PostModel
+import pl.vemu.zsme.modifiers.noRippleClickable
 import pl.vemu.zsme.paddingBottom
 import pl.vemu.zsme.paddingTop
 import pl.vemu.zsme.plus
@@ -93,6 +102,8 @@ annotation class PostNavGraph(
     val start: Boolean = false,
 )
 
+private val toolbarHeight = 68.dp
+
 @OptIn(ExperimentalMaterial3Api::class)
 @PostNavGraph(start = true)
 @Destination("post/main")
@@ -102,15 +113,12 @@ fun Post(
     vm: PostVM = hiltViewModel(),
 ) {
     val pagingItems = vm.posts.collectAsLazyPagingItems()
-    val nestedScrolling = rememberFloatingTopBar(toolbarHeight = 64.dp)
+    val focusManager = LocalFocusManager.current
 
     Scaffold(
-        topBar = {
-            FloatingSearchBar(nestedScrolling.offset)
-        },
-        modifier = Modifier.nestedScroll(nestedScrolling.nestedScrollConnection),
-        contentWindowInsets = WindowInsets.statusBars
-    ) { padding ->
+        Modifier
+            .noRippleClickable { focusManager.clearFocus() }
+            .statusBarsPadding()) { padding ->
         val refreshing by remember {
             derivedStateOf {
                 pagingItems.loadState.refresh is LoadState.Loading
@@ -123,17 +131,16 @@ fun Post(
             }
         }
 
-        val pullRefreshState = rememberPullToRefreshState()
+        val pullRefreshState =
+            rememberPullToRefreshState(toolbarHeight + 80.dp) // toolbar height + default
 
-        if (pullRefreshState.isRefreshing)
-            LaunchedEffect(Unit) {
-                pagingItems.refresh()
-            }
+        if (pullRefreshState.isRefreshing) LaunchedEffect(Unit) {
+            pagingItems.refresh()
+        }
 
-        if (!refreshing)
-            LaunchedEffect(Unit) {
-                pullRefreshState.endRefresh()
-            }
+        if (!refreshing) LaunchedEffect(Unit) {
+            pullRefreshState.endRefresh()
+        }
 
         Crossfade(initial, label = "Post") { initialState ->
             if (initialState) Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -144,10 +151,19 @@ fun Post(
             }
             else Box(Modifier.nestedScroll(pullRefreshState.nestedScrollConnection)) {
 
-                LazyColumn(Modifier.fillMaxSize(), contentPadding = padding.plus(top = 8.dp)) {
+                val nestedScrolling = rememberFloatingTopBar(toolbarHeight)
+
+                LazyColumn(
+                    Modifier
+                        .fillMaxSize()
+                        .nestedScroll(nestedScrolling.nestedScrollConnection),
+                    contentPadding = padding.plus(top = 72.dp)
+                ) {
                     items(pagingItems.itemCount, key = pagingItems.itemKey { it.id }) { idx ->
                         pagingItems[idx]?.let { post ->
-                            PostCard(navController, post)
+                            PostCard(post) {
+                                navController.navigate(DetailDestination(post))
+                            }
                         }
                     }
                     item {
@@ -176,11 +192,10 @@ fun Post(
                     }
                 }
 
-                if (pagingItems.loadState.refresh is LoadState.Error) Snackbar(modifier = Modifier
-                    .padding(
-                        padding
-                    )
-                    .align(Alignment.BottomCenter),
+                if (pagingItems.loadState.refresh is LoadState.Error) Snackbar(
+                    modifier = Modifier
+                        .padding(padding)
+                        .align(Alignment.BottomCenter),
                     snackbarData = object : SnackbarData {
                         override val visuals = object : SnackbarVisuals {
                             override val actionLabel = stringResource(R.string.retry)
@@ -194,14 +209,22 @@ fun Post(
                         override fun performAction() {
                             pagingItems.retry()
                         }
+                    },
+                )
 
-                    })
 
                 PullToRefreshContainer(
                     state = pullRefreshState,
                     modifier = Modifier
                         .padding(padding)
                         .align(Alignment.TopCenter),
+                )
+
+                val query by vm.query.collectAsStateWithLifecycle()
+                FloatingSearchBar(
+                    offset = nestedScrolling.offset,
+                    query = query ?: "",
+                    onQueryChange = vm::setQuery,
                 )
             }
         }
@@ -210,61 +233,78 @@ fun Post(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun FloatingSearchBar(offset: Density.() -> IntOffset, vm: PostVM = hiltViewModel()) {
-    var text by rememberSaveable { mutableStateOf("") }
-    var active by rememberSaveable { mutableStateOf(false) }
+private fun FloatingSearchBar(
+    offset: Density.() -> IntOffset,
+    query: String,
+    onQueryChange: (query: String?) -> Unit,
+) {
+    val shadowPx = with(LocalDensity.current) { Elevation.Level3.roundToPx().toFloat() }
+    val toolbarHeight = with(LocalDensity.current) { toolbarHeight.roundToPx().toFloat() }
+    val shape = SearchBarDefaults.dockedShape
 
-    val query by vm.query.collectAsStateWithLifecycle()
-
-    Box( /*TODO add shadow only when floating, translations, save last 5 to DB, place inside scaffold, position pullrefresh, dark theme*/
+    Box(
         Modifier
-            .fillMaxWidth()
-            .statusBarsPadding()
+            .padding(8.dp)
             .offset(offset)
-    ) {
-        DockedSearchBar(
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .padding(top = 8.dp),
-            query = query ?: "",
-            onQueryChange = { vm.setQuery(it) },
-            shadowElevation = Elevation.Level3,
-            onSearch = { active = false },
-            active = active,
-            onActiveChange = {
-                active = it
-            },
-            placeholder = { Text("Znajdź post") },
-            leadingIcon = { Icon(Icons.Rounded.Search, contentDescription = "Znajdź post") },
-        ) {
-            repeat(4) { idx ->
-                val resultText = "Suggestion $idx"
-                ListItem(headlineContent = { Text(resultText) },
-                    supportingContent = { Text("Additional info") },
-                    leadingContent = { Icon(Icons.Filled.Star, contentDescription = null) },
-                    modifier = Modifier
-                        .clickable {
-                            text = resultText
-                            active = false
-                        }
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 4.dp))
+            .graphicsLayer {
+                this.shape = shape
+                shadowElevation = if (offset().y <= -toolbarHeight) 0F else shadowPx
             }
-        }
+            .background(MaterialTheme.colorScheme.surfaceColorAtElevation(Elevation.Level3), shape)
+    ) {
+        val interactionSource = remember { MutableInteractionSource() }
+        val focusRequester = remember { FocusRequester() }
+
+        BasicTextField(
+            value = query,
+            onValueChange = onQueryChange,
+            modifier = Modifier
+                .height(SearchBarDefaults.InputFieldHeight)
+                .fillMaxWidth()
+                .focusRequester(focusRequester)
+                .clickable { focusRequester.requestFocus() },
+            singleLine = true,
+            textStyle = LocalTextStyle.current,
+            cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+            interactionSource = interactionSource,
+            decorationBox = @Composable { innerTextField ->
+                TextFieldDefaults.DecorationBox(
+                    value = query,
+                    innerTextField = innerTextField,
+                    singleLine = true,
+                    visualTransformation = VisualTransformation.None,
+                    leadingIcon = {
+                        Icon(
+                            Icons.Rounded.Search,
+                            modifier = Modifier.offset(4.dp),
+                            contentDescription = "Znajdź post"
+                        )
+                    },
+                    placeholder = { Text("Znajdź post") },
+                    shape = SearchBarDefaults.inputFieldShape,
+                    colors = SearchBarDefaults.inputFieldColors(),
+                    contentPadding = TextFieldDefaults.contentPaddingWithoutLabel(),
+                    enabled = true,
+                    interactionSource = interactionSource,
+                    container = {},
+                )
+            }
+        )
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun PostCard(
-    navController: DestinationsNavigator,
     postModel: PostModel,
+    onClick: () -> Unit,
 ) {
-    Card(modifier = Modifier
-        .heightIn(150.dp)
-        .padding(8.dp), onClick = {
-        navController.navigate(DetailDestination(postModel))
-    }) {
+    Card(
+        modifier = Modifier
+            .heightIn(150.dp)
+            .padding(8.dp),
+        onClick = onClick,
+    ) {
         Row {
             Column(Modifier.padding(8.dp)) {
                 AsyncImage(
@@ -293,8 +333,7 @@ private fun PostCard(
                 Html(
                     html = postModel.title,
                     style = MaterialTheme.typography.labelLarge.copy(
-                        color = MaterialTheme.colorScheme.primary,
-                        textAlign = TextAlign.Center
+                        color = MaterialTheme.colorScheme.primary, textAlign = TextAlign.Center
                     ),
                     modifier = Modifier.fillMaxWidth(),
                 )
@@ -312,7 +351,7 @@ private fun PostCard(
 @Preview
 @Composable
 private fun PostCardPreview(@PreviewParameter(PostPreviewProvider::class) postModel: PostModel) {
-    PostCard(navController = EmptyDestinationsNavigator, postModel = postModel)
+    PostCard(postModel = postModel) {}
 }
 
 class PostPreviewProvider : PreviewParameterProvider<PostModel> {
