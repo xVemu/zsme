@@ -4,8 +4,8 @@ import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
 import java.util.*
 
+// TODO Remove when Retrofit 2.10.0 is released
 @Keep
-/*TODO Keep needed?*/
 data class PostEntity(
     val id: Int,
     val date: Date,

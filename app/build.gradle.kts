@@ -146,8 +146,8 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling:$compose")
 
     // Network
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.retrofit2:retrofit:2.10.0-SNAPSHOT")
+    implementation("com.squareup.retrofit2:converter-gson:2.10.0-SNAPSHOT")
     implementation("it.skrape:skrapeit:1.2.2")
     // Chrome custom tabs
     implementation("androidx.browser:browser:1.7.0")
@@ -172,4 +172,13 @@ dependencies {
     implementation("com.github.YarikSOffice:lingver:1.3.0")
     debugImplementation("com.squareup.leakcanary:leakcanary-android:2.12")
     implementation("com.github.viluahealthcare:compose-html:1.0.3")
+}
+
+// https://github.com/androidx/androidx/blob/08c6116/compose/compiler/design/compiler-metrics.md
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    val path = layout.buildDirectory.dir("composeReports").get().asFile.path
+    compilerOptions.freeCompilerArgs.addAll(
+        "-P",
+        "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=$path"
+    )
 }
