@@ -15,14 +15,14 @@ fun Avatar(content: String) {
     Box(
         Modifier
             .background(
-                MaterialTheme.colorScheme.primaryContainer,
+                MaterialTheme.colorScheme.secondaryContainer,
                 MaterialTheme.shapes.extraLarge,
             )
             .size(40.dp)
     ) {
         Text(
             content,
-            style = MaterialTheme.typography.titleMedium.copy(color = MaterialTheme.colorScheme.onPrimaryContainer),
+            style = MaterialTheme.typography.titleMedium.copy(color = MaterialTheme.colorScheme.onSecondaryContainer),
             modifier = Modifier.align(Alignment.Center)
         )
     }

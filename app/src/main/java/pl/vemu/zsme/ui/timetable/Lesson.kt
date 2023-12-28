@@ -194,7 +194,6 @@ private fun LessonTabRow(pagerState: PagerState) {
                     coroutineScope.launch { pagerState.animateScrollToPage(index) }
                 },
                 text = { Text(name) },
-                selectedContentColor = MaterialTheme.colorScheme.onSurface,
                 unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }

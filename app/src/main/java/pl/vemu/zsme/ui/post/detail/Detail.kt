@@ -131,10 +131,10 @@ private fun AppBar(
             }) {
                 Icon(
                     imageVector = Icons.Rounded.Share,
-                contentDescription = stringResource(R.string.share)
-            )
-        }
-    })
+                    contentDescription = stringResource(R.string.share)
+                )
+            }
+        })
 }
 
 @OptIn(ExperimentalCoilApi::class)
@@ -150,34 +150,40 @@ private suspend fun share(context: Context, postModel: PostModel, shareText: Str
 
         val uri =
             context.imageLoader.diskCache?.openSnapshot(postModel.id.toString())?.use { snapshot ->
-            FileProvider.getUriForFile(
-                context, "pl.vemu.zsme.fileprovider", snapshot.data.toFile()
-            )
-        }
+                FileProvider.getUriForFile(
+                    context, "pl.vemu.zsme.fileprovider", snapshot.data.toFile()
+                )
+            }
 
-    intent.clipData = ClipData(
-        null, arrayOf("image/png"), ClipData.Item(uri)
-    )// ClipData.newUri(context.contentResolver, null, uri) TODO
+        intent.clipData = ClipData(
+            null, arrayOf("image/png"), ClipData.Item(uri)
+        )// ClipData.newUri(context.contentResolver, null, uri) TODO
 
         val shareIntent = Intent.createChooser(intent, shareText)
-    withContext(Dispatchers.Main) {
-        context.startActivity(shareIntent)
+        withContext(Dispatchers.Main) {
+            context.startActivity(shareIntent)
+        }
     }
-}
 
 @Composable
 private fun DetailFloatingButton(
     navController: DestinationsNavigator,
     images: List<String>,
 ) {
-    ExtendedFloatingActionButton(text = { Text(stringResource(R.string.gallery)) }, onClick = {
-        navController.navigate(GalleryDestination(images.toTypedArray()))
-    }, icon = {
-        Icon(
-            imageVector = Icons.Rounded.PhotoLibrary,
-            contentDescription = stringResource(R.string.gallery)
-        )
-    })
+    ExtendedFloatingActionButton(
+        containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+        contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
+        text = { Text(stringResource(R.string.gallery)) },
+        onClick = {
+            navController.navigate(GalleryDestination(images.toTypedArray()))
+        },
+        icon = {
+            Icon(
+                imageVector = Icons.Rounded.PhotoLibrary,
+                contentDescription = stringResource(R.string.gallery)
+            )
+        },
+    )
 }
 
 @Composable

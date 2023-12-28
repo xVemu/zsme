@@ -117,7 +117,7 @@ fun Gallery(images: Array<String>, navController: DestinationsNavigator) {
                     repeat(pagerState.pageCount) { iteration ->
                         Box(modifier = Modifier
                             .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.outline)
+                            .background(MaterialTheme.colorScheme.outlineVariant)
                             .clickable {
                                 coroutineScope.launch {
                                     pagerState.animateScrollToPage(iteration)
