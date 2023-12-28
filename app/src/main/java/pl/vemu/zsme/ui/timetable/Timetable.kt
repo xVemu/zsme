@@ -35,6 +35,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -45,6 +46,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -60,8 +62,8 @@ import pl.vemu.zsme.Result
 import pl.vemu.zsme.data.model.TimetableModel
 import pl.vemu.zsme.ui.components.Avatar
 import pl.vemu.zsme.ui.components.CustomError
-import pl.vemu.zsme.ui.components.PrimaryPagerTabIndicator
 import pl.vemu.zsme.ui.components.SimpleLargeAppBar
+import pl.vemu.zsme.ui.components.measureTabIndicatorOffset
 import pl.vemu.zsme.ui.destinations.LessonDestination
 import java.util.Locale
 
@@ -104,8 +106,7 @@ fun Timetable(
                 when (data) {
                     is Result.Loading -> {
                         Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
+                            modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
                         ) {
                             CircularProgressIndicator()
                         }
@@ -117,8 +118,7 @@ fun Timetable(
 
                     is Result.Success -> {
                         HorizontalPager(
-                            state = pagerState,
-                            modifier = Modifier.fillMaxSize()
+                            state = pagerState, modifier = Modifier.fillMaxSize()
                         ) { page ->
                             val value = data.value[page]
                             LazyColumn(Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)) {
@@ -229,11 +229,16 @@ private fun TimetableTabRow(
 
     PrimaryTabRow(
         selectedTabIndex = pagerState.currentPage,
-        indicator = { tabPositions ->
-            PrimaryPagerTabIndicator(
-                pagerState = pagerState,
-                tabPositions = tabPositions,
-            )
+        indicator = {
+            TabRowDefaults.PrimaryIndicator(Modifier.tabIndicatorLayout { measurable, constraints, tabPositions ->
+                measureTabIndicatorOffset(
+                    tabPositions,
+                    pagerState.currentPage,
+                    pagerState.currentPageOffsetFraction,
+                    measurable,
+                    constraints,
+                )
+            }, width = Dp.Unspecified)
         },
     ) {
         stringArrayResource(R.array.timetable_tabs).zip(icons)

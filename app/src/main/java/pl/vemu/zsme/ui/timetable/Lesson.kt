@@ -182,6 +182,7 @@ private fun LessonTabRow(pagerState: PagerState) {
                 Modifier.pagerTabIndicatorOffset(
                     pagerState = pagerState,
                     tabPositions = tabPositions,
+                    useFullWidth = true,
                 ),
             )
         }

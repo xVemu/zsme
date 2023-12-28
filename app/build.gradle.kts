@@ -133,7 +133,7 @@ dependencies {
 
     // Compose
     val compose = "1.5.4"
-    implementation("androidx.compose.material3:material3:1.2.0-alpha12")
+    implementation("androidx.compose.material3:material3:1.2.0-beta01")
     implementation("androidx.compose.material:material-icons-extended:$compose")
     implementation("androidx.activity:activity-compose:1.8.1")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
