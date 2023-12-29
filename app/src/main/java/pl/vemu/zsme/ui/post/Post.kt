@@ -23,13 +23,14 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material.icons.rounded.SearchOff
 import androidx.compose.material3.Card
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBarDefaults
@@ -39,9 +40,9 @@ import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarVisuals
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
-import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -49,15 +50,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -66,8 +63,6 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import androidx.compose.ui.unit.Density
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -85,12 +80,9 @@ import pl.vemu.zsme.R
 import pl.vemu.zsme.data.model.PostModel
 import pl.vemu.zsme.modifiers.noRippleClickable
 import pl.vemu.zsme.paddingBottom
-import pl.vemu.zsme.plus
-import pl.vemu.zsme.remembers.rememberFloatingTopBar
 import pl.vemu.zsme.ui.components.CustomError
 import pl.vemu.zsme.ui.components.Html
 import pl.vemu.zsme.ui.destinations.DetailDestination
-import pl.vemu.zsme.ui.theme.Elevation
 import pl.vemu.zsme.util.Formatter
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -101,8 +93,6 @@ annotation class PostNavGraph(
     val start: Boolean = false,
 )
 
-private val toolbarHeight = 68.dp
-
 @OptIn(ExperimentalMaterial3Api::class)
 @PostNavGraph(start = true)
 @Destination("post/main")
@@ -111,18 +101,30 @@ fun Post(
     navController: DestinationsNavigator,
     vm: PostVM = hiltViewModel(),
 ) {
-    val pagingItems = vm.posts.collectAsLazyPagingItems()
     val focusManager = LocalFocusManager.current
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
     Scaffold(
         Modifier
             .noRippleClickable { focusManager.clearFocus() }
-            .statusBarsPadding()) { padding ->
-        val refreshing by remember {
-            derivedStateOf {
-                pagingItems.loadState.refresh is LoadState.Loading
-            }
-        }
+            .statusBarsPadding(),
+        topBar = {
+            val query by vm.query.collectAsStateWithLifecycle()
+
+            CenterAlignedTopAppBar(
+                title = {
+                    FloatingSearchBar(
+                        query = query ?: "",
+                        onQueryChange = vm::setQuery,
+                    )
+                },
+                scrollBehavior = scrollBehavior,
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(scrolledContainerColor = MaterialTheme.colorScheme.surface),
+            )
+
+        },
+    ) { padding ->
+        val pagingItems = vm.posts.collectAsLazyPagingItems()
 
         val initial by remember {
             derivedStateOf {
@@ -130,104 +132,115 @@ fun Post(
             }
         }
 
-        val pullRefreshState =
-            rememberPullToRefreshState(toolbarHeight + 80.dp) // toolbar height + default
-
-        if (pullRefreshState.isRefreshing) LaunchedEffect(Unit) {
-            pagingItems.refresh()
-        }
-
-        if (!refreshing) LaunchedEffect(Unit) {
-            pullRefreshState.endRefresh()
-        }
-
         Crossfade(initial, label = "Post") { initialState ->
+
             if (initialState) Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                if (refreshing) CircularProgressIndicator()
-                else if (pagingItems.loadState.refresh is LoadState.Error) CustomError {
-                    pagingItems.retry()
+                when (pagingItems.loadState.refresh) {
+                    is LoadState.Loading -> CircularProgressIndicator()
+                    is LoadState.Error -> CustomError { pagingItems.retry() }
+                    else -> Column(horizontalAlignment = Alignment.CenterHorizontally) { /*TODO displays on start*/
+                        Icon(
+                            Icons.Rounded.SearchOff,
+                            contentDescription = stringResource(R.string.no_results),
+                            modifier = Modifier.size(108.dp),
+                        )
+                        Text(
+                            stringResource(R.string.no_results),
+                            style = MaterialTheme.typography.displaySmall
+                        )
+                    }
                 }
             }
-            else Box(Modifier.nestedScroll(pullRefreshState.nestedScrollConnection)) {
+            else {
+                val pullRefreshState = rememberPullToRefreshState()
 
-                val nestedScrolling = rememberFloatingTopBar(toolbarHeight)
+                if (pullRefreshState.isRefreshing) LaunchedEffect(Unit) {
+                    pagingItems.refresh()
+                }
 
-                LazyColumn(
-                    Modifier
-                        .fillMaxSize()
-                        .nestedScroll(nestedScrolling.nestedScrollConnection),
-                    contentPadding = padding.plus(top = 72.dp)
-                ) {
-                    items(pagingItems.itemCount, key = pagingItems.itemKey { it.id }) { idx ->
-                        pagingItems[idx]?.let { post ->
-                            PostCard(post) {
-                                navController.navigate(DetailDestination(post))
-                            }
-                        }
-                    }
-                    item {
-                        Box(
-                            Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            when (pagingItems.loadState.append) {
-                                is LoadState.Loading -> CircularProgressIndicator()
-
-                                is LoadState.Error -> Row(modifier = Modifier
-                                    .clickable { pagingItems.retry() }
-                                    .paddingBottom(8.dp),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.Center) {
-                                    Icon(
-                                        Icons.Rounded.Refresh,
-                                        contentDescription = stringResource(R.string.refresh)
-                                    )
-                                    Spacer(Modifier.width(4.dp))
-                                    Text(stringResource(R.string.error_retry))
-                                }
-
-                                else -> {}
-                            }
-                        }
+                val refreshing by remember {
+                    derivedStateOf {
+                        pagingItems.loadState.refresh is LoadState.Loading
                     }
                 }
 
-                if (pagingItems.loadState.refresh is LoadState.Error) Snackbar(
-                    modifier = Modifier
-                        .padding(padding)
-                        .align(Alignment.BottomCenter),
-                    snackbarData = object : SnackbarData {
-                        override val visuals = object : SnackbarVisuals {
-                            override val actionLabel = stringResource(R.string.retry)
-                            override val duration = SnackbarDuration.Indefinite
-                            override val message = stringResource(R.string.error)
-                            override val withDismissAction = false
+                if (!refreshing) LaunchedEffect(Unit) {
+                    pullRefreshState.endRefresh()
+                }
+
+                Box(Modifier.nestedScroll(pullRefreshState.nestedScrollConnection)) {
+
+                    LazyColumn(
+                        Modifier
+                            .fillMaxSize()
+                            .nestedScroll(scrollBehavior.nestedScrollConnection),
+                        contentPadding = padding
+                    ) {
+                        items(pagingItems.itemCount, key = pagingItems.itemKey { it.id }) { idx ->
+                            pagingItems[idx]?.let { post ->
+                                PostCard(post) {
+                                    navController.navigate(DetailDestination(post))
+                                }
+                            }
                         }
 
-                        override fun dismiss() = Unit
+                        item {
+                            Box(
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                                contentAlignment = Alignment.Center,
+                            ) {
+                                when (pagingItems.loadState.append) {
+                                    is LoadState.Loading -> CircularProgressIndicator()
 
-                        override fun performAction() {
-                            pagingItems.retry()
+                                    is LoadState.Error -> Row(modifier = Modifier
+                                        .clickable { pagingItems.retry() }
+                                        .paddingBottom(8.dp),
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.Center) {
+                                        Icon(
+                                            Icons.Rounded.Refresh,
+                                            contentDescription = stringResource(R.string.refresh)
+                                        )
+                                        Spacer(Modifier.width(4.dp))
+                                        Text(stringResource(R.string.error_retry))
+                                    }
+
+                                    else -> {}
+                                }
+                            }
                         }
-                    },
-                )
+                    }
+
+                    if (pagingItems.loadState.refresh is LoadState.Error) Snackbar(
+                        modifier = Modifier
+                            .padding(padding)
+                            .align(Alignment.BottomCenter),
+                        snackbarData = object : SnackbarData {
+                            override val visuals = object : SnackbarVisuals {
+                                override val actionLabel = stringResource(R.string.retry)
+                                override val duration = SnackbarDuration.Indefinite
+                                override val message = stringResource(R.string.error)
+                                override val withDismissAction = false
+                            }
+
+                            override fun dismiss() = Unit
+
+                            override fun performAction() {
+                                pagingItems.retry()
+                            }
+                        },
+                    )
 
 
-                PullToRefreshContainer(
-                    state = pullRefreshState,
-                    modifier = Modifier
-                        .padding(padding)
-                        .align(Alignment.TopCenter),
-                )
-
-                val query by vm.query.collectAsStateWithLifecycle()
-                FloatingSearchBar(
-                    offset = nestedScrolling.offset,
-                    query = query ?: "",
-                    onQueryChange = vm::setQuery,
-                )
+                    PullToRefreshContainer(
+                        state = pullRefreshState,
+                        modifier = Modifier
+                            .padding(padding)
+                            .align(Alignment.TopCenter),
+                    )
+                }
             }
         }
     }
@@ -236,64 +249,49 @@ fun Post(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun FloatingSearchBar(
-    offset: Density.() -> IntOffset,
     query: String,
     onQueryChange: (query: String?) -> Unit,
 ) {
-    val shadowPx = with(LocalDensity.current) { Elevation.Level3.roundToPx().toFloat() }
-    val toolbarHeight = with(LocalDensity.current) { toolbarHeight.roundToPx().toFloat() }
-    val shape = SearchBarDefaults.dockedShape
+    val interactionSource = remember { MutableInteractionSource() }
 
-    Box(
-        Modifier
-            .padding(8.dp)
-            .offset(offset)
-            .graphicsLayer {
-                this.shape = shape
-                shadowElevation = if (offset().y <= -toolbarHeight) 0F else shadowPx
-            }
+    BasicTextField(
+        value = query,
+        onValueChange = onQueryChange,
+        modifier = Modifier
+            .height(SearchBarDefaults.InputFieldHeight)
+            .fillMaxWidth()
             .background(
-                MaterialTheme.colorScheme.surfaceColorAtElevation(Elevation.Level3),
-                shape
-            )) {
-        val interactionSource = remember { MutableInteractionSource() }
-        val focusRequester = remember { FocusRequester() }
-
-        BasicTextField(value = query,
-            onValueChange = onQueryChange,
-            modifier = Modifier
-                .height(SearchBarDefaults.InputFieldHeight)
-                .fillMaxWidth()
-                .focusRequester(focusRequester)
-                .clickable { focusRequester.requestFocus() },
-            singleLine = true,
-            textStyle = LocalTextStyle.current,
-            cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-            interactionSource = interactionSource,
-            decorationBox = @Composable { innerTextField ->
-                TextFieldDefaults.DecorationBox(
-                    value = query,
-                    innerTextField = innerTextField,
-                    singleLine = true,
-                    visualTransformation = VisualTransformation.None,
-                    leadingIcon = {
-                        Icon(
-                            Icons.Rounded.Search,
-                            modifier = Modifier.offset(4.dp),
-                            contentDescription = stringResource(R.string.search_post)
-                        )
-                    },
-                    placeholder = { Text(stringResource(R.string.search_post)) },
-                    shape = SearchBarDefaults.inputFieldShape,
-                    colors = SearchBarDefaults.inputFieldColors(),
-                    contentPadding = TextFieldDefaults.contentPaddingWithoutLabel(),
-                    enabled = true,
-                    interactionSource = interactionSource,
-                    container = {},
-                )
-            })
-    }
+                MaterialTheme.colorScheme.surfaceContainerHigh,
+                SearchBarDefaults.dockedShape,
+            ),
+        singleLine = true,
+        textStyle = MaterialTheme.typography.bodyLarge,
+        cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+        interactionSource = interactionSource,
+        decorationBox = @Composable { innerTextField ->
+            TextFieldDefaults.DecorationBox(
+                value = query,
+                innerTextField = innerTextField,
+                singleLine = true,
+                visualTransformation = VisualTransformation.None,
+                leadingIcon = {
+                    Icon(
+                        Icons.Rounded.Search,
+                        modifier = Modifier.offset(4.dp),
+                        contentDescription = stringResource(R.string.search_post)
+                    )
+                },
+                placeholder = { Text(stringResource(R.string.search_post)) },
+                shape = SearchBarDefaults.inputFieldShape,
+                colors = SearchBarDefaults.inputFieldColors(),
+                contentPadding = TextFieldDefaults.contentPaddingWithoutLabel(),
+                enabled = true,
+                interactionSource = interactionSource,
+                container = {},
+            )
+        },
+    )
 }
 
 @Composable
@@ -326,7 +324,7 @@ private fun PostCard(
             )
             Html(
                 html = postModel.title,
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.headlineSmall,
                 modifier = Modifier.padding(horizontal = 16.dp),
             )
             Html(
