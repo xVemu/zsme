@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -28,9 +27,10 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Snackbar
@@ -51,6 +51,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -62,7 +63,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -85,7 +85,6 @@ import pl.vemu.zsme.R
 import pl.vemu.zsme.data.model.PostModel
 import pl.vemu.zsme.modifiers.noRippleClickable
 import pl.vemu.zsme.paddingBottom
-import pl.vemu.zsme.paddingTop
 import pl.vemu.zsme.plus
 import pl.vemu.zsme.remembers.rememberFloatingTopBar
 import pl.vemu.zsme.ui.components.CustomError
@@ -253,13 +252,14 @@ private fun FloatingSearchBar(
                 this.shape = shape
                 shadowElevation = if (offset().y <= -toolbarHeight) 0F else shadowPx
             }
-            .background(MaterialTheme.colorScheme.surfaceColorAtElevation(Elevation.Level3), shape)
-    ) {
+            .background(
+                MaterialTheme.colorScheme.surfaceColorAtElevation(Elevation.Level3),
+                shape
+            )) {
         val interactionSource = remember { MutableInteractionSource() }
         val focusRequester = remember { FocusRequester() }
 
-        BasicTextField(
-            value = query,
+        BasicTextField(value = query,
             onValueChange = onQueryChange,
             modifier = Modifier
                 .height(SearchBarDefaults.InputFieldHeight)
@@ -292,8 +292,7 @@ private fun FloatingSearchBar(
                     interactionSource = interactionSource,
                     container = {},
                 )
-            }
-        )
+            })
     }
 }
 
@@ -303,50 +302,38 @@ private fun PostCard(
     onClick: () -> Unit,
 ) {
     Card(
-        modifier = Modifier
-            .heightIn(150.dp)
-            .padding(8.dp),
+        modifier = Modifier.padding(8.dp),
         onClick = onClick,
     ) {
-        Row {
-            Column(Modifier.padding(8.dp)) {
-                AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(postModel.thumbnail ?: R.drawable.zsme).crossfade(true)
-                        .diskCacheKey(postModel.id.toString())
-                        .transformations(RoundedCornersTransformation(12f)).build(),
-                    placeholder = painterResource(R.drawable.zsme),
-                    contentDescription = stringResource(R.string.thumbnail),
-                    modifier = Modifier.size(108.dp),
-                    contentScale = ContentScale.Crop,
-                )
-                Column(
-                    Modifier
-                        .width(108.dp)
-                        .paddingTop(8.dp)
-                ) {
-                    ProvideTextStyle(MaterialTheme.typography.bodyMedium) {
-                        Text(Formatter.relativeDate(postModel.date))
-                        Text(postModel.author)
-                        Text(postModel.category)
-                    }
-                }
-            }
-            Column(Modifier.padding(8.dp)) {
-                Html(
-                    html = postModel.title,
-                    style = MaterialTheme.typography.labelLarge.copy(
-                        color = MaterialTheme.colorScheme.primary, textAlign = TextAlign.Center
-                    ),
-                    modifier = Modifier.fillMaxWidth(),
-                )
-                Html(
-                    html = postModel.excerpt,
-                    modifier = Modifier.paddingBottom(8.dp),
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
-
+        Column {
+            ListItem(
+                leadingContent = {
+                    AsyncImage(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(postModel.thumbnail ?: R.drawable.zsme).crossfade(true)
+                            .diskCacheKey(postModel.id.toString())
+                            .transformations(RoundedCornersTransformation(12f)).build(),
+                        placeholder = painterResource(R.drawable.zsme),
+                        contentDescription = stringResource(R.string.thumbnail),
+                        modifier = Modifier.size(64.dp),
+                        contentScale = ContentScale.Crop,
+                    )
+                },
+                overlineContent = { Text(postModel.category) },
+                headlineContent = { Text(postModel.author) },
+                supportingContent = { Text(Formatter.relativeDate(postModel.date)) },
+                colors = ListItemDefaults.colors(Color.Transparent),
+            )
+            Html(
+                html = postModel.title,
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.padding(horizontal = 16.dp),
+            )
+            Html(
+                html = postModel.excerpt,
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+            )
         }
     }
 }

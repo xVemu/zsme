@@ -54,7 +54,7 @@ data class MediaDetails(
 
 @Keep
 data class Sizes(
-    val medium: Image,
+    val thumbnail: Image,
     val full: Image,
 )
 
