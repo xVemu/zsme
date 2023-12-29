@@ -42,7 +42,7 @@ import kotlinx.coroutines.launch
 import net.engawapg.lib.zoomable.rememberZoomState
 import net.engawapg.lib.zoomable.zoomable
 import pl.vemu.zsme.R
-import pl.vemu.zsme.modifiers.noRippleCombinedClickable
+import pl.vemu.zsme.modifiers.noRippleClickable
 import pl.vemu.zsme.paddingBottom
 import pl.vemu.zsme.ui.components.SimpleSmallAppBar
 
@@ -82,7 +82,7 @@ fun Gallery(images: Array<String>, navController: DestinationsNavigator) {
                 )
             }
         },
-        modifier = Modifier.noRippleCombinedClickable(onDoubleClick = {
+        modifier = Modifier.noRippleClickable(onDoubleClick = {
             if (!fullScreen) fullScreen = true
         }) {
             fullScreen = !fullScreen

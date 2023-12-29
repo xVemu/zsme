@@ -135,7 +135,7 @@ dependencies {
     val compose = "1.5.4"
     implementation("androidx.compose.material3:material3:1.2.0-beta01")
     implementation("androidx.compose.material:material-icons-extended:$compose")
-    implementation("androidx.activity:activity-compose:1.8.1")
+    implementation("androidx.activity:activity-compose:1.8.2")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
     // Test
@@ -154,7 +154,7 @@ dependencies {
 
     // Navigation
     implementation("io.github.raamcosta.compose-destinations:core:1.9.53")
-    implementation("androidx.navigation:navigation-compose:2.7.5")
+    implementation("androidx.navigation:navigation-compose:2.7.6")
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
     ksp("io.github.raamcosta.compose-destinations:ksp:1.9.53")
     implementation("io.github.fornewid:material-motion-compose-core:1.0.7")
