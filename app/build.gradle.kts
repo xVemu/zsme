@@ -102,12 +102,6 @@ dependencies {
     androidTestImplementation("org.mockito:mockito-android:5.5.0")
     androidTestImplementation("org.mockito.kotlin:mockito-kotlin:5.1.0")
 
-    // WorkManager
-    implementation("androidx.hilt:hilt-work:1.1.0")
-    implementation("androidx.work:work-runtime-ktx:2.9.0")
-    ksp("androidx.hilt:hilt-compiler:1.1.0")
-    androidTestImplementation("androidx.work:work-testing:2.9.0")
-
     // Hilt
     val hilt = "2.48"
     implementation("com.google.dagger:hilt-android:$hilt")
@@ -165,6 +159,7 @@ dependencies {
 
     // Firebase
     implementation("com.google.firebase:firebase-config:21.6.0")
+    implementation("com.google.firebase:firebase-messaging:23.4.0")
 
     // 3-rd party
     implementation("io.coil-kt:coil-compose:2.4.0")

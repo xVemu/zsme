@@ -3,4 +3,5 @@
     <color name="surfaceNighted">#FDFBFF</color>
     <color name="surface">#FDFBFF</color>
     <color name="onSurface">#1A1B1E</color>
+    <color name="primary">#475D92</color>
 </resources>

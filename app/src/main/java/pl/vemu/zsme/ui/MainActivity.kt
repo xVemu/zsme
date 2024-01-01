@@ -1,8 +1,6 @@
 package pl.vemu.zsme.ui
 
 import android.Manifest
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.content.Context
 import android.graphics.Color
 import android.os.Build
@@ -45,11 +43,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.rememberNavController
-import androidx.work.Constraints
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.NetworkType
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
@@ -75,10 +68,8 @@ import pl.vemu.zsme.R
 import pl.vemu.zsme.remembers.Prefs
 import pl.vemu.zsme.remembers.rememberStringPreference
 import pl.vemu.zsme.ui.components.transitions
-import pl.vemu.zsme.ui.post.PostWorker
 import pl.vemu.zsme.ui.theme.MainTheme
 import soup.compose.material.motion.animation.rememberSlideDistance
-import java.util.concurrent.TimeUnit
 
 val Context.dataStore by preferencesDataStore(name = "settings")
 var fullScreen by mutableStateOf(false)
@@ -130,8 +121,6 @@ class MainActivity : ComponentActivity() {
             } catch (_: Exception) {
             }
         }
-        createNotificationChannel()
-        setupWorker()
         requestNotificationPermission()
     }
 
@@ -236,30 +225,6 @@ class MainActivity : ComponentActivity() {
         requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), 0)
     }
 
-    private fun setupWorker() {
-        val constraints =
-            Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
-        val worker = PeriodicWorkRequestBuilder<PostWorker>(
-            3L, TimeUnit.HOURS, 15L, TimeUnit.MINUTES
-        ).setConstraints(constraints).build()
-        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
-            "SyncPostWorker", ExistingPeriodicWorkPolicy.KEEP, worker
-        )
-    }
-
-    private fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
-
-        val channel = NotificationChannel(
-            getString(R.string.app_name),
-            getString(R.string.channel_name),
-            NotificationManager.IMPORTANCE_LOW
-        )
-        val notificationManager =
-            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.createNotificationChannel(channel)
-    }
-
     private suspend fun updateApp() {
         val manager = AppUpdateManagerFactory.create(applicationContext)
         val appUpdateInfo = manager.requestAppUpdateInfo()
@@ -280,6 +245,5 @@ class MainActivity : ComponentActivity() {
 * onProvideAssistContent
 * formatter kotlin
 * webview table full width
-* translations
 * dark theme
 * */
