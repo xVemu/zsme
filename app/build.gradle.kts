@@ -17,7 +17,7 @@ android {
 
     defaultConfig {
         applicationId = "pl.vemu.zsme"
-        minSdk = 23
+        minSdk = 26
         targetSdk = 34
         versionCode = 43
         versionName = "2.1.0"
