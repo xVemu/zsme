@@ -52,6 +52,7 @@ import com.google.android.play.core.ktx.isFlexibleUpdateAllowed
 import com.google.android.play.core.ktx.requestAppUpdateInfo
 import com.google.android.play.core.ktx.requestUpdateFlow
 import com.google.firebase.Firebase
+import com.google.firebase.messaging.messaging
 import com.google.firebase.remoteconfig.remoteConfig
 import com.google.firebase.remoteconfig.remoteConfigSettings
 import com.ramcosta.composedestinations.DestinationsNavHost
@@ -121,6 +122,7 @@ class MainActivity : ComponentActivity() {
             } catch (_: Exception) {
             }
         }
+        Firebase.messaging.subscribeToTopic("news")
         requestNotificationPermission()
     }
 

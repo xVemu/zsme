@@ -45,6 +45,8 @@ data class Embedded(
 data class WpFeaturedmedia(
     @SerializedName("media_details")
     val mediaDetails: MediaDetails,
+    @SerializedName("source_url")
+    val sourceUrl: String?,
 )
 
 @Keep
@@ -55,7 +57,6 @@ data class MediaDetails(
 @Keep
 data class Sizes(
     val thumbnail: Image,
-    val full: Image,
 )
 
 @Keep

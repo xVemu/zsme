@@ -308,7 +308,8 @@ private fun PostCard(
                 leadingContent = {
                     AsyncImage(
                         model = ImageRequest.Builder(LocalContext.current)
-                            .data(postModel.thumbnail ?: R.drawable.zsme).crossfade(true)
+                            .data(postModel.thumbnail ?: postModel.fullImage ?: R.drawable.zsme)
+                            .crossfade(true)
                             .diskCacheKey(postModel.id.toString())
                             .transformations(RoundedCornersTransformation(12f)).build(),
                         placeholder = painterResource(R.drawable.zsme),

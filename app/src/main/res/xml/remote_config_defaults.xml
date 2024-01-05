@@ -2,15 +2,19 @@
 <defaults>
   <entry>
     <key>apiUrl</key>
-    <value>https://zsme.tarnow.pl/wp/wp-json/wp/v2/</value>
+    <value>https://zsme.tarnow.pl/wp/wp-json/wp/v2</value>
   </entry>
   <entry>
-    <key>baseUrl</key>
-    <value>https://zsme.tarnow.pl</value>
+    <key>scheduleUrl</key>
+    <value>http://nas.zsme.tarnow.pl:8080</value>
   </entry>
   <entry>
     <key>journalUrl</key>
     <value>https://uonetplus.umt.tarnow.pl/tarnow</value>
+  </entry>
+  <entry>
+    <key>baseUrl</key>
+    <value>https://zsme.tarnow.pl</value>
   </entry>
   <entry>
     <key>scheduleLogin</key>
@@ -19,9 +23,5 @@
   <entry>
     <key>schedulePassword</key>
     <value>ZSME23</value>
-  </entry>
-  <entry>
-    <key>scheduleUrl</key>
-    <value>http://nas.zsme.tarnow.pl:8080/</value>
   </entry>
 </defaults>

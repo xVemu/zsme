@@ -27,7 +27,7 @@ class RetrofitModule {
     @Singleton
     @Provides
     fun provideRetrofit(gson: Gson): Retrofit = Retrofit.Builder()
-        .baseUrl(Firebase.remoteConfig["apiUrl"].asString())
+        .baseUrl(Firebase.remoteConfig["apiUrl"].asString() + "/")
         .addConverterFactory(GsonConverterFactory.create(gson))
         .build()
 
