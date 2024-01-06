@@ -60,6 +60,7 @@ import kotlinx.coroutines.launch
 import pl.vemu.zsme.R
 import pl.vemu.zsme.Result
 import pl.vemu.zsme.data.model.TimetableModel
+import pl.vemu.zsme.remembers.isLandscape
 import pl.vemu.zsme.ui.components.Avatar
 import pl.vemu.zsme.ui.components.CustomError
 import pl.vemu.zsme.ui.components.SimpleLargeAppBar
@@ -230,15 +231,18 @@ private fun TimetableTabRow(
     PrimaryTabRow(
         selectedTabIndex = pagerState.currentPage,
         indicator = {
-            TabRowDefaults.PrimaryIndicator(Modifier.tabIndicatorLayout { measurable, constraints, tabPositions ->
-                measureTabIndicatorOffset(
-                    tabPositions,
-                    pagerState.currentPage,
-                    pagerState.currentPageOffsetFraction,
-                    measurable,
-                    constraints,
-                )
-            }, width = Dp.Unspecified)
+            TabRowDefaults.PrimaryIndicator(
+                Modifier.tabIndicatorLayout { measurable, constraints, tabPositions ->
+                    measureTabIndicatorOffset(
+                        tabPositions,
+                        pagerState.currentPage,
+                        pagerState.currentPageOffsetFraction,
+                        measurable,
+                        constraints,
+                    )
+                },
+                width = Dp.Unspecified,
+            )
         },
     ) {
         stringArrayResource(R.array.timetable_tabs).zip(icons)
@@ -248,7 +252,7 @@ private fun TimetableTabRow(
                     onClick = {
                         coroutineScope.launch { pagerState.animateScrollToPage(index) }
                     },
-                    icon = { Icon(icon, name) },
+                    icon = if (!isLandscape) ({ Icon(icon, name) }) else null,
                     text = { Text(name) },
                     unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                 )

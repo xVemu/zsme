@@ -1,6 +1,5 @@
 package pl.vemu.zsme.ui.timetable
 
-import android.os.Build
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
@@ -60,7 +59,6 @@ import pl.vemu.zsme.ui.components.CustomError
 import pl.vemu.zsme.ui.components.SimpleMediumAppBar
 import pl.vemu.zsme.ui.components.pagerTabIndicatorOffset
 import java.time.LocalDate
-import java.util.Calendar
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @TimetableNavGraph
@@ -160,13 +158,9 @@ fun Lesson(
     }
 }
 
-private fun getWeekDay() =
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        val dayOfWeek = LocalDate.now().dayOfWeek.value
+private fun getWeekDay(): Int =
+    LocalDate.now().dayOfWeek.value.let { dayOfWeek ->
         if (dayOfWeek >= 6) 0 else dayOfWeek - 1
-    } else {
-        val dayOfWeek = Calendar.getInstance()[Calendar.DAY_OF_WEEK]
-        if ((dayOfWeek == 1) or (dayOfWeek == 7)) 0 else dayOfWeek - 2
     }
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
@@ -174,29 +168,34 @@ private fun getWeekDay() =
 private fun LessonTabRow(pagerState: PagerState) {
     val coroutineScope = rememberCoroutineScope()
 
-    SecondaryScrollableTabRow(
-        selectedTabIndex = pagerState.currentPage,
-        edgePadding = 0.dp,
-        indicator = { tabPositions ->
-            TabRowDefaults.SecondaryIndicator(
-                Modifier.pagerTabIndicatorOffset(
-                    pagerState = pagerState,
-                    tabPositions = tabPositions,
-                    useFullWidth = true,
-                ),
-            )
+    Column {
+        SecondaryScrollableTabRow(
+            selectedTabIndex = pagerState.currentPage,
+            edgePadding = 0.dp,
+            // Divider is not full width on landscape.
+            divider = {},
+            indicator = { tabPositions ->
+                TabRowDefaults.SecondaryIndicator(
+                    Modifier.pagerTabIndicatorOffset(
+                        pagerState = pagerState,
+                        tabPositions = tabPositions,
+                        useFullWidth = true,
+                    ),
+                )
+            }
+        ) {
+            stringArrayResource(R.array.weekdays).forEachIndexed { index, name ->
+                Tab(
+                    selected = pagerState.currentPage == index,
+                    onClick = {
+                        coroutineScope.launch { pagerState.animateScrollToPage(index) }
+                    },
+                    text = { Text(name) },
+                    unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
         }
-    ) {
-        stringArrayResource(R.array.weekdays).forEachIndexed { index, name ->
-            Tab(
-                selected = pagerState.currentPage == index,
-                onClick = {
-                    coroutineScope.launch { pagerState.animateScrollToPage(index) }
-                },
-                text = { Text(name) },
-                unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-        }
+        HorizontalDivider()
     }
 }
 

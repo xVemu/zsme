@@ -101,7 +101,7 @@ fun Gallery(images: Array<String>, navController: DestinationsNavigator) {
                         .crossfade(true).build(),
                     modifier = Modifier
                         .fillMaxSize()
-                        .zoomable(rememberZoomState()),
+                        .zoomable(rememberZoomState()), /*TODO dont crop resolution (on landscape)*/
                     contentDescription = null
                 )
             }
