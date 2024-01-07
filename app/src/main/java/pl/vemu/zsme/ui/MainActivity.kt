@@ -1,6 +1,7 @@
 package pl.vemu.zsme.ui
 
 import android.Manifest
+import android.app.assist.AssistContent
 import android.content.Context
 import android.graphics.Color
 import android.os.Build
@@ -18,6 +19,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.core.net.toUri
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
@@ -47,6 +49,7 @@ import kotlinx.coroutines.withContext
 import pl.vemu.zsme.BuildConfig
 import pl.vemu.zsme.R
 import pl.vemu.zsme.remembers.Prefs
+import pl.vemu.zsme.remembers.link
 import pl.vemu.zsme.remembers.rememberStringPreference
 import pl.vemu.zsme.ui.components.PrimaryScaffold
 import pl.vemu.zsme.ui.components.transitions
@@ -156,10 +159,14 @@ class MainActivity : ComponentActivity() {
             if (appUpdateResult is AppUpdateResult.Downloaded) appUpdateResult.completeUpdate()
         }
     }
+
+    override fun onProvideAssistContent(outContent: AssistContent?) {
+        super.onProvideAssistContent(outContent)
+        outContent?.webUri = link?.toUri()
+    }
 }
 
 /*TODO
-* onProvideAssistContent
 * formatter kotlin
 * webview table full width
 * dark theme

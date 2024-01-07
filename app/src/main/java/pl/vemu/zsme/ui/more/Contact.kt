@@ -19,10 +19,14 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.remoteconfig.get
+import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import pl.vemu.zsme.R
+import pl.vemu.zsme.remembers.LinkProviderEffect
 import pl.vemu.zsme.ui.components.SimpleMediumAppBar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -30,6 +34,8 @@ import pl.vemu.zsme.ui.components.SimpleMediumAppBar
 @Destination("more/contact")
 @Composable
 fun Contact(navController: DestinationsNavigator) {
+    LinkProviderEffect(Firebase.remoteConfig["baseUrl"].asString() + "/wp/kontakt/")
+
     val context = LocalContext.current
     val behavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 

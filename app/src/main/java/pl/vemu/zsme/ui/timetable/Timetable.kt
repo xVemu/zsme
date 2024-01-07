@@ -50,6 +50,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.google.firebase.Firebase
+import com.google.firebase.remoteconfig.get
+import com.google.firebase.remoteconfig.remoteConfig
 import com.ramcosta.composedestinations.annotation.DeepLink
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.NavGraph
@@ -60,6 +63,7 @@ import kotlinx.coroutines.launch
 import pl.vemu.zsme.R
 import pl.vemu.zsme.Result
 import pl.vemu.zsme.data.model.TimetableModel
+import pl.vemu.zsme.remembers.LinkProviderEffect
 import pl.vemu.zsme.remembers.isLandscape
 import pl.vemu.zsme.ui.components.Avatar
 import pl.vemu.zsme.ui.components.CustomError
@@ -85,6 +89,8 @@ fun Timetable(
     navController: DestinationsNavigator,
     vm: TimetableVM = hiltViewModel(),
 ) {
+    LinkProviderEffect(Firebase.remoteConfig["scheduleUrl"].asString())
+
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
     Scaffold(topBar = {

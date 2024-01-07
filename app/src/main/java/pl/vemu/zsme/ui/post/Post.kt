@@ -72,6 +72,9 @@ import androidx.paging.compose.itemKey
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import coil.transform.RoundedCornersTransformation
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.remoteconfig.get
+import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.NavGraph
 import com.ramcosta.composedestinations.annotation.RootNavGraph
@@ -80,6 +83,7 @@ import pl.vemu.zsme.R
 import pl.vemu.zsme.data.model.PostModel
 import pl.vemu.zsme.modifiers.noRippleClickable
 import pl.vemu.zsme.paddingBottom
+import pl.vemu.zsme.remembers.LinkProviderEffect
 import pl.vemu.zsme.ui.components.CustomError
 import pl.vemu.zsme.ui.components.Html
 import pl.vemu.zsme.ui.destinations.DetailDestination
@@ -101,6 +105,8 @@ fun Post(
     navController: DestinationsNavigator,
     vm: PostVM = hiltViewModel(),
 ) {
+    LinkProviderEffect(Firebase.remoteConfig["baseUrl"].asString())
+
     val focusManager = LocalFocusManager.current
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 

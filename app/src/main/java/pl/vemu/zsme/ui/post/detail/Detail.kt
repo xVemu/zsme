@@ -52,6 +52,7 @@ import pl.vemu.zsme.Result
 import pl.vemu.zsme.data.model.HtmlString
 import pl.vemu.zsme.data.model.PostModel
 import pl.vemu.zsme.isNetworkAvailable
+import pl.vemu.zsme.remembers.LinkProviderEffect
 import pl.vemu.zsme.ui.components.CustomError
 import pl.vemu.zsme.ui.components.Html
 import pl.vemu.zsme.ui.components.SimpleSmallAppBar
@@ -70,10 +71,12 @@ fun Detail(
     navController: DestinationsNavigator,
     vm: DetailVM = hiltViewModel(),
 ) {
+//    HasDefaultViewModelProviderFactory TODO
     LaunchedEffect(Unit) {
         vm.init(postModel.id, postModel.content)
     }
-//    HasDefaultViewModelProviderFactory TODO
+
+    LinkProviderEffect(postModel.link)
 
     val images by vm.images.collectAsStateWithLifecycle()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
