@@ -174,6 +174,7 @@ private fun DetailFloatingButton(
         containerColor = MaterialTheme.colorScheme.tertiaryContainer,
         contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
         text = { Text(stringResource(R.string.gallery)) },
+//        modifier = Modifier.safeDrawingPadding(), TODO tablet
         onClick = {
             navController.navigate(GalleryDestination(images.toTypedArray()))
         },

@@ -16,15 +16,12 @@ import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.navigation.suite.ExperimentalMaterial3AdaptiveNavigationSuiteApi
 import androidx.compose.material3.adaptive.navigation.suite.NavigationSuite
 import androidx.compose.material3.adaptive.navigation.suite.NavigationSuiteScaffoldLayout
 import androidx.compose.material3.adaptive.navigation.suite.NavigationSuiteType
-import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -50,29 +47,24 @@ fun PrimaryScaffold(
 ) {
 
     Scaffold(contentWindowInsets = WindowInsets.systemBars.exclude(WindowInsets.statusBars)) { padding ->
-        Surface(
-            color = MaterialTheme.colorScheme.background,
-            contentColor = contentColorFor(MaterialTheme.colorScheme.background),
+        NavigationSuiteScaffoldLayout(
+            navigationSuite = {
+                AnimatedVisibility(
+                    visible = !fullScreen,
+                    enter = enterAnim(isLandscape),
+                    exit = exitAnim(isLandscape)
+                ) {
+                    Navigation(navController, isLandscape)
+                }
+            },
+            layoutType = if (isLandscape) NavigationSuiteType.NavigationRail else NavigationSuiteType.NavigationBar,
         ) {
-            NavigationSuiteScaffoldLayout(
-                navigationSuite = {
-                    AnimatedVisibility(
-                        visible = !fullScreen,
-                        enter = enterAnim(isLandscape),
-                        exit = exitAnim(isLandscape)
-                    ) {
-                        Navigation(navController, isLandscape)
-                    }
-                },
-                layoutType = if (isLandscape) NavigationSuiteType.NavigationRail else NavigationSuiteType.NavigationBar,
-            ) {
-                Box(
-                    modifier = Modifier
-                        .then(if (isLandscape) Modifier.displayCutoutPadding() else Modifier)
-                        .consumeWindowInsets(padding),
-                    content = content,
-                )
-            }
+            Box(
+                modifier = Modifier
+                    .then(if (isLandscape) Modifier.displayCutoutPadding() else Modifier)
+                    .consumeWindowInsets(padding),
+                content = content,
+            )
         }
     }
 }

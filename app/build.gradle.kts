@@ -6,7 +6,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("kotlin-parcelize")
     id("dagger.hilt.android.plugin")
-    id("io.gitlab.arturbosch.detekt") version "1.23.4"
+    id("io.gitlab.arturbosch.detekt")
     id("com.google.devtools.ksp")
     id("com.google.gms.google-services")
 }
@@ -78,7 +78,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.6"
+        kotlinCompilerExtensionVersion = "1.5.7"
     }
 
     packaging {
@@ -98,12 +98,12 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation("org.mockito:mockito-core:5.5.0")
-    androidTestImplementation("org.mockito:mockito-android:5.5.0")
-    androidTestImplementation("org.mockito.kotlin:mockito-kotlin:5.1.0")
+    androidTestImplementation("org.mockito:mockito-core:5.8.0")
+    androidTestImplementation("org.mockito:mockito-android:5.8.0")
+    androidTestImplementation("org.mockito.kotlin:mockito-kotlin:5.2.1")
 
     // Hilt
-    val hilt = "2.48"
+    val hilt = "2.50"
     implementation("com.google.dagger:hilt-android:$hilt")
     ksp("com.google.dagger:hilt-compiler:$hilt")
     androidTestImplementation("com.google.dagger:hilt-android-testing:$hilt")
@@ -150,25 +150,25 @@ dependencies {
     implementation("androidx.browser:browser:1.7.0")
 
     // Navigation
-    implementation("io.github.raamcosta.compose-destinations:core:1.9.53")
+    implementation("io.github.raamcosta.compose-destinations:core:1.9.57")
     implementation("androidx.navigation:navigation-compose:2.7.6")
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
-    ksp("io.github.raamcosta.compose-destinations:ksp:1.9.53")
-    implementation("io.github.fornewid:material-motion-compose-core:1.0.7")
+    ksp("io.github.raamcosta.compose-destinations:ksp:1.9.57")
+    implementation("io.github.fornewid:material-motion-compose-core:1.1.0")
 
     // Settings
     implementation("androidx.datastore:datastore-preferences:1.0.0")
-    implementation("com.github.alorma:compose-settings-ui-m3:0.27.0")
+    implementation("com.github.alorma:compose-settings-ui-m3:1.0.3")
 
     // Firebase
     implementation("com.google.firebase:firebase-config:21.6.0")
     implementation("com.google.firebase:firebase-messaging:23.4.0")
 
     // 3-rd party
-    implementation("io.coil-kt:coil-compose:2.4.0")
-    implementation("net.engawapg.lib:zoomable:1.5.2")
+    implementation("io.coil-kt:coil-compose:2.5.0")
+    implementation("net.engawapg.lib:zoomable:1.5.3")
     implementation("com.github.YarikSOffice:lingver:1.3.0")
-    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.12")
+    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.13")
     implementation("com.github.viluahealthcare:compose-html:1.0.3")
 }
 
