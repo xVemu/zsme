@@ -50,9 +50,6 @@ fun WebView(html: String, style: TextStyle = LocalTextStyle.current) {
                 //noinspection SetJavaScriptEnabled
                 javaScriptEnabled = true
                 defaultFontSize = style.fontSize.value.toInt()
-//                isAlgorithmicDarkeningAllowed = true implementation("androidx.webkit:webkit:1.9.0") TODO
-//                isForceDarkAllowed = true
-//                forceDark = true
             }
             webViewClient = object : WebViewClient() {
                 override fun shouldOverrideUrlLoading(

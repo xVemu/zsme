@@ -271,7 +271,7 @@ private fun FloatingSearchBar(
                 SearchBarDefaults.dockedShape,
             ),
         singleLine = true,
-        textStyle = MaterialTheme.typography.bodyLarge,
+        textStyle = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.onSurface),
         cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
         interactionSource = interactionSource,

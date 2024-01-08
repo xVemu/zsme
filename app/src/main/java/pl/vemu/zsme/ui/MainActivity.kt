@@ -169,5 +169,4 @@ class MainActivity : ComponentActivity() {
 /*TODO
 * formatter kotlin
 * webview table full width
-* dark theme
 * */

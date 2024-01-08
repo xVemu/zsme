@@ -105,35 +105,36 @@ fun Gallery(images: Array<String>, navController: DestinationsNavigator) {
                     contentDescription = null
                 )
             }
-            AnimatedVisibility(
-                !fullScreen,
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .paddingBottom(16.dp),
-                enter = fadeIn() + scaleIn(),
-                exit = fadeOut() + scaleOut(),
-            ) {
-                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    repeat(pagerState.pageCount) { iteration ->
-                        Box(modifier = Modifier
-                            .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.outlineVariant)
-                            .clickable {
-                                coroutineScope.launch {
-                                    pagerState.animateScrollToPage(iteration)
-                                }
-                            }
-                            .size(10.dp))
-                    }
-                }
-                Box(
+            if (pagerState.pageCount > 1)
+                AnimatedVisibility(
+                    !fullScreen,
                     modifier = Modifier
-                        .slidingLineTransition(pagerState, 16.dp)
-                        .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.primary)
-                        .size(10.dp)
-                )
-            }
+                        .align(Alignment.BottomCenter)
+                        .paddingBottom(16.dp),
+                    enter = fadeIn() + scaleIn(),
+                    exit = fadeOut() + scaleOut(),
+                ) {
+                    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                        repeat(pagerState.pageCount) { iteration ->
+                            Box(modifier = Modifier
+                                .clip(CircleShape)
+                                .background(MaterialTheme.colorScheme.outlineVariant)
+                                .clickable {
+                                    coroutineScope.launch {
+                                        pagerState.animateScrollToPage(iteration)
+                                    }
+                                }
+                                .size(10.dp))
+                        }
+                    }
+                    Box(
+                        modifier = Modifier
+                            .slidingLineTransition(pagerState, 16.dp)
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.primary)
+                            .size(10.dp)
+                    )
+                }
         }
     }
 }
