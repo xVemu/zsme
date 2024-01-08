@@ -1,7 +1,6 @@
 package pl.vemu.zsme.data.repo
 
 import com.google.firebase.Firebase
-import com.google.firebase.remoteconfig.get
 import com.google.firebase.remoteconfig.remoteConfig
 import it.skrape.core.htmlDocument
 import it.skrape.fetcher.AsyncFetcher
@@ -11,6 +10,9 @@ import it.skrape.fetcher.skrape
 import it.skrape.selects.DocElement
 import it.skrape.selects.ElementNotFoundException
 import pl.vemu.zsme.data.model.LessonModel
+import pl.vemu.zsme.util.scheduleLogin
+import pl.vemu.zsme.util.schedulePassword
+import pl.vemu.zsme.util.scheduleUrl
 import javax.inject.Inject
 
 class LessonRepo @Inject constructor() {
@@ -18,9 +20,9 @@ class LessonRepo @Inject constructor() {
     suspend fun getLesson(link: String): List<List<LessonModel>> =
         skrape(AsyncFetcher) {
             request {
-                val login: String = Firebase.remoteConfig["scheduleLogin"].asString()
-                val password: String = Firebase.remoteConfig["schedulePassword"].asString()
-                url = Firebase.remoteConfig["scheduleUrl"].asString() + "/$link"
+                val login: String = Firebase.remoteConfig.scheduleLogin
+                val password: String = Firebase.remoteConfig.schedulePassword
+                url = Firebase.remoteConfig.scheduleUrl + "/$link"
                 authentication = BasicAuth(login, password)
             }
             response {

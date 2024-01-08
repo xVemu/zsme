@@ -1,7 +1,6 @@
 package pl.vemu.zsme.injection
 
 import com.google.firebase.Firebase
-import com.google.firebase.remoteconfig.get
 import com.google.firebase.remoteconfig.remoteConfig
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -10,6 +9,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import pl.vemu.zsme.data.service.ZSMEService
+import pl.vemu.zsme.util.apiUrl
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
@@ -27,7 +27,7 @@ class RetrofitModule {
     @Singleton
     @Provides
     fun provideRetrofit(gson: Gson): Retrofit = Retrofit.Builder()
-        .baseUrl(Firebase.remoteConfig["apiUrl"].asString() + "/")
+        .baseUrl(Firebase.remoteConfig.apiUrl + "/")
         .addConverterFactory(GsonConverterFactory.create(gson))
         .build()
 

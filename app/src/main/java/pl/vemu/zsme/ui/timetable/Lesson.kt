@@ -50,7 +50,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.firebase.Firebase
-import com.google.firebase.remoteconfig.get
 import com.google.firebase.remoteconfig.remoteConfig
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -62,6 +61,7 @@ import pl.vemu.zsme.remembers.LinkProviderEffect
 import pl.vemu.zsme.ui.components.CustomError
 import pl.vemu.zsme.ui.components.SimpleMediumAppBar
 import pl.vemu.zsme.ui.components.pagerTabIndicatorOffset
+import pl.vemu.zsme.util.scheduleUrl
 import java.time.LocalDate
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
@@ -79,7 +79,7 @@ fun Lesson(
         vm.init(url)
     }
 
-    LinkProviderEffect(Firebase.remoteConfig["scheduleUrl"].asString() + "/$url")
+    LinkProviderEffect(Firebase.remoteConfig.scheduleUrl + "/$url")
 
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 

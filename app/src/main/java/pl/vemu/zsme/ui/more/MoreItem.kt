@@ -9,13 +9,14 @@ import androidx.compose.material.icons.rounded.ImportContacts
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.google.firebase.Firebase
-import com.google.firebase.remoteconfig.get
 import com.google.firebase.remoteconfig.remoteConfig
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import pl.vemu.zsme.R
 import pl.vemu.zsme.launchCustomTabs
 import pl.vemu.zsme.ui.destinations.ContactDestination
 import pl.vemu.zsme.ui.destinations.SettingsDestination
+import pl.vemu.zsme.util.baseUrl
+import pl.vemu.zsme.util.journalUrl
 
 enum class MoreItem(
     val icon: ImageVector,
@@ -30,12 +31,12 @@ enum class MoreItem(
         }
     ),
     HOME_PAGE(Icons.Rounded.Home, R.string.home_page, { context, _ ->
-        context.launchCustomTabs(Firebase.remoteConfig["baseUrl"].asString())
+        context.launchCustomTabs(Firebase.remoteConfig.baseUrl)
     }
     ),
     JOURNAL(
         Icons.Rounded.ImportContacts, R.string.e_dziennik, { context, _ ->
-            context.launchCustomTabs(Firebase.remoteConfig["journalUrl"].asString())
+            context.launchCustomTabs(Firebase.remoteConfig.journalUrl)
         }
     ),
     CONTACT(
