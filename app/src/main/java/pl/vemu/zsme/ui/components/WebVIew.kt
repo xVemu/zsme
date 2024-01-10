@@ -5,6 +5,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -23,6 +24,7 @@ fun WebView(html: String, style: TextStyle = LocalTextStyle.current) {
         style.color.takeOrElse {
             LocalContentColor.current
         }.toArgb()
+    val linkColor = MaterialTheme.colorScheme.primary.toArgb()
 
     val styledHtml = """
         <style type="text/css">
@@ -36,6 +38,9 @@ fun WebView(html: String, style: TextStyle = LocalTextStyle.current) {
         }
         table, th, td {
             border: 1px solid;
+        }
+        a {
+            color: rgb(${linkColor.red} ${linkColor.green} ${linkColor.blue});
         }
         </style>
     """ + html
