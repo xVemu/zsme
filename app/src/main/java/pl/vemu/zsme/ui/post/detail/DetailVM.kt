@@ -1,5 +1,6 @@
 package pl.vemu.zsme.ui.post.detail
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -11,11 +12,14 @@ import pl.vemu.zsme.ResultList
 import pl.vemu.zsme.data.model.HtmlString
 import pl.vemu.zsme.data.model.ImageUrl
 import pl.vemu.zsme.data.repo.DetailRepo
+import pl.vemu.zsme.ui.destinations.DetailDestination
+import pl.vemu.zsme.ui.navArgs
 import javax.inject.Inject
 
 @HiltViewModel
 class DetailVM @Inject constructor(
     private val detailRepo: DetailRepo,
+    state: SavedStateHandle,
 ) : ViewModel() {
     private val _detail = MutableStateFlow<Result<HtmlString>>(Result.Loading)
     private val _images = MutableStateFlow<ResultList<ImageUrl>>(Result.Loading)
@@ -23,18 +27,23 @@ class DetailVM @Inject constructor(
     val detail = _detail.asStateFlow()
     val images = _images.asStateFlow()
 
-    fun init(id: Int, content: String) {
+    init {
+        val navArgs: DetailDestination.NavArgs = state.navArgs()
+        navArgs.postModel.run { init(id, content) }
+    }
+
+    private fun init(postId: Int, postContent: String) {
         viewModelScope.launch {
             launch {
                 _detail.value = try {
-                    Result.Success(detailRepo.removeImgsFromContent(content))
+                    Result.Success(detailRepo.removeImgsFromContent(postContent))
                 } catch (e: Exception) {
                     Result.Failure(e)
                 }
             }
             launch {
                 _images.value = try {
-                    Result.Success(detailRepo.getImages(id))
+                    Result.Success(detailRepo.getImages(postId))
                 } catch (e: Exception) {
                     Result.Failure(e)
                 }

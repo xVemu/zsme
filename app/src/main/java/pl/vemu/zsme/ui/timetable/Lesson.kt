@@ -33,7 +33,6 @@ import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -74,11 +73,6 @@ fun Lesson(
     navController: DestinationsNavigator,
     vm: LessonVM = hiltViewModel(),
 ) {
-    /*TODO recreates when navigating*/
-    LaunchedEffect(url) {
-        vm.init(url)
-    }
-
     LinkProviderEffect(Firebase.remoteConfig.scheduleUrl + "/$url")
 
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()

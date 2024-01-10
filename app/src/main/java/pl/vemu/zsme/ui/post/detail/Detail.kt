@@ -23,7 +23,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -71,11 +70,6 @@ fun Detail(
     navController: DestinationsNavigator,
     vm: DetailVM = hiltViewModel(),
 ) {
-//    HasDefaultViewModelProviderFactory TODO
-    LaunchedEffect(Unit) {
-        vm.init(postModel.id, postModel.content)
-    }
-
     LinkProviderEffect(postModel.link)
 
     val images by vm.images.collectAsStateWithLifecycle()
