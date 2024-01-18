@@ -149,9 +149,10 @@ class MainActivity : ComponentActivity() {
     private suspend fun updateApp() {
         val manager = AppUpdateManagerFactory.create(applicationContext)
         val appUpdateInfo = manager.requestAppUpdateInfo()
-        if (!(appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE && appUpdateInfo.isFlexibleUpdateAllowed && (appUpdateInfo.clientVersionStalenessDays
-                ?: -1) >= 7)
+        if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE && appUpdateInfo.isFlexibleUpdateAllowed && (appUpdateInfo.clientVersionStalenessDays
+                ?: -1) < 7
         ) return
+
         manager.startUpdateFlowForResult(
             appUpdateInfo, AppUpdateType.FLEXIBLE, this, 0
         )

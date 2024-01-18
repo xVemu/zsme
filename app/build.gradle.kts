@@ -6,7 +6,6 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("kotlin-parcelize")
     id("dagger.hilt.android.plugin")
-    id("io.gitlab.arturbosch.detekt")
     id("com.google.devtools.ksp")
     id("com.google.gms.google-services")
 }
@@ -98,8 +97,8 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation("org.mockito:mockito-core:5.8.0")
-    androidTestImplementation("org.mockito:mockito-android:5.8.0")
+    androidTestImplementation("org.mockito:mockito-core:5.9.0")
+    androidTestImplementation("org.mockito:mockito-android:5.9.0")
     androidTestImplementation("org.mockito.kotlin:mockito-kotlin:5.2.1")
 
     // Hilt
@@ -127,13 +126,13 @@ dependencies {
 
     // Compose
     val compose = "1.5.4"
-    implementation("androidx.compose.material3:material3:1.2.0-beta01")
+    implementation("androidx.compose.material3:material3:1.2.0-beta02")
     implementation("androidx.compose.material:material-icons-extended:$compose")
     implementation("androidx.activity:activity-compose:1.8.2")
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     // Landscape
-    implementation("androidx.compose.material3:material3-adaptive:1.0.0-alpha03")
+    implementation("androidx.compose.material3:material3-adaptive:1.0.0-alpha04")
     implementation("androidx.compose.material3:material3-adaptive-navigation-suite:1.0.0-alpha02")
     // Test
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:$compose")
@@ -150,11 +149,11 @@ dependencies {
     implementation("androidx.browser:browser:1.7.0")
 
     // Navigation
-    implementation("io.github.raamcosta.compose-destinations:core:1.9.57")
+    implementation("io.github.raamcosta.compose-destinations:core:1.9.62")
     implementation("androidx.navigation:navigation-compose:2.7.6")
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
-    ksp("io.github.raamcosta.compose-destinations:ksp:1.9.57")
-    implementation("io.github.fornewid:material-motion-compose-core:1.1.0")
+    ksp("io.github.raamcosta.compose-destinations:ksp:1.9.62")
+    implementation("io.github.fornewid:material-motion-compose-core:1.1.1")
 
     // Settings
     implementation("androidx.datastore:datastore-preferences:1.0.0")

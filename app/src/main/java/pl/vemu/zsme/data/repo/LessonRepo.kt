@@ -75,10 +75,10 @@ class LessonRepo @Inject constructor() {
             timeFinish = timeFinish,
         )
 
-    private fun DocElement.findFirstOrNull(selector: String): DocElement? = try {
-        findFirst(selector)
-    } catch (e: ElementNotFoundException) {
-        null
-    }
-
+    private fun DocElement.findFirstOrNull(selector: String): DocElement? =
+        try { /* https://github.com/skrapeit/skrape.it/issues/236 https://github.com/skrapeit/skrape.it/pull/227#event-11093753273  */
+            findFirst(selector)
+        } catch (e: ElementNotFoundException) {
+            null
+        }
 }
