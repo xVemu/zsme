@@ -1,10 +1,11 @@
-const logger = require('firebase-functions/logger')
-const admin = require('firebase-admin')
-const { onSchedule } = require('firebase-functions/v2/scheduler')
+import logger from 'firebase-functions/logger'
+import admin from 'firebase-admin'
+import { onSchedule } from 'firebase-functions/v2/scheduler'
+import { convert } from 'html-to-text'
 
 admin.initializeApp()
 
-exports.notifyNews = onSchedule('0 16 * * *', async () => {
+export const notifyNews = onSchedule('0 16 * * *', async () => {
 // exports.notifyNews = onRequest(async () => { // For testing purposes.
   const config = await admin.remoteConfig()
   const template = await config.getTemplate()
@@ -35,14 +36,19 @@ exports.notifyNews = onSchedule('0 16 * * *', async () => {
   await config.publishTemplate(template)
 })
 
+/** @type {Options}*/
+const options = {
+  wordwrap: false,
+}
+
 /** @returns Message */
 function createMessage(post) {
   return {
     topic: 'news',
     android: {
       notification: {
-        title: post.title.rendered,
-        body: post.excerpt.rendered.replace(/(<([^>]+)>)/gi, '') /*strips HTML*/,
+        title: convert(post.title.rendered, options),
+        body: convert(post.excerpt.rendered, options),
         eventTimestamp: new Date(post.date_gmt),
         imageUrl: post._embedded['wp:featuredmedia'][0].source_url,
       },
