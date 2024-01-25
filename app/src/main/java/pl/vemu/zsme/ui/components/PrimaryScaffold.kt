@@ -82,7 +82,7 @@ private fun Navigation(navController: NavController, rail: Boolean) {
 
     NavigationSuite(layoutType = if (rail) NavigationSuiteType.NavigationRail else NavigationSuiteType.NavigationBar) {
         BottomNavItem.entries.forEach { item ->
-            val selected = currentDestination == item.destination
+            val selected = currentDestination == item.destination /* TODO colors */
 
             item(label = { Text(stringResource(item.label)) }, selected = selected, icon = {
                 Icon(

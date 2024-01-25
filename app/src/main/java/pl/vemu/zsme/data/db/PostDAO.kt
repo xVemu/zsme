@@ -4,7 +4,6 @@ import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
-import kotlinx.coroutines.flow.Flow
 import pl.vemu.zsme.data.model.PostModel
 
 @Dao
@@ -13,15 +12,26 @@ interface PostDAO {
     @Upsert
     suspend fun insertAll(postmodels: List<PostModel>)
 
-    @Upsert
-    suspend fun insert(postModel: PostModel)
+    @Query(
+        """SELECT * FROM posts WHERE
+        excerpt LIKE '%' || :query || '%'
+        AND (author IN (:authors) OR coalesce(:authors, 'null') = 'null')
+        AND (category IN (:categories) OR coalesce(:categories, 'null') = 'null')
+        ORDER BY date DESC
+        """
+    )
+    fun searchPosts(
+        query: String,
+        authors: List<String>?,
+        categories: List<String>?,
+    ): PagingSource<Int, PostModel>
 
-    @Query("SELECT * FROM posts WHERE (:query IS NULL OR excerpt LIKE '%' || :query || '%') ORDER BY date DESC")
-    fun searchPosts(query: String?): PagingSource<Int, PostModel>
-
-    @Query("DELETE FROM posts WHERE (:query IS NULL OR excerpt LIKE '%' || :query || '%')")
-    fun deleteByQuery(query: String?)
-
-    @Query("SELECT * FROM posts ORDER by date DESC")
-    fun getAll(): Flow<PostModel>
+    @Query(
+        """DELETE FROM posts WHERE
+        excerpt LIKE '%' || :query || '%'
+        AND (author IN (:authors) OR coalesce(:authors, 'null') = 'null')
+        AND (category IN (:categories) OR coalesce(:categories, 'null') = 'null')
+        """
+    )
+    fun delete(query: String, authors: List<String>?, categories: List<String>?)
 }

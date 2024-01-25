@@ -5,7 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 
 fun Modifier.noRippleClickable(onDoubleClick: (() -> Unit)? = null, onClick: () -> Unit) =
-    pointerInput(Unit) {
+    this.pointerInput(Unit) {
         detectTapGestures(
             onDoubleTap = onDoubleClick?.let { { it() } },
             onTap = { onClick() },

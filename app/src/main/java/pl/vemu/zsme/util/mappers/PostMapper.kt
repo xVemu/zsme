@@ -37,7 +37,7 @@ class PostMapper @Inject constructor() : EntityMapper<PostEntity, PostModel> {
         content = Content(model.content),
         excerpt = Excerpt(model.excerpt),
         embedded = Embedded(
-            author = listOf(Author(model.author)),
+            author = listOf(Author(0, model.author)),
             wpFeaturedmedia = listOf(
                 WpFeaturedmedia(
                     MediaDetails(
@@ -48,7 +48,7 @@ class PostMapper @Inject constructor() : EntityMapper<PostEntity, PostModel> {
                     model.fullImage,
                 )
             ),
-            category = listOf(listOf(Category(model.category))),
+            category = listOf(listOf(Category(0, model.category))),
         ),
     )
 

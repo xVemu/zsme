@@ -3,7 +3,6 @@ package pl.vemu.zsme.ui.timetable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -26,7 +25,7 @@ class TimetableVM @Inject constructor(
     }
 
     fun downloadTimetable() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             _list.value = Result.Loading
             _list.value = try {
                 Result.Success(timetableRepo.getTimetable())

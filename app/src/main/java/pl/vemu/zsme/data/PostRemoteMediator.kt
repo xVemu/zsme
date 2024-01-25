@@ -8,6 +8,8 @@ import androidx.room.withTransaction
 import pl.vemu.zsme.data.db.Database
 import pl.vemu.zsme.data.db.PostDAO
 import pl.vemu.zsme.data.db.RemoteKeyDAO
+import pl.vemu.zsme.data.model.Author
+import pl.vemu.zsme.data.model.Category
 import pl.vemu.zsme.data.model.PostModel
 import pl.vemu.zsme.data.model.RemoteKeyModel
 import pl.vemu.zsme.data.service.ZSMEService
@@ -20,7 +22,9 @@ const val PAGE_SIZE = 10
 
 @OptIn(ExperimentalPagingApi::class)
 class PostRemoteMediator(
-    private val query: String?,
+    private val query: String,
+    private val categories: List<Category>,
+    private val authors: List<Author>,
     private val postDAO: PostDAO,
     private val remoteKeyDAO: RemoteKeyDAO,
     private val db: Database,
@@ -34,6 +38,7 @@ class PostRemoteMediator(
         return try {
             val page = when (loadType) {
                 LoadType.REFRESH -> DEFAULT_PAGE
+
                 LoadType.APPEND -> {
                     val remoteKey = state.getRemoteKeyForLastItem()
                     val nextKey = remoteKey?.nextKey
@@ -46,12 +51,23 @@ class PostRemoteMediator(
                 }
             }
 
-            val response = zsmeService.searchPosts(query, page, state.config.pageSize)
+            val response =
+                zsmeService.searchPosts(
+                    query,
+                    page,
+                    state.config.pageSize,
+                    categories.map { it.id },
+                    authors.map { it.id },
+                )
             val isEndOfList = response.isEmpty() || response.size < state.config.pageSize
 
             db.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    postDAO.deleteByQuery(query)
+                    postDAO.delete(
+                        query,
+                        authors.ifEmpty { null }?.map { it.name },
+                        categories.ifEmpty { null }?.map { it.name },
+                    )
                     remoteKeyDAO.clearAll()
                 }
                 val nextKey = if (isEndOfList) null else page + 1
@@ -69,8 +85,6 @@ class PostRemoteMediator(
         }
     }
 
-
     private suspend fun PagingState<Int, PostModel>.getRemoteKeyForLastItem(): RemoteKeyModel? =
         lastItemOrNull()?.let { postModel -> remoteKeyDAO.remoteKeyByQueryId(postModel.id) }
-
 }

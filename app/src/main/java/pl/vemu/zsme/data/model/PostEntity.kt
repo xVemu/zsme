@@ -67,10 +67,12 @@ data class Image(
 
 @Keep
 data class Author(
+    val id: Int,
     val name: String,
 )
 
 @Keep
 data class Category(
+    val id: Int,
     val name: String,
 )

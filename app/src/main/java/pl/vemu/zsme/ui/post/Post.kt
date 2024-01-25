@@ -120,7 +120,7 @@ fun Post(
             CenterAlignedTopAppBar(
                 title = {
                     FloatingSearchBar(
-                        query = query ?: "",
+                        query = query,
                         onQueryChange = vm::setQuery,
                     )
                 },
@@ -256,7 +256,7 @@ fun Post(
 @Composable
 private fun FloatingSearchBar(
     query: String,
-    onQueryChange: (query: String?) -> Unit,
+    onQueryChange: (query: String) -> Unit,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
 
