@@ -29,8 +29,16 @@ fun Context.isNetworkAvailable() =
     }
 
 sealed interface Result<out T> {
-    class Success<out T>(val value: T) : Result<T>
-    class Failure(val error: Exception) : Result<Nothing>
+    @JvmInline
+    value class Success<out T>(val value: T) : Result<T> {
+        operator fun component1() = value
+    }
+
+    @JvmInline
+    value class Failure(val error: Exception) : Result<Nothing> {
+        operator fun component1() = error
+    }
+
     data object Loading : Result<Nothing>
 }
 

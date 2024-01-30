@@ -89,4 +89,11 @@
     <string name="refresh">Odśwież</string>
     <string name="error_retry">Wystąpił błąd. Spróbuj ponownie klikając</string>
     <string name="search_post">Znajdź post</string>
+    <string name="choose_categories">Wybierz kategorie</string>
+    <string name="categories">Kategorie</string>
+    <string name="choose_authors">Wybierz autorów</string>
+    <string name="authors">Autorzy</string>
+    <string name="cancel">Anuluj</string>
+    <string name="confirm">Potwierdź</string>
+    <string name="clear">Wyczyść</string>
 </resources>

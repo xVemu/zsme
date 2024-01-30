@@ -3,6 +3,7 @@ package pl.vemu.zsme.ui.post
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,19 +19,28 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.SearchOff
+import androidx.compose.material3.BasicAlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBarDefaults
@@ -38,16 +48,22 @@ import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarData
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarVisuals
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -79,6 +95,7 @@ import com.ramcosta.composedestinations.annotation.NavGraph
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import pl.vemu.zsme.R
+import pl.vemu.zsme.Result
 import pl.vemu.zsme.data.model.PostModel
 import pl.vemu.zsme.modifiers.noRippleClickable
 import pl.vemu.zsme.paddingBottom
@@ -115,10 +132,10 @@ fun Post(
             .noRippleClickable { focusManager.clearFocus() }
             .statusBarsPadding(),
         topBar = {
-            val query by vm.query.collectAsStateWithLifecycle()
-
             CenterAlignedTopAppBar(
                 title = {
+                    val query by vm.query.collectAsStateWithLifecycle()
+
                     FloatingSearchBar(
                         query = query,
                         onQueryChange = vm::setQuery,
@@ -127,7 +144,6 @@ fun Post(
                 scrollBehavior = scrollBehavior,
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(scrolledContainerColor = MaterialTheme.colorScheme.surface),
             )
-
         },
     ) { padding ->
         val pagingItems = vm.posts.collectAsLazyPagingItems()
@@ -138,26 +154,32 @@ fun Post(
             }
         }
 
-        Crossfade(initial, label = "Post") { initialState ->
+        Column {
+            FilterBar(vm, modifier = Modifier.padding(padding))
 
-            if (initialState) Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                when (pagingItems.loadState.refresh) {
-                    is LoadState.Loading -> CircularProgressIndicator()
-                    is LoadState.Error -> CustomError { pagingItems.retry() }
-                    else -> Column(horizontalAlignment = Alignment.CenterHorizontally) { /*TODO displays on start*/
-                        Icon(
-                            Icons.Rounded.SearchOff,
-                            contentDescription = stringResource(R.string.no_results),
-                            modifier = Modifier.size(108.dp),
-                        )
-                        Text(
-                            stringResource(R.string.no_results),
-                            style = MaterialTheme.typography.displaySmall
-                        )
+            Crossfade(initial, label = "Post") { initialState ->
+
+                if (initialState) return@Crossfade Box(
+                    Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    when (pagingItems.loadState.refresh) {
+                        is LoadState.Loading -> CircularProgressIndicator()
+                        is LoadState.Error -> CustomError { pagingItems.retry() }
+                        else -> Column(horizontalAlignment = Alignment.CenterHorizontally) { /*TODO displays on start*/
+                            Icon(
+                                Icons.Rounded.SearchOff,
+                                contentDescription = stringResource(R.string.no_results),
+                                modifier = Modifier.size(108.dp),
+                            )
+                            Text(
+                                stringResource(R.string.no_results),
+                                style = MaterialTheme.typography.displaySmall
+                            )
+                        }
                     }
                 }
-            }
-            else {
+
                 val pullRefreshState = rememberPullToRefreshState()
 
                 if (pullRefreshState.isRefreshing) LaunchedEffect(Unit) {
@@ -180,7 +202,6 @@ fun Post(
                         Modifier
                             .fillMaxSize()
                             .nestedScroll(scrollBehavior.nestedScrollConnection),
-                        contentPadding = padding
                     ) {
                         items(pagingItems.itemCount, key = pagingItems.itemKey { it.id }) { idx ->
                             pagingItems[idx]?.let { post ->
@@ -242,13 +263,117 @@ fun Post(
 
                     PullToRefreshContainer(
                         state = pullRefreshState,
-                        modifier = Modifier
-                            .padding(padding)
-                            .align(Alignment.TopCenter),
+                        modifier = Modifier.align(Alignment.TopCenter),
                     )
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun FilterBar(vm: PostVM, modifier: Modifier = Modifier) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = modifier.horizontalScroll(rememberScrollState()),
+    ) {
+        Box {} // Padding 8dp
+        val authors by vm.authors.collectAsStateWithLifecycle()
+
+        when (val list = authors) {
+            is Result.Loading -> {}
+
+            is Result.Failure ->
+                Button(onClick = { vm.downloadCategoriesAndAuthors() }) {
+                    Text(stringResource(R.string.retry))
+                }
+
+            is Result.Success -> {
+                var isOpened by remember { mutableStateOf(false) }
+                val actives by vm.activeAuthors.collectAsStateWithLifecycle()
+                val active = actives.isNotEmpty()
+
+                FilterChip(
+                    onClick = { isOpened = true },
+                    selected = active,
+                    label = {
+                        if (active) Text(actives.joinToString(", ") { it.name })
+                        else Text(stringResource(R.string.authors))
+                    },
+                    trailingIcon = {
+                        if (active) Icon(
+                            Icons.Rounded.Clear,
+                            contentDescription = stringResource(R.string.clear),
+                            modifier = Modifier
+                                .clickable { vm.setAuthors(emptyList()) }
+                                .size(18.dp),
+                        )
+                    }
+                )
+
+                if (isOpened)
+                    ChoiceDialog(
+                        stringResource(R.string.choose_authors),
+                        list.value.map { it.name },
+                        actives.map { it.name },
+                    ) { items ->
+                        isOpened = false
+                        if (items != null) vm.setAuthors(list.value.filter {
+                            items.contains(
+                                it.name
+                            )
+                        })
+                    }
+            }
+        }
+
+        val categories by vm.categories.collectAsStateWithLifecycle()
+        when (val list = categories) {
+            is Result.Loading -> {}
+
+            is Result.Failure ->
+                Button(onClick = { vm.downloadCategoriesAndAuthors() }) {
+                    Text(stringResource(R.string.retry))
+                }
+
+            is Result.Success -> {
+                var isOpened by remember { mutableStateOf(false) }
+                val actives by vm.activeCategories.collectAsStateWithLifecycle()
+                val active = actives.isNotEmpty()
+
+                FilterChip(
+                    onClick = { isOpened = true },
+                    selected = active,
+                    label = {
+                        if (active) Text(actives.joinToString(", ") { it.name })
+                        else Text(stringResource(R.string.categories))
+                    },
+                    trailingIcon = {
+                        if (active) Icon(
+                            Icons.Rounded.Clear,
+                            contentDescription = stringResource(R.string.clear),
+                            modifier = Modifier
+                                .clickable { vm.setCategories(emptyList()) }
+                                .size(18.dp),
+                        )
+                    }
+                )
+                if (isOpened)
+                    ChoiceDialog(
+                        stringResource(R.string.choose_categories),
+                        list.value.map { it.name },
+                        actives.map { it.name },
+                    ) { items ->
+                        isOpened = false
+                        if (items != null) vm.setCategories(list.value.filter {
+                            items.contains(
+                                it.name
+                            )
+                        })
+                    }
+            }
+        }
+        Box {} // Padding 8dp
     }
 }
 
@@ -339,6 +464,68 @@ private fun PostCard(
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
             )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun ChoiceDialog(
+    title: String,
+    items: List<String>,
+    initial: List<String> = emptyList(),
+    onExit: (items: List<String>?) -> Unit,
+) {
+    BasicAlertDialog(
+        onDismissRequest = { onExit(null) }
+    ) {
+        val checkedList = remember { initial.toMutableStateList() }
+        Surface(shape = MaterialTheme.shapes.extraLarge) {
+            Column(Modifier.padding(vertical = 24.dp)) {
+                Text(
+                    title,
+                    style = MaterialTheme.typography.headlineSmall,
+                    modifier = Modifier.padding(horizontal = 24.dp),
+                )
+                Spacer(Modifier.height(16.dp))
+                HorizontalDivider()
+                LazyColumn(Modifier.weight(1f, false)) {
+                    items(items) { item ->
+                        ListItem(
+                            modifier = Modifier.clickable {
+                                if (checkedList.contains(item)) checkedList -= item
+                                else checkedList += item
+                            },
+                            headlineContent = { Text(item) },
+                            leadingContent = {
+                                Checkbox(
+                                    checked = checkedList.contains(item),
+                                    onCheckedChange = { checked ->
+                                        if (checked) checkedList += item
+                                        else checkedList -= item
+                                    },
+                                )
+                            },
+                        )
+                    }
+                }
+                HorizontalDivider()
+                Spacer(Modifier.height(24.dp))
+                CompositionLocalProvider(LocalTextStyle provides MaterialTheme.typography.labelLarge) {
+                    Row(
+                        Modifier
+                            .align(Alignment.End)
+                            .padding(horizontal = 24.dp)
+                    ) {
+                        TextButton(onClick = { onExit(emptyList()) }) {
+                            Text(stringResource(R.string.cancel))
+                        }
+                        TextButton(onClick = { onExit(checkedList) }) {
+                            Text(stringResource(R.string.confirm))
+                        }
+                    }
+                }
+            }
         }
     }
 }

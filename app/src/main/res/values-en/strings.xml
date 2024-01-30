@@ -58,4 +58,11 @@
     <string name="refresh">Refresh</string>
     <string name="error_retry">Error! Tap to try again</string>
     <string name="search_post">Find post</string>
+    <string name="choose_categories">Choose category</string>
+    <string name="categories">Categories</string>
+    <string name="choose_authors">Choose authors</string>
+    <string name="authors">Authors</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
+    <string name="clear">Clear</string>
 </resources>
