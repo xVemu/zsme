@@ -1,6 +1,5 @@
 package pl.vemu.zsme.ui.post
 
-import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -29,7 +28,6 @@ import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.SearchOff
 import androidx.compose.material3.BasicAlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Checkbox
@@ -125,7 +123,7 @@ fun Post(
     LinkProviderEffect(Firebase.remoteConfig.baseUrl)
 
     val focusManager = LocalFocusManager.current
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
     Scaffold(
         Modifier
@@ -141,132 +139,139 @@ fun Post(
                         onQueryChange = vm::setQuery,
                     )
                 },
-                scrollBehavior = scrollBehavior,
+                scrollBehavior = topAppBarScrollBehavior,
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(scrolledContainerColor = MaterialTheme.colorScheme.surface),
             )
         },
     ) { padding ->
         val pagingItems = vm.posts.collectAsLazyPagingItems()
+        val sourceRefresh = pagingItems.loadState.source.refresh
+        val mediatorRefresh = pagingItems.loadState.mediator?.refresh
 
-        val initial by remember {
+        val pullRefreshState = rememberPullToRefreshState()
+
+        if (pullRefreshState.isRefreshing) LaunchedEffect(Unit) {
+            pagingItems.refresh()
+        }
+
+        val empty by remember {
             derivedStateOf {
                 pagingItems.itemCount <= 0
             }
         }
 
-        Column {
-            FilterBar(vm, modifier = Modifier.padding(padding))
+        LaunchedEffect(mediatorRefresh, empty) {
+            if (mediatorRefresh is LoadState.Loading && sourceRefresh !is LoadState.Loading && !empty)
+                pullRefreshState.startRefresh()
+            else
+                pullRefreshState.endRefresh()
+        }
 
-            Crossfade(initial, label = "Post") { initialState ->
+        Box {
+            LazyColumn(
+                Modifier
+                    .fillMaxSize()
+                    .nestedScroll(pullRefreshState.nestedScrollConnection)
+                    .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+                contentPadding = padding,
+            ) {
+                item {
+                    FilterBar(vm)
+                }
 
-                if (initialState) return@Crossfade Box(
-                    Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    when (pagingItems.loadState.refresh) {
-                        is LoadState.Loading -> CircularProgressIndicator()
-                        is LoadState.Error -> CustomError { pagingItems.retry() }
-                        else -> Column(horizontalAlignment = Alignment.CenterHorizontally) { /*TODO displays on start*/
-                            Icon(
-                                Icons.Rounded.SearchOff,
-                                contentDescription = stringResource(R.string.no_results),
-                                modifier = Modifier.size(108.dp),
-                            )
-                            Text(
-                                stringResource(R.string.no_results),
-                                style = MaterialTheme.typography.displaySmall
-                            )
+                items(pagingItems.itemCount, key = pagingItems.itemKey { it.id }) { idx ->
+                    pagingItems[idx]?.let { post ->
+                        PostCard(post) {
+                            navController.navigate(DetailDestination(post))
                         }
                     }
                 }
 
-                val pullRefreshState = rememberPullToRefreshState()
-
-                if (pullRefreshState.isRefreshing) LaunchedEffect(Unit) {
-                    pagingItems.refresh()
-                }
-
-                val refreshing by remember {
-                    derivedStateOf {
-                        pagingItems.loadState.refresh is LoadState.Loading
-                    }
-                }
-
-                if (!refreshing) LaunchedEffect(Unit) {
-                    pullRefreshState.endRefresh()
-                }
-
-                Box(Modifier.nestedScroll(pullRefreshState.nestedScrollConnection)) {
-
-                    LazyColumn(
+                item {
+                    Box(
                         Modifier
-                            .fillMaxSize()
-                            .nestedScroll(scrollBehavior.nestedScrollConnection),
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        contentAlignment = Alignment.Center,
                     ) {
-                        items(pagingItems.itemCount, key = pagingItems.itemKey { it.id }) { idx ->
-                            pagingItems[idx]?.let { post ->
-                                PostCard(post) {
-                                    navController.navigate(DetailDestination(post))
-                                }
+                        when (pagingItems.loadState.append) {
+                            is LoadState.Loading -> CircularProgressIndicator()
+
+                            is LoadState.Error -> Row(modifier = Modifier
+                                .clickable { pagingItems.retry() }
+                                .paddingBottom(8.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center) {
+                                Icon(
+                                    Icons.Rounded.Refresh,
+                                    contentDescription = stringResource(R.string.refresh)
+                                )
+                                Spacer(Modifier.width(4.dp))
+                                Text(stringResource(R.string.error_retry))
                             }
+
+                            else -> {}
                         }
+                    }
+                }
 
-                        item {
-                            Box(
-                                Modifier
-                                    .fillMaxWidth()
-                                    .padding(16.dp),
-                                contentAlignment = Alignment.Center,
-                            ) {
-                                when (pagingItems.loadState.append) {
-                                    is LoadState.Loading -> CircularProgressIndicator()
+                if (empty) {
+                    item {
+                        Box(
+                            Modifier
+                                .fillParentMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            when (pagingItems.loadState.refresh) {
+                                is LoadState.Loading -> CircularProgressIndicator()
+                                is LoadState.Error -> CustomError { pagingItems.retry() }
 
-                                    is LoadState.Error -> Row(modifier = Modifier
-                                        .clickable { pagingItems.retry() }
-                                        .paddingBottom(8.dp),
-                                        verticalAlignment = Alignment.CenterVertically,
-                                        horizontalArrangement = Arrangement.Center) {
-                                        Icon(
-                                            Icons.Rounded.Refresh,
-                                            contentDescription = stringResource(R.string.refresh)
-                                        )
-                                        Spacer(Modifier.width(4.dp))
-                                        Text(stringResource(R.string.error_retry))
-                                    }
-
-                                    else -> {}
+                                is LoadState.NotLoading -> {
+                                    if (mediatorRefresh is LoadState.NotLoading && sourceRefresh is LoadState.NotLoading)
+                                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                            Icon(
+                                                Icons.Rounded.SearchOff,
+                                                contentDescription = stringResource(R.string.no_results),
+                                                modifier = Modifier.size(108.dp),
+                                            )
+                                            Text(
+                                                stringResource(R.string.no_results),
+                                                style = MaterialTheme.typography.displaySmall
+                                            )
+                                        }
                                 }
                             }
                         }
                     }
-
-                    if (pagingItems.loadState.refresh is LoadState.Error) Snackbar(
-                        modifier = Modifier
-                            .padding(padding)
-                            .align(Alignment.BottomCenter),
-                        snackbarData = object : SnackbarData {
-                            override val visuals = object : SnackbarVisuals {
-                                override val actionLabel = stringResource(R.string.retry)
-                                override val duration = SnackbarDuration.Indefinite
-                                override val message = stringResource(R.string.error)
-                                override val withDismissAction = false
-                            }
-
-                            override fun dismiss() = Unit
-
-                            override fun performAction() {
-                                pagingItems.retry()
-                            }
-                        },
-                    )
-
-
-                    PullToRefreshContainer(
-                        state = pullRefreshState,
-                        modifier = Modifier.align(Alignment.TopCenter),
-                    )
                 }
             }
+
+            if (mediatorRefresh is LoadState.Error && !empty) Snackbar(
+                modifier = Modifier
+                    .padding(padding)
+                    .align(Alignment.BottomCenter),
+                snackbarData = object : SnackbarData {
+                    override val visuals = object : SnackbarVisuals {
+                        override val actionLabel = stringResource(R.string.retry)
+                        override val duration = SnackbarDuration.Indefinite
+                        override val message = stringResource(R.string.error)
+                        override val withDismissAction = false
+                    }
+
+                    override fun dismiss() = Unit
+
+                    override fun performAction() {
+                        pagingItems.retry()
+                    }
+                },
+            )
+
+            PullToRefreshContainer(
+                state = pullRefreshState,
+                modifier = Modifier
+                    .padding(padding)
+                    .align(Alignment.TopCenter),
+            )
         }
     }
 }
@@ -278,16 +283,9 @@ private fun FilterBar(vm: PostVM, modifier: Modifier = Modifier) {
         modifier = modifier.horizontalScroll(rememberScrollState()),
     ) {
         Box {} // Padding 8dp
-        val authors by vm.authors.collectAsStateWithLifecycle()
+        val authors = vm.authors.collectAsStateWithLifecycle()
 
-        when (val list = authors) {
-            is Result.Loading -> {}
-
-            is Result.Failure ->
-                Button(onClick = { vm.downloadCategoriesAndAuthors() }) {
-                    Text(stringResource(R.string.retry))
-                }
-
+        when (val list = authors.value) {
             is Result.Success -> {
                 var isOpened by remember { mutableStateOf(false) }
                 val actives by vm.activeAuthors.collectAsStateWithLifecycle()
@@ -325,17 +323,12 @@ private fun FilterBar(vm: PostVM, modifier: Modifier = Modifier) {
                         })
                     }
             }
+
+            else -> {}
         }
 
         val categories by vm.categories.collectAsStateWithLifecycle()
         when (val list = categories) {
-            is Result.Loading -> {}
-
-            is Result.Failure ->
-                Button(onClick = { vm.downloadCategoriesAndAuthors() }) {
-                    Text(stringResource(R.string.retry))
-                }
-
             is Result.Success -> {
                 var isOpened by remember { mutableStateOf(false) }
                 val actives by vm.activeCategories.collectAsStateWithLifecycle()
@@ -372,6 +365,8 @@ private fun FilterBar(vm: PostVM, modifier: Modifier = Modifier) {
                         })
                     }
             }
+
+            else -> {}
         }
         Box {} // Padding 8dp
     }
@@ -443,6 +438,7 @@ private fun PostCard(
                             .crossfade(true)
                             .diskCacheKey(postModel.id.toString())
                             .transformations(RoundedCornersTransformation(12f)).build(),
+                        /* TODO error no network */
                         placeholder = painterResource(R.drawable.zsme),
                         contentDescription = stringResource(R.string.thumbnail),
                         modifier = Modifier.size(64.dp),
