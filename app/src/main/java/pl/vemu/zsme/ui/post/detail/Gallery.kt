@@ -42,6 +42,7 @@ import kotlinx.coroutines.launch
 import net.engawapg.lib.zoomable.rememberZoomState
 import net.engawapg.lib.zoomable.zoomable
 import pl.vemu.zsme.R
+import pl.vemu.zsme.data.model.ImageUrl
 import pl.vemu.zsme.modifiers.noRippleClickable
 import pl.vemu.zsme.paddingBottom
 import pl.vemu.zsme.ui.components.SimpleSmallAppBar
@@ -51,14 +52,13 @@ import pl.vemu.zsme.ui.post.PostNavGraph
 import pl.vemu.zsme.util.changeUiVisibility
 import pl.vemu.zsme.util.rememberInsetsController
 
-
 @OptIn(
     ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class
 )
 @PostNavGraph
 @Destination("post/gallery")
 @Composable
-fun Gallery(images: Array<String>, navController: DestinationsNavigator) {
+fun Gallery(images: Array<ImageUrl>, navController: DestinationsNavigator) {
 
     BackHandler {
         fullScreen = false

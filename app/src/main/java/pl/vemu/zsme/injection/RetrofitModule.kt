@@ -8,6 +8,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import pl.vemu.zsme.data.model.DetailImage
+import pl.vemu.zsme.data.model.DetailImageDeserializer
 import pl.vemu.zsme.data.service.ZSMEService
 import pl.vemu.zsme.util.apiUrl
 import retrofit2.Retrofit
@@ -22,6 +24,9 @@ class RetrofitModule {
     @Provides
     fun provideGson(): Gson = GsonBuilder()
         .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+        .registerTypeAdapter(
+            DetailImage::class.java, DetailImageDeserializer(),
+        )
         .create()
 
     @Singleton

@@ -49,6 +49,7 @@ import kotlinx.coroutines.withContext
 import pl.vemu.zsme.R
 import pl.vemu.zsme.Result
 import pl.vemu.zsme.data.model.HtmlString
+import pl.vemu.zsme.data.model.ImageUrl
 import pl.vemu.zsme.data.model.PostModel
 import pl.vemu.zsme.isNetworkAvailable
 import pl.vemu.zsme.remembers.LinkProviderEffect
@@ -165,7 +166,7 @@ private suspend fun share(context: Context, postModel: PostModel, shareText: Str
 @Composable
 private fun DetailFloatingButton(
     navController: DestinationsNavigator,
-    images: List<String>,
+    images: List<ImageUrl>,
 ) {
     ExtendedFloatingActionButton(
         containerColor = MaterialTheme.colorScheme.tertiaryContainer,
