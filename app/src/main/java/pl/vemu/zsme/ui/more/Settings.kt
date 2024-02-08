@@ -5,6 +5,8 @@ import android.os.Build
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.BrightnessMedium
 import androidx.compose.material.icons.rounded.Language
@@ -13,8 +15,10 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,27 +34,34 @@ import pl.vemu.zsme.remembers.Prefs
 import pl.vemu.zsme.remembers.rememberStringPreference
 import pl.vemu.zsme.ui.components.SimpleMediumAppBar
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @MoreNavGraph
 @Destination("more/settings")
 @Composable
 fun Settings(navController: DestinationsNavigator) {
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+
     Scaffold(
         topBar = {
             SimpleMediumAppBar(
                 title = R.string.settings,
-                navController = navController
+                navController = navController,
+                scrollBehavior = scrollBehavior,
             )
-        }) { padding ->
-        Column(Modifier.padding(padding)) {
+        },
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+    ) { padding ->
+        Column(
+            Modifier
+                .padding(padding)
+                .verticalScroll(rememberScrollState()),
+        ) {
             Theme()
             Language()
             Notification()
         }
     }
 }
-
 
 @Preview(showBackground = true, backgroundColor = 0xFFFFFF)
 @Composable

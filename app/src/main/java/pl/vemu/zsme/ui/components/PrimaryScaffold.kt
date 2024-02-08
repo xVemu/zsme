@@ -18,10 +18,10 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.adaptive.navigation.suite.ExperimentalMaterial3AdaptiveNavigationSuiteApi
-import androidx.compose.material3.adaptive.navigation.suite.NavigationSuite
-import androidx.compose.material3.adaptive.navigation.suite.NavigationSuiteScaffoldLayout
-import androidx.compose.material3.adaptive.navigation.suite.NavigationSuiteType
+import androidx.compose.material3.adaptive.navigationsuite.ExperimentalMaterial3AdaptiveNavigationSuiteApi
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuite
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldLayout
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -82,7 +82,7 @@ private fun Navigation(navController: NavController, rail: Boolean) {
 
     NavigationSuite(layoutType = if (rail) NavigationSuiteType.NavigationRail else NavigationSuiteType.NavigationBar) {
         BottomNavItem.entries.forEach { item ->
-            val selected = currentDestination == item.destination /* TODO colors */
+            val selected = currentDestination == item.destination
 
             item(label = { Text(stringResource(item.label)) }, selected = selected, icon = {
                 Icon(

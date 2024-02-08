@@ -77,7 +77,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.7"
+        kotlinCompilerExtensionVersion = "1.5.9"
     }
 
     packaging {
@@ -97,8 +97,8 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation("org.mockito:mockito-core:5.9.0")
-    androidTestImplementation("org.mockito:mockito-android:5.9.0")
+    androidTestImplementation("org.mockito:mockito-core:5.10.0")
+    androidTestImplementation("org.mockito:mockito-android:5.10.0")
     androidTestImplementation("org.mockito.kotlin:mockito-kotlin:5.2.1")
 
     // Hilt
@@ -125,15 +125,15 @@ dependencies {
     implementation("androidx.core:core-ktx:1.12.0")
 
     // Compose
-    val compose = "1.5.4"
-    implementation("androidx.compose.material3:material3:1.2.0-beta02")
+    val compose = "1.6.1"
+    implementation("androidx.compose.material3:material3:1.2.0")
     implementation("androidx.compose.material:material-icons-extended:$compose")
     implementation("androidx.activity:activity-compose:1.8.2")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     // Landscape
-    implementation("androidx.compose.material3:material3-adaptive:1.0.0-alpha04")
-    implementation("androidx.compose.material3:material3-adaptive-navigation-suite:1.0.0-alpha02")
+    implementation("androidx.compose.material3:material3-adaptive:1.0.0-alpha06")
+    implementation("androidx.compose.material3:material3-adaptive-navigation-suite:1.0.0-alpha03")
     // Test
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:$compose")
     debugImplementation("androidx.compose.ui:ui-test-manifest:$compose")
@@ -149,11 +149,11 @@ dependencies {
     implementation("androidx.browser:browser:1.7.0")
 
     // Navigation
-    implementation("io.github.raamcosta.compose-destinations:core:1.9.62")
-    implementation("androidx.navigation:navigation-compose:2.7.6")
+    implementation("io.github.raamcosta.compose-destinations:core:1.10.0")
+    implementation("androidx.navigation:navigation-compose:2.7.7")
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
-    ksp("io.github.raamcosta.compose-destinations:ksp:1.9.62")
-    implementation("io.github.fornewid:material-motion-compose-core:1.1.1")
+    ksp("io.github.raamcosta.compose-destinations:ksp:1.10.0")
+    implementation("io.github.fornewid:material-motion-compose-core:1.2.0")
 
     // Settings
     implementation("androidx.datastore:datastore-preferences:1.0.0")
@@ -165,7 +165,7 @@ dependencies {
 
     // 3-rd party
     implementation("io.coil-kt:coil-compose:2.5.0")
-    implementation("net.engawapg.lib:zoomable:1.5.3")
+    implementation("net.engawapg.lib:zoomable:1.6.0")
     implementation("com.github.YarikSOffice:lingver:1.3.0")
     debugImplementation("com.squareup.leakcanary:leakcanary-android:2.13")
     implementation("com.github.viluahealthcare:compose-html:1.0.3")
