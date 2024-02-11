@@ -25,7 +25,6 @@ class RoomModule {
         .fallbackToDestructiveMigration()
         .build()
 
-
     @Singleton
     @Provides
     fun providePostDAO(database: Database) = database.postDao()
@@ -34,4 +33,7 @@ class RoomModule {
     @Provides
     fun provideRemoteKeyDAO(database: Database) = database.remoteKeyDao()
 
+    @Singleton
+    @Provides
+    fun provideTimetableDAO(database: Database) = database.timetableDao()
 }

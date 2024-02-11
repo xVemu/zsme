@@ -5,19 +5,20 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.launch
 import pl.vemu.zsme.Result
 import pl.vemu.zsme.ResultList
+import pl.vemu.zsme.data.TimetableMediator
 import pl.vemu.zsme.data.model.TimetableModel
-import pl.vemu.zsme.data.repo.TimetableRepo
 import javax.inject.Inject
 
 @HiltViewModel
 class TimetableVM @Inject constructor(
-    private val timetableRepo: TimetableRepo,
+    private val mediator: TimetableMediator,
 ) : ViewModel() {
     private val _list =
-        MutableStateFlow<ResultList<List<TimetableModel>>>(Result.Loading)
+        MutableStateFlow<ResultList<TimetableModel>>(Result.Loading)
     val list = _list.asStateFlow()
 
     init {
@@ -26,12 +27,7 @@ class TimetableVM @Inject constructor(
 
     fun downloadTimetable() {
         viewModelScope.launch {
-            _list.value = Result.Loading
-            _list.value = try {
-                Result.Success(timetableRepo.getTimetable())
-            } catch (e: Exception) {
-                Result.Failure(e)
-            }
+            _list.emitAll(mediator.getTimetable())
         }
     }
 }

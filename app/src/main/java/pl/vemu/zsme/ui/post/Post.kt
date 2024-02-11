@@ -197,11 +197,13 @@ fun Post(
                         when (pagingItems.loadState.append) {
                             is LoadState.Loading -> CircularProgressIndicator()
 
-                            is LoadState.Error -> Row(modifier = Modifier
-                                .clickable { pagingItems.retry() }
-                                .paddingBottom(8.dp),
+                            is LoadState.Error -> Row(
+                                modifier = Modifier
+                                    .clickable { pagingItems.retry() }
+                                    .paddingBottom(8.dp),
                                 verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.Center) {
+                                horizontalArrangement = Arrangement.Center,
+                            ) {
                                 Icon(
                                     Icons.Rounded.Refresh,
                                     contentDescription = stringResource(R.string.refresh)

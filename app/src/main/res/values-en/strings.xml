@@ -22,11 +22,9 @@
     <string name="notification">Notifications</string>
     <string name="gallery">Photos</string>
     <string name="error">An error has occurred</string>
-    <string-array name="timetable_tabs">
-        <item>Classes</item>
-        <item>Teachers</item>
-        <item>Classroom</item>
-    </string-array>
+    <string name="timetable_groups">Classes</string>
+    <string name="timetable_teachers">Teachers</string>
+    <string name="timetable_rooms">Classroom</string>
     <string-array name="weekdays">
         <item>Monday</item>
         <item>Tuesday</item>

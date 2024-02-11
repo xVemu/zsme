@@ -10,6 +10,7 @@ import it.skrape.fetcher.skrape
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import pl.vemu.zsme.data.model.TimetableModel
+import pl.vemu.zsme.data.model.TimetableType
 import pl.vemu.zsme.util.scheduleLogin
 import pl.vemu.zsme.util.schedulePassword
 import pl.vemu.zsme.util.scheduleUrl
@@ -17,7 +18,7 @@ import javax.inject.Inject
 
 class TimetableRepo @Inject constructor() {
 
-    suspend fun getTimetable(): List<List<TimetableModel>> =
+    suspend fun getTimetable(): List<TimetableModel> =
         withContext(Dispatchers.IO) {
             skrape(AsyncFetcher) {
                 request {
@@ -28,11 +29,11 @@ class TimetableRepo @Inject constructor() {
                 }
                 response {
                     htmlDocument {
-                        listOf("#oddzialy", "#nauczyciele", "#sale").map { selector ->
-                            findFirst(selector) {
+                        TimetableType.entries.flatMap { type ->
+                            findFirst(type.selector) {
                                 children.map {
-                                    TimetableModel(it.text, it.eachHref.first())
-                                }.sortedBy { it.name }
+                                    TimetableModel(it.text, it.eachHref.first(), type)
+                                }
                             }
                         }
                     }

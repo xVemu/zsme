@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
 import java.util.Date
 
-@Entity(tableName = "posts")
+@Entity(tableName = "post")
 @Parcelize
 @Immutable
 data class PostModel(

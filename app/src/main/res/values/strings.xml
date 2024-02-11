@@ -57,11 +57,9 @@
     <string name="gallery">Zdjęcia</string>
     <string name="error">Wystąpił błąd</string>
     <string name="destination_button">Otwórz w aplikacji</string>
-    <string-array name="timetable_tabs">
-        <item>Oddziały</item>
-        <item>Nauczyciele</item>
-        <item>Sale</item>
-    </string-array>
+    <string name="timetable_groups">Oddziały</string>
+    <string name="timetable_teachers">Nauczyciele</string>
+    <string name="timetable_rooms">Sale</string>
     <string-array name="weekdays">
         <item>Poniedziałek</item>
         <item>Wtorek</item>

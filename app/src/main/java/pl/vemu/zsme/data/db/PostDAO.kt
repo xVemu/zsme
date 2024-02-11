@@ -13,7 +13,7 @@ interface PostDAO {
     suspend fun insertAll(postmodels: List<PostModel>)
 
     @Query(
-        """SELECT * FROM posts WHERE
+        """SELECT * FROM post WHERE
         excerpt LIKE '%' || :query || '%'
         AND (author IN (:authors) OR coalesce(:authors, 'null') = 'null')
         AND (category IN (:categories) OR coalesce(:categories, 'null') = 'null')
@@ -27,11 +27,11 @@ interface PostDAO {
     ): PagingSource<Int, PostModel>
 
     @Query(
-        """DELETE FROM posts WHERE
+        """DELETE FROM post WHERE
         excerpt LIKE '%' || :query || '%'
         AND (author IN (:authors) OR coalesce(:authors, 'null') = 'null')
         AND (category IN (:categories) OR coalesce(:categories, 'null') = 'null')
         """
     )
-    fun delete(query: String, authors: List<String>?, categories: List<String>?)
+    suspend fun delete(query: String, authors: List<String>?, categories: List<String>?)
 }
