@@ -32,8 +32,10 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,6 +48,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.firebase.Firebase
@@ -57,10 +60,13 @@ import pl.vemu.zsme.R
 import pl.vemu.zsme.Result
 import pl.vemu.zsme.data.model.LessonModel
 import pl.vemu.zsme.remembers.LinkProviderEffect
+import pl.vemu.zsme.remembers.rememberDeclarativeRefresh
 import pl.vemu.zsme.ui.components.CustomError
+import pl.vemu.zsme.ui.components.RetrySnackbar
 import pl.vemu.zsme.ui.components.SimpleMediumAppBar
 import pl.vemu.zsme.ui.components.pagerTabIndicatorOffset
 import pl.vemu.zsme.util.scheduleUrl
+import java.time.DayOfWeek
 import java.time.LocalDate
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
@@ -96,9 +102,8 @@ fun Lesson(
             val pagerState = rememberPagerState(initialPage = getWeekDay()) { 5 }
 
             LessonTabRow(pagerState)
-
-            Crossfade(result, label = "Lessons") { lessonsResult ->
-                when (lessonsResult) {
+            Crossfade(result, label = "Lessons") { data ->
+                when (data) {
                     is Result.Loading -> {
                         Box(
                             modifier = Modifier.fillMaxSize(),
@@ -113,43 +118,65 @@ fun Lesson(
                     }
 
                     is Result.Success -> {
-                        HorizontalPager(
-                            state = pagerState, modifier = Modifier.fillMaxSize()
-                        ) { page ->
-                            val lessons = lessonsResult.value[page]
+                        Box {
+                            val refreshState =
+                                rememberDeclarativeRefresh(data.refreshing) { vm.downloadLessons() }
 
-                            if (lessons.isEmpty()) return@HorizontalPager Column(
+                            HorizontalPager(
+                                state = pagerState,
                                 modifier = Modifier
                                     .fillMaxSize()
-                                    .padding(horizontal = 16.dp),
-                                verticalArrangement = Arrangement.Center,
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                            ) {
-                                Icon(
-                                    Icons.Rounded.SatelliteAlt,
-                                    contentDescription = stringResource(R.string.no_lessons),
-                                    modifier = Modifier.size(128.dp)
-                                )
-                                Spacer(Modifier.height(12.dp))
-                                Text(
-                                    text = stringResource(R.string.no_lessons),
-                                    style = MaterialTheme.typography.headlineSmall,
-                                    textAlign = TextAlign.Center,
-                                )
-                            }
+                                    .nestedScroll(refreshState.nestedScrollConnection),
+                            ) { page ->
+                                val lessons =
+                                    remember {
+                                        data.value.filter { it.day.value == page + 1 }
+                                            .sortedWith(
+                                                compareBy({ it.index }, { !it.showIndex })
+                                            )
+                                    }
 
-                            LazyColumn(
-                                Modifier
-                                    .fillMaxSize()
-                                    .nestedScroll(scrollBehavior.nestedScrollConnection)
-                            ) {
-                                itemsIndexed(lessons) { index, item ->
-                                    LessonItem(
-                                        item = item,
-                                        divider = index < lessons.lastIndex && lessons[index + 1].index != null
+                                if (lessons.isEmpty()) return@HorizontalPager Column(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .padding(horizontal = 16.dp),
+                                    verticalArrangement = Arrangement.Center,
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                ) {
+                                    Icon(
+                                        Icons.Rounded.SatelliteAlt,
+                                        contentDescription = stringResource(R.string.no_lessons),
+                                        modifier = Modifier.size(128.dp)
+                                    )
+                                    Spacer(Modifier.height(12.dp))
+                                    Text(
+                                        text = stringResource(R.string.no_lessons),
+                                        style = MaterialTheme.typography.headlineSmall,
+                                        textAlign = TextAlign.Center,
                                     )
                                 }
+
+                                LazyColumn(
+                                    Modifier
+                                        .fillMaxSize()
+                                        .nestedScroll(scrollBehavior.nestedScrollConnection)
+                                ) {
+                                    itemsIndexed(lessons) { index, item ->
+                                        LessonItem(
+                                            item = item,
+                                            divider = index < lessons.lastIndex && lessons[index + 1].showIndex,
+                                        )
+                                    }
+                                }
                             }
+
+                            if (data.error != null)
+                                RetrySnackbar { vm.downloadLessons() }
+
+                            PullToRefreshContainer(
+                                refreshState,
+                                Modifier.align(Alignment.TopCenter)
+                            )
                         }
                     }
                 }
@@ -168,7 +195,7 @@ private fun getWeekDay(): Int =
 private fun LessonTabRow(pagerState: PagerState) {
     val coroutineScope = rememberCoroutineScope()
 
-    Column {
+    Column(Modifier.zIndex(1f)) {
         SecondaryScrollableTabRow(
             selectedTabIndex = pagerState.currentPage,
             edgePadding = 0.dp,
@@ -219,7 +246,7 @@ private fun LessonItem(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
-            text = (item.index ?: "").toString(),
+            text = (if (item.showIndex) item.index else "").toString(),
             style = MaterialTheme.typography.headlineLarge,
             textAlign = TextAlign.Center,
             modifier = Modifier.width(48.dp)
@@ -254,7 +281,6 @@ private fun LessonItem(
     if (divider) HorizontalDivider(modifier = Modifier.padding(horizontal = 8.dp))
 }
 
-
 class LessonModelPreviewParameterProvider : PreviewParameterProvider<LessonModel> {
     override val values = sequenceOf(
         LessonModel(
@@ -263,14 +289,20 @@ class LessonModelPreviewParameterProvider : PreviewParameterProvider<LessonModel
             teacher = "DR",
             timeStart = "11:11",
             timeFinish = "12:00",
-            index = 5
+            index = 5,
+            showIndex = false,
+            day = DayOfWeek.FRIDAY,
+            parentUrl = ""
         ), LessonModel(
             name = "fizyka-2/2",
             room = "22",
             teacher = null,
             timeStart = "11:11",
             timeFinish = "12:00",
-            index = null,
+            index = 6,
+            showIndex = true,
+            day = DayOfWeek.FRIDAY,
+            parentUrl = ""
         )
     )
 }

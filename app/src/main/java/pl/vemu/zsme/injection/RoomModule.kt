@@ -36,4 +36,8 @@ class RoomModule {
     @Singleton
     @Provides
     fun provideTimetableDAO(database: Database) = database.timetableDao()
+
+    @Singleton
+    @Provides
+    fun provideLessonDAO(database: Database) = database.lessonDao()
 }
