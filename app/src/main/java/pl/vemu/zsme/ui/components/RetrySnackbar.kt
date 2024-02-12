@@ -10,9 +10,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import pl.vemu.zsme.R
+import pl.vemu.zsme.remembers.rememberConnectivityState
 
 @Composable
-fun BoxScope.RetrySnackbar(modifier: Modifier = Modifier, retry: () -> Unit) {
+fun BoxScope.RetrySnackbar(
+    modifier: Modifier = Modifier,
+    retry: () -> Unit,
+) {
+    val hasNetwork = rememberConnectivityState(onAvailable = retry)
+
     Snackbar(
         modifier = modifier
             .align(Alignment.BottomCenter),
@@ -20,7 +26,8 @@ fun BoxScope.RetrySnackbar(modifier: Modifier = Modifier, retry: () -> Unit) {
             override val visuals = object : SnackbarVisuals {
                 override val actionLabel = stringResource(R.string.retry)
                 override val duration = SnackbarDuration.Indefinite
-                override val message = stringResource(R.string.error)
+                override val message =
+                    stringResource(if (!hasNetwork) R.string.no_connection else R.string.error)
                 override val withDismissAction = false
             }
 

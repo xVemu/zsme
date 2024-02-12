@@ -236,9 +236,7 @@ fun Post(
                 }
             }
 
-            if (mediatorRefresh is LoadState.Error && !empty) RetrySnackbar {
-                pagingItems.retry()
-            }
+            if (mediatorRefresh is LoadState.Error && !empty) RetrySnackbar(retry = pagingItems::retry)
 
             PullToRefreshContainer(
                 state = pullRefreshState,
