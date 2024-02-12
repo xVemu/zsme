@@ -42,20 +42,14 @@ import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBarDefaults
-import androidx.compose.material3.Snackbar
-import androidx.compose.material3.SnackbarData
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarVisuals
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -98,8 +92,10 @@ import pl.vemu.zsme.data.model.PostModel
 import pl.vemu.zsme.modifiers.noRippleClickable
 import pl.vemu.zsme.paddingBottom
 import pl.vemu.zsme.remembers.LinkProviderEffect
+import pl.vemu.zsme.remembers.rememberDeclarativeRefresh
 import pl.vemu.zsme.ui.components.CustomError
 import pl.vemu.zsme.ui.components.Html
+import pl.vemu.zsme.ui.components.RetrySnackbar
 import pl.vemu.zsme.ui.destinations.DetailDestination
 import pl.vemu.zsme.util.Formatter
 import pl.vemu.zsme.util.baseUrl
@@ -144,30 +140,22 @@ fun Post(
             )
         },
     ) { padding ->
-        val pagingItems = vm.posts.collectAsLazyPagingItems()
-        val sourceRefresh = pagingItems.loadState.source.refresh
-        val mediatorRefresh = pagingItems.loadState.mediator?.refresh
-
-        val pullRefreshState = rememberPullToRefreshState()
-
-        if (pullRefreshState.isRefreshing) LaunchedEffect(Unit) {
-            pagingItems.refresh()
-        }
-
-        val empty by remember {
-            derivedStateOf {
-                pagingItems.itemCount <= 0
-            }
-        }
-
-        LaunchedEffect(mediatorRefresh, empty) {
-            if (mediatorRefresh is LoadState.Loading && sourceRefresh !is LoadState.Loading && !empty)
-                pullRefreshState.startRefresh()
-            else
-                pullRefreshState.endRefresh()
-        }
-
         Box {
+            val pagingItems = vm.posts.collectAsLazyPagingItems()
+            val sourceRefresh = pagingItems.loadState.source.refresh
+            val mediatorRefresh = pagingItems.loadState.mediator?.refresh
+
+            val empty by remember {
+                derivedStateOf {
+                    pagingItems.itemCount <= 0
+                }
+            }
+
+            val pullRefreshState =
+                rememberDeclarativeRefresh(mediatorRefresh is LoadState.Loading && sourceRefresh !is LoadState.Loading && !empty) {
+                    pagingItems.refresh()
+                }
+
             LazyColumn(
                 Modifier
                     .fillMaxSize()
@@ -248,25 +236,9 @@ fun Post(
                 }
             }
 
-            if (mediatorRefresh is LoadState.Error && !empty) Snackbar(
-                modifier = Modifier
-                    .padding(padding)
-                    .align(Alignment.BottomCenter),
-                snackbarData = object : SnackbarData {
-                    override val visuals = object : SnackbarVisuals {
-                        override val actionLabel = stringResource(R.string.retry)
-                        override val duration = SnackbarDuration.Indefinite
-                        override val message = stringResource(R.string.error)
-                        override val withDismissAction = false
-                    }
-
-                    override fun dismiss() = Unit
-
-                    override fun performAction() {
-                        pagingItems.retry()
-                    }
-                },
-            )
+            if (mediatorRefresh is LoadState.Error && !empty) RetrySnackbar {
+                pagingItems.retry()
+            }
 
             PullToRefreshContainer(
                 state = pullRefreshState,

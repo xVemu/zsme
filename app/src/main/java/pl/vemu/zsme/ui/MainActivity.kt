@@ -170,4 +170,5 @@ class MainActivity : ComponentActivity() {
 /*TODO
 * webview table full width
 * timetable home widget
+* https://issuetracker.google.com/issues/273554698
 * */
