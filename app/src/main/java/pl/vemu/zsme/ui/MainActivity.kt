@@ -20,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.core.net.toUri
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
@@ -64,8 +65,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Without this Android 34+ displays wrong theme, when launched with Android Studio.
-        if (BuildConfig.DEBUG) setTheme(R.style.MainTheme)
+        installSplashScreen()
 
         enableEdgeToEdge(
             navigationBarStyle = SystemBarStyle.auto(
