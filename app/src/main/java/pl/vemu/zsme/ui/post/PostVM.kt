@@ -50,7 +50,7 @@ class PostVM @Inject constructor(
         downloadCategoriesAndAuthors()
     }
 
-    fun downloadCategoriesAndAuthors() {
+    private fun downloadCategoriesAndAuthors() {
         viewModelScope.launch {
             launch {
                 _categories.value = Result.Loading

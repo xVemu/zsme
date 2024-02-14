@@ -1,5 +1,6 @@
 package pl.vemu.zsme.ui.post
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -20,8 +21,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text2.BasicTextField2
+import androidx.compose.foundation.text2.input.TextFieldLineLimits
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material.icons.rounded.Refresh
@@ -344,7 +346,7 @@ private fun FilterBar(vm: PostVM, modifier: Modifier = Modifier) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 private fun FloatingSearchBar(
     query: String,
@@ -352,7 +354,7 @@ private fun FloatingSearchBar(
 ) {
     val interactionSource = remember { MutableInteractionSource() }
 
-    BasicTextField(
+    BasicTextField2(
         value = query,
         onValueChange = onQueryChange,
         modifier = Modifier
@@ -362,12 +364,12 @@ private fun FloatingSearchBar(
                 MaterialTheme.colorScheme.surfaceContainerHigh,
                 SearchBarDefaults.dockedShape,
             ),
-        singleLine = true,
+        lineLimits = TextFieldLineLimits.SingleLine,
         textStyle = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.onSurface),
         cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
         interactionSource = interactionSource,
-        decorationBox = @Composable { innerTextField ->
+        decorator = { innerTextField ->
             TextFieldDefaults.DecorationBox(
                 value = query,
                 innerTextField = innerTextField,
@@ -388,7 +390,7 @@ private fun FloatingSearchBar(
                 interactionSource = interactionSource,
                 container = {},
             )
-        },
+        }
     )
 }
 
