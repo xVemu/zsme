@@ -60,7 +60,7 @@ import pl.vemu.zsme.ui.components.WebView
 import pl.vemu.zsme.ui.destinations.GalleryDestination
 import pl.vemu.zsme.ui.post.PostNavGraph
 import pl.vemu.zsme.util.Formatter
-
+import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)
 @PostNavGraph
@@ -148,14 +148,24 @@ private suspend fun share(context: Context, postModel: PostModel, shareText: Str
 
         val uri =
             context.imageLoader.diskCache?.openSnapshot(postModel.id.toString())?.use { snapshot ->
-                FileProvider.getUriForFile(
-                    context, "pl.vemu.zsme.fileprovider", snapshot.data.toFile()
-                )
+                val newFile =
+                    File.createTempFile(
+                        "shareImage",
+                        ".png",
+                        File(context.cacheDir, "/image_cache")
+                    )
+
+                snapshot.data.toFile().copyTo(newFile, true)
+                FileProvider.getUriForFile(context, "pl.vemu.zsme.fileprovider", newFile)
             }
 
-        intent.clipData = ClipData(
-            null, arrayOf("image/png"), ClipData.Item(uri)
-        )// ClipData.newUri(context.contentResolver, null, uri) TODO
+
+        intent.clipData =
+            ClipData.newUri(
+                context.contentResolver,
+                null,
+                uri
+            ) // TODO https://github.com/coil-kt/coil/issues/1920
 
         val shareIntent = Intent.createChooser(intent, shareText)
         withContext(Dispatchers.Main) {
