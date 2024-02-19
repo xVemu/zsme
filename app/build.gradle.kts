@@ -146,7 +146,8 @@ dependencies {
     // Network
     implementation("com.squareup.retrofit2:retrofit:2.10.0-SNAPSHOT")
     implementation("com.squareup.retrofit2:converter-gson:2.10.0-SNAPSHOT")
-    implementation("it.skrape:skrapeit:1.2.2")
+    // Wait for stable release
+    implementation("it.skrape:skrapeit:1.3.0-alpha.1")
     // Chrome custom tabs
     implementation("androidx.browser:browser:1.7.0")
 

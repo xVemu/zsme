@@ -38,8 +38,8 @@ fun rememberConnectivityState(onAvailable: (() -> Unit)? = null): Boolean {
 
         val callback = object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) {
+                if (!state) onAvailable?.invoke()
                 state = true
-                onAvailable?.invoke()
             }
 
             override fun onLost(network: Network) {

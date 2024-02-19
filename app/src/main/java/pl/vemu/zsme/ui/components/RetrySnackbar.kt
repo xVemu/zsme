@@ -17,7 +17,7 @@ fun BoxScope.RetrySnackbar(
     modifier: Modifier = Modifier,
     retry: () -> Unit,
 ) {
-    val hasNetwork = rememberConnectivityState(onAvailable = retry)
+    val hasNetwork = rememberConnectivityState(retry)
 
     Snackbar(
         modifier = modifier
