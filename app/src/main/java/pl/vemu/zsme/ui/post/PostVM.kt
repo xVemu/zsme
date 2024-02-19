@@ -25,7 +25,7 @@ class PostVM @Inject constructor(
 ) : ViewModel() {
     private val _query = MutableStateFlow("")
     private val _activeCategories = MutableStateFlow(emptyList<Category>())
-    private val _categories = MutableStateFlow<ResultList<Category>>(Result.Loading)
+    private val _categories = MutableStateFlow<Result<Set<Category>>>(Result.Loading)
     private val _activeAuthors = MutableStateFlow(emptyList<Author>())
     private val _authors = MutableStateFlow<ResultList<Author>>(Result.Loading)
     val query = _query.asStateFlow()
@@ -55,7 +55,7 @@ class PostVM @Inject constructor(
             launch {
                 _categories.value = Result.Loading
                 _categories.value = try {
-                    Result.Success(postRepo.getCategories())
+                    Result.Success(postRepo.getCategories().toSet())
                 } catch (e: Exception) {
                     Result.Failure(e)
                 }

@@ -1,7 +1,6 @@
 package pl.vemu.zsme.ui.more
 
 import android.content.Intent
-import android.os.Build
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -29,6 +28,7 @@ import com.alorma.compose.settings.ui.SettingsMenuLink
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
+import com.yariksoffice.lingver.Lingver
 import pl.vemu.zsme.R
 import pl.vemu.zsme.remembers.Prefs
 import pl.vemu.zsme.remembers.rememberStringPreference
@@ -102,6 +102,7 @@ private fun Language() {
         "pl" to stringResource(R.string.polish),
         "en" to stringResource(R.string.english)
     )
+    val context = LocalContext.current
 
     SettingsList(
         modifier = Modifier.height(88.dp),
@@ -116,7 +117,12 @@ private fun Language() {
         items = items.values.toList(),
         state = rememberIntSettingState(defaultValue = items.keys.indexOf(lang))
     ) { index, _ ->
-        lang = items.keys.elementAt(index)
+        val item = items.keys.elementAt(index)
+        lang = item
+        Lingver.getInstance().apply {
+            if (item == "system") setFollowSystemLocale(context)
+            else setLocale(context, item)
+        }
     }
 }
 
@@ -140,12 +146,7 @@ private fun Notification() {
         }) {
         val intent = Intent().apply {
             action = "android.settings.APP_NOTIFICATION_SETTINGS"
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                putExtra("android.provider.extra.APP_PACKAGE", context.packageName)
-            else {
-                putExtra("app_package", context.packageName)
-                putExtra("app_uid", context.applicationInfo.uid)
-            }
+            putExtra("android.provider.extra.APP_PACKAGE", context.packageName)
         }
         context.startActivity(intent)
     }

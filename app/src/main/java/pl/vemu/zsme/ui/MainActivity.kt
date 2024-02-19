@@ -6,7 +6,6 @@ import android.content.Context
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.webkit.WebView
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
@@ -22,8 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.core.net.toUri
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.datastore.preferences.preferencesDataStore
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
@@ -40,11 +37,8 @@ import com.google.firebase.remoteconfig.remoteConfig
 import com.google.firebase.remoteconfig.remoteConfigSettings
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.rememberNavHostEngine
-import com.yariksoffice.lingver.Lingver
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import pl.vemu.zsme.BuildConfig
@@ -86,19 +80,6 @@ class MainActivity : ComponentActivity() {
         }
 
         lifecycleScope.launch {
-            launch {
-                dataStore.data.flowWithLifecycle(lifecycle, Lifecycle.State.CREATED)
-                    .map { it[Prefs.LANGUAGE.key] ?: Prefs.LANGUAGE.defaultValue }
-                    .collectLatest { lang ->
-                        Lingver.getInstance().apply {
-                            if (lang == "system") return@collectLatest setFollowSystemLocale(this@MainActivity)
-
-                            // fixes resetting language to system when it's first use of webview.
-                            WebView(applicationContext).destroy()
-                            setLocale(this@MainActivity, lang)
-                        }
-                    }
-            }
             launch { setupRemoteConfig() }
 
             try {

@@ -89,7 +89,9 @@ android {
             )
         }
     }
-    bundle.language.enableSplit = false // TODO
+    @Suppress("UnstableApiUsage")
+    // Could be replaced with on demand download, but it makes no real difference in size.
+    bundle.language.enableSplit = false
 }
 
 dependencies {
@@ -160,8 +162,8 @@ dependencies {
     implementation("com.github.alorma:compose-settings-ui-m3:1.0.3")
 
     // Firebase
-    implementation("com.google.firebase:firebase-config:21.6.0")
-    implementation("com.google.firebase:firebase-messaging:23.4.0")
+    implementation("com.google.firebase:firebase-config:21.6.1")
+    implementation("com.google.firebase:firebase-messaging:23.4.1")
 
     // 3-rd party
     implementation("io.coil-kt:coil-compose:2.5.0")
