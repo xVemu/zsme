@@ -412,7 +412,6 @@ private fun PostCard(
                             .crossfade(true)
                             .diskCacheKey(postModel.id.toString())
                             .transformations(RoundedCornersTransformation(12f)).build(),
-                        /* TODO error no network */
                         placeholder = painterResource(R.drawable.zsme),
                         contentDescription = stringResource(R.string.thumbnail),
                         modifier = Modifier.size(64.dp),
