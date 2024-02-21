@@ -63,7 +63,7 @@ import pl.vemu.zsme.remembers.LinkProviderEffect
 import pl.vemu.zsme.remembers.rememberDeclarativeRefresh
 import pl.vemu.zsme.ui.components.CustomError
 import pl.vemu.zsme.ui.components.RetrySnackbar
-import pl.vemu.zsme.ui.components.SimpleMediumAppBar
+import pl.vemu.zsme.ui.components.SimpleLargeAppBar
 import pl.vemu.zsme.ui.components.pagerTabIndicatorOffset
 import pl.vemu.zsme.util.scheduleUrl
 import java.time.DayOfWeek
@@ -85,7 +85,7 @@ fun Lesson(
 
     Scaffold(
         topBar = {
-            SimpleMediumAppBar(
+            SimpleLargeAppBar(
                 title = name,
                 navController = navController,
                 scrollBehavior = scrollBehavior,

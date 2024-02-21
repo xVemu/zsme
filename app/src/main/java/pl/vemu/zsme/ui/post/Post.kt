@@ -269,7 +269,8 @@ private fun FilterBar(vm: PostVM, modifier: Modifier = Modifier) {
                     onClick = { isOpened = true },
                     selected = active,
                     label = {
-                        if (active) Text(actives.joinToString(", ") { it.name })
+                        if (active) Text(actives.distinctBy { it.name }
+                            .joinToString(", ") { it.name })
                         else Text(stringResource(R.string.authors))
                     },
                     trailingIcon = {
@@ -312,7 +313,8 @@ private fun FilterBar(vm: PostVM, modifier: Modifier = Modifier) {
                     onClick = { isOpened = true },
                     selected = active,
                     label = {
-                        if (active) Text(actives.joinToString(", ") { it.name })
+                        if (active) Text(actives.distinctBy { it.name }
+                            .joinToString(", ") { it.name })
                         else Text(stringResource(R.string.categories))
                     },
                     trailingIcon = {
@@ -459,7 +461,7 @@ private fun ChoiceDialog(
                 Spacer(Modifier.height(16.dp))
                 HorizontalDivider()
                 LazyColumn(Modifier.weight(1f, false)) {
-                    items(items) { item ->
+                    items(items.distinct()) { item ->
                         ListItem(
                             modifier = Modifier.clickable {
                                 if (checkedList.contains(item)) checkedList -= item

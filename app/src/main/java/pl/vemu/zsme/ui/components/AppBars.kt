@@ -18,6 +18,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import pl.vemu.zsme.R
 
@@ -109,7 +110,7 @@ fun SimpleLargeAppBar(
     colors: TopAppBarColors = TopAppBarDefaults.largeTopAppBarColors(),
 ) {
     LargeTopAppBar(
-        title = { Text(title) },
+        title = { Text(title, maxLines = 2, overflow = TextOverflow.Ellipsis) },
         navigationIcon = { AutoBackButton(navController) },
         scrollBehavior = scrollBehavior,
         colors = colors,
