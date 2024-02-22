@@ -2,11 +2,12 @@
 
 Mobile application based on [ZSME site](https://zsme.tarnow.pl).
 
-## Versions
+## Old versions
+Names in brackets indicate tags in git repository.
 
-- 1.x used Java & XML.
-- 2.0 used Kotlin & experimental Jetpack Compose.
-- 2.1 used Material 3.
+- 1.x (java) used Java & XML.
+- 2.0 (old-compose) used Kotlin & experimental Jetpack Compose.
+- 2.1 (material3) used Material 3.
 
 ## Download
 

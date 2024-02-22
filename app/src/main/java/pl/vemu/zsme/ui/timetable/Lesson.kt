@@ -68,6 +68,8 @@ import pl.vemu.zsme.ui.components.pagerTabIndicatorOffset
 import pl.vemu.zsme.util.scheduleUrl
 import java.time.DayOfWeek
 import java.time.LocalDate
+import java.time.LocalTime
+import kotlin.math.pow
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @TimetableNavGraph
@@ -99,7 +101,8 @@ fun Lesson(
                 .padding(padding)
         ) {
             val result by vm.list.collectAsStateWithLifecycle()
-            val pagerState = rememberPagerState(initialPage = getWeekDay()) { 5 }
+            val currentDay = remember { getWeekDay() }
+            val pagerState = rememberPagerState(initialPage = currentDay) { 5 }
 
             LessonTabRow(pagerState)
             Crossfade(result, label = "Lessons") { data ->
@@ -162,9 +165,13 @@ fun Lesson(
                                         .nestedScroll(scrollBehavior.nestedScrollConnection)
                                 ) {
                                     itemsIndexed(lessons) { index, item ->
+                                        val active =
+                                            remember { getActive(item.timeStart, item.timeFinish) }
+
                                         LessonItem(
                                             item = item,
                                             divider = index < lessons.lastIndex && lessons[index + 1].showIndex,
+                                            active = active && page == currentDay
                                         )
                                     }
                                 }
@@ -183,6 +190,16 @@ fun Lesson(
             }
         }
     }
+}
+
+private fun getActive(timeStart: String, timeFinish: String): Boolean {
+    val now = LocalTime.now().toSecondOfDay().toDouble()
+    val start = timeStart.split(":")
+        .foldIndexed(.0) { index, acc, item -> acc + item.toInt() * 60.0.pow(2 - index) }
+    val finish =
+        timeFinish.split(":")
+            .foldIndexed(.0) { index, acc, item -> acc + item.toInt() * 60.0.pow(2 - index) }
+    return now in start..finish
 }
 
 private fun getWeekDay(): Int =
@@ -238,6 +255,7 @@ private fun LessonTabRowPreview() {
 private fun LessonItem(
     @PreviewParameter(LessonModelPreviewParameterProvider::class) item: LessonModel,
     divider: Boolean = true,
+    active: Boolean = false,
 ) {
     Row(
         modifier = Modifier
@@ -247,7 +265,7 @@ private fun LessonItem(
     ) {
         Text(
             text = (if (item.showIndex) item.index else "").toString(),
-            style = MaterialTheme.typography.headlineLarge,
+            style = MaterialTheme.typography.headlineLarge.run { if (active) copy(color = MaterialTheme.colorScheme.inversePrimary) else this },
             textAlign = TextAlign.Center,
             modifier = Modifier.width(48.dp)
         )
