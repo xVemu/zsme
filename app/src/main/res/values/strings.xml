@@ -94,4 +94,5 @@
     <string name="cancel">Anuluj</string>
     <string name="confirm">Potwierdź</string>
     <string name="clear">Wyczyść</string>
+    <string name="custom_tabs_error">Nie udało się otworzyć linku</string>
 </resources>

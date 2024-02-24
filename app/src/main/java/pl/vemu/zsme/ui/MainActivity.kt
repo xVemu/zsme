@@ -152,4 +152,5 @@ class MainActivity : ComponentActivity() {
 * webview table full width
 * timetable home widget
 * https://issuetracker.google.com/issues/273554698
+* hold splashscreen for initial loading
 * */

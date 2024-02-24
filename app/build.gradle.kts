@@ -18,7 +18,7 @@ android {
         applicationId = "pl.vemu.zsme"
         minSdk = 26
         targetSdk = 34
-        versionCode = 46
+        versionCode = 48
         versionName = "2.2.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         resourceConfigurations += listOf("en", "pl")

@@ -1,8 +1,10 @@
 package pl.vemu.zsme
 
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.widget.Toast
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
@@ -50,7 +52,11 @@ sealed interface Result<out T> {
 typealias ResultList<T> = Result<List<T>>
 
 fun Context.launchCustomTabs(url: String) {
-    CustomTabsIntent.Builder().build().launchUrl(this, url.toUri())
+    try {
+        CustomTabsIntent.Builder().build().launchUrl(this, url.toUri())
+    } catch (e: ActivityNotFoundException) {
+        Toast.makeText(this, R.string.custom_tabs_error, Toast.LENGTH_SHORT).show()
+    }
 }
 
 fun String.capitalize() = lowercase().replaceFirstChar { it.uppercase() }
