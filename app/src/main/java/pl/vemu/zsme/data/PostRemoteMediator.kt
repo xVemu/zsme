@@ -5,6 +5,7 @@ import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
+import io.ktor.client.plugins.ResponseException
 import pl.vemu.zsme.data.db.Database
 import pl.vemu.zsme.data.db.PostDAO
 import pl.vemu.zsme.data.db.RemoteKeyDAO
@@ -14,7 +15,6 @@ import pl.vemu.zsme.data.model.PostModel
 import pl.vemu.zsme.data.model.RemoteKeyModel
 import pl.vemu.zsme.data.service.ZSMEService
 import pl.vemu.zsme.util.mappers.PostMapper
-import retrofit2.HttpException
 import java.io.IOException
 
 const val DEFAULT_PAGE = 1
@@ -80,7 +80,7 @@ class PostRemoteMediator(
             MediatorResult.Success(endOfPaginationReached = isEndOfList)
         } catch (exception: IOException) {
             MediatorResult.Error(exception)
-        } catch (exception: HttpException) {
+        } catch (exception: ResponseException) {
             MediatorResult.Error(exception)
         }
     }

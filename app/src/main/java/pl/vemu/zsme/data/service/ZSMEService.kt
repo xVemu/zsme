@@ -1,11 +1,11 @@
 package pl.vemu.zsme.data.service
 
+import de.jensklingenberg.ktorfit.http.GET
+import de.jensklingenberg.ktorfit.http.Query
 import pl.vemu.zsme.data.model.Author
 import pl.vemu.zsme.data.model.Category
 import pl.vemu.zsme.data.model.DetailImage
 import pl.vemu.zsme.data.model.PostEntity
-import retrofit2.http.GET
-import retrofit2.http.Query
 
 interface ZSMEService {
     @GET("posts?_embed&fields=id,date,link,title,content.rendered,excerpt.rendered,_links")

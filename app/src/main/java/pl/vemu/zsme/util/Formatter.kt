@@ -18,5 +18,5 @@ object Formatter {
     /**
      * Example: '16 Nov 2023, 09:23:11'
      * */
-    fun fullDate(date: Date): String = DateFormat.getDateTimeInstance().format(date)
+    fun fullDate(date: Date): String = DateFormat.getDateTimeInstance().format(date) // TODO DateTimeFormatter
 }
