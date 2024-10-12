@@ -11,8 +11,6 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven("https://jitpack.io")
-//        remove when retrofit2 2.10.0 is released in maven central
-        maven("https://oss.sonatype.org/content/repositories/snapshots")
     }
 }
 

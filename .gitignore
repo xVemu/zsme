@@ -69,5 +69,5 @@ lint/tmp/
 # lint/reports/
 .DS_Store
 app/schemas/pl.vemu.zsme.data.db.Database/
-KeyAndroid.jks
+KeyAndroid.p12
 keystore.properties
