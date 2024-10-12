@@ -2,42 +2,46 @@ package pl.vemu.zsme.injection
 
 import com.google.firebase.Firebase
 import com.google.firebase.remoteconfig.remoteConfig
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import pl.vemu.zsme.data.model.DetailImage
-import pl.vemu.zsme.data.model.DetailImageDeserializer
+import de.jensklingenberg.ktorfit.Ktorfit
+import io.ktor.client.HttpClient
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.json.*
 import pl.vemu.zsme.data.service.ZSMEService
+import pl.vemu.zsme.data.service.createZSMEService
 import pl.vemu.zsme.util.apiUrl
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 class RetrofitModule {
 
+    @OptIn(ExperimentalSerializationApi::class)
     @Singleton
     @Provides
-    fun provideGson(): Gson = GsonBuilder()
-        .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
-        .registerTypeAdapter(
-            DetailImage::class.java, DetailImageDeserializer(),
-        )
-        .create()
+    fun provideHttpClient(): HttpClient = HttpClient {
+        install(ContentNegotiation) {
+            json(Json {
+                ignoreUnknownKeys = true
+                explicitNulls = false
+            })
+        }
+    }
 
     @Singleton
     @Provides
-    fun provideRetrofit(gson: Gson): Retrofit = Retrofit.Builder()
+    fun provideRetrofit(httpClient: HttpClient): Ktorfit = Ktorfit.Builder()
         .baseUrl(Firebase.remoteConfig.apiUrl + "/")
-        .addConverterFactory(GsonConverterFactory.create(gson))
+        .httpClient(httpClient)
         .build()
 
     @Singleton
     @Provides
-    fun provideZSMEService(retrofit: Retrofit): ZSMEService =
-        retrofit.create(ZSMEService::class.java)
+    fun provideZSMEService(ktorfit: Ktorfit): ZSMEService =
+        ktorfit.createZSMEService()
 }

@@ -1,11 +1,12 @@
 package pl.vemu.zsme.data.model
 
 import androidx.annotation.Keep
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonNames
 import java.util.*
 
-// TODO Remove when Retrofit 2.10.0 is released
-@Keep
+@Serializable
 data class PostEntity(
     val id: Int,
     val date: Date,
@@ -13,65 +14,65 @@ data class PostEntity(
     val title: Title,
     val content: Content,
     val excerpt: Excerpt,
-    @SerializedName("_embedded")
+    @SerialName("_embedded")
     val embedded: Embedded,
 )
 
-@Keep
+@Serializable
 data class Title(
     val rendered: String,
 )
 
-@Keep
+@Serializable
 data class Content(
     val rendered: String,
 )
 
-@Keep
+@Serializable
 data class Excerpt(
     val rendered: String,
 )
 
-@Keep
+@Serializable
 data class Embedded(
     val author: List<Author>,
-    @SerializedName("wp:featuredmedia")
+    @SerialName("wp:featuredmedia")
     val wpFeaturedmedia: List<WpFeaturedmedia>?,
-    @SerializedName("wp:term")
+    @SerialName("wp:term")
     val category: List<List<Category>>,
 )
 
-@Keep
+@Serializable
 data class WpFeaturedmedia(
-    @SerializedName("media_details")
+    @SerialName("media_details")
     val mediaDetails: MediaDetails,
-    @SerializedName("source_url")
+    @SerialName("source_url")
     val sourceUrl: String?,
 )
 
-@Keep
+@Serializable
 data class MediaDetails(
     val sizes: Sizes,
 )
 
-@Keep
+@Serializable
 data class Sizes(
-    val thumbnail: Image,
+    val thumbnail: Image?,
 )
 
-@Keep
+@Serializable
 data class Image(
-    @SerializedName("source_url")
+    @SerialName("source_url")
     val sourceUrl: String?,
 )
 
-@Keep
+@Serializable
 data class Author(
     val id: Int,
     val name: String,
 )
 
-@Keep
+@Serializable
 data class Category(
     val id: Int,
     val name: String,

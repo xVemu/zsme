@@ -9,7 +9,9 @@ plugins {
     id("dagger.hilt.android.plugin")
     id("com.google.gms.google-services")
     id("kotlin-parcelize")
+    kotlin("plugin.serialization")
     id("com.autonomousapps.dependency-analysis")
+    id("de.jensklingenberg.ktorfit")
 }
 
 android {
@@ -122,6 +124,7 @@ dependencies {
     implementation("androidx.core:core-splashscreen:1.0.1")
     implementation("com.google.android.play:app-update-ktx:2.1.0")
     implementation("androidx.core:core-ktx:1.13.1") // https://developer.android.com/jetpack/androidx/releases/core
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1") // TODO replace Date and LocalDateTime
 
     // Compose
     val compose = "1.7.3"
@@ -144,9 +147,10 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling:$compose") // https://developer.android.com/jetpack/androidx/releases/compose-ui
 
     // Network
-    implementation("com.squareup.retrofit2:retrofit:2.11.0") // https://github.com/square/retrofit/blob/trunk/CHANGELOG.md
-    implementation("com.squareup.retrofit2:converter-kotlinx-serialization:2.11.0") // https://github.com/square/retrofit/blob/trunk/CHANGELOG.md
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3") // https://github.com/Kotlin/kotlinx.serialization/releases
+    implementation("de.jensklingenberg.ktorfit:ktorfit-lib:2.1.0") // https://foso.github.io/Ktorfit/CHANGELOG/
+    implementation("io.ktor:ktor-client-content-negotiation:2.3.12")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.12")
+//    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3") // https://github.com/Kotlin/kotlinx.serialization/releases
     // Wait for stable release
     implementation("it.skrape:skrapeit:1.3.0-alpha.1")
     // Chrome custom tabs
