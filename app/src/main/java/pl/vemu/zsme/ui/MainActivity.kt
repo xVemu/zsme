@@ -36,6 +36,7 @@ import com.google.firebase.messaging.messaging
 import com.google.firebase.remoteconfig.remoteConfig
 import com.google.firebase.remoteconfig.remoteConfigSettings
 import com.ramcosta.composedestinations.DestinationsNavHost
+import com.ramcosta.composedestinations.generated.NavGraphs
 import com.ramcosta.composedestinations.rememberNavHostEngine
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -47,7 +48,7 @@ import pl.vemu.zsme.remembers.Prefs
 import pl.vemu.zsme.remembers.link
 import pl.vemu.zsme.remembers.rememberStringPreference
 import pl.vemu.zsme.ui.components.PrimaryScaffold
-import pl.vemu.zsme.ui.components.transitions
+import pl.vemu.zsme.ui.components.Transitions
 import pl.vemu.zsme.ui.theme.MainTheme
 import soup.compose.material.motion.animation.rememberSlideDistance
 
@@ -97,16 +98,15 @@ class MainActivity : ComponentActivity() {
 
         val slideDistance = rememberSlideDistance()
         val transitions = remember(slideDistance) {
-            transitions(slideDistance)
+            Transitions(slideDistance)
         }
-        val navEngine = rememberNavHostEngine(rootDefaultAnimations = transitions)
 
         PrimaryScaffold(navController) {
             DestinationsNavHost(
                 navGraph = NavGraphs.root,
                 navController = navController,
-                engine = navEngine,
                 modifier = Modifier.fillMaxSize(),
+                defaultTransitions = transitions,
             )
         }
     }

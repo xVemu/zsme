@@ -57,14 +57,13 @@ import pl.vemu.zsme.ui.components.CustomError
 import pl.vemu.zsme.ui.components.Html
 import pl.vemu.zsme.ui.components.SimpleSmallAppBar
 import pl.vemu.zsme.ui.components.WebView
-import pl.vemu.zsme.ui.destinations.GalleryDestination
+import com.ramcosta.composedestinations.generated.destinations.GalleryDestination
 import pl.vemu.zsme.ui.post.PostNavGraph
 import pl.vemu.zsme.util.Formatter
 import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)
-@PostNavGraph
-@Destination("post/detail")
+@Destination<PostNavGraph>
 @Composable
 fun Detail(
     postModel: PostModel,

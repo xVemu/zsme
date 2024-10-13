@@ -71,9 +71,8 @@ import java.time.LocalDate
 import java.time.LocalTime
 import kotlin.math.pow
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
-@TimetableNavGraph
-@Destination("timetable/lesson")
+@OptIn(ExperimentalMaterial3Api::class)
+@Destination<TimetableNavGraph>
 @Composable
 fun Lesson(
     name: String,

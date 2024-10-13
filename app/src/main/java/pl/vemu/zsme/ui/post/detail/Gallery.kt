@@ -53,16 +53,15 @@ import pl.vemu.zsme.util.changeUiVisibility
 import pl.vemu.zsme.util.rememberInsetsController
 
 @OptIn(
-    ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class
+    ExperimentalMaterial3Api::class
 )
-@PostNavGraph
-@Destination("post/gallery")
+@Destination<PostNavGraph>
 @Composable
 fun Gallery(images: Array<ImageUrl>, navController: DestinationsNavigator) {
 
     BackHandler {
         fullScreen = false
-        navController.popBackStack()
+        navController.navigateUp()
     }
 
     val systemUi = rememberInsetsController()

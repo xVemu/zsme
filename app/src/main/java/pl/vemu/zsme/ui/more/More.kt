@@ -17,25 +17,20 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.ramcosta.composedestinations.annotation.DeepLink
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.annotation.NavGraph
-import com.ramcosta.composedestinations.annotation.RootNavGraph
+import com.ramcosta.composedestinations.annotation.*
+import com.ramcosta.composedestinations.annotation.parameters.DeepLink
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import pl.vemu.zsme.R
 import pl.vemu.zsme.ui.components.SimpleLargeAppBar
 
-@RootNavGraph
-@NavGraph
-annotation class MoreNavGraph(
-    val start: Boolean = false,
-)
+@NavGraph<RootGraph>
+annotation class MoreNavGraph
 
 @OptIn(ExperimentalMaterial3Api::class)
-@MoreNavGraph(start = true)
-@Destination(
+@Destination<MoreNavGraph>(
     route = "more/main",
+    start = true,
     deepLinks = [DeepLink("pl.vemu.zsme.shortcut.MORE")],
 )
 @Composable

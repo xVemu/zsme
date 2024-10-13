@@ -18,6 +18,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
+import com.ramcosta.composedestinations.generated.NavGraphs
+import com.ramcosta.composedestinations.spec.Direction
+import com.ramcosta.composedestinations.spec.DirectionNavGraphSpec
 import com.ramcosta.composedestinations.spec.NavGraphSpec
 import pl.vemu.zsme.R
 
@@ -53,7 +56,7 @@ private fun NavDestination.navGraph(): NavGraphSpec {
 }
 
 enum class BottomNavItem(
-    val destination: NavGraphSpec,
+    val destination: DirectionNavGraphSpec,
     val icon: ImageVector,
     val iconFilled: ImageVector,
     @StringRes val label: Int

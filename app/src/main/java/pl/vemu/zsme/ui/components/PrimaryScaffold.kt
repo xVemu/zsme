@@ -31,8 +31,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.rememberNavController
-import com.ramcosta.composedestinations.navigation.navigate
-import com.ramcosta.composedestinations.navigation.popBackStack
 import pl.vemu.zsme.remembers.isLandscape
 import pl.vemu.zsme.ui.BottomNavItem
 import pl.vemu.zsme.ui.currentScreenAsState
@@ -99,13 +97,13 @@ private fun Navigation(navController: NavController, rail: Boolean) {
             }, onClick = onClick@{
                 if (selected) {
                     navController.popBackStack(
-                        item.destination.startRoute,
+                        item.destination.startRoute.route,
                         false,
                     )
                     return@onClick
                 }
 
-                navController.navigate(item.destination) {
+                navController.navigate(item.destination.route) {
                     popUpTo(navController.graph.findStartDestination().id) {
                         saveState = true
                     }
