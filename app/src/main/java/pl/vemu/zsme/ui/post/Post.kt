@@ -21,10 +21,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text.input.TextFieldLineLimits
-import androidx.compose.foundation.text2.BasicTextField2
-import androidx.compose.foundation.text2.input.TextFieldLineLimits
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material.icons.rounded.Refresh
@@ -140,6 +138,22 @@ fun Post(
         },
     ) { padding ->
         Box {
+            /**
+             * Possible states:
+             * append (db or remote):
+             *   - loading => loading circle at bottom
+             *   - error => error at bottom
+             *   - notLoading => nothing
+             *
+             * empty (db or remote):
+             *   - loading => loading circle fullscreen
+             *   - error => error fullscreen
+             *   - notLoading (db and remote) => no results full screen
+             *
+             * remote error & not empty => error snackbar
+             *
+             * remote loading & db notLoading & not empty => refresh indicator at top
+             * */
             val pagingItems = vm.posts.collectAsLazyPagingItems()
             val sourceRefresh = pagingItems.loadState.source.refresh
             val mediatorRefresh = pagingItems.loadState.mediator?.refresh
@@ -345,7 +359,7 @@ private fun FilterBar(vm: PostVM, modifier: Modifier = Modifier) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun FloatingSearchBar(
     query: String,
@@ -353,7 +367,7 @@ private fun FloatingSearchBar(
 ) {
     val interactionSource = remember { MutableInteractionSource() }
 
-    BasicTextField2(
+    BasicTextField(
         value = query,
         onValueChange = onQueryChange,
         modifier = Modifier
@@ -363,12 +377,12 @@ private fun FloatingSearchBar(
                 MaterialTheme.colorScheme.surfaceContainerHigh,
                 SearchBarDefaults.dockedShape,
             ),
-        lineLimits = TextFieldLineLimits.SingleLine,
+        singleLine = true,
         textStyle = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.onSurface),
         cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
         interactionSource = interactionSource,
-        decorator = { innerTextField ->
+        decorationBox = { innerTextField ->
             TextFieldDefaults.DecorationBox(
                 value = query,
                 innerTextField = innerTextField,
@@ -389,7 +403,7 @@ private fun FloatingSearchBar(
                 interactionSource = interactionSource,
                 container = {},
             )
-        }
+        },
     )
 }
 

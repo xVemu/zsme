@@ -30,10 +30,10 @@ fun rememberConnectivityState(onAvailable: (() -> Unit)? = null): Boolean {
         }
 
         state = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
-            ?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
+            ?.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED) == true
 
         val networkRequest = NetworkRequest.Builder()
-            .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+            .addCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
             .build()
 
         val callback = object : ConnectivityManager.NetworkCallback() {

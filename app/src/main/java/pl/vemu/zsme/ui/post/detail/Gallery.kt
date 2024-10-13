@@ -138,7 +138,6 @@ fun Gallery(images: Array<ImageUrl>, navController: DestinationsNavigator) {
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 private fun Modifier.slidingLineTransition(pagerState: PagerState, distance: Dp) = graphicsLayer {
     val scrollPosition = pagerState.currentPage + pagerState.currentPageOffsetFraction
     translationX = scrollPosition * distance.roundToPx()

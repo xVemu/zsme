@@ -206,7 +206,7 @@ private fun getWeekDay(): Int =
         if (dayOfWeek >= 6) 0 else dayOfWeek - 1
     }
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun LessonTabRow(pagerState: PagerState) {
     val coroutineScope = rememberCoroutineScope()
@@ -242,7 +242,6 @@ private fun LessonTabRow(pagerState: PagerState) {
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Preview
 @Composable
 private fun LessonTabRowPreview() {

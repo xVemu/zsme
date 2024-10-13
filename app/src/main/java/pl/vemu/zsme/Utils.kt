@@ -16,10 +16,10 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 
-fun Modifier.paddingStart(size: Dp) = this.padding(size, 0.dp, 0.dp, 0.dp)
-fun Modifier.paddingTop(size: Dp) = this.padding(0.dp, size, 0.dp, 0.dp)
-fun Modifier.paddingEnd(size: Dp) = this.padding(0.dp, 0.dp, size, 0.dp)
-fun Modifier.paddingBottom(size: Dp) = this.padding(0.dp, 0.dp, 0.dp, size)
+fun Modifier.paddingStart(size: Dp) = this.padding(start = size)
+fun Modifier.paddingTop(size: Dp) = this.padding(top = size)
+fun Modifier.paddingEnd(size: Dp) = this.padding(end = size)
+fun Modifier.paddingBottom(size: Dp) = this.padding(bottom = size)
 
 fun Context.isNetworkAvailable() =
     (this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager).run {
@@ -27,7 +27,7 @@ fun Context.isNetworkAvailable() =
             hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
                     || hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
                     || hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)
-        } ?: false
+        } == true
     }
 
 sealed interface Result<out T> {

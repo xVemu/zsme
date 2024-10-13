@@ -175,7 +175,6 @@ dependencies {
     implementation("net.engawapg.lib:zoomable:1.6.2") // https://github.com/mxalbert1996/Zoomable/releases
     implementation("com.github.YarikSOffice:lingver:1.3.0")
     debugImplementation("com.squareup.leakcanary:leakcanary-android:2.14") // https://square.github.io/leakcanary/changelog/
-    implementation("com.github.viluahealthcare:compose-html:1.0.3")
 }
 
 // https://github.com/androidx/androidx/blob/08c6116/compose/compiler/design/compiler-metrics.md
