@@ -22,6 +22,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text2.BasicTextField2
 import androidx.compose.foundation.text2.input.TextFieldLineLimits
 import androidx.compose.material.icons.Icons
@@ -86,7 +87,8 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.NavGraph
-import com.ramcosta.composedestinations.annotation.RootNavGraph
+import com.ramcosta.composedestinations.annotation.RootGraph
+import com.ramcosta.composedestinations.generated.destinations.DetailDestination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import pl.vemu.zsme.R
 import pl.vemu.zsme.Result
@@ -98,21 +100,16 @@ import pl.vemu.zsme.remembers.rememberDeclarativeRefresh
 import pl.vemu.zsme.ui.components.CustomError
 import pl.vemu.zsme.ui.components.Html
 import pl.vemu.zsme.ui.components.RetrySnackbar
-import pl.vemu.zsme.ui.destinations.DetailDestination
 import pl.vemu.zsme.util.Formatter
 import pl.vemu.zsme.util.baseUrl
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-@RootNavGraph(start = true)
-@NavGraph
-annotation class PostNavGraph(
-    val start: Boolean = false,
-)
+@NavGraph<RootGraph>(start = true)
+annotation class PostNavGraph
 
 @OptIn(ExperimentalMaterial3Api::class)
-@PostNavGraph(start = true)
-@Destination("post/main")
+@Destination<PostNavGraph>("post/main", start = true)
 @Composable
 fun Post(
     navController: DestinationsNavigator,

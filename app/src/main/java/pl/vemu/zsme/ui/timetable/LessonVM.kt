@@ -12,8 +12,7 @@ import pl.vemu.zsme.Result
 import pl.vemu.zsme.ResultList
 import pl.vemu.zsme.data.LessonMediator
 import pl.vemu.zsme.data.model.LessonModel
-import pl.vemu.zsme.ui.destinations.LessonDestination
-import pl.vemu.zsme.ui.navArgs
+import com.ramcosta.composedestinations.generated.destinations.LessonDestination
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,7 +25,7 @@ class LessonVM @Inject constructor(
     val list = _list.asStateFlow()
 
     private val url: String =
-        state.navArgs<LessonDestination.NavArgs>().url
+        LessonDestination.argsFrom(state).url
 
     init {
         downloadLessons()

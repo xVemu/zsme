@@ -51,10 +51,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.firebase.Firebase
 import com.google.firebase.remoteconfig.remoteConfig
-import com.ramcosta.composedestinations.annotation.DeepLink
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.annotation.NavGraph
-import com.ramcosta.composedestinations.annotation.RootNavGraph
+import com.ramcosta.composedestinations.annotation.*
+import com.ramcosta.composedestinations.annotation.parameters.DeepLink
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import kotlinx.coroutines.launch
@@ -70,22 +68,19 @@ import pl.vemu.zsme.ui.components.CustomError
 import pl.vemu.zsme.ui.components.RetrySnackbar
 import pl.vemu.zsme.ui.components.SimpleLargeAppBar
 import pl.vemu.zsme.ui.components.measureTabIndicatorOffset
-import pl.vemu.zsme.ui.destinations.LessonDestination
+import com.ramcosta.composedestinations.generated.destinations.LessonDestination
 import pl.vemu.zsme.util.scheduleUrl
 import java.util.Locale
 
-@RootNavGraph
-@NavGraph
-annotation class TimetableNavGraph(
-    val start: Boolean = false,
-)
+@NavGraph<RootGraph>
+annotation class TimetableNavGraph
 
-@TimetableNavGraph(start = true)
-@Destination(
+@Destination<TimetableNavGraph>(
     route = "timetable/main",
+    start = true,
     deepLinks = [DeepLink("pl.vemu.zsme.shortcut.TIMETABLE")],
 )
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Timetable(
     navController: DestinationsNavigator,

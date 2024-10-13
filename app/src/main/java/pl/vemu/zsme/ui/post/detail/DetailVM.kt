@@ -12,8 +12,7 @@ import pl.vemu.zsme.ResultList
 import pl.vemu.zsme.data.model.HtmlString
 import pl.vemu.zsme.data.model.ImageUrl
 import pl.vemu.zsme.data.repo.DetailRepo
-import pl.vemu.zsme.ui.destinations.DetailDestination
-import pl.vemu.zsme.ui.navArgs
+import com.ramcosta.composedestinations.generated.destinations.DetailDestination
 import javax.inject.Inject
 
 @HiltViewModel
@@ -28,7 +27,7 @@ class DetailVM @Inject constructor(
     val images = _images.asStateFlow()
 
     init {
-        val navArgs: DetailDestination.NavArgs = state.navArgs()
+        val navArgs = DetailDestination.argsFrom(state)
         navArgs.postModel.run { init(id, content) }
     }
 

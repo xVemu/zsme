@@ -30,8 +30,7 @@ import pl.vemu.zsme.ui.components.SimpleMediumAppBar
 import pl.vemu.zsme.util.baseUrl
 
 @OptIn(ExperimentalMaterial3Api::class)
-@MoreNavGraph
-@Destination("more/contact")
+@Destination<MoreNavGraph>
 @Composable
 fun Contact(navController: DestinationsNavigator) {
     LinkProviderEffect(Firebase.remoteConfig.baseUrl + "/wp/kontakt/")

@@ -35,8 +35,7 @@ import pl.vemu.zsme.remembers.rememberStringPreference
 import pl.vemu.zsme.ui.components.SimpleMediumAppBar
 
 @OptIn(ExperimentalMaterial3Api::class)
-@MoreNavGraph
-@Destination("more/settings")
+@Destination<MoreNavGraph>
 @Composable
 fun Settings(navController: DestinationsNavigator) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
