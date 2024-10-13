@@ -242,7 +242,7 @@ private fun Header(title: String) {
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TimetableTabRow(
     pagerState: PagerState,
@@ -314,7 +314,6 @@ private fun RoomPagePreview() {
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Preview
 @Composable
 private fun TimetableTabRowPreview() {

@@ -6,4 +6,4 @@ import androidx.compose.ui.platform.LocalConfiguration
 
 val isLandscape: Boolean
     @Composable
-    get() = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
+    get() = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE // TODO replace with width

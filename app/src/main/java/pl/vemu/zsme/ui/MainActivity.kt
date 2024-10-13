@@ -24,13 +24,10 @@ import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.appupdate.AppUpdateOptions
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
-import com.google.android.play.core.ktx.AppUpdateResult
-import com.google.android.play.core.ktx.clientVersionStalenessDays
-import com.google.android.play.core.ktx.isFlexibleUpdateAllowed
-import com.google.android.play.core.ktx.requestAppUpdateInfo
-import com.google.android.play.core.ktx.requestUpdateFlow
+import com.google.android.play.core.ktx.*
 import com.google.firebase.Firebase
 import com.google.firebase.messaging.messaging
 import com.google.firebase.remoteconfig.remoteConfig
@@ -135,7 +132,10 @@ class MainActivity : ComponentActivity() {
         ) return
 
         manager.startUpdateFlowForResult(
-            appUpdateInfo, AppUpdateType.FLEXIBLE, this, 0
+            appUpdateInfo,
+            this,
+            AppUpdateOptions.defaultOptions(AppUpdateType.FLEXIBLE),
+            0
         )
         manager.requestUpdateFlow().collect { appUpdateResult ->
             if (appUpdateResult is AppUpdateResult.Downloaded) appUpdateResult.completeUpdate()
