@@ -128,7 +128,7 @@ dependencies {
 
     // Compose
     val compose = "1.7.3"
-    implementation("androidx.compose.material3:material3:1.2.0")
+    implementation("androidx.compose.material3:material3:1.3.0")
 //    implementation("androidx.compose.material3:material3:1.3.0") // https://developer.android.com/jetpack/androidx/releases/compose-material3
     implementation("androidx.compose.material:material-icons-extended:$compose") // https://developer.android.com/jetpack/androidx/releases/compose-material
     implementation("androidx.activity:activity-compose:1.9.2") // https://developer.android.com/jetpack/androidx/releases/activity

@@ -48,7 +48,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.derivedStateOf
@@ -94,7 +94,6 @@ import pl.vemu.zsme.data.model.PostModel
 import pl.vemu.zsme.modifiers.noRippleClickable
 import pl.vemu.zsme.paddingBottom
 import pl.vemu.zsme.remembers.LinkProviderEffect
-import pl.vemu.zsme.remembers.rememberDeclarativeRefresh
 import pl.vemu.zsme.ui.components.CustomError
 import pl.vemu.zsme.ui.components.Html
 import pl.vemu.zsme.ui.components.RetrySnackbar
@@ -137,42 +136,39 @@ fun Post(
             )
         },
     ) { padding ->
-        Box {
-            /**
-             * Possible states:
-             * append (db or remote):
-             *   - loading => loading circle at bottom
-             *   - error => error at bottom
-             *   - notLoading => nothing
-             *
-             * empty (db or remote):
-             *   - loading => loading circle fullscreen
-             *   - error => error fullscreen
-             *   - notLoading (db and remote) => no results full screen
-             *
-             * remote error & not empty => error snackbar
-             *
-             * remote loading & db notLoading & not empty => refresh indicator at top
-             * */
-            val pagingItems = vm.posts.collectAsLazyPagingItems()
-            val sourceRefresh = pagingItems.loadState.source.refresh
-            val mediatorRefresh = pagingItems.loadState.mediator?.refresh
-
-            val empty by remember {
-                derivedStateOf {
-                    pagingItems.itemCount <= 0
-                }
+        /**
+         * Possible states:
+         * append (db or remote):
+         *   - loading => loading circle at bottom
+         *   - error => error at bottom
+         *   - notLoading => nothing
+         *
+         * empty (db or remote):
+         *   - loading => loading circle fullscreen
+         *   - error => error fullscreen
+         *   - notLoading (db and remote) => no results full screen
+         *
+         * remote error & not empty => error snackbar
+         *
+         * remote loading & db notLoading & not empty => refresh indicator at top
+         * */
+        val pagingItems = vm.posts.collectAsLazyPagingItems()
+        val sourceRefresh = pagingItems.loadState.source.refresh
+        val mediatorRefresh = pagingItems.loadState.mediator?.refresh
+        val empty by remember {
+            derivedStateOf {
+                pagingItems.itemCount <= 0
             }
+        }
 
-            val pullRefreshState =
-                rememberDeclarativeRefresh(mediatorRefresh is LoadState.Loading && sourceRefresh !is LoadState.Loading && !empty) {
-                    pagingItems.refresh()
-                }
-
+        PullToRefreshBox(
+            isRefreshing = mediatorRefresh is LoadState.Loading && sourceRefresh !is LoadState.Loading && !empty,
+            onRefresh = pagingItems::refresh,
+            modifier = Modifier.padding(padding),
+        ) {
             LazyColumn(
                 Modifier
                     .fillMaxSize()
-                    .nestedScroll(pullRefreshState.nestedScrollConnection)
                     .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
                 contentPadding = padding,
             ) {
@@ -250,13 +246,6 @@ fun Post(
             }
 
             if (mediatorRefresh is LoadState.Error && !empty) RetrySnackbar(retry = pagingItems::retry)
-
-            PullToRefreshContainer(
-                state = pullRefreshState,
-                modifier = Modifier
-                    .padding(padding)
-                    .align(Alignment.TopCenter),
-            )
         }
     }
 }
