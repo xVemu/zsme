@@ -32,7 +32,7 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -60,11 +60,7 @@ import pl.vemu.zsme.R
 import pl.vemu.zsme.Result
 import pl.vemu.zsme.data.model.LessonModel
 import pl.vemu.zsme.remembers.LinkProviderEffect
-import pl.vemu.zsme.remembers.rememberDeclarativeRefresh
-import pl.vemu.zsme.ui.components.CustomError
-import pl.vemu.zsme.ui.components.RetrySnackbar
-import pl.vemu.zsme.ui.components.SimpleLargeAppBar
-import pl.vemu.zsme.ui.components.pagerTabIndicatorOffset
+import pl.vemu.zsme.ui.components.*
 import pl.vemu.zsme.util.scheduleUrl
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -120,15 +116,10 @@ fun Lesson(
                     }
 
                     is Result.Success -> {
-                        Box {
-                            val refreshState =
-                                rememberDeclarativeRefresh(data.refreshing) { vm.downloadLessons() }
-
+                        PullToRefreshBox(isRefreshing = data.refreshing, onRefresh = vm::downloadLessons) {
                             HorizontalPager(
                                 state = pagerState,
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .nestedScroll(refreshState.nestedScrollConnection),
+                                modifier = Modifier.fillMaxSize(),
                             ) { page ->
                                 val lessons =
                                     remember {
@@ -178,11 +169,6 @@ fun Lesson(
 
                             if (data.error != null)
                                 RetrySnackbar { vm.downloadLessons() }
-
-                            PullToRefreshContainer(
-                                refreshState,
-                                Modifier.align(Alignment.TopCenter)
-                            )
                         }
                     }
                 }
@@ -211,19 +197,23 @@ private fun getWeekDay(): Int =
 private fun LessonTabRow(pagerState: PagerState) {
     val coroutineScope = rememberCoroutineScope()
 
-    Column(Modifier.zIndex(1f)) {
+    Column {
         SecondaryScrollableTabRow(
             selectedTabIndex = pagerState.currentPage,
             edgePadding = 0.dp,
             // Divider is not full width on landscape.
             divider = {},
-            indicator = { tabPositions ->
+            indicator = {
                 TabRowDefaults.SecondaryIndicator(
-                    Modifier.pagerTabIndicatorOffset(
-                        pagerState = pagerState,
-                        tabPositions = tabPositions,
-                        useFullWidth = true,
-                    ),
+                    Modifier.tabIndicatorLayout { measurable, constraints, tabPositions ->
+                        measureTabIndicatorOffset(
+                            tabPositions,
+                            pagerState.currentPage,
+                            pagerState.currentPageOffsetFraction,
+                            measurable,
+                            constraints,
+                        )
+                    },
                 )
             }
         ) {

@@ -34,7 +34,7 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -62,7 +62,6 @@ import pl.vemu.zsme.data.model.TimetableModel
 import pl.vemu.zsme.data.model.TimetableType
 import pl.vemu.zsme.remembers.LinkProviderEffect
 import pl.vemu.zsme.remembers.isLandscape
-import pl.vemu.zsme.remembers.rememberDeclarativeRefresh
 import pl.vemu.zsme.ui.components.Avatar
 import pl.vemu.zsme.ui.components.CustomError
 import pl.vemu.zsme.ui.components.RetrySnackbar
@@ -121,15 +120,10 @@ fun Timetable(
                     }
 
                     is Result.Success -> {
-                        Box {
-                            val refreshState =
-                                rememberDeclarativeRefresh(data.refreshing) { vm.downloadTimetable() }
-
+                        PullToRefreshBox(isRefreshing = data.refreshing, onRefresh = vm::downloadTimetable) {
                             HorizontalPager(
                                 state = pagerState,
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .nestedScroll(refreshState.nestedScrollConnection),
+                                modifier = Modifier.fillMaxSize(),
                             ) { page ->
                                 val type = TimetableType.entries[page]
                                 val items =
@@ -148,11 +142,6 @@ fun Timetable(
 
                             if (data.error != null)
                                 RetrySnackbar { vm.downloadTimetable() }
-
-                            PullToRefreshContainer(
-                                refreshState,
-                                Modifier.align(Alignment.TopCenter)
-                            )
                         }
                     }
                 }
@@ -250,7 +239,6 @@ private fun TimetableTabRow(
     val coroutineScope = rememberCoroutineScope()
 
     PrimaryTabRow(
-        modifier = Modifier.zIndex(1f), // TODO https://issuetracker.google.com/issues/314496282
         selectedTabIndex = pagerState.currentPage,
         indicator = {
             TabRowDefaults.PrimaryIndicator(
