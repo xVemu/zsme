@@ -4,7 +4,7 @@ import androidx.compose.runtime.Immutable
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
-import java.time.DayOfWeek
+import kotlinx.datetime.*
 
 @Immutable
 @Entity(
@@ -24,10 +24,15 @@ data class LessonModel(
     val name: String,
     val room: String?,
     val teacher: String?,
-    val timeStart: String,
-    val timeFinish: String,
+    val timeStart: LocalTime,
+    val timeFinish: LocalTime,
     val index: Int,
     val showIndex: Boolean,
     val day: DayOfWeek,
     val parentUrl: String,
-)
+) {
+    val isActive: Boolean
+        get() = Clock.System.now()
+            .toLocalDateTime(TimeZone.currentSystemDefault())
+            .let { it.dayOfWeek == day && it.time in timeStart..timeFinish }
+}

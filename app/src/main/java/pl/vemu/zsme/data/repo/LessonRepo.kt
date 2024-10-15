@@ -9,11 +9,14 @@ import it.skrape.fetcher.response
 import it.skrape.fetcher.skrape
 import it.skrape.selects.DocElement
 import it.skrape.selects.ElementNotFoundException
+import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.LocalTime
+import kotlinx.datetime.format.char
 import pl.vemu.zsme.data.model.LessonModel
+import pl.vemu.zsme.util.Parser
 import pl.vemu.zsme.util.scheduleLogin
 import pl.vemu.zsme.util.schedulePassword
 import pl.vemu.zsme.util.scheduleUrl
-import java.time.DayOfWeek
 import javax.inject.Inject
 
 class LessonRepo @Inject constructor() {
@@ -77,8 +80,8 @@ class LessonRepo @Inject constructor() {
             name = (findFirstOrNull(".p") ?: this).text,
             teacher = (findFirstOrNull(".n") ?: findFirstOrNull(".o"))?.text,
             room = (findFirstOrNull(".s") ?: findFirstOrNull(".o"))?.text,
-            timeStart = timeStart,
-            timeFinish = timeFinish,
+            timeStart = Parser.parseHourMinute(timeStart),
+            timeFinish = Parser.parseHourMinute(timeFinish),
             index = index,
             showIndex = showIndex,
             day = day,

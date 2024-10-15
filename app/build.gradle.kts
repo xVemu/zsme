@@ -124,7 +124,7 @@ dependencies {
     implementation("androidx.core:core-splashscreen:1.0.1")
     implementation("com.google.android.play:app-update-ktx:2.1.0")
     implementation("androidx.core:core-ktx:1.13.1") // https://developer.android.com/jetpack/androidx/releases/core
-    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1") // TODO replace Date and LocalDateTime
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
 
     // Compose
     val compose = "1.7.3"

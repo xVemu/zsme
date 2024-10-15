@@ -1,7 +1,6 @@
 package pl.vemu.zsme.ui.timetable
 
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -56,16 +55,14 @@ import com.google.firebase.remoteconfig.remoteConfig
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch
+import kotlinx.datetime.*
 import pl.vemu.zsme.R
 import pl.vemu.zsme.Result
 import pl.vemu.zsme.data.model.LessonModel
 import pl.vemu.zsme.remembers.LinkProviderEffect
 import pl.vemu.zsme.ui.components.*
+import pl.vemu.zsme.util.Formatter
 import pl.vemu.zsme.util.scheduleUrl
-import java.time.DayOfWeek
-import java.time.LocalDate
-import java.time.LocalTime
-import kotlin.math.pow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Destination<TimetableNavGraph>
@@ -96,8 +93,8 @@ fun Lesson(
                 .padding(padding)
         ) {
             val result by vm.list.collectAsStateWithLifecycle()
-            val currentDay = remember { getWeekDay() }
-            val pagerState = rememberPagerState(initialPage = currentDay) { 5 }
+            val nearestDay = remember { getNearestWeekDay() }
+            val pagerState = rememberPagerState(initialPage = nearestDay) { 5 }
 
             LessonTabRow(pagerState)
             Crossfade(result, label = "Lessons") { data ->
@@ -155,13 +152,9 @@ fun Lesson(
                                         .nestedScroll(scrollBehavior.nestedScrollConnection)
                                 ) {
                                     itemsIndexed(lessons) { index, item ->
-                                        val active =
-                                            remember { getActive(item.timeStart, item.timeFinish) }
-
                                         LessonItem(
                                             item = item,
                                             divider = index < lessons.lastIndex && lessons[index + 1].showIndex,
-                                            active = active && page == currentDay
                                         )
                                     }
                                 }
@@ -177,18 +170,8 @@ fun Lesson(
     }
 }
 
-private fun getActive(timeStart: String, timeFinish: String): Boolean {
-    val now = LocalTime.now().toSecondOfDay().toDouble()
-    val start = timeStart.split(":")
-        .foldIndexed(.0) { index, acc, item -> acc + item.toInt() * 60.0.pow(2 - index) }
-    val finish =
-        timeFinish.split(":")
-            .foldIndexed(.0) { index, acc, item -> acc + item.toInt() * 60.0.pow(2 - index) }
-    return now in start..finish
-}
-
-private fun getWeekDay(): Int =
-    LocalDate.now().dayOfWeek.value.let { dayOfWeek ->
+private fun getNearestWeekDay(): Int =
+    Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).dayOfWeek.value.let { dayOfWeek ->
         if (dayOfWeek >= 6) 0 else dayOfWeek - 1
     }
 
@@ -243,8 +226,9 @@ private fun LessonTabRowPreview() {
 private fun LessonItem(
     @PreviewParameter(LessonModelPreviewParameterProvider::class) item: LessonModel,
     divider: Boolean = true,
-    active: Boolean = false,
 ) {
+    val active = remember { item.isActive }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -260,7 +244,7 @@ private fun LessonItem(
         ProvideTextStyle(MaterialTheme.typography.bodyMedium) {
             Column {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(item.timeStart)
+                    Text(Formatter.hourMinute(item.timeStart))
                     Spacer(Modifier.width(8.dp))
                     Text(
                         text = item.name,
@@ -271,7 +255,7 @@ private fun LessonItem(
                 }
                 Spacer(Modifier.height(4.dp))
                 Row {
-                    Text(item.timeFinish)
+                    Text(Formatter.hourMinute(item.timeFinish))
                     Spacer(Modifier.width(8.dp))
                     item.room?.let {
                         Text(it)
@@ -293,8 +277,8 @@ class LessonModelPreviewParameterProvider : PreviewParameterProvider<LessonModel
             name = "t_jęz an z-1/2",
             room = "36",
             teacher = "DR",
-            timeStart = "11:11",
-            timeFinish = "12:00",
+            timeStart = LocalTime.parse("11:11"),
+            timeFinish = LocalTime.parse("12:00"),
             index = 5,
             showIndex = false,
             day = DayOfWeek.FRIDAY,
@@ -303,8 +287,8 @@ class LessonModelPreviewParameterProvider : PreviewParameterProvider<LessonModel
             name = "fizyka-2/2",
             room = "22",
             teacher = null,
-            timeStart = "11:11",
-            timeFinish = "12:00",
+            timeStart = LocalTime.parse("11:11"),
+            timeFinish = LocalTime.parse("12:00"),
             index = 6,
             showIndex = true,
             day = DayOfWeek.FRIDAY,

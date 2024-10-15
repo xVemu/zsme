@@ -1,15 +1,15 @@
 package pl.vemu.zsme.data.model
 
-import androidx.annotation.Keep
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JsonNames
-import java.util.*
 
 @Serializable
 data class PostEntity(
     val id: Int,
-    val date: Date,
+    @SerialName("date_gmt")
+    val date: LocalDateTime,
     val link: String,
     val title: Title,
     val content: Content,
