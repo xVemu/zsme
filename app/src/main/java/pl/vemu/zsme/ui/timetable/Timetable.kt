@@ -34,6 +34,8 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.currentWindowSize
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -49,6 +51,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.window.core.layout.WindowHeightSizeClass
 import com.google.firebase.Firebase
 import com.google.firebase.remoteconfig.remoteConfig
 import com.ramcosta.composedestinations.annotation.*
@@ -61,7 +64,6 @@ import pl.vemu.zsme.Result
 import pl.vemu.zsme.data.model.TimetableModel
 import pl.vemu.zsme.data.model.TimetableType
 import pl.vemu.zsme.remembers.LinkProviderEffect
-import pl.vemu.zsme.remembers.isLandscape
 import pl.vemu.zsme.ui.components.Avatar
 import pl.vemu.zsme.ui.components.CustomError
 import pl.vemu.zsme.ui.components.RetrySnackbar
@@ -255,18 +257,20 @@ private fun TimetableTabRow(
             )
         },
     ) {
+        val height = currentWindowAdaptiveInfo().windowSizeClass.windowHeightSizeClass
+
         TimetableType.entries.forEachIndexed { index, type ->
             Tab(
                 selected = pagerState.currentPage == index,
                 onClick = {
                     coroutineScope.launch { pagerState.animateScrollToPage(index) }
                 },
-                icon = if (!isLandscape) ({
+                icon = (@Composable {
                     Icon(
                         type.icon,
                         stringResource(type.title)
                     )
-                }) else null,
+                }).takeUnless { height == WindowHeightSizeClass.COMPACT },
                 text = { Text(stringResource(type.title)) },
                 unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
             )
