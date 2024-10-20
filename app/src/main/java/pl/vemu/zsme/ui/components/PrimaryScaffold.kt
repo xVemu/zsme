@@ -13,6 +13,7 @@ import androidx.compose.material3.adaptive.WindowAdaptiveInfo
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.adaptive.navigationsuite.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -24,6 +25,8 @@ import com.ramcosta.composedestinations.spec.NavGraphSpec
 import pl.vemu.zsme.ui.BottomNavItem
 import pl.vemu.zsme.ui.currentScreenAsState
 import pl.vemu.zsme.ui.fullScreen
+import pl.vemu.zsme.util.changeUiVisibility
+import pl.vemu.zsme.util.rememberInsetsController
 
 @Composable
 fun PrimaryScaffold(
@@ -35,6 +38,11 @@ fun PrimaryScaffold(
         contentColor = NavigationSuiteScaffoldDefaults.contentColor
     ) {
         val layoutType = currentWindowAdaptiveInfo().calculateType()
+
+        val systemUi = rememberInsetsController()
+        LaunchedEffect(fullScreen) {
+            systemUi?.changeUiVisibility(!fullScreen)
+        }
 
         NavigationSuiteScaffoldLayout(
             navigationSuite = {

@@ -92,7 +92,6 @@ import kotlinx.datetime.LocalDateTime
 import pl.vemu.zsme.R
 import pl.vemu.zsme.Result
 import pl.vemu.zsme.data.model.PostModel
-import pl.vemu.zsme.modifiers.noRippleClickable
 import pl.vemu.zsme.paddingBottom
 import pl.vemu.zsme.remembers.LinkProviderEffect
 import pl.vemu.zsme.ui.components.CustomError
@@ -120,7 +119,7 @@ fun Post(
 
     Scaffold(
         Modifier
-            .noRippleClickable { focusManager.clearFocus() }
+            .clickable(interactionSource = null, indication = null) { focusManager.clearFocus() }
             .statusBarsPadding(),
         topBar = {
             CenterAlignedTopAppBar(

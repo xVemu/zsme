@@ -9,7 +9,7 @@ val FirebaseRemoteConfig.baseUrl
     get() = getString("baseUrl")
 
 val FirebaseRemoteConfig.journalUrl
-    get() = getString("journalLrl")
+    get() = getString("journalUrl")
 
 val FirebaseRemoteConfig.scheduleLogin
     get() = getString("scheduleLogin")

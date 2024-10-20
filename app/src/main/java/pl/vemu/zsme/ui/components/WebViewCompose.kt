@@ -7,8 +7,6 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.TextStyle
@@ -19,7 +17,7 @@ import androidx.core.graphics.red
 import pl.vemu.zsme.launchCustomTabs
 
 @Composable
-fun WebView(html: String, style: TextStyle = LocalTextStyle.current) {
+fun WebViewCompose(html: String, style: TextStyle = LocalTextStyle.current) {
     val textColor =
         style.color.takeOrElse {
             LocalContentColor.current
@@ -45,8 +43,7 @@ fun WebView(html: String, style: TextStyle = LocalTextStyle.current) {
         </style>
     """ + html
 
-    // Prevents from crashing when clicked back button in app bar.
-    AndroidView(modifier = Modifier.alpha(.99F), factory = { context ->
+    AndroidView(factory = { context ->
         WebView(context).apply {
             isVerticalScrollBarEnabled = false
             isHorizontalScrollBarEnabled = false

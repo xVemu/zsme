@@ -56,7 +56,7 @@ import pl.vemu.zsme.remembers.LinkProviderEffect
 import pl.vemu.zsme.ui.components.CustomError
 import pl.vemu.zsme.ui.components.Html
 import pl.vemu.zsme.ui.components.SimpleSmallAppBar
-import pl.vemu.zsme.ui.components.WebView
+import pl.vemu.zsme.ui.components.WebViewCompose
 import com.ramcosta.composedestinations.generated.destinations.GalleryDestination
 import pl.vemu.zsme.ui.post.PostNavGraph
 import pl.vemu.zsme.util.Formatter
@@ -224,7 +224,7 @@ private fun DetailItem(
             style = MaterialTheme.typography.labelMedium,
         )
         when (htmlContent) {
-            is Result.Success -> WebView(htmlContent.value)
+            is Result.Success -> WebViewCompose(htmlContent.value)
             is Result.Failure -> CustomError()
             is Result.Loading -> {}
         }
