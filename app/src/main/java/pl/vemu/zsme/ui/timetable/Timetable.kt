@@ -133,7 +133,10 @@ fun Timetable(
                                         data.value.filter { it.type == type }
                                             .sortedBy { it.name }
                                     }
-                                LazyColumn(Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)) {
+                                LazyColumn(
+                                    Modifier
+                                        .fillMaxSize()
+                                        .nestedScroll(scrollBehavior.nestedScrollConnection)) {
                                     when (type) {
                                         TimetableType.GROUP -> groups(items, navController)
                                         TimetableType.TEACHER -> teachers(items, navController)

@@ -61,10 +61,10 @@ fun Context.launchCustomTabs(url: String) {
 
 fun String.capitalize() = lowercase().replaceFirstChar { it.uppercase() }
 
-fun PaddingValues.plus(top: Dp = 0.dp, left: Dp = 0.dp, right: Dp = 0.dp, bottom: Dp = 0.dp) =
+operator fun PaddingValues.plus(other: PaddingValues) =
     PaddingValues(
-        top = calculateTopPadding() + top,
-        start = calculateStartPadding(LayoutDirection.Ltr) + left,
-        end = calculateEndPadding(LayoutDirection.Ltr) + right,
-        bottom = calculateBottomPadding() + bottom,
+        top = calculateTopPadding() + other.calculateTopPadding(),
+        start = calculateStartPadding(LayoutDirection.Ltr) + other.calculateStartPadding(LayoutDirection.Ltr),
+        end = calculateEndPadding(LayoutDirection.Ltr) + other.calculateEndPadding(LayoutDirection.Ltr),
+        bottom = calculateBottomPadding() + other.calculateBottomPadding(),
     )

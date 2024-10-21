@@ -43,8 +43,8 @@ fun More(navController: DestinationsNavigator) {
     ) { padding ->
         Column(
             modifier = Modifier
-                .padding(padding)
-                .verticalScroll(rememberScrollState()),
+                .verticalScroll(rememberScrollState())
+                .padding(padding),
         ) {
             val context = LocalContext.current
             MoreItem.entries.forEach { item ->

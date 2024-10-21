@@ -52,8 +52,8 @@ fun Settings(navController: DestinationsNavigator) {
     ) { padding ->
         Column(
             Modifier
-                .padding(padding)
-                .verticalScroll(rememberScrollState()),
+                .verticalScroll(rememberScrollState())
+                .padding(padding),
         ) {
             Theme()
             Language()

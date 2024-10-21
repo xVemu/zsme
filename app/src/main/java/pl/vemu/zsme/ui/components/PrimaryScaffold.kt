@@ -55,6 +55,7 @@ fun PrimaryScaffold(
 
                     NavigationSuite(
                         layoutType = layoutType,
+                        modifier = Modifier.windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Start)),
                         content = {
                             items(navController, currentDestination)
                         }
@@ -64,20 +65,23 @@ fun PrimaryScaffold(
             layoutType = layoutType,
             content = {
                 Box(
-                    Modifier.consumeWindowInsets(
-                        when (layoutType) {
-                            NavigationSuiteType.NavigationBar ->
-                                NavigationBarDefaults.windowInsets.only(WindowInsetsSides.Bottom)
+                    Modifier
+                        .consumeWindowInsets(
+                            when (layoutType) {
+                                NavigationSuiteType.NavigationBar ->
+                                    NavigationBarDefaults.windowInsets.only(WindowInsetsSides.Bottom)
 
-                            NavigationSuiteType.NavigationRail ->
-                                NavigationRailDefaults.windowInsets.only(WindowInsetsSides.Start)
+                                NavigationSuiteType.NavigationRail ->
+                                    NavigationRailDefaults.windowInsets.only(WindowInsetsSides.Start)
 
-                            NavigationSuiteType.NavigationDrawer ->
-                                DrawerDefaults.windowInsets.only(WindowInsetsSides.Start)
+                                NavigationSuiteType.NavigationDrawer ->
+                                    DrawerDefaults.windowInsets.only(WindowInsetsSides.Start)
 
-                            else -> WindowInsets(0, 0, 0, 0)
-                        }
-                    )
+                                else -> WindowInsets(0, 0, 0, 0)
+                            }
+                        )
+                        .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.End))
+                        .consumeWindowInsets(WindowInsets.displayCutout.only(WindowInsetsSides.End))
                 ) {
                     content()
                 }

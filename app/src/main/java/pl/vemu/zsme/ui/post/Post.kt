@@ -118,9 +118,7 @@ fun Post(
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
     Scaffold(
-        Modifier
-            .clickable(interactionSource = null, indication = null) { focusManager.clearFocus() }
-            .statusBarsPadding(),
+        Modifier.clickable(interactionSource = null, indication = null) { focusManager.clearFocus() },
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
