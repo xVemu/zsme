@@ -152,4 +152,5 @@ class MainActivity : ComponentActivity() {
 * webview table full width
 * timetable home widget
 * hold splashscreen for initial loading
+* shared element/bounds transition https://github.com/raamcosta/compose-destinations/releases/tag/2.1.0-beta02
 * */

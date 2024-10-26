@@ -19,6 +19,7 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+#https://github.com/skrapeit/skrape.it/issues/216 TODO
 -dontwarn edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 -dontwarn groovy.lang.GroovyObject
 -dontwarn groovy.lang.MetaClass
