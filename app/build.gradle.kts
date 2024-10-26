@@ -127,16 +127,16 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
 
     // Compose
-    val compose = "1.7.3"
+    val compose = "1.7.4"
     implementation("androidx.compose.material3:material3:1.3.0") // https://developer.android.com/jetpack/androidx/releases/compose-material3
     implementation("androidx.compose.material:material-icons-extended:$compose") // https://developer.android.com/jetpack/androidx/releases/compose-material
-    implementation("androidx.activity:activity-compose:1.9.2") // https://developer.android.com/jetpack/androidx/releases/activity
+    implementation("androidx.activity:activity-compose:1.9.3") // https://developer.android.com/jetpack/androidx/releases/activity
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.6") // https://developer.android.com/jetpack/androidx/releases/lifecycle
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.6") // https://developer.android.com/jetpack/androidx/releases/lifecycle
     // Adaptive
     // currentWindowAdaptiveInfo()
     implementation("androidx.compose.material3.adaptive:adaptive:1.0.0") // https://developer.android.com/jetpack/androidx/releases/compose-material3-adaptive
-    // ListDetailPaneScaffold, SupportingPaneScaffold TODO https://issuetracker.google.com/issues/294612000
+    // ListDetailPaneScaffold, SupportingPaneScaffold TODO Integrate with compose-navigation https://issuetracker.google.com/issues/294612000
 //    implementation("androidx.compose.material3.adaptive:adaptive-layout:1.0.0") // https://developer.android.com/jetpack/androidx/releases/compose-material3-adaptive
     // rememberListDetailPaneScaffoldNavigator, rememberSupportingPaneScaffoldNavigator
 //    implementation("androidx.compose.material3.adaptive:adaptive-navigation:1.0.0") // https://developer.android.com/jetpack/androidx/releases/compose-material3-adaptive
@@ -153,16 +153,15 @@ dependencies {
     implementation("de.jensklingenberg.ktorfit:ktorfit-lib:2.1.0") // https://foso.github.io/Ktorfit/CHANGELOG/
     implementation("io.ktor:ktor-client-content-negotiation:2.3.12")
     implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.12")
-//    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3") // https://github.com/Kotlin/kotlinx.serialization/releases
     // Wait for stable release
     implementation("it.skrape:skrapeit:1.3.0-alpha.1")
     // Chrome custom tabs
     implementation("androidx.browser:browser:1.8.0") // https://developer.android.com/jetpack/androidx/releases/browser
 
     // Navigation
-    implementation("io.github.raamcosta.compose-destinations:core:2.1.0-beta12") // https://github.com/raamcosta/compose-destinations/releases
+    implementation("io.github.raamcosta.compose-destinations:core:2.1.0-beta14") // https://github.com/raamcosta/compose-destinations/releases
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0") // https://developer.android.com/jetpack/androidx/releases/hilt
-    ksp("io.github.raamcosta.compose-destinations:ksp:2.1.0-beta12") // https://github.com/raamcosta/compose-destinations/releases
+    ksp("io.github.raamcosta.compose-destinations:ksp:2.1.0-beta14") // https://github.com/raamcosta/compose-destinations/releases
     implementation("io.github.fornewid:material-motion-compose-core:2.0.1") // https://github.com/fornewid/material-motion-compose/releases
 
     // Settings
@@ -170,8 +169,8 @@ dependencies {
     implementation("com.github.alorma:compose-settings-ui-m3:1.0.3")
 
     // Firebase
-    implementation("com.google.firebase:firebase-config:22.0.0") // https://firebase.google.com/support/release-notes/android
-    implementation("com.google.firebase:firebase-messaging:24.0.2") // https://firebase.google.com/support/release-notes/android
+    implementation("com.google.firebase:firebase-config:22.0.1") // https://firebase.google.com/support/release-notes/android
+    implementation("com.google.firebase:firebase-messaging:24.0.3") // https://firebase.google.com/support/release-notes/android
 
     // 3-rd party
     implementation("io.coil-kt:coil-compose:2.7.0") // https://github.com/coil-kt/coil/blob/main/CHANGELOG.md

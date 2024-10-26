@@ -45,7 +45,7 @@ data class Embedded(
 @Serializable
 data class WpFeaturedmedia(
     @SerialName("media_details")
-    val mediaDetails: MediaDetails,
+    val mediaDetails: MediaDetails?,
     @SerialName("source_url")
     val sourceUrl: String?,
 )

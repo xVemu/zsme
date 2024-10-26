@@ -14,9 +14,9 @@ interface PostDAO {
 
     @Query(
         """SELECT * FROM post WHERE
-        excerpt LIKE '%' || :query || '%'
-        AND (author IN (:authors) OR coalesce(:authors, 'null') = 'null')
-        AND (category IN (:categories) OR coalesce(:categories, 'null') = 'null')
+        content LIKE '%' || REPLACE(:query, ' ', '%') || '%'
+        AND (author IN (:authors) OR COALESCE(:authors, 'null') = 'null')
+        AND (category IN (:categories) OR COALESCE(:categories, 'null') = 'null')
         ORDER BY date DESC
         """
     )
@@ -28,9 +28,9 @@ interface PostDAO {
 
     @Query(
         """DELETE FROM post WHERE
-        excerpt LIKE '%' || :query || '%'
-        AND (author IN (:authors) OR coalesce(:authors, 'null') = 'null')
-        AND (category IN (:categories) OR coalesce(:categories, 'null') = 'null')
+        content LIKE '%' || REPLACE(:query, ' ', '%') || '%'
+        AND (author IN (:authors) OR COALESCE(:authors, 'null') = 'null')
+        AND (category IN (:categories) OR COALESCE(:categories, 'null') = 'null')
         """
     )
     suspend fun delete(query: String, authors: List<String>?, categories: List<String>?)
