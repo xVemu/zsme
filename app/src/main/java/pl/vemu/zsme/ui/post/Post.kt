@@ -7,6 +7,7 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -23,7 +24,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material.icons.rounded.Search
@@ -33,6 +37,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DockedSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
@@ -41,6 +46,7 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Surface
@@ -49,6 +55,10 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
+import androidx.compose.material3.pulltorefresh.PullToRefreshState
+import androidx.compose.material3.pulltorefresh.pullToRefresh
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.derivedStateOf
@@ -124,9 +134,25 @@ fun Post(
                 title = {
                     val query by vm.query.collectAsStateWithLifecycle()
 
-                    FloatingSearchBar(
+                    SearchBarDefaults.InputField(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(
+                                MaterialTheme.colorScheme.surfaceContainerHigh,
+                                SearchBarDefaults.dockedShape
+                            ),
                         query = query,
                         onQueryChange = vm::setQuery,
+                        onSearch = { focusManager.clearFocus() },
+                        expanded = false,
+                        placeholder = { Text(stringResource(R.string.search_post)) },
+                        onExpandedChange = {},
+                        leadingIcon = {
+                            Icon(
+                                Icons.Rounded.Search,
+                                contentDescription = stringResource(R.string.search_post)
+                            )
+                        }
                     )
                 },
                 scrollBehavior = topAppBarScrollBehavior,
@@ -153,16 +179,12 @@ fun Post(
         val pagingItems = vm.posts.collectAsLazyPagingItems()
         val sourceRefresh = pagingItems.loadState.source.refresh
         val mediatorRefresh = pagingItems.loadState.mediator?.refresh
-        val empty by remember {
-            derivedStateOf {
-                pagingItems.itemCount <= 0
-            }
-        }
+        val empty = pagingItems.itemCount <= 0
 
-        PullToRefreshBox(
+        PullToRefresh(
             isRefreshing = mediatorRefresh is LoadState.Loading && sourceRefresh !is LoadState.Loading && !empty,
             onRefresh = pagingItems::refresh,
-            modifier = Modifier.padding(padding),
+            modifier = Modifier.padding(padding)
         ) {
             LazyColumn(
                 Modifier
@@ -245,6 +267,30 @@ fun Post(
 
             if (mediatorRefresh is LoadState.Error && !empty) RetrySnackbar(retry = pagingItems::retry)
         }
+    }
+}
+
+/** Can't use [PullToRefreshBox] directly, because it passes modifier to all children instead of only indicator.
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun PullToRefresh(
+    isRefreshing: Boolean,
+    onRefresh: () -> Unit,
+    modifier: Modifier = Modifier,
+    state: PullToRefreshState = rememberPullToRefreshState(),
+    content: @Composable BoxScope.() -> Unit
+) {
+    Box(
+        Modifier.pullToRefresh(state = state, isRefreshing = isRefreshing, onRefresh = onRefresh),
+        contentAlignment = Alignment.TopStart
+    ) {
+        content()
+        Indicator(
+            modifier = modifier.align(Alignment.TopCenter),
+            isRefreshing = isRefreshing,
+            state = state
+        )
     }
 }
 
@@ -344,54 +390,6 @@ private fun FilterBar(vm: PostVM, modifier: Modifier = Modifier) {
         }
         Box {} // Padding 8dp
     }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun FloatingSearchBar(
-    query: String,
-    onQueryChange: (query: String) -> Unit,
-) {
-    val interactionSource = remember { MutableInteractionSource() }
-
-    BasicTextField(
-        value = query,
-        onValueChange = onQueryChange,
-        modifier = Modifier
-            .height(SearchBarDefaults.InputFieldHeight)
-            .fillMaxWidth()
-            .background(
-                MaterialTheme.colorScheme.surfaceContainerHigh,
-                SearchBarDefaults.dockedShape,
-            ),
-        singleLine = true,
-        textStyle = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.onSurface),
-        cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
-        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-        interactionSource = interactionSource,
-        decorationBox = { innerTextField ->
-            TextFieldDefaults.DecorationBox(
-                value = query,
-                innerTextField = innerTextField,
-                singleLine = true,
-                visualTransformation = VisualTransformation.None,
-                leadingIcon = {
-                    Icon(
-                        Icons.Rounded.Search,
-                        modifier = Modifier.offset(4.dp),
-                        contentDescription = stringResource(R.string.search_post)
-                    )
-                },
-                placeholder = { Text(stringResource(R.string.search_post)) },
-                shape = SearchBarDefaults.inputFieldShape,
-                colors = SearchBarDefaults.inputFieldColors(),
-                contentPadding = TextFieldDefaults.contentPaddingWithoutLabel(),
-                enabled = true,
-                interactionSource = interactionSource,
-                container = {},
-            )
-        },
-    )
 }
 
 @Composable
