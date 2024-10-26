@@ -11,7 +11,7 @@ var link: String? = null
 fun LinkProviderEffect(url: String) {
     // DisposableEffect is not suspended. Idk if it should change coroutine context.
     LaunchedEffect(url) {
-        // Needs delay because onDispose is called after settings an url.
+        // Needs delay because onDispose is called after setting an url.
         delay(1000)
         link = url
     }

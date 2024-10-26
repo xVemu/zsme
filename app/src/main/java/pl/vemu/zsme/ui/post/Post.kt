@@ -9,11 +9,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imeNestedScroll
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -38,6 +40,7 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DockedSearchBar
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
@@ -69,12 +72,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -124,13 +131,20 @@ fun Post(
 ) {
     LinkProviderEffect(Firebase.remoteConfig.baseUrl)
 
-    val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
     val topAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
     Scaffold(
-        Modifier.clickable(interactionSource = null, indication = null) { focusManager.clearFocus() },
+        Modifier
+            .clickable(interactionSource = null, indication = null) { keyboardController?.hide() }
+            .statusBarsPadding(),
         topBar = {
             CenterAlignedTopAppBar(
+                scrollBehavior = topAppBarScrollBehavior,
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    scrolledContainerColor = Color.Transparent,
+                    containerColor = Color.Transparent
+                ),
                 title = {
                     val query by vm.query.collectAsStateWithLifecycle()
 
@@ -143,7 +157,7 @@ fun Post(
                             ),
                         query = query,
                         onQueryChange = vm::setQuery,
-                        onSearch = { focusManager.clearFocus() },
+                        onSearch = { keyboardController?.hide() },
                         expanded = false,
                         placeholder = { Text(stringResource(R.string.search_post)) },
                         onExpandedChange = {},
@@ -155,8 +169,6 @@ fun Post(
                         }
                     )
                 },
-                scrollBehavior = topAppBarScrollBehavior,
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(scrolledContainerColor = MaterialTheme.colorScheme.surface),
             )
         },
     ) { padding ->
@@ -186,9 +198,17 @@ fun Post(
             onRefresh = pagingItems::refresh,
             modifier = Modifier.padding(padding)
         ) {
+            val closeKeyboardOnScroll = remember {
+                object : NestedScrollConnection {
+                    override fun onPreScroll(available: Offset, source: NestedScrollSource) =
+                        Offset.Zero.also { keyboardController?.hide() }
+                }
+            }
+
             LazyColumn(
                 Modifier
                     .fillMaxSize()
+                    .nestedScroll(closeKeyboardOnScroll)
                     .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
                 contentPadding = padding,
             ) {
