@@ -41,6 +41,15 @@
                 android:resource="@xml/filepaths" />
         </provider>
 
+        <provider
+                android:name="androidx.startup.InitializationProvider"
+                android:authorities="${applicationId}.androidx-startup"
+                android:exported="false"
+                tools:node="merge">
+            <meta-data android:name="pl.vemu.zsme.injection.LingverInitializer"
+                       android:value="androidx.startup"/>
+        </provider>
+
         <!--Firebase Messaging-->
         <meta-data
             android:name="firebase_analytics_collection_enabled"

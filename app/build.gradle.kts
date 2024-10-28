@@ -80,6 +80,11 @@ android {
         buildConfig = true
     }
 
+    /*composeCompiler {
+        reportsDestination = layout.buildDirectory.dir("compose_compiler")
+        metricsDestination = layout.buildDirectory.dir("compose_compiler")
+    }*/
+
     packaging {
         resources {
             // https://github.com/skrapeit/skrape.it/issues/184#issuecomment-1204545852
@@ -125,6 +130,7 @@ dependencies {
     implementation("com.google.android.play:app-update-ktx:2.1.0")
     implementation("androidx.core:core-ktx:1.13.1") // https://developer.android.com/jetpack/androidx/releases/core
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
+    implementation("androidx.startup:startup-runtime:1.2.0")
 
     // Compose
     val compose = "1.7.4"
@@ -177,13 +183,4 @@ dependencies {
     implementation("net.engawapg.lib:zoomable:1.6.2") // https://github.com/mxalbert1996/Zoomable/releases
     implementation("com.github.YarikSOffice:lingver:1.3.0")
     debugImplementation("com.squareup.leakcanary:leakcanary-android:2.14") // https://square.github.io/leakcanary/changelog/
-}
-
-// https://github.com/androidx/androidx/blob/08c6116/compose/compiler/design/compiler-metrics.md
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    val path = layout.buildDirectory.dir("composeReports").get().asFile.path
-    compilerOptions.freeCompilerArgs.addAll(
-        "-P",
-        "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=$path"
-    )
 }
