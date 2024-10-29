@@ -3,7 +3,6 @@ package pl.vemu.zsme.ui.post.detail
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -13,10 +12,11 @@ import pl.vemu.zsme.data.model.HtmlString
 import pl.vemu.zsme.data.model.ImageUrl
 import pl.vemu.zsme.data.repo.DetailRepo
 import com.ramcosta.composedestinations.generated.destinations.DetailDestination
+import org.koin.android.annotation.KoinViewModel
 import javax.inject.Inject
 
-@HiltViewModel
-class DetailVM @Inject constructor(
+@KoinViewModel
+class DetailVM(
     private val detailRepo: DetailRepo,
     state: SavedStateHandle,
 ) : ViewModel() {

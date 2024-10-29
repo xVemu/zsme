@@ -48,7 +48,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.firebase.Firebase
 import com.google.firebase.remoteconfig.remoteConfig
@@ -56,6 +55,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch
 import kotlinx.datetime.*
+import org.koin.androidx.compose.navigation.koinNavViewModel
 import pl.vemu.zsme.R
 import pl.vemu.zsme.Result
 import pl.vemu.zsme.data.model.LessonModel
@@ -71,7 +71,7 @@ fun Lesson(
     name: String,
     url: String,
     navController: DestinationsNavigator,
-    vm: LessonVM = hiltViewModel(),
+    vm: LessonVM = koinNavViewModel(),
 ) {
     LinkProviderEffect(Firebase.remoteConfig.scheduleUrl + "/$url")
 

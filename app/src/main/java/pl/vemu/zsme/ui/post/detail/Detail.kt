@@ -33,7 +33,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.AsyncImage
@@ -58,6 +57,7 @@ import pl.vemu.zsme.ui.components.Html
 import pl.vemu.zsme.ui.components.SimpleSmallAppBar
 import pl.vemu.zsme.ui.components.WebViewCompose
 import com.ramcosta.composedestinations.generated.destinations.GalleryDestination
+import org.koin.androidx.compose.navigation.koinNavViewModel
 import pl.vemu.zsme.ui.post.PostNavGraph
 import pl.vemu.zsme.util.Formatter
 import java.io.File
@@ -68,7 +68,7 @@ import java.io.File
 fun Detail(
     postModel: PostModel,
     navController: DestinationsNavigator,
-    vm: DetailVM = hiltViewModel(),
+    vm: DetailVM = koinNavViewModel(),
 ) {
     LinkProviderEffect(postModel.link)
 

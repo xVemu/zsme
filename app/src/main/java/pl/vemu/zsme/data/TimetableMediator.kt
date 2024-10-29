@@ -1,12 +1,14 @@
 package pl.vemu.zsme.data
 
 import kotlinx.coroutines.flow.flow
+import org.koin.core.annotation.Single
 import pl.vemu.zsme.Result
 import pl.vemu.zsme.data.db.TimetableDAO
 import pl.vemu.zsme.data.repo.TimetableRepo
 import javax.inject.Inject
 
-class TimetableMediator @Inject constructor(
+@Single
+class TimetableMediator(
     private val dao: TimetableDAO,
     private val repo: TimetableRepo,
 ) {

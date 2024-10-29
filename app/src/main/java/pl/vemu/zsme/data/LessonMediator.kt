@@ -1,12 +1,13 @@
 package pl.vemu.zsme.data
 
 import kotlinx.coroutines.flow.flow
+import org.koin.core.annotation.Single
 import pl.vemu.zsme.Result
 import pl.vemu.zsme.data.db.LessonDAO
 import pl.vemu.zsme.data.repo.LessonRepo
-import javax.inject.Inject
 
-class LessonMediator @Inject constructor(
+@Single
+class LessonMediator(
     private val dao: LessonDAO,
     private val repo: LessonRepo,
 ) {

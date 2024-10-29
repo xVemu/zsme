@@ -6,7 +6,6 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
     id("com.google.devtools.ksp")
-    id("dagger.hilt.android.plugin")
     id("com.google.gms.google-services")
     id("kotlin-parcelize")
     kotlin("plugin.serialization")
@@ -107,12 +106,14 @@ dependencies {
     androidTestImplementation("org.mockito:mockito-android:5.14.1")
     androidTestImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")
 
-    // Hilt
-    val hilt = "2.52" // https://github.com/google/dagger/releases
-    implementation("com.google.dagger:hilt-android:$hilt")
-    ksp("com.google.dagger:hilt-compiler:$hilt")
-    androidTestImplementation("com.google.dagger:hilt-android-testing:$hilt")
-    kspAndroidTest("com.google.dagger:hilt-android-compiler:$hilt")
+    // Koin
+    val koin = "4.0.0"
+    implementation("io.insert-koin:koin-androidx-compose:$koin")
+    implementation("io.insert-koin:koin-androidx-compose-navigation:$koin")
+    implementation("io.insert-koin:koin-androidx-startup:$koin")
+    val koinAnnotations = "2.0.0-Beta1"
+    implementation("io.insert-koin:koin-annotations:$koinAnnotations")
+    ksp("io.insert-koin:koin-ksp-compiler:$koinAnnotations")
 
     // Room
     val room = "2.6.1"
@@ -166,7 +167,6 @@ dependencies {
 
     // Navigation
     implementation("io.github.raamcosta.compose-destinations:core:2.1.0-beta14") // https://github.com/raamcosta/compose-destinations/releases
-    implementation("androidx.hilt:hilt-navigation-compose:1.2.0") // https://developer.android.com/jetpack/androidx/releases/hilt
     ksp("io.github.raamcosta.compose-destinations:ksp:2.1.0-beta14") // https://github.com/raamcosta/compose-destinations/releases
     implementation("io.github.fornewid:material-motion-compose-core:2.0.1") // https://github.com/fornewid/material-motion-compose/releases
 

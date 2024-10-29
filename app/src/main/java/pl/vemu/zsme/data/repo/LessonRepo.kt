@@ -12,6 +12,7 @@ import it.skrape.selects.ElementNotFoundException
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.format.char
+import org.koin.core.annotation.Single
 import pl.vemu.zsme.data.model.LessonModel
 import pl.vemu.zsme.util.Parser
 import pl.vemu.zsme.util.scheduleLogin
@@ -19,8 +20,8 @@ import pl.vemu.zsme.util.schedulePassword
 import pl.vemu.zsme.util.scheduleUrl
 import javax.inject.Inject
 
-class LessonRepo @Inject constructor() {
-
+@Single
+class LessonRepo {
     suspend fun getLesson(link: String): List<LessonModel> =
         skrape(AsyncFetcher) {
             request {

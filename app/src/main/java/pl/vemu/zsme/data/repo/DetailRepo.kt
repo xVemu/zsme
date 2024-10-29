@@ -3,12 +3,14 @@ package pl.vemu.zsme.data.repo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
+import org.koin.core.annotation.Single
 import pl.vemu.zsme.data.model.HtmlString
 import pl.vemu.zsme.data.model.ImageUrl
 import pl.vemu.zsme.data.service.ZSMEService
 import javax.inject.Inject
 
-class DetailRepo @Inject constructor(private val zsmeService: ZSMEService) {
+@Single
+class DetailRepo(private val zsmeService: ZSMEService) {
 
     suspend fun removeImgsFromContent(content: String): HtmlString =
         withContext(Dispatchers.Default) {

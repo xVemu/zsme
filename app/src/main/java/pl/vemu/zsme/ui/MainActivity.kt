@@ -34,8 +34,6 @@ import com.google.firebase.remoteconfig.remoteConfig
 import com.google.firebase.remoteconfig.remoteConfigSettings
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.generated.NavGraphs
-import com.ramcosta.composedestinations.rememberNavHostEngine
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -52,7 +50,6 @@ import soup.compose.material.motion.animation.rememberSlideDistance
 val Context.dataStore by preferencesDataStore(name = "settings")
 var fullScreen by mutableStateOf(false)
 
-@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

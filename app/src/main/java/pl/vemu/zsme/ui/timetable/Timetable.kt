@@ -49,7 +49,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.window.core.layout.WindowHeightSizeClass
 import com.google.firebase.Firebase
@@ -70,6 +69,7 @@ import pl.vemu.zsme.ui.components.RetrySnackbar
 import pl.vemu.zsme.ui.components.SimpleLargeAppBar
 import pl.vemu.zsme.ui.components.measureTabIndicatorOffset
 import com.ramcosta.composedestinations.generated.destinations.LessonDestination
+import org.koin.androidx.compose.koinViewModel
 import pl.vemu.zsme.util.scheduleUrl
 import java.util.Locale
 
@@ -85,7 +85,7 @@ annotation class TimetableNavGraph
 @Composable
 fun Timetable(
     navController: DestinationsNavigator,
-    vm: TimetableVM = hiltViewModel(),
+    vm: TimetableVM = koinViewModel(),
 ) {
     LinkProviderEffect(Firebase.remoteConfig.scheduleUrl)
 

@@ -90,7 +90,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -106,6 +105,7 @@ import com.ramcosta.composedestinations.annotation.RootGraph
 import com.ramcosta.composedestinations.generated.destinations.DetailDestination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.datetime.LocalDateTime
+import org.koin.androidx.compose.koinViewModel
 import pl.vemu.zsme.R
 import pl.vemu.zsme.Result
 import pl.vemu.zsme.data.model.PostModel
@@ -127,7 +127,7 @@ annotation class PostNavGraph
 @Composable
 fun Post(
     navController: DestinationsNavigator,
-    vm: PostVM = hiltViewModel(),
+    vm: PostVM = koinViewModel(),
 ) {
     LinkProviderEffect(Firebase.remoteConfig.baseUrl)
 

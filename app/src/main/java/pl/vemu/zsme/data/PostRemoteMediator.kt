@@ -6,14 +6,18 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import io.ktor.client.plugins.ResponseException
+import org.koin.core.annotation.Factory
+import org.koin.core.annotation.InjectedParam
 import pl.vemu.zsme.data.db.Database
 import pl.vemu.zsme.data.db.PostDAO
 import pl.vemu.zsme.data.db.RemoteKeyDAO
 import pl.vemu.zsme.data.model.Author
 import pl.vemu.zsme.data.model.Category
+import pl.vemu.zsme.data.model.PostEntity
 import pl.vemu.zsme.data.model.PostModel
 import pl.vemu.zsme.data.model.RemoteKeyModel
 import pl.vemu.zsme.data.service.ZSMEService
+import pl.vemu.zsme.util.EntityMapper
 import pl.vemu.zsme.util.mappers.PostMapper
 import java.io.IOException
 
@@ -21,15 +25,16 @@ const val DEFAULT_PAGE = 1
 const val PAGE_SIZE = 10
 
 @OptIn(ExperimentalPagingApi::class)
+@Factory([PostRemoteMediator::class])
 class PostRemoteMediator(
-    private val query: String,
-    private val categories: List<Category>,
-    private val authors: List<Author>,
+    @InjectedParam private val query: String,
+    @InjectedParam private val categories: List<Category>,
+    @InjectedParam private val authors: List<Author>,
     private val postDAO: PostDAO,
     private val remoteKeyDAO: RemoteKeyDAO,
     private val db: Database,
     private val zsmeService: ZSMEService,
-    private val postMapper: PostMapper,
+    private val postMapper: EntityMapper<PostEntity, PostModel>,
 ) : RemoteMediator<Int, PostModel>() {
 
     override suspend fun load(
