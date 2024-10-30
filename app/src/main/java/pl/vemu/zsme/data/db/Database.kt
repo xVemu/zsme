@@ -10,7 +10,7 @@ import pl.vemu.zsme.data.model.TimetableModel
 
 @Database(
     entities = [PostModel::class, RemoteKeyModel::class, TimetableModel::class, LessonModel::class],
-    version = 3,
+    version = 4,
     exportSchema = false
 )
 @TypeConverters(Converters::class)

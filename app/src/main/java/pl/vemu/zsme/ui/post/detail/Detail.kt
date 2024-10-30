@@ -159,12 +159,13 @@ private suspend fun share(context: Context, postModel: PostModel, shareText: Str
             }
 
 
-        intent.clipData =
-            ClipData.newUri(
-                context.contentResolver,
-                null,
-                uri
-            ) // TODO https://github.com/coil-kt/coil/issues/1920
+        if (uri != null)
+            intent.clipData =
+                ClipData.newUri(
+                    context.contentResolver,
+                    null,
+                    uri
+                ) // TODO https://github.com/coil-kt/coil/issues/1920
 
         val shareIntent = Intent.createChooser(intent, shareText)
         withContext(Dispatchers.Main) {

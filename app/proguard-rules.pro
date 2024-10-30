@@ -19,7 +19,6 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
-#https://github.com/skrapeit/skrape.it/issues/216 TODO
 -dontwarn edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 -dontwarn groovy.lang.GroovyObject
 -dontwarn groovy.lang.MetaClass
@@ -66,6 +65,14 @@
 -dontwarn org.ietf.jgss.GSSName
 -dontwarn org.ietf.jgss.Oid
 -dontwarn sun.reflect.Reflection
+# Ktor
+-keep class javax.xml.parsers.** { *; }
+-dontwarn javax.xml.parsers.**
+-keep class org.xml.sax.** { *; }
+-dontwarn org.xml.sax.**
+# TODO https://android-review.googlesource.com/c/platform/frameworks/support/+/3131661
+-keep class * extends androidx.room.RoomDatabase { void <init>(); }
+# https://github.com/skrapeit/skrape.it/issues/216 TODO
 # Skrapeit
 -keep class org.apache.** { *; }
 -keep class ch.qos.** { *; }

@@ -4,6 +4,8 @@ import android.app.Application
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.androix.startup.KoinStartup.onKoinStartup
+import org.koin.compose.KoinContext
+import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -16,6 +18,7 @@ class MainApplication : Application() {
     init {
         @Suppress("OPT_IN_USAGE")
         onKoinStartup {
+//            TODO https://github.com/InsertKoinIO/koin/issues/2019
             androidContext(this@MainApplication)
             modules(
                 RetrofitModule().module,
