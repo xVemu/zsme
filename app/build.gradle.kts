@@ -11,6 +11,7 @@ plugins {
     kotlin("plugin.serialization")
     id("com.autonomousapps.dependency-analysis")
     id("de.jensklingenberg.ktorfit")
+    id("androidx.baselineprofile")
 }
 
 android {
@@ -66,12 +67,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
 
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = "1.8"
     }
 
     buildFeatures {
@@ -97,7 +98,14 @@ android {
     bundle.language.enableSplit = false
 }
 
+baselineProfile {
+    automaticGenerationDuringBuild = true
+    dexLayoutOptimization = true
+}
+
 dependencies {
+    implementation("androidx.profileinstaller:profileinstaller:1.4.1")
+    "baselineProfile"(project(":baselineprofile"))
     // Tests
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")

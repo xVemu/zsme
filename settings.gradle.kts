@@ -16,3 +16,4 @@ dependencyResolutionManagement {
 
 include(":app")
 rootProject.name = "zsme"
+include(":baselineprofile")

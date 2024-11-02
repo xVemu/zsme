@@ -7,4 +7,6 @@ plugins {
     id("com.autonomousapps.dependency-analysis") version "2.1.4" apply false // unused dependencies, :buildHealth https://github.com/autonomousapps/dependency-analysis-gradle-plugin/blob/main/CHANGELOG.md
     id("de.jensklingenberg.ktorfit") version "2.1.0" apply false // https://foso.github.io/Ktorfit/CHANGELOG/
     kotlin("plugin.serialization") version "2.0.20" apply false
+    id("com.android.test") version "8.6.0-alpha07" apply false
+    id("androidx.baselineprofile") version "1.3.3" apply false
 }
