@@ -11,14 +11,9 @@ import org.koin.core.annotation.InjectedParam
 import pl.vemu.zsme.data.db.Database
 import pl.vemu.zsme.data.db.PostDAO
 import pl.vemu.zsme.data.db.RemoteKeyDAO
-import pl.vemu.zsme.data.model.Author
-import pl.vemu.zsme.data.model.Category
-import pl.vemu.zsme.data.model.PostEntity
-import pl.vemu.zsme.data.model.PostModel
-import pl.vemu.zsme.data.model.RemoteKeyModel
+import pl.vemu.zsme.data.model.*
 import pl.vemu.zsme.data.service.ZSMEService
 import pl.vemu.zsme.util.EntityMapper
-import pl.vemu.zsme.util.mappers.PostMapper
 import java.io.IOException
 
 const val DEFAULT_PAGE = 1

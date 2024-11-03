@@ -1,6 +1,5 @@
 package pl.vemu.zsme.data.model
 
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

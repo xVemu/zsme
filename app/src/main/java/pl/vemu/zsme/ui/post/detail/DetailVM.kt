@@ -3,17 +3,16 @@ package pl.vemu.zsme.ui.post.detail
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ramcosta.composedestinations.generated.destinations.DetailDestination
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import org.koin.android.annotation.KoinViewModel
 import pl.vemu.zsme.Result
 import pl.vemu.zsme.ResultList
 import pl.vemu.zsme.data.model.HtmlString
 import pl.vemu.zsme.data.model.ImageUrl
 import pl.vemu.zsme.data.repo.DetailRepo
-import com.ramcosta.composedestinations.generated.destinations.DetailDestination
-import org.koin.android.annotation.KoinViewModel
-import javax.inject.Inject
 
 @KoinViewModel
 class DetailVM(

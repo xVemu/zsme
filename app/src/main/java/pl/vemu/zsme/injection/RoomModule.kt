@@ -2,11 +2,9 @@ package pl.vemu.zsme.injection
 
 import android.content.Context
 import androidx.room.Room
-import dagger.hilt.android.qualifiers.ApplicationContext
 import org.koin.core.annotation.Module
 import org.koin.core.annotation.Single
 import pl.vemu.zsme.data.db.Database
-import javax.inject.Singleton
 
 @Module
 class RoomModule {

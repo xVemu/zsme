@@ -15,7 +15,6 @@ import pl.vemu.zsme.data.model.TimetableType
 import pl.vemu.zsme.util.scheduleLogin
 import pl.vemu.zsme.util.schedulePassword
 import pl.vemu.zsme.util.scheduleUrl
-import javax.inject.Inject
 
 @Single
 class TimetableRepo {

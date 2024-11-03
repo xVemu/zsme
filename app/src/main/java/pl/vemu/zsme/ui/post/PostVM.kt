@@ -5,11 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
 import pl.vemu.zsme.Result
@@ -17,7 +13,6 @@ import pl.vemu.zsme.ResultList
 import pl.vemu.zsme.data.model.Author
 import pl.vemu.zsme.data.model.Category
 import pl.vemu.zsme.data.repo.PostRepo
-import javax.inject.Inject
 
 @KoinViewModel
 class PostVM(

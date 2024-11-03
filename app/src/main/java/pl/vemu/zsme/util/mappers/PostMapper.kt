@@ -1,20 +1,8 @@
 package pl.vemu.zsme.util.mappers
 
 import org.koin.core.annotation.Single
-import pl.vemu.zsme.data.model.Author
-import pl.vemu.zsme.data.model.Category
-import pl.vemu.zsme.data.model.Content
-import pl.vemu.zsme.data.model.Embedded
-import pl.vemu.zsme.data.model.Excerpt
-import pl.vemu.zsme.data.model.Image
-import pl.vemu.zsme.data.model.MediaDetails
-import pl.vemu.zsme.data.model.PostEntity
-import pl.vemu.zsme.data.model.PostModel
-import pl.vemu.zsme.data.model.Sizes
-import pl.vemu.zsme.data.model.Title
-import pl.vemu.zsme.data.model.WpFeaturedmedia
+import pl.vemu.zsme.data.model.*
 import pl.vemu.zsme.util.EntityMapper
-import javax.inject.Inject
 
 @Single
 class PostMapper : EntityMapper<PostEntity, PostModel> {

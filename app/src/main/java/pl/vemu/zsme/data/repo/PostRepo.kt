@@ -9,14 +9,10 @@ import org.koin.core.component.get
 import org.koin.core.parameter.parametersOf
 import pl.vemu.zsme.data.PAGE_SIZE
 import pl.vemu.zsme.data.PostRemoteMediator
-import pl.vemu.zsme.data.db.Database
 import pl.vemu.zsme.data.db.PostDAO
-import pl.vemu.zsme.data.db.RemoteKeyDAO
 import pl.vemu.zsme.data.model.Author
 import pl.vemu.zsme.data.model.Category
 import pl.vemu.zsme.data.service.ZSMEService
-import pl.vemu.zsme.util.mappers.PostMapper
-import javax.inject.Inject
 
 @Single
 class PostRepo(

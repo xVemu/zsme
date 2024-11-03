@@ -5,7 +5,6 @@ import org.koin.core.annotation.Single
 import pl.vemu.zsme.Result
 import pl.vemu.zsme.data.db.TimetableDAO
 import pl.vemu.zsme.data.repo.TimetableRepo
-import javax.inject.Inject
 
 @Single
 class TimetableMediator(

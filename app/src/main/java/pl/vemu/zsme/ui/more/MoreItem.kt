@@ -10,9 +10,9 @@ import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.google.firebase.Firebase
 import com.google.firebase.remoteconfig.remoteConfig
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.ramcosta.composedestinations.generated.destinations.SettingsDestination
 import com.ramcosta.composedestinations.generated.destinations.ContactDestination
+import com.ramcosta.composedestinations.generated.destinations.SettingsDestination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import pl.vemu.zsme.R
 import pl.vemu.zsme.launchCustomTabs
 import pl.vemu.zsme.util.baseUrl

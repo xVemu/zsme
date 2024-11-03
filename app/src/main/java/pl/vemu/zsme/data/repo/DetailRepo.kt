@@ -7,7 +7,6 @@ import org.koin.core.annotation.Single
 import pl.vemu.zsme.data.model.HtmlString
 import pl.vemu.zsme.data.model.ImageUrl
 import pl.vemu.zsme.data.service.ZSMEService
-import javax.inject.Inject
 
 @Single
 class DetailRepo(private val zsmeService: ZSMEService) {
