@@ -1,6 +1,5 @@
 package pl.vemu.zsme.ui.components
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material3.TabPosition
 import androidx.compose.ui.Modifier
@@ -75,7 +74,6 @@ private fun TabPosition.getWidth(useFullWidth: Boolean = false) =
 private val TabPosition.midOffset: Dp
     get() = left + (width - contentWidth) / 2
 
-@OptIn(ExperimentalFoundationApi::class)
 internal fun Modifier.pagerTabIndicatorOffset(
     pagerState: PagerState,
     tabPositions: List<TabPosition>,

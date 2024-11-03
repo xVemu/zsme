@@ -1,6 +1,8 @@
 package pl.vemu.zsme.ui.theme
 
+import android.content.Context
 import android.os.Build
+import android.provider.Settings
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -245,10 +247,15 @@ fun MainTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
+    val context = LocalContext.current
     val dynamicColor = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !BuildConfig.DEBUG
     val colors = when {
-        dynamicColor && useDarkTheme -> dynamicDarkColorScheme(LocalContext.current)
-        dynamicColor && !useDarkTheme -> dynamicLightColorScheme(LocalContext.current)
+        dynamicColor && useDarkTheme -> dynamicDarkColorScheme(context)
+        dynamicColor -> dynamicLightColorScheme(context)
+        context.isHighContrastEnabled && useDarkTheme -> highContrastDarkColorScheme
+        context.isHighContrastEnabled -> highContrastLightColorScheme
+        context.isMediumContrastEnabled && useDarkTheme -> mediumContrastDarkColorScheme
+        context.isMediumContrastEnabled -> mediumContrastLightColorScheme
         useDarkTheme -> darkScheme
         else -> lightScheme
     }
@@ -262,3 +269,9 @@ fun MainTheme(
 val MaterialTheme.isDark
     @Composable
     get() = colorScheme.surface.luminance() < .5
+
+private val Context.isMediumContrastEnabled
+    get() = Settings.Secure.getFloat(contentResolver, "contrast_level", 0F) >= .5F
+
+private val Context.isHighContrastEnabled
+    get() = Settings.Secure.getFloat(contentResolver, "contrast_level", 0F) >= 1F
