@@ -1,5 +1,5 @@
 import java.io.FileInputStream
-import java.util.Properties
+import java.util.*
 
 plugins {
     id("com.android.application")
@@ -20,7 +20,9 @@ android {
 
     defaultConfig {
         applicationId = "pl.vemu.zsme"
-        minSdk = 26
+        // Can't be lower, because android versions < 9, includes `org.apache.http.legacy` in `/system/framework` classpath,
+        // and apk for some reason prioritize this over apache bundled in app, so skrapeit breaks on API 26.
+        minSdk = 28
         targetSdk = 35
         versionCode = 49
         versionName = "2.3.0"
@@ -90,7 +92,8 @@ android {
             // https://github.com/skrapeit/skrape.it/issues/184#issuecomment-1204545852
             excludes += listOf(
                 "META-INF/DEPENDENCIES",
-                "mozilla/public-suffix-list.txt",
+                "META-INF/INDEX.LIST",
+                "mozilla/public-suffix-list.txt"
             )
         }
     }
@@ -166,10 +169,13 @@ dependencies {
 
     // Network
     implementation("de.jensklingenberg.ktorfit:ktorfit-lib:2.1.0") // https://foso.github.io/Ktorfit/CHANGELOG/
-    implementation("io.ktor:ktor-client-content-negotiation:2.3.12")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.12")
+    implementation("io.ktor:ktor-client-content-negotiation:2.0.3")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:2.0.3")
     // Wait for stable release
-    implementation("it.skrape:skrapeit:1.3.0-alpha.1")
+    implementation("it.skrape:skrapeit:1.3.0-alpha.2") {
+        exclude("it.skrape", "skrapeit-http-fetcher")
+    }
+
     // Chrome custom tabs
     implementation("androidx.browser:browser:1.8.0") // https://developer.android.com/jetpack/androidx/releases/browser
 
