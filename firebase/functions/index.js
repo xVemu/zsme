@@ -47,6 +47,7 @@ function createMessage(post) {
     topic: 'news',
     android: {
       notification: {
+        // Can't use Kotlin, because I couldn't find similar package
         title: convert(post.title.rendered, options),
         body: convert(post.excerpt.rendered, options),
         eventTimestamp: new Date(post.date_gmt),
