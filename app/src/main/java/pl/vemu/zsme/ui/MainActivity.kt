@@ -146,4 +146,5 @@ class MainActivity : ComponentActivity() {
 * timetable home widget
 * hold splashscreen for initial loading
 * shared element/bounds transition https://github.com/raamcosta/compose-destinations/releases/tag/2.1.0-beta02
+* Firebase Crashlytics in release variant
 * */

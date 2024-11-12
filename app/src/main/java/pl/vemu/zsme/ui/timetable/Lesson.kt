@@ -8,7 +8,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.SatelliteAlt
+import androidx.compose.material.icons.rounded.EventAvailable
 import androidx.compose.material3.*
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
@@ -115,7 +115,7 @@ fun Lesson(
                                     horizontalAlignment = Alignment.CenterHorizontally,
                                 ) {
                                     Icon(
-                                        Icons.Rounded.SatelliteAlt,
+                                        Icons.Rounded.EventAvailable,
                                         contentDescription = stringResource(R.string.no_lessons),
                                         modifier = Modifier.size(128.dp)
                                     )

@@ -8,7 +8,6 @@ import it.skrape.fetcher.BasicAuth
 import it.skrape.fetcher.response
 import it.skrape.fetcher.skrape
 import it.skrape.selects.DocElement
-import it.skrape.selects.ElementNotFoundException
 import kotlinx.datetime.DayOfWeek
 import org.koin.core.annotation.Single
 import pl.vemu.zsme.data.model.LessonModel
@@ -42,11 +41,7 @@ class LessonRepo {
                             row.children.drop(2).flatMapIndexed { dayIndex, lesson ->
                                 if (lesson.text.isEmpty()) return@flatMapIndexed emptyList()
 
-                                val list = try {
-                                    lesson.findAll("[style=font-size:85%]")
-                                } catch (e: ElementNotFoundException) {
-                                    listOf(lesson)
-                                }
+                                val list = lesson.findAll("[style=font-size:85%]").ifEmpty { listOf(lesson) }
 
                                 val day = DayOfWeek.of(dayIndex + 1)
                                 list.mapIndexed { singleIndex, singleLesson ->
@@ -86,10 +81,5 @@ class LessonRepo {
             parentUrl = parentUrl,
         )
 
-    private fun DocElement.findFirstOrNull(selector: String): DocElement? =
-        try { /* https://github.com/skrapeit/skrape.it/issues/236 https://github.com/skrapeit/skrape.it/pull/227#event-11093753273  */
-            findFirst(selector)
-        } catch (e: ElementNotFoundException) {
-            null
-        }
+    private fun DocElement.findFirstOrNull(selector: String) = findAll(selector).firstOrNull()
 }

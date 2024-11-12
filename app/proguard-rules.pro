@@ -19,6 +19,7 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+-dontwarn javax.naming.spi.InitialContextFactory
 -dontwarn edu.umd.cs.findbugs.annotations.SuppressFBWarnings
 -dontwarn groovy.lang.GroovyObject
 -dontwarn groovy.lang.MetaClass

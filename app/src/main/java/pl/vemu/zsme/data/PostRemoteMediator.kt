@@ -5,7 +5,6 @@ import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
-import io.ktor.client.plugins.ResponseException
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.InjectedParam
 import pl.vemu.zsme.data.db.Database
@@ -14,7 +13,6 @@ import pl.vemu.zsme.data.db.RemoteKeyDAO
 import pl.vemu.zsme.data.model.*
 import pl.vemu.zsme.data.service.ZSMEService
 import pl.vemu.zsme.util.EntityMapper
-import java.io.IOException
 
 const val DEFAULT_PAGE = 1
 const val PAGE_SIZE = 10
@@ -78,10 +76,8 @@ class PostRemoteMediator(
                 postDAO.insertAll(postMapper.mapFromEntityList(response))
             }
             MediatorResult.Success(endOfPaginationReached = isEndOfList)
-        } catch (exception: IOException) {
-            MediatorResult.Error(exception)
-        } catch (exception: ResponseException) {
-            MediatorResult.Error(exception)
+        } catch (e: Exception) {
+            MediatorResult.Error(e)
         }
     }
 
