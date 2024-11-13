@@ -7,6 +7,7 @@ plugins {
     id("org.jetbrains.kotlin.plugin.compose")
     id("com.google.devtools.ksp")
     id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
     id("kotlin-parcelize")
     kotlin("plugin.serialization")
     id("com.autonomousapps.dependency-analysis")
@@ -24,8 +25,8 @@ android {
         // and apk for some reason prioritize this over apache bundled in app, so skrapeit breaks on API 26.
         minSdk = 28
         targetSdk = 35
-        versionCode = 49
-        versionName = "2.3.0"
+        versionCode = 50
+        versionName = "2.3.1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         resourceConfigurations += listOf("en", "pl")
     }
@@ -191,6 +192,7 @@ dependencies {
     // Firebase
     implementation("com.google.firebase:firebase-config:22.0.1") // https://firebase.google.com/support/release-notes/android
     implementation("com.google.firebase:firebase-messaging:24.0.3") // https://firebase.google.com/support/release-notes/android
+    implementation("com.google.firebase:firebase-crashlytics:19.2.1")
 
     // 3-rd party
     implementation("io.coil-kt:coil-compose:2.7.0") // https://github.com/coil-kt/coil/blob/main/CHANGELOG.md
