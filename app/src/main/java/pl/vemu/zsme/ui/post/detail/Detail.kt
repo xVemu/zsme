@@ -64,6 +64,7 @@ fun Detail(
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
     Scaffold(floatingActionButton = {
+        // TODO NET_CAPABILITY_VALIDATED
         if (!LocalContext.current.isNetworkAvailable()) return@Scaffold
 
         val data = images
